@@ -33,18 +33,19 @@ Some ideas to add:
 -	Heap
 -	Permutations
 -	cookie historic for multi cookie storage !?
+-	greyish hover effect for rows/columns headers that would highlight the whole row/column
+-	Essence.say("... ?", "quest")/Essence.ask("... ?") corresponding with Sys.in to get the user input
+-	Streams which are like Arrays but: Stream(initial_val, formula, data[], next(): /\*push an element into the data using the last value of the data as a parameter/variable of the formula\*/)
 
 To fix/continue:
 -	Huffman based data archieving (creating archive objs that takes datas and keep a dictionnary with the terms and binary versions)
 -	Path finding using A*\IDA* with Euclidian/Manhattan
 -	Cumultative probability
--	Website templating
+-	Webpage templating
 -	Radial gradient generator
 -	Connexion features
 -	Server.data
 -	UnescapeHTML()
--	colourTable()
--	greyish hover effect for rows/columns
 -	maxSort()
 -	mixedRange()
 -	alphabetSort()
@@ -69,3 +70,8 @@ To fix/continue:
 1.	Once this library is heading toward a state where having everything in one single script will no longer be good for readability and maintenance causing it to be splitted into several files (modules) which would make it less portable and slower in some cases but it will be way more organised, more readable and more maintanable.
 2.	The usage of plugins (yes, you could make your own ones and share it so that anyone could use Essence.js with your additions :))
 3.	There might be some other upcoming changes after I learn more frameworks and libraries and grab more and more ideas by then as well as better ways to do stuff.
+
+###Note:
+-	EssenceJS 1.0 will be the ES4-5 All-In-One version
+-	EssenceJS 1.1 will be the ES5 framework (ES4-like module based)
+-	EssenceJS 1.2 will be the ES5-6 framework
