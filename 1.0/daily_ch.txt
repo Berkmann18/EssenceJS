@@ -1,0 +1,6 @@
+-	Fixed (Array|String).unzip(), alphabetSort(), mixedRange(..., true), Array.rand(), (Array|String).get(-n), fromPixel(), toPixel(), Set.isEmpty(), typos in QueueList, typos in Shapes' objects, process and a few other mistakes and typoes
+-	Improved (Array|String).zip(), Array.rand(n), virtualHistory, Set.last(), Array.all()
+-	Added Object.delete(), Object.equals() and Array.trimAll('l'|'r'|'')
+-	Cleaned Array.uniform(), Element.before, Element.after, Array.variance, Bin2Norm(), simpleInterest(), compoundInterest() and many more
+-	Linted and cleaned a few stuff
+-	Removed isArray
