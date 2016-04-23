@@ -50,6 +50,7 @@ var Essence = {
 	}, editor: function (ctt) {
 		location.href = "data:text/html, <html contenteditable>" + (ctt? ctt + "</html>": "</html>");
 	}, processList: [["Name (signature)", "Author", "Size"]],
+	global: $G,
 	addProcess: function (pcs) {
 		pcs.update();
 		Essence.processList.push([pcs.name + " (" + pcs.sig + ")", pcs.author, pcs.bitsize]);
@@ -74,16 +75,21 @@ var Essence = {
 		}
 		this.txt2print = "";
 	}, preInit: function () {
-		t1 = t1.getSeconds() * 1000 + t1.getMilliseconds();
+		$G["t1"] = $G["t1"].getSeconds() * 1000 + $G["t1"].getMilliseconds();
 	}, init: function () {
-		t2 = new Date();
-		t2 = t2.getSeconds() * 1000 + t2.getMilliseconds();
-		t = (t2-t1 > 1000)? (t2-t1)/1000 + "s": (t2-t1) + "ms";
-		Essence.say("Page loaded in " + t, "succ");
+		$G["t2"] = new Date();
+		$G["t2"] = $G["t2"].getSeconds() * 1000 + $G["t2"].getMilliseconds();
+		$G["t"] = ($G["t2"] - $G["t1"] > 1000)? ($G["t2"] - $G["t1"])/1000 + "s": ($G["t2"] - $G["t1"]) + "ms";
+		Essence.say("Page loaded in " + $G["t"], "succ");
 	}
 }
 
-var t1 = new Date(), t2 = 0, t;
+var $G = { //Globals won't be globals !
+	t1: new Date(),
+	t2: 0,
+	t: null
+}
+
 var $e = function (selector) { //THE selector !!
 	return new Element(selector)
 }
@@ -92,7 +98,7 @@ function Element (selector) { //The element object
 	if(/^([\#\.\* _-\`\~\&]\W * |\S|undefined|null|())$/.test(selector)) throw new SyntaxError("Element cannot accept the selector '" + selector + "' as it's invalid.")//Reject invalid selectors
 	if(selector[0] === "#") this.node = document.querySelector(selector) || document.getElementById(selector.slice(1, selector.length))//Id
 	else if(selector[0] === ".") this.node = document.querySelector(selector) || document.getElementByClassName(selector.slice(1, selector.length))//Class
-	else if(selector[0] === " * ") this.node = document.querySelectorAll(selector.slice(1, selector.length)) || document.getElementsByTagName(selector.slice(1, selector.length))//Node array
+	else if(selector[0] === "*") this.node = document.querySelectorAll(selector.slice(1, selector.length)) || document.getElementsByTagName(selector.slice(1, selector.length))//Node array
 	else this.node = document.querySelector(selector);
 	this.val = function (getHTML, withTags) { //Get the value of the element's node
 		if (isType(this.node, "array")) {
@@ -476,7 +482,7 @@ Array.prototype.replace = function (Ci, Cf, toStr) { //Replace all the character
 	for (var i = 0; i < this.length; i++) {
 		if(this[i] === Ci) this[i] = Cf;
 	}
-return toStr? this.toString(): this;
+	return toStr? this.toString(): this;
 }
 
 Array.prototype.sum = function (start, end) { //The sum of every terms of the array
@@ -689,7 +695,7 @@ Array.prototype.bubbleSort = function (order) { //My version of the Bubble Sort
 
 Array.prototype.bruteForceSort = function () {
 	for (var i = 0; i < this.length; i++) {
-		var s = this[i]; pos = i;
+		var s = this[i], pos = i;
 		for (var j = i + 1; j <= this.length; j++) {
 			if (s > this[j]) {
 				s = this[j];
@@ -789,18 +795,15 @@ Array.prototype.xclean = function () { //Remove a righty of undesirable items
 	return this.clean(true).remove([undefined, "undefined", null, "null"]) 
 }
 Array.prototype.chg = function(arr, s, e) { //Susbsitute every elements from s to e with the elements from s to e of arr
-	// body...
 	s = s || 0;
 	e = e || this.length-1;
 	var a = this.get(s, e), b = arr.get(s, e)
 
 	for (var i = 0; i < a.length; i++) a[i] = b[i]
-
-		return a;
+	return a;
 }
 
 Array.prototype.exchange = function(arr, s, e) { //Exchange every elements from s to e between the array and arr
-	// body...
 	s = s || 0;
 	e = e || this.length-1;
 	var a = this.get(s, e), b = arr.get(s, e)
@@ -814,8 +817,8 @@ Array.prototype.exchange = function(arr, s, e) { //Exchange every elements from 
 }
 
 Array.prototype.rot = function (deg) { //Rotate a matrix by n % 90 degrees. Useful for Rubik's cubes simulator and other matrix based simulations/calculations!
-var tmp;
-if(deg % 90 != 0) throw new Error("The absolute degree of rotation must be either 90° or 180°");
+	var tmp;
+	if(deg % 90 != 0) throw new Error("The absolute degree of rotation must be either 90° or 180°");
 	if (this.numElm() === 4 && this.length === 2) { //2x2 matrix
 		if (deg === 90) {
 			tmp = this[0][0];
@@ -908,8 +911,8 @@ Array.prototype.numElm = function () { //Get the number of elements in the N-dim
 	return this.toString().split(",").length
 }
 
-Array.prototype.size = function (_str) { //Get the w * h size of the array
-	return _str? this.length + "x" + this.maxLength(): [this.length, this.maxLength()]
+Array.prototype.size = function (str) { //Get the w * h size of the array
+	return str? this.length + "x" + this.maxLength(): [this.length, this.maxLength()]
 }
 
 Array.prototype.det = function () { //Determinant of a matrix
@@ -941,7 +944,7 @@ Array.prototype.translate = function () {
 
 Array.prototype.lookFor = function (x) { //Look for an element x in the array and get its position
 	for (var i = 0; i < this.length; i++) {
-		if(this[i] === x) return i//I is the row number and j the column which oppose j being the x-coord and i the y-coord
+		if(this[i] === x) return i //I is the row number and j the column which oppose j being the x-coord and i the y-coord
 	}
 	return -1
 }
@@ -1043,6 +1046,7 @@ Array.prototype.append = function (arr) { //Pushing every elements of the array 
 Array.prototype.preppend = function (arr) { //Unshifting every elements of the array into the current one
 	for(var i = 0; i < arr.length; i++) this.unshift(arr[i])
 }
+
 Array.prototype.unique = function () { //List all the unique values of the array
 	var u = [];
 	for (var i = 0; i < this.length; i++) {
@@ -1055,6 +1059,7 @@ Array.prototype.to1d = function (jointer) { //N-dimensional arrays to 1D arrays
 	for(var i = 0; i < res.length; i++) res[i] = res[i].join(jointer || "");
 	return res
 }
+
 Array.prototype.uniform = function (cr) { //Ensure that all elements in the array are of the same length
 	var res = this, ml = res.maxLength();
 	for (var i = 0; i < res.length; i++) {
@@ -1062,6 +1067,7 @@ Array.prototype.uniform = function (cr) { //Ensure that all elements in the arra
 	}
 	return res
 }
+
 Array.prototype.zip = function () { //Compress the array
 	var res = [], j;
 	for (var i = 0; i < this.length; i++) {
@@ -1074,6 +1080,7 @@ Array.prototype.zip = function () { //Compress the array
 	}
 	return res.length<this.length? res: this //Make sure that the compressed array isn't longer than the initial one
 }
+
 Array.prototype.unzip = function (noPairs) { //Decompress the array (when being compressed using Array.zip()) with(out) pairs
 	var res = [];
 	for (var i = 0; i < this.length; i++) {
@@ -1082,12 +1089,14 @@ Array.prototype.unzip = function (noPairs) { //Decompress the array (when being 
 	}
 	return noPairs? res.join("").split(""): res;
 }
+
 Array.prototype.trimAll = function(side) { //Trimes every elements
 	var res = [];
 	side = side? side[0].toLowerCase(): "";
 	for (var i = 0; i < this.length; i++) res[i] = (side === "l")? this[i].trimLeft(): ((side === "r")? this[i].trimRight(): this[i].trim());
 	return res
 }
+
 Array.prototype.isSorted = function() { //Check if the array is sorted
 	if(this[0] > this[1]) return false;
 	for (var i = 1; i < this.length; i++) {
@@ -1095,6 +1104,7 @@ Array.prototype.isSorted = function() { //Check if the array is sorted
 	}
 	return true
 }
+
 String.prototype.remove = function (c) { //Remove c from the string
 	var str = this;
 	if (isType(c, "Array")) {
@@ -1106,6 +1116,7 @@ String.prototype.remove = function (c) { //Remove c from the string
 		return (v.indexOf(undefined) != -1)? str.remove(): v
 	}
 }
+
 String.prototype.toNDigits = function (n) { //Get the string (representing a number) to be a n-digit string
 	var i = this;
 	n = n || 2;
@@ -1197,10 +1208,10 @@ String.prototype.zip = function () { //Compress the string
 			j = 1;
 			while(this[i] === this[i + j]) j++;
 			res += this[i] + "@" + j;
-			i += j-1;
+			i += j - 1;
 		} else res += this[i];
 	}
-	return res.length<this.length? res: this //Make sure that the compression doesn't end up making the string longer
+	return res.length < this.length? res: this //Make sure that the compression doesn't end up making the string longer
 }
 
 String.prototype.unzip = function (noPairs) { //Decompress the string (when being compressed using String.zip()) with(out) pairs
@@ -1215,7 +1226,7 @@ String.prototype.unzip = function (noPairs) { //Decompress the string (when bein
 Number.prototype.length = function () { //Count how many digits is in x (including seperatly the decimales when there's some)
 	if((this + "").indexOf(".") != -1) return [parseInt((this + "").split(".")[0]).length(), parseInt((this + "").split(".")[1]).length()]
 	var l = 0, x = this;
-	while (Math.floor(x)!= 0) {
+	while (Math.floor(x) != 0) {
 		x /= 10;
 		l++;
 	}
@@ -1224,22 +1235,20 @@ Number.prototype.length = function () { //Count how many digits is in x (includi
 
 Number.prototype.toNDec = function (n) { //A bit like .toFixed(n) and .toPrecision(n) but returning a double instead of a string
 	var pow10s = Math.pow(10, n || 2);
-	return (n)? Math.round(pow10s * this)/pow10s: this
+	return (n)? Math.round(pow10s * this) / pow10s: this
 }
 
 Number.prototype.toNDigits = function (n) { //Get the number to be a n-digit number
-	var i = this + ''//Because it won't work with other types than strings
+	var i = this + ""; //Because it won't work with other types than strings
 	n = n || 2;
-	if (parseFloat(i)<Math.pow(10, n-1)) {
-		while (i.split(".")[0].length < n) {
-			i = "0" + i;
-		}
+	if (parseFloat(i) < Math.pow(10, n - 1)) {
+		while (i.split(".")[0].length < n)  i = "0" + i;
 	}
 	return i
 }
 
 Number.prototype.sign = function (str) { //Get the sign of the number
-	return str? (this < 0? "-": (this > 0? " + ": "")): (this < 0?-1: (this > 0? 1: 0))
+	return str? (this < 0? "-": (this > 0? " + ": "")): (this < 0? -1: (this > 0? 1: 0))
 }
 
 Number.prototype.isPrime = function (n) { //Check the primeness of n
@@ -1251,9 +1260,9 @@ Number.prototype.isPrime = function (n) { //Check the primeness of n
 
 Number.prototype.clean = function (nbDec) { //Clean the number to make it "normal"
 if(this == 0) return 0
-	else if(this > 0 && this[0] == " + ") return nbDec? this.slice(1, this.length).toNDec(nbDec): this.slice(1, this.length)
-		else if(this =="-") return this + 1
-			else if(this ==" + ") return 1
+	else if(this > 0 && this[0] == "+") return nbDec? this.slice(1, this.length).toNDec(nbDec): this.slice(1, this.length)
+		else if(this == "-") return this + 1
+			else if(this == "+") return 1
 				else return nbDec? this.toNDec(nbDec): this
 			}
 
@@ -1262,13 +1271,13 @@ Number.prototype.toArr = function () { //Number->Number[]
 	while (n > 0) {
 		arr[i] = n % 10;
 		i++;
-		n/= 10;
+		n /= 10;
 	}
 	return n
 }
 
 Function.prototype.inheritsFrom = function (parentClassOrObj) { 
-	if (parentClassOrObj.constructor == Function){ //Normal Inheritance 
+	if (parentClassOrObj.constructor === Function){ //Normal Inheritance 
 		this.prototype = new parentClassOrObj;
 		this.prototype.constructor = this;
 		this.prototype.parent = parentClassOrObj.prototype;
@@ -1306,9 +1315,8 @@ function noRightClick () { //Disable right clicks
 }
 
 function reloadPage (lvl) { //Reload the page with 2 different level of reload
-	if(lvl === 1) location.reload() //Reload the location of the window
-	else if(lvl === 2) location.href = location.href //Update the hyper reference of the window's location
-	else reloadPage(1) //Otherwise the first option is used
+	if(lvl === 2) location.href = location.href //Update the hyper reference of the window's location
+	else location.reload() //Reload the location of the window (implying lvl = 0||1)
 }
 
 function redirect (to, dt, divId) { //Redirect to #to in #dt ms
@@ -1350,7 +1358,7 @@ function isValid (txt, type) { //Check if a text (generally from a field) is val
 			break;
 		case "hex":
 			pattern = /(#|0x)?([A-Fa-f0-9]){3}(([A-Fa-f0-9]){3})?/; //From CheatSheets (iOS)
-			break
+			break;
 		case "tag": //From CheatSheets (iOS)
 			pattern = /(\<(\/?[^\>] + )\>)/;
 			break;
@@ -1506,7 +1514,9 @@ function toMaxSize () { //Resize the window to maximum size of the client/screen
 		else if(frame.X) frame.resizeTo(frame.X, frame.Y);
 		else if(frame.x) frame.resizeTo(frame.x, frame.y);
 		else return false
-	}catch(e){}
+	}catch(e){
+		Essence.say("An error occurec when trying to maximise the size Because of " + e, "err");
+	}
 }
 
 function getScrenDim () { //Dimension of the screen
@@ -1770,6 +1780,7 @@ function sec2time (i, withH) { //Invert of toS(i)
 }
 /* *
 * Alias/Shortcuts
+* {!globals} s2t, toSec
 * */
 var s2t = sec2time, toSec = toS
 
@@ -2024,55 +2035,55 @@ function toPixel (x) { //X unit -> y px
 	//source: http://www.endmemo.com/sconvert/centimeterpixel.php
 	var m = 1;
 	switch (x.substring(String(getNumFromStr(x)).length, x.length)) {
-		case "em": 
+		case "em":
 			m = 16;
 			break;
-		case "km": 
+		case "km":
 			m = 3779527.5593333;
 			break;
-		case "hm": 
+		case "hm":
 			m = 377952.75593333;
 			break;
-		case "m": 
+		case "m":
 			m = 3779.5275593333;
 			break;
-		case "dm": 
+		case "dm":
 			m = 377.95275593333;
 			break;
-		case "cm": 
+		case "cm":
 			m = 37.795275593333;
 			break;
-		case "mm": 
+		case "mm":
 			m = 3.7795275593333;
 			break;
-		case "ɥm": 
+		case "ɥm":
 			m = 0.0037795275593333;
 			break;
-		case "nm": 
+		case "nm":
 			m = 3.7795275593333e-6;
 			break;
-		case "ex": 
+		case "ex":
 			m = 7.156;
 			break;
-		case "in": 
+		case "in":
 			m = 96;
 			break;
-		case "pt": 
+		case "pt":
 			m = 1.3333333333333;
 			break;
-		case "pc": 
+		case "pc":
 			m = 16;
 			break;
-		case "ft": 
+		case "ft":
 			m = 1152;
 			break;
-		case "twip": 
+		case "twip":
 			m = 15;
 			break;
-		case "mi": 
+		case "mi":
 			m = 6082636.631643;
 			break;
-		case "yd": 
+		case "yd":
 			m = 3456.043540706;
 			break;
 		default: break;
@@ -2083,55 +2094,55 @@ function toPixel (x) { //X unit -> y px
 function fromPixel (x, unit) { //X px -> y unit
 	var m = 1;
 	switch (unit) {
-		case "em": 
+		case "em":
 			m = 1/16;
 			break;
-		case "km": 
+		case "km":
 			m = 1/3779527.5593333;
 			break;
-		case "hm": 
+		case "hm":
 			m = 1/377952.75593333;
 			break;
-		case "m": 
+		case "m":
 			m = 1/3779.5275593333;
 			break;
-		case "dm": 
+		case "dm":
 			m = 1/377.95275593333;
 			break;
-		case "cm": 
+		case "cm":
 			m = 1/37.795275593333;
 			break;
-		case "mm": 
+		case "mm":
 			m = 1/3.7795275593333;
 			break;
-		case "ɥm": 
+		case "ɥm":
 			m = 1/0.0037795275593333;
 			break;
-		case "nm": 
+		case "nm":
 			m = 1/3.7795275593333e-6;
 			break;
-		case "ex": 
+		case "ex":
 			m = 1/7.156;
 			break;
-		case "in": 
+		case "in":
 			m = 1/96;
 			break;
-		case "pt": 
+		case "pt":
 			m = 1/1.3333333333333;
 			break;
-		case "pc": 
+		case "pc":
 			m = 1/16;
 			break;
-		case "ft": 
+		case "ft":
 			m = 1/1152;
 			break;
-		case "twip": 
+		case "twip":
 			m = 1/15;
 			break;
-		case "mi": 
+		case "mi":
 			m = 1/6082636.631643;
 			break;
-		case "yd": 
+		case "yd":
 			m = 1/3456.043540706;
 			break;
 		default: break;
@@ -2190,15 +2201,15 @@ function save (txt, name, type) { //Save into a file of the corresponding type
 	dlLink.click()
 }
 
-var fct = "";
 function getFileContent (fname) {
+	$G["fct"] = ""; //File content
 	var rawFile = new XMLHttpRequest();
 	rawFile.open("GET", fname, false);
 	rawFile.onreadystatechange = function () {
 		if (rawFile.readyState === 4) {
 			if (rawFile.status === 200 || rawFile.status == 0) {
 				//alert("File content:\n\n" + rawFile.responseText);
-				fct = rawFile.responseText//Because returning it won't allow the actual content to be returned
+				$G["fct"] = rawFile.responseText//Because returning it won't allow the actual content to be returned
 				return rawFile.responseText
 			}
 		}
@@ -2226,32 +2237,53 @@ function getTimestamp () { //ddMMM-hh-mm-ss
 	return getDate(true) + "-" + getTime().replace(/\:/g, "-")
 }
 
+function asciiTable(start, end) { //ASCII table
+	if(start === "A-Z" && !end){
+		start = 65;
+		end = 90;
+	} else if(start === "a-z" && !end){
+		start = 97;
+		end = 122;
+	} else if(start === "A-z" && !end){
+		start = 65;
+		end = 122;
+	} else if(start === "printable" && !end){
+		start = 32;
+		end = 126;
+	}
+	if(!start) start = 0;
+	if(!end) end = 255;
+	var res = [];
+
+	for (var i = start; i <= end; i++) res.push(String.fromCharCode(i));
+	return res;
+}
+
 function genStr (len, filter) { //Generate a string
-	var str = "", az = new Array("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"), AZ = [], zero9 = new Array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9"), common_char = new Array("&", "~", "\"", "#", "\'", "{", "[", "(", "-", "|", "`", "_", "\\", "^", "@", ")", "]", " + ", "=", "}", " % ", " * ", "?", ",", ";", ".", "/", ":", "!", " ", ""),
+	var str = "", az = asciiTable("a-z"), AZ = asciiTable("A-Z"), zero9 = range(9), commonChar = new Array("&", "~", "\"", "#", "\'", "{", "[", "(", "-", "|", "`", "_", "\\", "^", "@", ")", "]", " + ", "=", "}", " % ", " * ", "?", ",", ";", ".", "/", ":", "!", " "),
 	charlist;
-	for(var l = 0; l < az.length; l++) AZ[l] = az[l].toUpperCase();
-		charlist = az.concat(AZ, zero9, common_char);
+	charlist = az.concat(AZ, zero9, commonChar);
 	var c = "", i = 0;
 	while (str.length < len) {
-		c = charlist[randTo(charlist.length-1)];
+		c = charlist.rand();
 		if (filter.name === "specificChar") {
-			while(c === filter.character) c = charlist[randTo(charlist.length-1)];
+			while(c === filter.character) c = charlist.rand();
 		}else if (filter.name === "noUpperCase") {
 			c = c.toLowerCase();
 		}else if (filter.name === "noLowerCase") {
 			c = c.toUpperCase();
 		}else if (filter.name === "cumultativeRepeat") {
-			while(c === str[i-1]) c = charlist[randTo(charlist.length-1)];
+			while(c === str[i-1]) c = charlist.rand();
 		}else if (filter.name === "cumultativeSensitiveRepeat") {
-			while(c === str[i-1]) c = charlist[randTo(charlist.length-1)];
+			while(c === str[i-1]) c = charlist.rand();
 		}else if (filter.name === "noRepeat") {
 			charlist.pop(i > 0? str[i-1]: str[0]);
-			c = charlist[randTo(charlist.length-1)];
+			c = charlist.rand();
 		}
 		str += c;
 		i++;
 	}
-	if(str.length < len) str += charlist[randTo(charlist.length-1)];
+	if(str.length < len) str += charlist.rand();
 	else if(str.length > len) str = str.slice(0, len + 1);
 	if(str === "") genStr(len, filter)//May cause overflows
 	return str
@@ -2378,33 +2410,33 @@ function rgb2hex (rgb, toArray) { //RGB to hexademical
 }
 
 function negateColour (elmt, attr, mod) { //Switch the colour of the elmt's attribute (that can be the background/border/font colour of an HTML element and which is in hex form) to it's red/green/blue/yellow/cyan/magenta/full negative version.
-	mod = (mod)? mod[0].toLowerCase(): "x" //To accept: r, R, red, Red, RED; for the red, ...
-	var clrs = ($e(elmt).css(attr).indexOf("rgb(") == 0)? $e(elmt).css(attr).slice(4, $e(elmt).css(attr).length-1).split(", "): hex2rgb($e(elmt).css(attr), true), clr = new Colour();
-	if (mod == "r") {
+	mod = mod? mod[0].toLowerCase(): "x" //To accept: r, R, red, Red, RED; for the red, ...
+	var clrs = ($e(elmt).css(attr).indexOf("rgb(") === 0)? $e(elmt).css(attr).slice(4, $e(elmt).css(attr).length-1).split(", "): hex2rgb($e(elmt).css(attr), true), clr = new Colour();
+	if (mod === "r") {
 		clr.red = 255 - parseInt(clrs[0]);
 		clr.green = clrs[1];
 		clr.blue = clrs.last();
-	}else if (mod == "g") {
+	}else if (mod === "g") {
 		clr.red = clrs[0];
 		clr.green = 255 - parseInt(clrs[0]);
 		clr.blue = clrs.last();
-	}else if (mod == "b") {
+	}else if (mod === "b") {
 		clr.red = clrs[0];
 		clr.green = clrs[1];
 		clr.blue = 255 - parseInt(clrs.last());
-	}else if (mod == "y") {
+	}else if (mod === "y") {
 		clr.red = 255 - parseInt(clrs[0]);
 		clr.green = 255 - parseInt(clrs[1]);
 		clr.blue = clrs.last();
-	}else if (mod == "c") {
+	}else if (mod === "c") {
 		clr.red = clrs[0];
 		clr.green = 255 - parseInt(clrs[0]);
 		clr.blue = 255 - parseInt(clrs.last());
-	}else if (mod == "m") {
+	}else if (mod === "m") {
 		clr.red = 255 - parseInt(clrs[0]);
 		clr.green = clrs[1];
 		clr.blue = 255 - parseInt(clrs.last());
-	}else if (mod == "a" || mod == "f" || mod == "w") {
+	}else if (mod === "a" || mod === "f" || mod === "w") {
 		clr.red = 255 - parseInt(clrs[0]);
 		clr.green = 255 - parseInt(clrs[1]);
 		clr.blue = 255 - parseInt(clrs.last());
@@ -2566,6 +2598,7 @@ function mixedRange (min, inc, max, noRepeat) { //Like randArr but with optionna
 	}
 	return val
 }
+
 //Arr.fill(new Array(...).fill(...)) is already there
 function mkArray (len, dim, fill) { //Make an array of len^dim
 	var arr = [];
@@ -2752,7 +2785,7 @@ function toSameLength (a, b, cr) { //Make sure that a and b are of the same leng
 }
 
 function And (a, b, cr, toArr) { //Logical a&b where a and b are sets
-	toSameLength(a, b, cr|null);
+	toSameLength(a, b, cr || null);
 	var res = toArr? new Array(a.length): (a[0] && b[0]);
 	for (var i in a) {
 		if(toArr) res[i] = a[i] && b[i];
@@ -2762,7 +2795,7 @@ function And (a, b, cr, toArr) { //Logical a&b where a and b are sets
 }
 
 function Or (a, b, cr, toArr) { //Logical a|b where a and b are sets
-	toSameLength(a, b, cr|null);
+	toSameLength(a, b, cr || null);
 	var res = toArr? new Array(a.length): (a[0] || b[0]);
 	for (var i in a) {
 		if(toArr) res[i] = a[i] || b[i];
@@ -2772,7 +2805,7 @@ function Or (a, b, cr, toArr) { //Logical a|b where a and b are sets
 }
 
 function Xor (a, b, cr, toArr) { //Logical a^b where a and b are sets
-	toSameLength(a, b, cr|null);
+	toSameLength(a, b, cr || null);
 	var res = toArr? new Array(a.length): xor(a[0], b[0]);
 	for (var i in a) {
 		if(toArr) res[i] = xor(a[i], b[i]);
@@ -2782,7 +2815,7 @@ function Xor (a, b, cr, toArr) { //Logical a^b where a and b are sets
 }
 
 function Imply (a, b, cr, toArr) { //Logical a = >b where a and b are sets
-	toSameLength(a, b, cr|null);
+	toSameLength(a, b, cr || null);
 	var res = toArr? new Array(a.length): (!a[0] || b[0]);
 	for (var i in a) {
 		if(toArr) res[i] = (!a[i] || b[i]);
@@ -2792,15 +2825,15 @@ function Imply (a, b, cr, toArr) { //Logical a = >b where a and b are sets
 }
 
 function manhattanDist (a, b) { //Return the Manhattan distance between two points a(xa, ya) and b(xb, yb) where b is generally the solved position of a
-	return Math.abs(Math.abs(a[0]-b[0]) + Math.abs(a[1]-b[1]))
+	return Math.abs(Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]))
 }
 
 function euclidianDist (a, b) { //Return the Euclidian distance  ...
-	return Math.sqrt(Math.pow(a[0]-b[0], 2) + Math.pow(a[1]-b[1], 2))
+	return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2))
 }
 
 function diagDist (a, b) { //Return the Diagonal distance  ...
-	return Math.max(Math.abs(a[0]-b[0]), Math.abs(a[1]-b[1]))
+	return Math.max(Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1]))
 }
 
 function h (mtx, solvedMtx, hrt) { //(heuristic) manhattan distance of each elements of a matrix mtx
@@ -2821,7 +2854,7 @@ function lookfor (x, mtx, toCoord) { //Look for an element x in a matrix mtx
 			if(mtx[i][j] === x) return toCoord? [j, i]: [i, j]//I is the row number and j the column which oppose j being the x-coord and i the y-coord
 		}
 	}
-	return-1
+	return -1
 }
 
 function keyList (map, propOnly) { //Returns a list of keys of a map (like keys in ES6)
@@ -2947,6 +2980,7 @@ function TreeNode (pl, l, r) { //Binary tree
 		if(this.right) this.right.postOrder(t + s, s, d + 1, sym);
 		println(t + sym + this.payload + s+" (deepth = " + d+")")
 	}
+
 	//Getter
 	this.getInOrder = function (sym) {
 		if(!sym) sym = "->";
@@ -2974,18 +3008,18 @@ function TreeNode (pl, l, r) { //Binary tree
 		if(this.right) order += this.right.getPostOrder(sym);
 		return order + sym + this.payload
 	}
-		this.isLeaf = function () { //Is it an end of branch ?
-			return !this.left && !this.right
-		}
-		this.find = function (n, method) {
-			return (method.normal() === "bfs")? this.bfs(n): this.dfs(n)
-		}
-		this.dfs = function (n, d, td) { //Deepth First Search
+	this.isLeaf = function () { //Is it an end of branch ?
+		return !this.left && !this.right
+	}
+	this.find = function (n, method) {
+		return (method.normal() === "bfs")? this.bfs(n): this.dfs(n)
+	}
+	this.dfs = function (n, d, td) { //Deepth First Search
 		if(!d) d = 0//Deepth
 		if(!td) td = 0//Total deepth
-			var stack = [];
+		var stack = [];
 		stack.push(this);
-		while (stack!=[]) {
+		while (stack != []) {
 			d = 0;
 			var cur = stack.pop();
 			try{
@@ -3002,9 +3036,9 @@ function TreeNode (pl, l, r) { //Binary tree
 	this.bfs = function (n, b, tb) { //Breadth First Search
 		if(!b) b = 0//Breadth
 		if(!tb) tb = 0//Total breadth
-			var queue = [];
+		var queue = [];
 		queue.unshift(this)//Add as the end
-		while (queue!=[]) {
+		while (queue != []) {
 			b = 0;
 			var cur = queue.pop()//Get the first element of the queue
 			try{
@@ -3055,7 +3089,9 @@ function TreeNode (pl, l, r) { //Binary tree
 			try{
 				if(cur.left) queue.unshift(cur.left);
 				if(cur.right) queue.unshift(cur.right);
-			}catch(e){}
+			}catch(e){
+				Essence.say(e + " caused " + this + ".printBFS(" + sym + ") to go wrong", "err");
+			}
 		}
 		return sym
 	}
@@ -3105,8 +3141,8 @@ function Node (pl, nx, pv) {
 	
 	this.append = function (n) {
 		if (this.next === null) {
-		this.next = new Node(n) //If there is no next node, link the new one here
-		this.next.prev = this;
+			this.next = new Node(n) //If there is no next node, link the new one here
+			this.next.prev = this;
 		}else this.next.append(n) //Else, append to next node
 	}
 
@@ -3118,15 +3154,15 @@ function Node (pl, nx, pv) {
 
 	this.reverse = function () {
 		if(this.next == null) return this
-			else{
-				var newHead = this.next.reverse();
-				newHead.next = this;
-				newHead.prev = null;
-				this.prev = newHead;
-				this.next = null;
-				return newHead
-			}
+		else {
+			var newHead = this.next.reverse();
+			newHead.next = this;
+			newHead.prev = null;
+			this.prev = newHead;
+			this.next = null;
+			return newHead
 		}
+	}
 		
 	this.toString = function () {
 		return "Node(payload = " + this.payload + ", previous = " + this.prev + ", next = " + this.next + ")"
@@ -3247,8 +3283,8 @@ function NTreeNode (pl, ch) { //N-ary tree
 		return (method.normal() === "bfs")? this.bfs(n): this.dfs(n)
 	}
 	this.dfs = function (n, d, td) { //Deepth First Search
-	if(!d) d = 0//Deepth
-	if(!td) td = 0//Total deepth
+		if(!d) d = 0//Deepth
+		if(!td) td = 0//Total deepth
 		for (var c in this.childs) {
 			if(this.childs.hasOwnProperty(c)) c.dfs(n, d + 1, td++);
 		}
@@ -3257,13 +3293,13 @@ function NTreeNode (pl, ch) { //N-ary tree
 	this.bfs = function (n, b, tb) { //Breadth First Search
 		if(!b) b = 0//Breadth
 		if(!tb) tb = 0//Total breadth
-			var queue = [];
+		var queue = [];
 		queue.unshift(this)//Add as the end
-		while (queue!=[]) {
+		while (queue != []) {
 			b = 0;
 			var cur = new TreeNode(queue.pop())//Get the first element of the queue
 			if(cur.payload === n) return [b, tb]
-				if(cur.left) queue.unshift(cur.left);
+			if(cur.left) queue.unshift(cur.left);
 			if(cur.right) queue.unshift(cur.right);
 			b++;
 			tb++;
@@ -3333,14 +3369,14 @@ function Set (arr) { //Mathematical set
 	}
 	
 	this.add = function (item) {
-		if (this.value.indexOf(item) ==-1) {	
+		if (this.value.indexOf(item) == -1) {	
 			if(isType(item, "array")) this.value = this.value.concat(item);
 			else this.value.push(item)
 		}
 	}
 
 	this.remove = function (item) {
-		if (this.value.indexOf(item) ==-1) {
+		if (this.value.indexOf(item) == -1) {
 			if (isType(item, "array")) {
 				for(var i = 0; i < item.length; i++) this.remove(item[i]);
 			} else this.value = this.value.remove(item)
@@ -3360,7 +3396,7 @@ function Set (arr) { //Mathematical set
 			var c = true;
 			for (var i = 0; i < item.length; i++) {
 				if(!c) return false //Reduce the cost of the operation by not doing any unecessary work
-					c = c && this.contains(item[i]);
+				c = c && this.contains(item[i]);
 			}
 			return c
 		}else return this.value.indexOf(item) ==-1? false: true
@@ -3926,14 +3962,14 @@ function AABB (px, py, pw, ph, b, v) { //Axe Aligned Bounding Box
 		return new AABB(this.x, this.y, this.w, this.h, this.b, this.vel)
 	}
 	
-		this.concat = function (a) {
-		this.w = a.x - this.x - this.w //Or w + a.x + a.w
-		this.h = a.y - this.y - this.h //Or h + a.y + a.h
+	this.concat = function (a) {
+		this.w = a.x - this.x - this.w; //Or w + a.x + a.w
+		this.h = a.y - this.y - this.h; //Or h + a.y + a.h
 	}
 
 	this.deconcat = function (a) {
-		this.w = (a.x - this.x) / 2 //(a.x + a.w)/2
-		this.h = (a.y - this.y) / 2 //(a.y + a.h)/2
+		this.w = (a.x - this.x) / 2; //(a.x + a.w)/2
+		this.h = (a.y - this.y) / 2; //(a.y + a.h)/2
 	}
 
 	this.draw = function () {
@@ -4133,10 +4169,10 @@ function simpleTable (caption, rows, id, style, split) { //A basic html table
 		if (split) {
 			for(var j = 0; j < rows[i].length; j++) tab += "<td>" + rows[i][j] + "</td>";
 		} else  tab += "<td>" + rows[i] + "</td>";
-	tab += "</tr>";
-}
-tab += "</table><style> table{background: #000;}table, td {border: 1px solid #000; color: #000; background: #fff;} tr:nth-child(even) td{background: #ddd;} tr td:hover{background: #bbb;}</style>";
-return tab
+		tab += "</tr>";
+	}
+	tab += "</table><style> table{background: #000;}table, td {border: 1px solid #000; color: #000; background: #fff;} tr:nth-child(even) td{background: #ddd;} tr td:hover{background: #bbb;}</style>";
+	return tab
 }
 
 function rowTable (caption, headerRows, rows, id, split, style) {
@@ -4202,23 +4238,23 @@ function colourTable (caption, cols, clrs, id, split, style) { //A table with co
 	if (cols) {
 		tab += "<tr>";
 		for(var i = 0; i < cols.length; i++) tab += "<th>" + cols[i] + "</th>";
-			tab += "</tr>";
+		tab += "</tr>";
 	}
 	for (i = 0; i < clrs.length; i++) {
 		tab +="<tr>";
 		if (split) {
 			for(var j = 0; j < clrs[i].length; j++) tab += isValid(clrs[i][j], "color")? "<td style = 'background:" + clrs[i][j] + ";'><br /></td>": "<td>" + clrs[i][j] + "</td>";
 		} else tab += "<td style = 'background:" + clrs[i] + ";'><br /></td>";
-	tab +="</tr>"
-}
-tab += "</table><style > table{background: #000;}table, td, th {border: 1px solid #000; color: #000; background: #fff;} tr:nth-child(even) td{background: #ddd;} tr td:hover{background: #bbb;}</style>";
-return tab
+		tab +="</tr>"
+	}
+	tab += "</table><style > table{background: #000;}table, td, th {border: 1px solid #000; color: #000; background: #fff;} tr:nth-child(even) td{background: #ddd;} tr td:hover{background: #bbb;}</style>";
+	return tab
 }
 
 function database (name, headR, cells, headC, admin, ver) { //Local database
 	this.name = name || "Database";
 	this.headerRow = (isNon(headR))? range(0, 1, 100): headR;
-	this.content = (isNon(cells))? fillIn([], "..."): cells;
+	this.content = (isNon(cells))? [].fill("..."): cells;
 	this.headerCol = headC || ["Index", "Value"];
 	this.admin = admin || "Anonymous";
 	this.version = ver || 1.0;
@@ -4293,7 +4329,7 @@ function encrypt (txt, key) {
 		mid = (len % 2 === 0)? txt.charCodeAt(mid): (txt.charCodeAt(txt[mid-1]) + txt.charCodeAt(txt[mid]))/2;
 		if(mid >= 97 && mid <= 122) extra = 2;
 		else if(mid >= 65 && mid <= 90) extra = 1;
-		else if(mid - Math.floor(mid/2) * 2 === 0) extra =-1;
+		else if(mid - Math.floor(mid/2) * 2 === 0) extra = -1;
 		else extra = 2;
 		
 		key = Math.round((Math.pow(2, 7) + txt.sum()-48)/txt.prod()) + extra;
@@ -4455,10 +4491,9 @@ function abcDecode (txt) { //Encode the alphabet (regardless of the case) to hex
 	return Essence.say("The parameter of abcDecode must be a string or an array.", "err")
 }
 
-var nav = navigator.appName.substring(0,3), ver = navigator.appVersion.substring(0,1)
 function addFav (url, title, elmId) { //Url = http://Www...." title = "My Website"
 	var place = elmId? "#" + elmId: "body";
-	if(nav === "Mic" && ver >= 4) $e(place).write("<a href = \"#\" onClick = \"window.external.AddFavorite(" + url + ", " + title + ");return(false);\">Bookmark this webpage</a><br />", true);
+	if(navigator.appName.substring(0,3) === "Mic" && navigator.appVersion.substring(0,1) >= 4) $e(place).write("<a href = \"#\" onClick = \"window.external.AddFavorite(" + url + ", " + title + ");return(false);\">Bookmark this webpage</a><br />", true);
 	else $e(place).write("Press CTRL + D to add this webpage to your bookmarks!", true)
 }
 
@@ -4473,7 +4508,7 @@ function checkBrowser () {
 	return this
 }
 
-var BrowserDetect = {
+var BrowserDetect = { //Browser detection system
 	init: function () {
 		this.browser = this.searchString(this.dataBrowser) || "An unknown browser";
 		this.version = this.searchVersion(navigator.userAgent) || this.searchVersion(navigator.appVersion) || "an unknown version";
@@ -4532,13 +4567,12 @@ var BrowserDetect = {
 		string: navigator.platform, subString: "Linux", identity: "Linux"
 	}]
 };
-BrowserDetect.init();
+//BrowserDetect.init();
 
-var pos = 0;
 function writemsg (msg, where) { //Type a message
-	var maxl = msg.length + 10, txt;
-	while (pos < maxl) {
-		txt = msg.substring(pos,0);
+	var txt, pos = 0;
+	while (pos < msg.length + 10) {
+		txt = msg.substring(pos, 0);
 		where.write(txt);
 		pos++;
 	}
@@ -4684,37 +4718,32 @@ function server (name, admin, type, ver, mxsz) { //Content<->> database issues t
 	Essence.addServer(this)
 }
 
-var img, src, size = 0, delay = 100, nb =-1, maxDelay = 2e4//Image to load, image size, 20k ms
-
-function setupConnexionEval (imgsrc, sz, dl, dm) {
+function CECheck (id, src, sz, delay, maxDelay) { //Launch the verification of the connexion
 	window.defaultStatus = "Evalue the connexion and see the downloading speed";
-	src = imgsrc || "img/random2000x2000.jpg" || "img\\random2000x2000.jpg";
-	size = sz || 7723 * 8//7.723kB -> kb
-	delay = dl || 100;
-	nb = -1;
-	t1 = 0; t2 = 0;
-	maxDelay = dm || 2e4
+	if(!src) src = "img/random2000x2000.jpg" || "img\\random2000x2000.jpg";
+	if(!sz) sz = 7723 * 8; //7.723kB -> kb
+	if(!delay) delay = 100; //ms
+	if(!maxDelay) maxDelay = 2e4
+	var img = new Image();
+	$G["t1"] = new Date().getTime();
+	$G["t2"] = 0;
+	img.src = src + "?t1=" + $G["t1"];
+	var nb = 0;
+
+	$e("#" + slt).write("Verification in progress...");
+	setTimeout("CETimer(" + id + ", " + img + ", " + nb + ", " + delay + ", " + maxDelay + ", " + sz + ")", delay)
 }
 
-function CECheck (slt) { //Launch the verification of the connexion
-	img = new Image();
-	t1 = new Date().getTime();
-	img.src = src + "?t 1 = " + t1;
-	nb = 0;
-	$e(slt).write("Verification in progress...");
-	setTimeout("CETimer(" + slt + ")", delay)
-}
-
-function CETimer (slt) { //Connexion Evaluation Timer
+function CETimer (id, img, nb, delay, maxDelay, size) { //Connexion Evaluation Timer
 	nb++;
-	$e(slt).yxy("Verification in progress...");
-	if(nb * delay >= maxDelay) $e(slt).write(evalDownload(0))//End of the maximimun delay
+	$e("#" + id).write("Verification in progress...");
+	if(nb * delay >= maxDelay) $e("#" + id).write(evalDownload(0))//End of the maximimun delay
 	else {
 		if (img.complete) {
-			t2 = new Date().getTime();
-			$e(slt).write(evalDownload(size / (t2 - t1)));
-			console.log("[" + Date() + "] Connexion: " + (size / (t2 - t1).toNDigits(3) + " kbps"));
-		} else setTimeout("CETimer(" + slt + ")", delay);
+			$G["t2"] = new Date().getTime();
+			$e("#" + id).write(evalDownload(size / ($G["t2"] - $G["t1"])));
+			console.log("[" + Date() + "] Connexion: " + (size / ($G["t2"] - $G["t1"]).toNDigits(3) + " kbps"));
+		} else setTimeout("CETimer(" + id + ", " + img + ", " + nb + ", " + delay + ", " + maxDelay + ", " + sz + ")", delay);
 	}
 }
 /*
@@ -4745,7 +4774,6 @@ upload speed:
 	>5M, 100M>: Ethernet
 	*/
 function evalDownload (kbps) {
-	nb = -1;
 	var res = "";
 	if(kbps === 0) res = "No connexion";
 	else if(kbps > 0 && kbps <= 56) res = "Low debit";
@@ -4758,7 +4786,6 @@ function evalDownload (kbps) {
 }
 
 function evalUpload (kbps) {
-	nb =-1;
 	var res = "";
 	if(kbps === 0) res = "No connexion";
 	else if(kbps > 0 && kbps <= 56) res = "Low debit";
@@ -4769,7 +4796,6 @@ function evalUpload (kbps) {
 }
 
 function evalPing (ms) {
-	nb =-1;
 	var res = "";
 	if(ms > 0 && ms <= 30) res = "Excellent";
 	else if(ms > 30 && ms <= 60) res = "Really good";
@@ -4799,7 +4825,7 @@ var base64 = {
 		var pads, i, b10;
 		var imax = s.length;
 		if(imax === 0) return s
-			if(imax % 4 != 0) throw "Cannot decode base64";
+		if(imax % 4 != 0) throw "Cannot decode base64";
 		
 		pads = 0;
 		if (s.charAt(imax-1) === base64.PADCHAR) {
@@ -4817,13 +4843,13 @@ var base64 = {
 		
 		switch (pads) {
 			case 1: 
-			b10 = (gb64(s,i) << 18) | (gb64(s,i + 1) << 12) | (gb64(s,i + 2) << 6);
-			x.push(String.fromCharCode(b10 >> 16, (b10 >> 8) & 0xff));
-			break;
+				b10 = (gb64(s,i) << 18) | (gb64(s,i + 1) << 12) | (gb64(s,i + 2) << 6);
+				x.push(String.fromCharCode(b10 >> 16, (b10 >> 8) & 0xff));
+				break;
 			case 2: 
-			b10 = (gb64(s,i) << 18) | (gb64(s,i + 1) << 12);
-			x.push(String.fromCharCode(b10 >> 16));
-			break;
+				b10 = (gb64(s,i) << 18) | (gb64(s,i + 1) << 12);
+				x.push(String.fromCharCode(b10 >> 16));
+				break;
 		}
 		return x.join("")
 	},
@@ -4838,7 +4864,7 @@ var base64 = {
 		var alpha = this.ALPHA;
 		var gb = this.gb;
 		
-		var i, b10, x = []
+		var i, b10, x = [];
 
 		s += "";
 		
@@ -4883,7 +4909,7 @@ function msgBox (type, title, text, isHTML, style, customIcon) {
 		buttonColor: "#ccc",
 		buttonTextColor: "#000",
 		buttonTextSize: "14px",
-		buttonText: "OK",//Not really CSS related but whatever
+		buttonText: "OK"
 	}, icon = "", alt = "";
 	if (type === "info") {
 		icon = "img/info.png"; alt = "i";
@@ -4990,14 +5016,14 @@ function genPassword () { //Generate a password
 }
 
 function genHash (password) { //To fix
-	var hash = "", k = toNDigits((821-password.sum())/password.prod() * password.charCodeAt(0), 1), rest, c;
+	var hash = "", k = (821 - password.sum()) / password.prod() * password.charCodeAt(0).toNDigits(1), rest, c;
 	for (var i = 0; i < password.length; i++) {
 		rest = password.charCodeAt(i) + k.toNDigits(1) % 255;
 		//c = clamp(password.charCodeAt(i) + k, 32, 126);
 		c = Math.abs(password.charCodeAt(i) + k).toNDigits(1);
 		if(c < 32) c += 48;
-		//console.log("k = " + k+"\trest (" + password.charCodeAt(i) + "+" + k+")=" + rest + "\tc = " + c);
-		//console.log("Adjust: " + parseInt(48 + Math.round(password.charCodeAt(password.length-1)/10 + rest)));
+		//console.log("k= " + k + "\trest (" + password.charCodeAt(i) + " + " + k + ")=" + rest + "\tc=" + c);
+		//console.log("Adjust: " + parseInt(48 + Math.round(password.charCodeAt(password.length - 1) / 10 + rest)));
 		hash += String.fromCharCode(clamp(c % 127, 32, 126));
 	}
 	return hash
@@ -5024,7 +5050,7 @@ function dayOfWeek (d) { //Daniel "Kinch" Sheppard's method
 function linearGradient (clrI, clrF, n) {
 	var i = parseInt(conv(clrI, 16)), f = parseInt(conv(clrF, 16));
 	n = parseInt(n) || 10;
-	var /*s = (f - i).sign(), */grad = [], inc = (f - i)/(n - 1);
+	var /*s = (f - i).sign(), */grad = [], inc = (f - i) / (n - 1);
 	//console.log("i = " + i+"\tf = " + f+"\ns = " + s+"\ninc = " + inc);
 	for(var j = 0; j < n; j++) grad.push(conv(i + j * inc, 10, 16));
 	return grad
@@ -5135,18 +5161,18 @@ function binarySearch (list, x) { //Find if x exist in list
 	return term === x	
 }
 
-var dnM = false;
+$G["dnM"] = false;
 function daynightMode (exch) { //Switch between enabled or not for Day/Night page vision
 	var h = new Date().getHours();
-	if(exch) dnM = !dnM;
-	if (dnM) {
+	if(exch) $G["dnM"] = !$G["dnM"];
+	if ($G["dnM"]) {
 		if(h >= 21) $e("body").setStyles(["backgroundColor", "#000", "color", "#fff"]);
 		else $e("body").setStyles(["backgroundColor", "#fff", "color", "#000"]);
 	} else Essence.say("You cannot use the day/night modder if it\'s disabled.", "warn")
 }
 
 function archive (name, data) { //Compressed data using Huffman's approach while differentiating uppercase and lowercase letters
-this.name = name;
+	this.name = name;
 	this.data = data//Data to compress
 	this.dictionnary = []//Values should be in the format: letter = bitcode
 	this.updateDict = function () {
@@ -5182,7 +5208,7 @@ this.name = name;
 }
 
 function Machine (name, ver, cpy, type) {
-	//Ver (basis):= 1:binary, 2:ternary, 3:octal, 4:decimal, 5:hexadecimal, 6: base 36 
+	//ver (basis):= 1:binary, 2:ternary, 3:octal, 4:decimal, 5:hexadecimal, 6: base 36 
 	this.capacity = cpy || 1024//Pow(2, 10)bits = 128B
 	this.version = ver || 5;
 	this.name = name || "Machine_" + this.version;
@@ -5194,7 +5220,7 @@ function Machine (name, ver, cpy, type) {
 		case 4: this.base = 10; break;
 		case 5: this.base = 16; break;
 		case 6: this.base = 36; break;
-		default: this.base = 16;
+		default: this.base = 16; break;
 	}
 	
 	this.operation = function (a, b, op) {
@@ -5288,30 +5314,30 @@ function Memory (cpy, type, prefix) { //Stack memory
 	
 	this.getLocation = function (data) { //Get the memory location of a data
 		if (this.type === "local") {
-			for (i in localStorage) {
+			for (var i in localStorage) {
 				if(localStorage[i] === JSON.stringify(data)) return i
 			}
-	} else {
-		for (i in sessionStorage) {
-			if(sessionStorage[i] === JSON.stringify(data)) return i
+		} else {
+			for (i in sessionStorage) {
+				if(sessionStorage[i] === JSON.stringify(data)) return i
+			}
 		}
+		return -1
 	}
-	return -1
-}
 
-this.clear = function () {
-	this.slots = new Array(this.capacity);
-	this.free = 0;
-	if (this.type =="local") {
-		for (i in localStorage) {
-			if(i.indexOf(this.name) > -1) localStorage.removeItem(i);
-		}
-	} else {
-		for (i in sessionStorage) {
-			if(i.indexOf(this.name) > -1) sessionStorage.removeItem(i);
+	this.clear = function () {
+		this.slots = new Array(this.capacity);
+		this.free = 0;
+		if (this.type === "local") {
+			for (var i in localStorage) {
+				if(i.indexOf(this.name) > -1) localStorage.removeItem(i);
+			}
+		} else {
+			for (i in sessionStorage) {
+				if(i.indexOf(this.name) > -1) sessionStorage.removeItem(i);
+			}
 		}
 	}
-}
 
 	this.add = function (data) { //Added but not saved
 		this.slots[this.free++] = JSON.stringify(data);
@@ -5336,19 +5362,21 @@ this.clear = function () {
 	}
 	
 	this.toString = function () {
-		return this.type.capitalize() + " memory " + this.name + ": " + toStr(this.slots, true)
+		return this.type.capitalize() + " memory " + this.name + ": " + this.slots.toStr(true)
 	}
 }
 
-function EvtShow (evt) {
+function EvtShow (evt) { //Show some infos about the event
 	alert("\tName: " + evt.name + "\nsource: " + evt.source + "\ndata: " + evt.data + "\ntarget: " + evt.target + "\ntime stamp: " + evt.timeStamp)
 }
 
-function evtLog (event) {
-	for(atr in event) Essence.say(atr + ": " + event[atr]) 
+function evtLog (event) { //Event log
+	for(var atr in event){
+		if(event.hasOwnProperty(atr)) Essence.say(atr + ": " + event[atr])
+	}
 }
 
-/* function MyError(message) {
+/* function MyError(message) { //From Mozilla ?
   this.name = 'MyError';
   this.message = message || 'Default Message';
   this.stack = (new Error()).stack
@@ -5356,7 +5384,7 @@ function evtLog (event) {
 MyError.prototype = Object.create(Error.prototype);
 MyError.prototype.constructor = MyError; */
 
-function noobTest (fx, params) { //Source: https://Scontent-lhr3-1.xx.fbcdn.net/hphotos-xfl1/v/t1.0-9/12705609_1071795346206130_3757520485028328706_n.jpg?oh = cb99a4624d9732414b787f7eb8437c73&oe = 57383223
+function noobTest (fx, params) { //Source: https://scontent-lhr3-1.xx.fbcdn.net/hphotos-xfl1/v/t1.0-9/12705609_1071795346206130_3757520485028328706_n.jpg?oh = cb99a4624d9732414b787f7eb8437c73&oe = 57383223
 	try {
 		fx(params);
 	} catch(e){
@@ -5364,24 +5392,46 @@ function noobTest (fx, params) { //Source: https://Scontent-lhr3-1.xx.fbcdn.net/
 	}
 }
 
-var oldTab = "home";
+$G["oldTab"] = "home";
 function chTab (name) { //Change tabs
-	$e("#tab_" + oldTab).rmClass("tabOn");
-	$e("#tab_" + oldTab).addClass("tabOff");
+	$e("#tab_" + $G["oldTab"]).rmClass("tabOn");
+	$e("#tab_" + $G["oldTab"]).addClass("tabOff");
 	$e("#tab_" + name).rmClass("tabOff");
 	$e("#tab_" + name).addClass("tabOn");
-	$e("#contentTab_" + oldTab).style.display = "none";
+	$e("#contentTab_" + $G["oldTab"]).style.display = "none";
 	$e("#contentTab_" + name).style.display = "block";
-	oldTab = name
+	$G["oldTab"] = name
 }
 
-function animField (field) { //Animate a field that have the attribute for pointing at the id of the field
-	for (var l in $e(" * label")) {
-		if ($e(" * label").hasOwnProperty(l) && l.htmlFor == field.id) {
-			l.write(field.value);
-			field.value = "";
-		}
+function moveHTMLRange (id, n) { //Moove an HTML range left or right which was made using htmlRange
+	$e("#" + id).write(parseFloat($e("#" + id).val()) + n);
+	$e("#" + id + "_val").write($e("#" + id).val())
+}
+
+function htmlRange (id, min, val, max) { //Dynamic HTML range
+	if(!id) throw new Error("htmlRange needs to know the id of the element implementing the range");
+	Essence.addCSS(".arrow{cursor: pointer;font-size: 20px;vertical-align: middle}");
+	return "<b class=\"arrow\" onClick=\"moveHTMLRange('" + id + "', -1)\">&triangleleft;</b><input type=\"range\" value=" + (val || 0) + " max=" + (max || 100) + " min=" + (min || 0) + " id=\"" + id + "\" onChange=\"$e('#" + id + "_val').write(this.value);\" /><b class=\"arrow\" onClick=\"moveHTMLRange('" + id + "', 1)\">&triangleright;</b><span id=\"" + id + "_val\">" + (val || "") + "</span>"
+}
+
+function labelFieldSwap (id, lbl) { //HTML/JS animation swapping the field with the label
+	//If(!$e("#" + id).isEmpty() && $e("#" + id).val()!= lbl && $e("#" + id).val()!=$e("#lbl_" + id).val()) return false
+	if($e("#lbl_" + id).isEmpty()) $e("#lbl_" + id).write("&ensp;", true);
+	if ($e("#" + id).isEmpty() || $e("#" + id).val() === "\b" || ($e("#" + id).val()!= lbl && $e("#" + id).size() < 2)) { //The field isn't being filled so label inside the field
+		//Console.log("lbl inside");
+		$e("#" + id).write($e("#lbl_" + id).val());
+		$e("#lbl_" + id).write("&ensp;", true);
+	} else { //The field is being filled up so label shown and no placeholding value in the field
+		//Console.log("lbl outside");
+		$e("#lbl_" + id).write(lbl || $e("#" + id).val());
+		if($e("#" + id).val() === lbl || $e("#" + id).val() === "") $e("#" + id).write("\b");
 	}
+}
+
+function htmlInput (id, type, lbl) { //Dynamic HTML input with an animation
+	if(!id) throw new Error("htmlInput needs to know the id of the element implementing the input");
+	if(!lbl) lbl = type || id;
+	return "<label for='" + id + "' id='lbl_" + id + "'>&ensp;</label><br /><input type='" + (type || "text") + "' id='" + id + "' value='" + lbl + "' onFocus='labelFieldSwap(\"" + id + "\", \"" + lbl + "\")' onBlur='labelFieldSwap(\"" + id + "\", \"" + lbl + "\")' />"
 }
 
 function WebPage (title, name, path, author, ver, stct, type) { //Web page builder
@@ -5432,7 +5482,7 @@ function WebPage (title, name, path, author, ver, stct, type) { //Web page build
 			this.template += "<tr>";
 			var sct = cpnt.split("|");
 			for(var j = 0; j < sct.length; i++) this.template += this.word2code(sct[i]);
-				this.template += "</tr>";
+			this.template += "</tr>";
 		}
 		this.template += "</table>";
 		
@@ -5535,7 +5585,7 @@ function Editor (id, language, prev, parser, tb) {
 		}
 		this.codeHistory.update(this.code);
 		this.toolbar.update();
-		for(var i = 0; i < this.toolbar.tools.length; i++) this.toolbar.fn[i] = this[this.toolbar.tools[i]]
+		for(i = 0; i < this.toolbar.tools.length; i++) this.toolbar.fn[i] = this[this.toolbar.tools[i]]
 	}
 	this.write = function (txt) {
 		$e(this.id).after(txt);
@@ -5790,51 +5840,51 @@ function AJAXpost (data, to, xml) {
 function getHTTPMsg (status) { //Status: xhr.status
 	switch (status) {
 		//Information
-		case 100: return "Continue"; break
-		case 101: return "Switching Protocols"; break
+		case 100: return "Continue"; break;
+		case 101: return "Switching Protocols"; break;
 		//Success
-		case 200: return "OK"; break
-		case 201: return "Created"; break
-		case 202: return "Accepted"; break
-		case 203: return "Non-Authoriative Information"; break
-		case 204: return "No Content"; break
-		case 205: return "Reset Content"; break
-		case 206: return "Partial Content"; break
+		case 200: return "OK"; break;
+		case 201: return "Created"; break;
+		case 202: return "Accepted"; break;
+		case 203: return "Non-Authoriative Information"; break;
+		case 204: return "No Content"; break;
+		case 205: return "Reset Content"; break;
+		case 206: return "Partial Content"; break;
 		//Redirection
-		case 300: return "Multiple Choices"; break
-		case 301: return "Moved Permanently"; break
-		case 302: return "Found"; break
-		case 303: return "See Other"; break
-		case 304: return "Not Modified"; break
-		case 305: return "Use Proxy"; break
-		case 306: return "Unused"; break
-		case 307: return "Temporary Redirect"; break
+		case 300: return "Multiple Choices"; break;
+		case 301: return "Moved Permanently"; break;
+		case 302: return "Found"; break;
+		case 303: return "See Other"; break;
+		case 304: return "Not Modified"; break;
+		case 305: return "Use Proxy"; break;
+		case 306: return "Unused"; break;
+		case 307: return "Temporary Redirect"; break;
 		//Client error
-		case 400: return "Bad Request"; break
-		case 401: return "Unauthorized"; break
-		case 402: return "Payment Required"; break
-		case 403: return "Forbidden"; break
-		case 404: return "Not Found"; break
-		case 405: return "Method Not Allowed"; break
-		case 406: return "Not Acceptable"; break
-		case 407: return "Proxy Authentification Required"; break
-		case 408: return "Request Timeout"; break
-		case 409: return "Conflict"; break
-		case 410: return "Gone"; break
-		case 411: return "Length Required"; break
-		case 412: return "Precondition Failed"; break
-		case 413: return "Requeust Entity Too Large"; break
-		case 414: return "Request-url Too Long"; break
-		case 415: return "Bad Request"; break
-		case 416: return "Unsupported Media Type"; break
-		case 417: return "Expectation Failed"; break
+		case 400: return "Bad Request"; break;
+		case 401: return "Unauthorized"; break;
+		case 402: return "Payment Required"; break;
+		case 403: return "Forbidden"; break;
+		case 404: return "Not Found"; break;
+		case 405: return "Method Not Allowed"; break;
+		case 406: return "Not Acceptable"; break;
+		case 407: return "Proxy Authentification Required"; break;
+		case 408: return "Request Timeout"; break;
+		case 409: return "Conflict"; break;
+		case 410: return "Gone"; break;
+		case 411: return "Length Required"; break;
+		case 412: return "Precondition Failed"; break;
+		case 413: return "Requeust Entity Too Large"; break;
+		case 414: return "Request-url Too Long"; break;
+		case 415: return "Bad Request"; break;
+		case 416: return "Unsupported Media Type"; break;
+		case 417: return "Expectation Failed"; break;
 		//Server error
-		case 500: return "Internal Server Error"; break
-		case 501: return "Not Implemented"; break
-		case 502: return "Bad Gateway"; break
-		case 503: return "Service Unavailable"; break
-		case 504: return "Gateway Timeout"; break
-		case 505: return "HTTP Version Not Supported"; break
+		case 500: return "Internal Server Error"; break;
+		case 501: return "Not Implemented"; break;
+		case 502: return "Bad Gateway"; break;
+		case 503: return "Service Unavailable"; break;
+		case 504: return "Gateway Timeout"; break;
+		case 505: return "HTTP Version Not Supported"; break;
 		default: return "Unknown status"
 	}
 }
@@ -5856,37 +5906,6 @@ function Template (name, path, txt, params) { //JavaScript templating + conversi
 		if(obj) save(this.gen(obj), (name || this.name) + "." + (ext || ".js"), ext || "javascript");
 		else save(this.text, this.path, "javascript")
 	}
-}
-
-function moveHTMLRange (id, n) { //Moove an HTML range left or right which was made using htmlRange
-	$e("#" + id).write(parseFloat($e("#" + id).val()) + n);
-	$e("#" + id + "_val").write($e("#" + id).val())
-}
-
-function htmlRange (id, min, val, max) { //Dynamic HTML range
-	if(!id) throw new Error("htmlRange needs to know the id of the element implementing the range");
-	Essence.addCSS(".arrow{cursor: pointer;font-size: 20px;vertical-align: middle}");
-	return "<b class = \"arrow\" onClick = \"moveHTMLRange('" + id + "',-1)\">&triangleleft;</b><input type = \"range\" value = " + (val || 0) + " max = " + (max || 100) + " min = " + (min || 0) + " id = \"" + id + "\" onChange = \"$e('#" + id + "_val').write(this.value);\" /><b class = \"arrow\" onClick = \"moveHTMLRange('" + id + "', 1)\">&triangleright;</b><span id = \"" + id + "_val\">" + (val || "") + '</span>'
-}
-
-function labelFieldSwap (id, lbl) { //HTML/JS animation swapping the field with the label
-	//If(!$e("#" + id).isEmpty() && $e("#" + id).val()!= lbl && $e("#" + id).val()!=$e("#lbl_" + id).val()) return false
-	if($e("#lbl_" + id).isEmpty()) $e("#lbl_" + id).write("&ensp;", true);
-	if ($e("#" + id).isEmpty() || $e("#" + id).val() === "\b" || ($e("#" + id).val()!= lbl && $e("#" + id).size() < 2)) { //The field isn't being filled so label inside the field
-		//Console.log("lbl inside");
-		$e("#" + id).write($e("#lbl_" + id).val());
-		$e("#lbl_" + id).write("&ensp;", true);
-	} else { //The field is being filled up so label shown and no placeholding value in the field
-		//Console.log("lbl outside");
-		$e("#lbl_" + id).write(lbl || $e("#" + id).val());
-		if($e("#" + id).val() === lbl || $e("#" + id).val() === "") $e("#" + id).write("\b");
-	}
-}
-
-function htmlInput (id, type, lbl) { //Dynamic HTML input with an animation
-	if(!id) throw new Error("htmlInput needs to know the id of the element implementing the input");
-	if(!lbl) lbl = type || id;
-	return "<label for = '" + id + "' id = 'lbl_" + id + "'>&ensp;</label><br /><input type = '" + (type || "text") + "' id = '" + id + "' value = '" + lbl + "' onFocus = 'labelFieldSwap(\"" + id + "\", \"" + lbl + "\")' onBlur = 'labelFieldSwap(\"" + id + "\", \"" + lbl + "\")' />"
 }
 
 var Sys = { //System
