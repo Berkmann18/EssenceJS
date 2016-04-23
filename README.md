@@ -37,7 +37,6 @@ Some ideas to add:
 -	Streams which are like Arrays but: Stream(initial_val, formula, data[], next(): /\*push an element into the data using the last value of the data as a parameter/variable of the formula\*/)
 -	Object.compareTo() ?
 -	Colour.getColourName()
--	$G["global var"] ?
 -	console.log/Essence.say styling using %c, "color: ..."
 -	Add: select, datetime, datetime-local, time, month, range, search, week, url; to validate()
 -	Custom errors ?
