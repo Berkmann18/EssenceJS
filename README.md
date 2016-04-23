@@ -27,7 +27,6 @@ Some ideas to add:
 -	Brute force equation solver
 -	Colour.getColourName() (prototype already placed)
 -	Algebraic formula to truth table
--	Array.random(n) returning n random elements of the array
 -	Something like Java's System.in that allows the code to grab the user's input without having to use JS prompt, contentEditable or HTML's input/textarea fields
 -	Parser for MIPS, Batch, Java, Python to DHTML/PHP and eventually to MIPS
 -	Heap
@@ -36,9 +35,15 @@ Some ideas to add:
 -	greyish hover effect for rows/columns headers that would highlight the whole row/column
 -	Essence.say("... ?", "quest")/Essence.ask("... ?") corresponding with Sys.in to get the user input
 -	Streams which are like Arrays but: Stream(initial_val, formula, data[], next(): /\*push an element into the data using the last value of the data as a parameter/variable of the formula\*/)
+-	Object.compareTo() ?
+-	Colour.getColourName()
+-	$G["global var"] ?
+-	console.log/Essence.say styling using %c, "color: ..."
+-	Add: select, datetime, datetime-local, time, month, range, search, week, url; to validate()
+-	Custom errors ?
 
 To fix/continue:
--	Huffman based data archieving (creating archive objs that takes datas and keep a dictionnary with the terms and binary versions)
+-	Huffman based data archieving (creating archive objects that takes datas and keep a dictionnary with the terms and binary versions)
 -	Path finding using A*\IDA* with Euclidian/Manhattan
 -	Cumultative probability
 -	Webpage templating
@@ -47,8 +52,6 @@ To fix/continue:
 -	Server.data
 -	UnescapeHTML()
 -	maxSort()
--	mixedRange()
--	alphabetSort()
 -	Hours/mins of s2time
 -	Array.remove must affect the initial array in order for multiple removal to work
 -	Array.getOccurences()
