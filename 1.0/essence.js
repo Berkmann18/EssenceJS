@@ -1877,19 +1877,19 @@ function mapLinear (x, a1, a2, b1, b2) { //Linear mapping from range <a1, a2> to
 	return b1 + (x-a1) * (b2-b1)/(a2-a1)
 }
 
-function degToRad (deg) { //Degree to radiant
+function deg2Rad (deg) { //Degree to radiant
 	return deg * Essence.d2r
 }
 
-function radToDeg (rad) { //Radiant to degree
+function rad2Deg (rad) { //Radiant to degree
 	return rad * Essence.r2d
 }
 
-function celsToFahr (cel) { //Celsus to fahrenheit
+function cels2Fahr (cel) { //Celsus to fahrenheit
 	return 33.8 * cel
 }
 
-function fahrToCels (fahr) { //Fahrenheit to celsius
+function fahr2Cels (fahr) { //Fahrenheit to celsius
 	return fahr / 33.8
 }
 
@@ -2457,7 +2457,7 @@ function negateColour (elmt, attr, mod) { //Switch the colour of the elmt's attr
 	$e(elmt).setCSS(attr, clr.hex)
 }
 
-function colourNameToHex (clr) { //Get the hexadecimal equivalent of the colour names
+function colourName2Hex (clr) { //Get the hexadecimal equivalent of the colour names
 	switch (clr.normal()) {
 		case "aqua": return "#00ffff"; 
 		case "cyan": return "#00ffff"; 
@@ -2571,7 +2571,7 @@ function range (min, inc, max) { //Matlab min:inc:max range
 	return val
 }
 
-function rangeToBase (min, inc, max, b) { //Same as range(...) but to the base b
+function range2Base (min, inc, max, b) { //Same as range(...) but to the base b
 	var val = [], n = 0;
 	if (inc > 0) {
 		for(var i = min; i <= max; i += inc) val[n++] = conv(i, 10, b);
@@ -2594,7 +2594,7 @@ function letterArray (first, last) { //A letter pair array
 	return arr
 }
 
-function mixedRange (min, inc, max, noRepeat) { //Like randArr but with optionnaly unique values and using a Fisher Yates-like approach
+function mixedRange (min, inc, max, noRepeat) { //Like Array.rand() but with optionnaly unique values and using a Fisher Yates-like approach
 	var val = [], available = range(min, inc, max);
 	if (noRepeat) {
 		while (available.length > 0) {
@@ -2712,11 +2712,11 @@ function vectorProd (v1, v2) { //V1 x v2
 	return prod[0] + "i + "+ prod[1] + "j + "+ prod.last() + "k"
 }
 
-function vectorToPoint (v) { //Get the conversion of the vector to a point
+function vector2Point (v) { //Get the conversion of the vector to a point
 	return new Pt(v.x, v.y, v.z)
 }
 
-function vectorToPointForm (r) { //R = xi + yj + zk->(x, y, z)
+function vector2PointForm (r) { //R = xi + yj + zk->(x, y, z)
 	return "(" + (r.split("i")[0]).clean() + ", " + (r.split("i")[1].split("j")[0].slice(1, r.split("i")[1].split("j")[0].length)).clean() + ", " + (r.split("i")[1].split("j")[1].split("k")[0]).clean() + ")";
 }
 function scalarProd (v1, v2) { //V1.v2 (same as the dot product but for vectors)
@@ -3377,14 +3377,14 @@ function Set (arr) { //Mathematical set
 	}
 	
 	this.add = function (item) {
-		if (this.value.indexOf(item) == -1) {	
+		if (this.value.indexOf(item) === -1) {	
 			if(isType(item, "array")) this.value = this.value.concat(item);
 			else this.value.push(item)
 		}
 	}
 
 	this.remove = function (item) {
-		if (this.value.indexOf(item) == -1) {
+		if (this.value.indexOf(item) !== -1) {
 			if (isType(item, "array")) {
 				for(var i = 0; i < item.length; i++) this.remove(item[i]);
 			} else this.value = this.value.remove(item)
@@ -4577,7 +4577,7 @@ var BrowserDetect = { //Browser detection system
 };
 //BrowserDetect.init();
 
-function writemsg (msg, where) { //Type a message
+function writeMsg (msg, where) { //Type a message
 	var txt, pos = 0;
 	while (pos < msg.length + 10) {
 		txt = msg.substring(pos, 0);
@@ -5502,7 +5502,7 @@ function WebPage (title, name, path, author, ver, stct, type) { //Web page build
 	}
 }
 
-function WebAppBuilder (name, path, author, ver, stct) {
+function WebApp (name, path, author, ver, stct) {
 	this.name = name || "Web App";
 	this.path = path || "";
 	this.version = ver || 1.0;
@@ -5627,7 +5627,7 @@ function Editor (id, language, prev, parser, tb) {
 		var file = prompt("File: ", ".ws");
 		this.clear();
 		getFileContent(file);
-		$e(this.id).write(fct)
+		$e(this.id).write($G["fct"])
 	}
 	this.generate = function () { //Save the parsed code
 		if(this.previewer) /\<\?php([\s\S] * ?)\?\>/.test($e(this.id).val())? save($e(this.previewer.id).val(true), "script" + getTimestamp() + ".php", "php"): save($e(this.previewer.id).val(true), "script" + getTimestamp() + ".html", "html");
@@ -5704,7 +5704,7 @@ function Preview (id, language, parser, editor) {
 		$e(this.id).write(parseFirst? this.associatedParser.run(txt): txt, true)
 	}
 	this.viewCode = function () {
-		var win = open("", "Resulting code", "width = 800,height = 600,location = no,menubar = yes,scrollbars = yes,status = no,toolbar = yes"), code = escapeHTML($e(wsIDE.preview.id).val(true));
+		var win = open("", "Resulting code", "width = 800,height = 600,location = no,menubar = yes,scrollbars = yes,status = no,toolbar = yes"), code = escapeHTML($e(this.id).val(true));
 		code = code.replace(/\n/g, "<br />");
 		code = code.replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		win.document.write(this.associatedEditor.highlightSynthax(code, this.language));
@@ -5724,9 +5724,7 @@ function Debugger (id, language) {
 	}
 }
 
-function lorem () { //Dummy text !!
-	return "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,"
-}
+$G["lorem"] = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,"
 
 function Parser (from, to, customParse) {
 	this.from = from|"WebScript";
@@ -5740,9 +5738,8 @@ function Parser (from, to, customParse) {
 		res = res.replace(/\<error\>(. * ?)\<\/error\>/gm, "<span class = 'block error'>$1</span>");
 		res = res.replace(/\<warning\>(. * ?)\<\/warning\>/gm, "<span class = 'block warning'>$1</span>");
 		res = res.replace(/\<success\>(. * ?)\<\/success\>/gm, "<span class = 'block success'>$1</span>");
-		if(!lorem) lorem = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,";
-		res = res.replace(/(\{\{)LOREM(\}\})/ig, lorem);
-		res = res.replace(/(?:\{\{)LOREM\x7c(\d + )-(\d + )(?:\}\})/ig, lorem.chunk("$1", "$2"));
+		res = res.replace(/(\{\{)LOREM(\}\})/ig, $G["lorem"]);
+		res = res.replace(/(?:\{\{)LOREM\x7c(\d + )-(\d + )(?:\}\})/ig, $G["lorem"].chunk("$1", "$2"));
 		res = res.replace(/(?:\{\{)HW(?:\}\})/ig, "Hello World !");
 		res = res.replace(/\<icon \/\>/gm, "<img src = 'img/icon.png' class = 'icon'/>");
 		res = res.replace(/\<icon size = (?:\"|\')(\w + )(?:\"|\') \/\>/gm, "<img src = 'img/icon.png' class = 'icon' style = 'width: $1; height: $1;' />");
@@ -5823,7 +5820,7 @@ function loadDoc (url, callback) {
 }
 
 function AJAXpost (data, to, xml) {
-	var xhr =   window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP"), res;
+	var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP"), res;
 	xhr.onreadystatechange = function () {
 		//Request complete and HTTP OK response
 		/* readyStates
