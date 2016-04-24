@@ -1105,6 +1105,14 @@ Array.prototype.isSorted = function() { //Check if the array is sorted
 	return true
 }
 
+Array.prototype.uniquePush = function(obj) { //Post-init duplicate safe push
+	if(isType(obj, "Array")){
+		for (var i = 0; i < obj.length; i++) {
+			if(this.indexOf(obj[i]) === -1) this.push(obj[i]);
+		}
+	} else if(this.indexOf(obj) > -1) throw "the object " + obj.toString() + "is already present in " + this.toString();
+};
+
 String.prototype.remove = function (c) { //Remove c from the string
 	var str = this;
 	if (isType(c, "Array")) {
