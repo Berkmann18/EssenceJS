@@ -1627,6 +1627,10 @@ function stripPath (path) { //Keeps the file name even if it's not in the same d
 	return path.split("/")[path.split("/").length-1]
 }
 
+function getFilename(withExt) { //Get the name of the current file
+	return withExt? stripPath(location.pathname): stripPath(location.pathname).get(-stripPath(location.pathname).lastIndexOf(".")-1);
+}
+
 function getLocalPath (path, localPath) { //A bit like stripPath but which would preserve the directories that aren't listed in the local path
 	if(!localPath) localPath = "file:///";
 	var parts = path.split("/"), res = "", pParts = localPath.split("/"), i = 0, j = 0;
