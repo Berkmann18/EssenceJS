@@ -7,7 +7,7 @@ var Essence = {
 	source: (document.URL.indexOf("essence.min.js")>-1)? "https://Www.dropbox.com/s/1prjdvv9ku0ga92/essence.min.js?dl=0": "https://Www.dropbox.com/s/n2sz2mxz5zwc05t/essence.js?dl=0",
 	element: $n,
 	handleError: function (msg, url, line) {
-		alert("[Essence.js] An error has occurred (line " + line + " of " + url + ").\n\nMessage: " + msg)
+		getType(msg, "Error")? alert("[Essence.js] An error has occurred (line/column " + msg.lineNumber + "/" + msg.columnNumber + " of " + msg.fileName + ").\n\nMessage: " + msg.stack()): alert("[Essence.js] An error has occurred (line " + line + " of " + url + ").\n\nMessage: " + msg)
 	}, say: function (msg, type) { //Say something in the console
 		type = (isNon(type))? "": type.slice(0, 4).toLowerCase();
 		if(type === "info") console.info(" %c[Essence.js] %c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
