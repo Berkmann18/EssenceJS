@@ -1111,7 +1111,15 @@ Array.prototype.uniquePush = function(obj) { //Post-init duplicate safe push
 			if(this.indexOf(obj[i]) === -1) this.push(obj[i]);
 		}
 	} else if(this.indexOf(obj) > -1) throw "the object " + obj.toString() + "is already present in " + this.toString();
-};
+}
+
+Array.prototype.replaceAll = function(str, nstr) { //Replace every occurrences of str instead of just the first one
+	var res = this.replace(str, nstr);
+	while (res.indexOf(str) > -1) {
+		res = this.replace(str, nstr);
+	}
+	return res;
+}
 
 String.prototype.remove = function (c) { //Remove c from the string
 	var str = this;
@@ -1229,6 +1237,14 @@ String.prototype.unzip = function (noPairs) { //Decompress the string (when bein
 		else res += this[i];
 	}
 	return noPairs? res.split("").join(""): res;
+}
+
+String.prototype.replaceAll = function(str, nstr) { //Replace every occurrences of str instead of just the first one
+	var res = this.replace(str, nstr);
+	while (res.indexOf(str) > -1) {
+		res = this.replace(str, nstr);
+	}
+	return res;
 }
 
 Number.prototype.length = function () { //Count how many digits is in x (including seperatly the decimales when there's some)
@@ -5901,14 +5917,15 @@ function getHTTPMsg (status) { //Status: xhr.status
 function Template (name, path, txt, params) { //JavaScript templating + conversion
 	this.name = name || "Template";
 	this.path = path || this.name + ".jst";
-	this.params = params || ["name", "description", "version", "title", "path"]//{{params}}
-	this.special = ["tab", "date", "time", "timestamp"]// % special%
+	this.params = params || ["name", "description", "version", "title", "path"] //{{params}}
+	this.special = ["tab", "date", "time", "timestamp"] // %special%
 	this.specialEq = ["&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", getDate(), getTime(), getTimestamp()];
-	this.text = txt || ""//Text/code containing the {{params}}
+	this.text = txt || ""; //Text/code containing the {{params}}
 	this.gen = function (obj) { //Generate a text/code from the template using the keys of the object
 		var res = this.text, k = keyList(obj, true);
-		for(var i = 0; i < k.length; i++) res = res.replace("{{" + k[i] + "}}", obj[k[i]]);
-		for(i = 0; i < this.special.length; i++) res = res.replace(" % "+ this.special[i] + "%", this.specialEq[i]);
+		for(var i = 0; i < k.length; i++) res = res.replaceAll("{{" + k[i] + "}}", obj[k[i]]);
+		if(res.index)
+		for(i = 0; i < this.special.length; i++) res = res.replaceAll(" % "+ this.special[i] + "%", this.specialEq[i]);
 		return res
 	}
 	this.save = function (obj, name, ext) { //Save the template into a file or the converted version
