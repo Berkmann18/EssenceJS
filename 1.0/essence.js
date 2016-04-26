@@ -81,10 +81,12 @@ var Essence = {
 		$G["t2"] = $G["t2"].getSeconds() * 1000 + $G["t2"].getMilliseconds();
 		$G["t"] = ($G["t2"] - $G["t1"] > 1000)? ($G["t2"] - $G["t1"])/1000 + "s": ($G["t2"] - $G["t1"]) + "ms";
 		Essence.say("Page loaded in " + $G["t"], "succ");
+	}, time: function(msg) { //Like Essence.say(msg) but with the timestamp
+		console.log("[%c" + getTimestamp(true) + "%c] "+msg, "color: #f00;", "color: #000;")
 	}
 }
 
-var $G = { //Globals won't be globals !
+var $G = { //Globals won't be globals !!
 	t1: new Date(),
 	t2: 0,
 	t: null
@@ -469,11 +471,16 @@ Array.prototype.debug = function () { //Display in the console each elements of 
 	for(var i = 0; i < this.length; i++) Essence.say(i + ": " + this[i])
 }
 
-Array.prototype.getOccurences = function () { //Gets the number of occurences of each characters in a string or each elements in an array
+Array.prototype.getOccurences = function (simplified) { //Gets the number of occurences of each elements in an array as well as the positions of each occurence
 	var arr = rmDuplicates(this), res = [];
 	for (var i = 0; i < arr.length; i++) {
-		res.push(arr[i] + ":" + this.count(arr[i]) + "[" + this.positions(arr[i]).toStr(true) + "]");
-		Essence.say(arr[i] + ": " + this.positions(arr[i]).toStr(true));
+		res.push(arr[i] + ":" + this.count(arr[i]) + "{" + this.positions(arr[i]).toStr(true) + "}");
+		//Essence.say(arr[i] + ": " + this.positions(arr[i]).toStr(true));
+	}
+	if (simplified) {
+		for (i = 0; i < res.length; i++) {
+			res[i] = parseInt(res[i].replace(/(?:.*?)\:(\d+)\{(.*?)\}/g, "$1"));
+		}
 	}
 	return res
 }
@@ -1114,9 +1121,10 @@ Array.prototype.uniquePush = function(obj) { //Post-init duplicate safe push
 }
 
 Array.prototype.replaceAll = function(str, nstr) { //Replace every occurrences of str instead of just the first one
-	var res = this.replace(str, nstr);
-	while (res.indexOf(str) > -1) {
+	var res = this.replace(str, nstr), i = 0;
+	while (res.indexOf(str) > -1 || i === this.length) {
 		res = this.replace(str, nstr);
+		i++;
 	}
 	return res;
 }
@@ -1189,21 +1197,7 @@ String.prototype.normal = function () { //More efficient codewise than a trim
 	return this.toLowerCase().remove(" ")
 }
 
-String.prototype.getOccurences = function () { //Gets the number of occurences of each characters in a string or each elements in an array
-	var arr = rmDuplicates(this), res = [];
-	for (var i in arr) {
-		if (arr.hasOwnProperty(i)) {
-			res.push(arr[i] + ":" + this.count(arr[i]) + "{" + this.positions(arr[i]).toStr(true) + "}");
-			Essence.say(arr[i] + ": " + this.positions(arr[i]).toStr(true));
-		}
-	}
-	return res
-}
-
-String.prototype.chunk = function (s, e) { //Split the string into chunks
-	if(e < 0) e = this.split(" ").length + e - 1;
-	return this.split(" ").get(parseInt(s), parseInt(e)).join(" ")
-}
+String.prototype.getOccurences = Array.prototype.getOccurences;
 
 String.prototype.get = function (start, end) { //Get the sub-string starting at the start index and ending at the end index (no trickness from substr/substring)
 	var res = "";
@@ -1239,12 +1233,14 @@ String.prototype.unzip = function (noPairs) { //Decompress the string (when bein
 	return noPairs? res.split("").join(""): res;
 }
 
-String.prototype.replaceAll = function(str, nstr) { //Replace every occurrences of str instead of just the first one
-	var res = this.replace(str, nstr);
-	while (res.indexOf(str) > -1) {
+String.prototype.replaceAll = function(str, nstr, sep) { //Replace every occurrences of str instead of just the first one
+	//caution: do not use with sep = ("" || false) when str.length > 1 as it will run into an infinite loop and eventually crash the script
+	var res = sep? this.split(sep).replace(str, nstr) : this.replace(str, nstr), i = 0;
+	while (res.indexOf(str) > -1 || i === this.length) { //Look up the occurrences until there's none of them left or the interpreter reached the end
 		res = this.replace(str, nstr);
+		i++;
 	}
-	return res;
+	return sep? res.join(sep): res;
 }
 
 Number.prototype.length = function () { //Count how many digits is in x (including seperatly the decimales when there's some)
@@ -1749,61 +1745,39 @@ function dec2min (dec) {
 	return (30 * dec)/50
 }
 
-function toS (i, withH, unformat) { //Hr:min:s.ms->s
+function toS (i, withH) { //h:min:s.ms->s
 	if(!i) i = withH? "00:00:00.000": "00:00.000";//Avoid having errors
 	if(!isType(i, "String")) i += "";
-	if(i.length >= 4 && i.indexOf(":") == 1) return toS("0" + i, withH, unformat) //So times without the leading 0 or simply with a 1-digit first section could be read properly
+	if(i.length >= 4 && i.indexOf(":") == 1) return toS("0" + i, withH) //So times without the leading 0 or simply with a 1-digit first section could be read properly
+	
+	var t = i.split(":");
+
 	if (withH) {
 		var h, m, s, ms; //Any parts that need to be extracted
-		h = i.slice(0, 2); //The first section: hour
-		m = i.slice(3, 5); //The second section: min
-		s = i.slice(6, 8); //The third section: sec
-		h = parseInt(h); //Keep it as an int
-		m = parseInt(m);
-		s = parseInt(s);
-		ms = i.slice(8, i.length); //The last section: ms
-		ms = parseInt(ms * 1000) //Round it to avoid having too much digits and being at the right distance of the point
-		ms = (ms < 100 && ms[0]!= 0)? "0" + ms: ms;
-		s += ms * 0.001; //Collapse the sec and ms together
-		s += "";
-		s.split(".")[0] = s.split(".")[0].toNDigits();
-		if(s.length > 6) s = s.slice(0, 5) || i.split(":")[1]; //Avoid having a malformatting
-		var r = ((h * 360 + m*60 + Math.floor(s * 1000) / 1000) + "").slice(0, 7);
-		if(unformat) return parseFloat(r) //Return the time into seconds keeping the milliseconds
-		else return parseFloat(r.toNDigits()) //Keep it as an int with 7 characters
+		h = parseInt(t[0]); //The first section: hour
+		m = parseInt(t[1]); //The second section: min
+		s = parseFloat(t[2]); //The third section: sec
+		return h * 3600 + m * 60 + s.toNDec();
 	} else {
-		m = i.slice(0, 2); //The first section: min
-		m = parseInt(m); //Keep it as an int
-		s = i.slice(3, 5); //The second section: sec
-		s = parseInt(s);
-		ms = i.slice(5, i.length); //The last section: ms
-		ms = parseInt(ms * 1000) //Round it to avoid having too much digits and being at the right distance of the point
-		ms = (ms < 100 && ms[0] != 0)? "0" + ms: ms;
-		s += ms * 0.001; //Collapse the sec and ms together
-		s +="";
-		s.split(".")[0] = s.split(".")[0].toNDigits();
-		if(s.length > 6) s = s.slice(0, 5) || i.split(":")[1]; //Avoid having a malformatting
-		r = ((m * 60 + Math.floor(s * 1000) / 1000) + "").slice(0, 7);
-		if(unformat) return parseFloat(r) //Return the time into seconds keeping the milliseconds
-		else return parseFloat(r.toNDigits()) //Keep it as an int with 7 characters
+		m = parseInt(t[0]); //The first section: min
+		s = parseFloat(t[1]); //The second section: sec
+		return m * 60 + s;
 	}
 }
+
 function sec2time (i, withH) { //Invert of toS(i)
 	var h = 0, m = 0, s = i; //Min = 0 to avoid incrementing an unvalued variable and s the time in seconds
 	if (withH) {
-		s = (i % 60).toNDigits(3);
-		h = (i >= 3600)? Math.floor(i/3600): 0;
-		m = Math.floor((i-s- 3600 * h)/60);
-		s = (s + "").slice(0, 6);
+		s = (i % 60).toNDigits();
+		h = (i >= 3600)? Math.floor(i / 3600): 0;
+		m = Math.floor((i - s - 3600 * h) / 60);
 		m = (m <= 0)? "00": m.toNDigits();
 		h = (h <= 0)? "00": h.toNDigits();
-		return (h <= 0)? m + ":" + s: h + ":" + m+":" + s
+		return h + ":" + m+":" + s.get(0, Math.min(4, s.length-1))
 	} else {
-		s = (i % 60).toNDigits(3);
-		m = Math.floor(i/60);
-		s = (s + "").slice(0, 6);
-		m = (m <= 0)? "00": m.toNDigits();
-		return (m <= 0)? s: m + ":" + s//Return the result as min:s.ms
+		s = (i % 60).toNDigits();
+		m = Math.floor(i / 60).toNDigits();
+		return (m <= 0)? s: m + ":" + s.get(0, Math.min(4, s.length-1)) //Return the result as min:s.ms
 	}
 }
 /* *
@@ -1818,7 +1792,7 @@ function markConv (mark, initTotal, endTotal, precision) { //To get mark/initTot
 
 function nthroot (x, n, nDec) { //Nth-root of x
 	var r = x/2;
-	for(var i = 0; i < 60; i++) r +=(x-Math.pow(r, n))/(Math.pow(r + 1, n)-Math.pow(r, n));
+	for(var i = 0; i < 60; i++) r += (x - Math.pow(r, n)) / (Math.pow(r + 1, n) - Math.pow(r, n));
 	return r.toNDec(nDec || 20)
 }
 
@@ -1897,19 +1871,19 @@ function mapLinear (x, a1, a2, b1, b2) { //Linear mapping from range <a1, a2> to
 	return b1 + (x-a1) * (b2-b1)/(a2-a1)
 }
 
-function deg2Rad (deg) { //Degree to radiant
+function deg2rad (deg) { //Degree to radiant
 	return deg * Essence.d2r
 }
 
-function rad2Deg (rad) { //Radiant to degree
+function rad2deg (rad) { //Radiant to degree
 	return rad * Essence.r2d
 }
 
-function cels2Fahr (cel) { //Celsus to fahrenheit
+function cels2fahr (cel) { //Celsus to fahrenheit
 	return 33.8 * cel
 }
 
-function fahr2Cels (fahr) { //Fahrenheit to celsius
+function fahr2cels (fahr) { //Fahrenheit to celsius
 	return fahr / 33.8
 }
 
@@ -1929,20 +1903,26 @@ function primeCheck (a, b) { //Check the primeness of a toward b
 	else return false
 }
 
-function getClosestRoot (x, n) { //Get the closest whole nth-root of x 
+function getClosestRoot (x, n) { //Get the closest whole nth-root of x
+	if(!x) Essence.say("x must be initiated");
+	if(!n) n = 2;
 	var rof = 0, er = 0;
-	if((x/2 * x/2)/2-2 <= x) rof = x/2;
-	else if(x/3 * x/3 <= x) rof = x/3;
+	
+	if((x / 2 * x / 2) / 2 - 2 <= x) rof = x / 2;
+	else if(x / 3 * x / 3 <= x) rof = x / 3;
+	else rof = x / 4;
+	if(Math.pow(rof, n) === x) return rof;
+
 	for (var p = 1; p <= n; p++) {
 		for (var i = 1; i < x; i++) {
-			if(Math.pow(i, p) === x || Math.pow(i, p-1) * i === x) er = i;
-			else if(Math.pow(i, p) > x || Math.pow(i, p-1) * i > x) er = i - .5;
+			if(Math.pow(i, p) === x || Math.pow(i, p - 1) * i === x) er = i;
+			else if(Math.pow(i, p) > x || Math.pow(i, p - 1) * i > x) er = i - .5;
 		}
 	}
 	if(Math.pow(er, n) <= x) return er
-	else er = (Math.pow(n,-2) + x/Math.pow(n, 4)-x/Math.pow(n, 5) + Math.pow(x, n)/(Math.pow(n, Math.pow(n, 3) + 3)) + x/Math.pow(n, 2))/2;
-	if(Math.pow(er, n)>x) er = (er + rof)/2;
-	return (x/er + er)/2
+	else er = (Math.pow(n, -2) + x / Math.pow(n, 4)-x / Math.pow(n, 5) + Math.pow(x, n) / (Math.pow(n, Math.pow(n, 3) + 3)) + x / Math.pow(n, 2)) / 2;
+	if(Math.pow(er, n) > x) er = (er + rof) / 2;
+	return (x / er + er) / 2
 }
 
 function simpleInterest (po, i, t) {
@@ -2261,8 +2241,8 @@ function getDate (short) { //ddMMM
 	return short? d.getDate().toNDigits() + m[d.getMonth()] + d.getUTCFullYear(): d.getDate().toNDigits() + "/" + d.getMonth().toNDigits() + "/" + d.getUTCFullYear()
 }
 
-function getTimestamp () { //ddMMM-hh-mm-ss
-	return getDate(true) + "-" + getTime().replace(/\:/g, "-")
+function getTimestamp (readable) { //dd/MM/yyyy hh:mm:ss | ddMMM-hh-mm-ss
+	return readable? getDate() + " " + getTime(): getDate(true) + "-" + getTime().replace(/\:/g, "-")
 }
 
 function asciiTable(start, end) { //ASCII table
@@ -4748,18 +4728,17 @@ function server (name, admin, type, ver, mxsz) { //Content<->> database issues t
 
 function CECheck (id, src, sz, delay, maxDelay) { //Launch the verification of the connexion
 	window.defaultStatus = "Evalue the connexion and see the downloading speed";
-	if(!src) src = "img/random2000x2000.jpg" || "img\\random2000x2000.jpg";
-	if(!sz) sz = 7723 * 8; //7.723kB -> kb
+	if(!src) src = "img/random2000x2000.jpg";
+	if(!sz) sz = 61784; //7.723kB -> kb
 	if(!delay) delay = 100; //ms
 	if(!maxDelay) maxDelay = 2e4
 	var img = new Image();
 	$G["t1"] = new Date().getTime();
 	$G["t2"] = 0;
-	img.src = src + "?t1=" + $G["t1"];
-	var nb = 0;
+	img.src = src + "?t1=" + $G["t1"]; //To prevent the browser to load a cached version of the image
 
-	$e("#" + slt).write("Verification in progress...");
-	setTimeout("CETimer(" + id + ", " + img + ", " + nb + ", " + delay + ", " + maxDelay + ", " + sz + ")", delay)
+	$e("#" + id).write("Verification in progress...");
+	setTimeout("CETimer('" + id + "', '" + img + "', 0, " + delay + ", " + maxDelay + ", " + sz + ")", delay); //Uncaught SyntaxError: Unexpected identifier
 }
 
 function CETimer (id, img, nb, delay, maxDelay, size) { //Connexion Evaluation Timer
@@ -4770,8 +4749,8 @@ function CETimer (id, img, nb, delay, maxDelay, size) { //Connexion Evaluation T
 		if (img.complete) {
 			$G["t2"] = new Date().getTime();
 			$e("#" + id).write(evalDownload(size / ($G["t2"] - $G["t1"])));
-			console.log("[" + Date() + "] Connexion: " + (size / ($G["t2"] - $G["t1"]).toNDigits(3) + " kbps"));
-		} else setTimeout("CETimer(" + id + ", " + img + ", " + nb + ", " + delay + ", " + maxDelay + ", " + sz + ")", delay);
+			Essence.time("Connexion: " + (size / ($G["t2"] - $G["t1"]).toNDigits(3) + " kbps"));
+		} else setTimeout("CETimer(" + id + ", " + img + ", " + nb + ", " + delay + ", " + maxDelay + ", " + size + ")", delay);
 	}
 }
 /*
@@ -5165,6 +5144,10 @@ function alphabetSort (x) { //Sort alphabetically the elements in x
 	return res.trimAll("r")
 }
 
+function occurenceSort(arr) { //Sort the array from the most occurred element to the least the occured one
+	var count = arr.getOccurences(true);
+}
+
 function timeUp (act, pref, params) { //Time how long act() will take to be fully executed
 	var t1 = new Date(), t2 = 0;
 	t1 = (t1.getMinutes() * 60 + t1.getSeconds()) * 1000 + t1.getMilliseconds();
@@ -5199,17 +5182,17 @@ function daynightMode (exch) { //Switch between enabled or not for Day/Night pag
 	} else Essence.say("You cannot use the day/night modder if it\'s disabled.", "warn")
 }
 
-function archive (name, data) { //Compressed data using Huffman's approach while differentiating uppercase and lowercase letters
-	this.name = name;
-	this.data = data//Data to compress
-	this.dictionnary = []//Values should be in the format: letter = bitcode
+function Archive (name, data) { //Compressed data using Huffman's approach while differentiating uppercase and lowercase letters
+	this.name = name || "Archive";
+	this.data = data || ""; //Data to compress
+	this.dictionnary = []; //Values should be in the format: letter = bitcode
 	this.updateDict = function () {
 		var lexiq = [], count, str = "", tmp = alphabetSort(data);
-		for (var i = 0; i < data.length - 1; i++) { //Fill lexiq
+		for (var i = 0; i < this.data.length - 1; i++) { //Fill lexiq
 			if(tmp[i] != tmp[i + 1]) lexiq.push(tmp[i]);
 		}
 		lexiq = rmDuplicates(lexiq);
-		//debugArr(lexiq);
+		//lexiq.debug();
 		console.log(lexiq.getOccurences());
 		count = new Array(lexiq.length);
 		tmp = [];
@@ -5220,24 +5203,26 @@ function archive (name, data) { //Compressed data using Huffman's approach while
 		}
 		Essence.say("Lexiq of " + this.name + ": " + lexiq + "\ncounts: " + count);
 		//Tree sorting
-		/* for (var i = 0; i < lexiq.length; i++) {
-			if (count[i] === getMax(count)) { //Take off the most occurred character and h
-				str += "0";
-				lexiq = lexiq.remove(exiq[i]);
-				count = count.remove(count[i]);
-			}else str += "1";
-	 
-			for (var j = 0; j < this.dictionnary.length; j++) {
-				if(this.dictionnary[i][0] === lexiq[i]) this.dictionnary[i] += str;
-			}		  
-		} */
+		// for (i = 0; i < lexiq.length; i++) {
+		// 	if (count[i] === count.max()) { //Take off the most occurred character and h
+		// 		str += "0";
+		// 		lexiq = lexiq.remove(lexiq[i]);
+		// 		count = count.remove(count[i]);
+		// 	}else str += "1";
+	
+		// 	for (var j = 0; j < this.dictionnary.length; j++) {
+		// 		if(this.dictionnary[i][0] === lexiq[i]) this.dictionnary[i] += str;
+		// 	}		  
+		// }
+
+		this.dictionnary = occurenceSort(this.data);
 	}
 	return this
 }
 
 function Machine (name, ver, cpy, type) {
-	//ver (basis):= 1:binary, 2:ternary, 3:octal, 4:decimal, 5:hexadecimal, 6: base 36 
-	this.capacity = cpy || 1024//Pow(2, 10)bits = 128B
+	//ver (basis) := 1: binary, 2: ternary, 3: octal, 4: decimal, 5: hexadecimal, 6: base 36 
+	this.capacity = cpy || 1024 //pow(2, 10) bits = 128B
 	this.version = ver || 5;
 	this.name = name || "Machine_" + this.version;
 	
@@ -5252,26 +5237,38 @@ function Machine (name, ver, cpy, type) {
 	}
 	
 	this.operation = function (a, b, op) {
-		switch (op) {
-			case " + ": return a + b; break;
-			case "-": return a - b; break;
-			case " * ": return a * b; break;
-			case "/": return a / b; break;
-			case " % ": return a % b;break;
-			case ">>": return a >> b;break;
-			case "<<": return a << b;break;
-			case ">>>": return a >>> b;break;
-			case ">": return a > b; break;
-			case "<": return a < b; break;
-			case "|": return a|b; break;
-			case "&": return a&b; break;
-			case "^": return a^b; break;
-			case "=": return a == b; break;
-			case "!=": return a != b; break;
-			case ">=": return a >= b; break;
-			case "<=": return a <= b; break;
-			case " || ": return a || b; break;
-			case " && ": return a && b; break;
+		switch (op.normal()) {
+			case "+": return a + b;
+			case "-": return a - b;
+			case "*": return a * b;
+			case "/": return a / b;
+			case "%": return a % b;
+			case ">>": return a >> b;
+			case "<<": return a << b;
+			case ">>>": return a >>> b;
+			case ">": return a > b;
+			case "<": return a < b;
+			case "|": return a | b;
+			case "&": return a & b;
+			case "^": return a ^ b;
+			case "=": return a === b;
+			case "!=": return a != b;
+			case ">=": return a >= b;
+			case "<=": return a <= b;
+			case "||": return a || b;
+			case "&&": return a && b;
+			case "e": return a * Math.pow(10, b);
+			case "e^": case "exp":
+				return [Math.exp(a), Math.exp(b)];
+			case "log": return log(a, b);
+			case "++": return [a++, b++];
+			case "--": return [a--, b--];
+			case "+=": return a += b;
+			case "-=": return a -= b;
+			case "*=": return a *= b;
+			case "/=": return a /= b;
+			case "%=": return a %= b;
+			case ".=": return a.concat(b);
 			default: return a + "" + b;
 		}
 	}
@@ -5284,27 +5281,28 @@ function Machine (name, ver, cpy, type) {
 	
 	this.memory = new Memory(this.capacity, type || "", this.name);
 	this.send = function (msg, to) {
-		POST(to, "msg = " + this.parse(msg));
+		POST(to, "msg=" + this.parse(msg));
 	}
 	
 	this.parse = function (data) { //Turn the machine string into a human readable one
+		if(!isType(data, "Array")) data = this.base === 2? data.divide(8): data.divide(2);
 		var res = "", deconvs = [];
 		for (var i = 0; i < data.length; i++) {
 			deconvs[i] = conv(data[i], this.base);
 			res += String.fromCharCode(conv(data[i], this.base));
 		}
-		console.log(deconvs);
-		return JSON.parse(res)
+		Essence.say(deconvs);
+		return JSON.parse(res) //prone to errors when this.base != 16
 	}
 	
-	this.unparse = function (data) { //Turn the data into a machine readable string
+	this.unparse = function (data, noArr) { //Turn the data into a machine readable string
 		var nd = JSON.stringify(data), res = "", codes = [];
 		for (var i = 0; i < nd.length; i++) {
 			codes[i] = nd.charCodeAt(i);
 			res += this.base === 2? conv(nd.charCodeAt(i).toNDigits(8), 10, this.base): conv(nd.charCodeAt(i), 10, this.base);
 		}
-		Essence.say(data + "= " + codes, "info");
-		return this.base === 2? res.divide(8): res.divide(2)
+		//Essence.say("\'" + data + "\'= " + codes, "info");
+		return noArr? res: (this.base === 2? res.divide(8): res.divide(2));
 	}
 	
 	this.store = function (data) {
@@ -5316,8 +5314,16 @@ function Machine (name, ver, cpy, type) {
 		for(var i = 0; i < this.memory.slots.length; i++) Essence.say(this.memory.slots[i]);
 	}
 
-	this.specs = function () { //ToString variant
+	this.specs = function () { //Specifications about the machine
 		return "Name: " + this.name + "\nCapacity: " + this.capacity + " bits\nMemory: \n" + this.memory.toString()
+	}
+
+	this.toString = function () {
+		return "Machine("+ this.specs() + ")";
+	}
+
+	this.conv = function (data, base) {
+		return conv(data, base || 36, this.base);
 	}
 }
 
@@ -5865,51 +5871,51 @@ function AJAXpost (data, to, xml) {
 function getHTTPMsg (status) { //Status: xhr.status
 	switch (status) {
 		//Information
-		case 100: return "Continue"; break;
-		case 101: return "Switching Protocols"; break;
+		case 100: return "Continue";
+		case 101: return "Switching Protocols";
 		//Success
-		case 200: return "OK"; break;
-		case 201: return "Created"; break;
-		case 202: return "Accepted"; break;
-		case 203: return "Non-Authoriative Information"; break;
-		case 204: return "No Content"; break;
-		case 205: return "Reset Content"; break;
-		case 206: return "Partial Content"; break;
+		case 200: return "OK";
+		case 201: return "Created";
+		case 202: return "Accepted";
+		case 203: return "Non-Authoriative Information";
+		case 204: return "No Content";
+		case 205: return "Reset Content";
+		case 206: return "Partial Content";
 		//Redirection
-		case 300: return "Multiple Choices"; break;
-		case 301: return "Moved Permanently"; break;
-		case 302: return "Found"; break;
-		case 303: return "See Other"; break;
-		case 304: return "Not Modified"; break;
-		case 305: return "Use Proxy"; break;
-		case 306: return "Unused"; break;
-		case 307: return "Temporary Redirect"; break;
+		case 300: return "Multiple Choices";
+		case 301: return "Moved Permanently";
+		case 302: return "Found";
+		case 303: return "See Other";
+		case 304: return "Not Modified";
+		case 305: return "Use Proxy";
+		case 306: return "Unused";
+		case 307: return "Temporary Redirect";
 		//Client error
-		case 400: return "Bad Request"; break;
-		case 401: return "Unauthorized"; break;
-		case 402: return "Payment Required"; break;
-		case 403: return "Forbidden"; break;
-		case 404: return "Not Found"; break;
-		case 405: return "Method Not Allowed"; break;
-		case 406: return "Not Acceptable"; break;
-		case 407: return "Proxy Authentification Required"; break;
-		case 408: return "Request Timeout"; break;
-		case 409: return "Conflict"; break;
-		case 410: return "Gone"; break;
-		case 411: return "Length Required"; break;
-		case 412: return "Precondition Failed"; break;
-		case 413: return "Requeust Entity Too Large"; break;
-		case 414: return "Request-url Too Long"; break;
-		case 415: return "Bad Request"; break;
-		case 416: return "Unsupported Media Type"; break;
-		case 417: return "Expectation Failed"; break;
+		case 400: return "Bad Request";
+		case 401: return "Unauthorized";
+		case 402: return "Payment Required";
+		case 403: return "Forbidden";
+		case 404: return "Not Found";
+		case 405: return "Method Not Allowed";
+		case 406: return "Not Acceptable";
+		case 407: return "Proxy Authentification Required";
+		case 408: return "Request Timeout";
+		case 409: return "Conflict";
+		case 410: return "Gone";
+		case 411: return "Length Required";
+		case 412: return "Precondition Failed";
+		case 413: return "Requeust Entity Too Large";
+		case 414: return "Request-url Too Long";
+		case 415: return "Bad Request";
+		case 416: return "Unsupported Media Type";
+		case 417: return "Expectation Failed";
 		//Server error
-		case 500: return "Internal Server Error"; break;
-		case 501: return "Not Implemented"; break;
-		case 502: return "Bad Gateway"; break;
-		case 503: return "Service Unavailable"; break;
-		case 504: return "Gateway Timeout"; break;
-		case 505: return "HTTP Version Not Supported"; break;
+		case 500: return "Internal Server Error";
+		case 501: return "Not Implemented";
+		case 502: return "Bad Gateway";
+		case 503: return "Service Unavailable";
+		case 504: return "Gateway Timeout";
+		case 505: return "HTTP Version Not Supported";
 		default: return "Unknown status"
 	}
 }
@@ -5923,9 +5929,9 @@ function Template (name, path, txt, params) { //JavaScript templating + conversi
 	this.text = txt || ""; //Text/code containing the {{params}}
 	this.gen = function (obj) { //Generate a text/code from the template using the keys of the object
 		var res = this.text, k = keyList(obj, true);
-		for(var i = 0; i < k.length; i++) res = res.replaceAll("{{" + k[i] + "}}", obj[k[i]]);
+		for(var i = 0; i < k.length; i++) res = res.replace(RegExpify("{{" + k[i] + "}}"), obj[k[i]]);
 		if(res.index)
-		for(i = 0; i < this.special.length; i++) res = res.replaceAll(" % "+ this.special[i] + "%", this.specialEq[i]);
+		for(i = 0; i < this.special.length; i++) res = res.replaceAll(RegExpify("%"+ this.special[i] + "%"), this.specialEq[i], " ");
 		return res
 	}
 	this.save = function (obj, name, ext) { //Save the template into a file or the converted version
@@ -5970,4 +5976,12 @@ var Sys = { //System
 
 window.onkeypress = function (keyStroke) {
 	Sys.in.record(keyStroke)
+}
+
+function RegExpify(list) { //Turn an string into a regular expression
+	return new RegExp(list.replace(/[|\\{}()[\]^$+*?.:\'<>]/g, "\\$&"), "gm");
+}
+
+function unRegExpify(re) { //Turn a regular expression into a string
+	return re.toString().get(1, re.toString().lastIndexOf("/")-1).remove("\\");
 }
