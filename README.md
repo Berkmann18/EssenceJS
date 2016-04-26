@@ -51,7 +51,6 @@ To fix/continue:
 -	Server.data
 -	UnescapeHTML()
 -	maxSort()
--	Hours/mins of s2time
 -	Array.remove must affect the initial array in order for multiple removal to work
 -	Array.getOccurences()
 -	Array.revSort() which leaves a few elements unsorted
@@ -59,7 +58,7 @@ To fix/continue:
 -	box's graphic methods
 -	4x4 matrices support for Array.rot(), Array.det() and Array.getAdjoint()
 -	5x5+ support for Array.translate()
--	Machine.parse() for base 2
+-	Machine.parse() for other bases than base 16 which tries to get string with a code "out of the visible"
 -	msgBox()
 -	spreadSort()
 -	QueueList and StackList
@@ -67,6 +66,9 @@ To fix/continue:
 -	WebAppBuilder
 -	getLocalPath's support for when the path is a few folders away from the local path
 -	fully functionnal NoSQL/NoPHP server
+-	Improve getClosestRoot
+-	Getting either weekDay or dayOfWeek right and deleting the other one
+-	Work on the Debugger
 
 ##About the future of Essence.js
 1.	Once this library is heading toward a state where having everything in one single script will no longer be good for readability and maintenance causing it to be splitted into several files (modules) which would make it less portable and slower in some cases but it will be way more organised, more readable and more maintanable.
