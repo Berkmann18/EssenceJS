@@ -10,11 +10,25 @@ var Essence = {
 		getType(msg, "Error")? alert("[Essence.js] An error has occurred (line/column " + msg.lineNumber + "/" + msg.columnNumber + " of " + msg.fileName + ").\n\nMessage: " + msg.stack()): alert("[Essence.js] An error has occurred (line " + line + " of " + url + ").\n\nMessage: " + msg)
 	}, say: function (msg, type, style, style0) { //Say something in the console
 		type = (isNon(type))? "": type.slice(0, 4).toLowerCase();
-		if(type === "info") console.info("%c[Essence.js]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
-		else if(type === "erro") console.error("%c[Essence.js]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
-		else if(type === "warn") console.warn("%c[Essence.js]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
-		else if(type === "succ") console.log("%c[Essence.js]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
-		else console.log("%c[Essence.js]%c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
+		if (style && !style0) {
+			if(type === "info") console.info("%c[Essence.js]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
+			else if(type === "erro") console.error("%c[Essence.js]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
+			else if(type === "warn") console.warn("%c[Essence.js]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
+			else if(type === "succ") console.log("%c[Essence.js]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
+			else console.log("%c[Essence.js]%c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
+		} else if (style0 && style0) {
+			if(type === "info") console.info("%c[Essence.js]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
+			else if(type === "erro") console.error("%c[Essence.js]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
+			else if(type === "warn") console.warn("%c[Essence.js]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
+			else if(type === "succ") console.log("%c[Essence.js]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
+			else console.log("%c[Essence.js]%c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
+		} else {
+			if(type === "info") console.info("%c[Essence.js]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
+			else if(type === "erro") console.error("%c[Essence.js]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
+			else if(type === "warn") console.warn("%c[Essence.js]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
+			else if(type === "succ") console.log("%c[Essence.js]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
+			else console.log("%c[Essence.js]%c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
+		}
 	},
 	css: "@charset: 'UTF-8'; *{font-family:Calibrie,Verdana,Segoe UI} body{height:100 %;width:auto;padding:0} table{background:#000}table,td,th{border:1px solid #000;color:#000;background:#fff;cellspacing:0;cellpadding:2;border-collapse:true;}tr:nth-child(even) td{background:#ddd}.none,.none td,.none th{border:none}tr:hover td{background:#888																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							}.inf{color:#008}.succ{color:#0f0}.err{color:#f00}.quest{color:#00f}.warn{color:#fc0}.info{border-color:#008;background-color:#00008f}.success{border-color:#080;background-color:#008f00}.error{border-color:#800;background-color:#8f0000}.question{border-color:#00f;background-color:#0000f8}.warning{border-color:#f8c808;background-color:#fc0}.block{color:#fff;background-repeat:repeat;background-position:0 center;border-style:solid;border-width:1px;-webkit-appearance:none;outline:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;width:100 %;height:1.1em;line-height:200 %;white-space:nowrap;min-height:16px;position:relative;margin:2px;padding:.3em 2px;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-touch-callout:none;border-radius:7px;-webkit-border-radius:7px;-moz-border-radius:7px}.icon{width:64px;height:64px;border:none;margin:2px} kbd{border:3px outset #ccc;background:#ccc;border-radius:5px;-webkit-border-radius:7px;-moz-border-radius:7px;-o- border-radius:7px;padding:2px;font-family:Consolas,Tahoma,Segoe UI}h1.title{text-decoration:underline} h2{color:#088} h3{color:#0ff}.code-tag,.code-inst{color:#00f}.code-cmt{color:#0f0}.code-str,.code-id{color:#00c0c0}.code-num,.code-class{color:#f00}.code-attr{color:#c00}.code-val{color:#fc0}.code-type{color:#800080}.code-doc, .code-op{color:#0ff},.code-var{color:#0000c0}.code-keyword{color:#f0f}",
 	applyCSS: function () {
@@ -83,6 +97,8 @@ var Essence = {
 		Essence.say("Page loaded in %c" + $G["t"] + "%c", "succ", "font-style: italic", "font-style: none");
 	}, time: function(msg, style, style0) { //Like Essence.say(msg) but with the timestamp
 		console.log("[%c" + getTimestamp(true) + "%c] "+msg, "color: #f00;", "color: #000;", style, style0)
+	}, sayClr: function (clrs) { //Display a RGB(A) coloured console log
+		clrs.length === 4? console.log("%cr%cg%cb%ca(%c" + clrs.join(", %c") + "%c)", "color: #f00", "color: #0f0", "color: #00f", "color: #00f", "color: #000", "color: #f00", "color: #0f0", "color: #00f", "color: #00f", "color: #000"): console.log("%cr%cg%cb%c(%c" + clrs.join(", %c") + "%c)", "color: #f00", "color: #0f0", "color: #00f", "color: #00f", "color: #000", "color: #f00", "color: #0f0", "color: #00f", "color: #00f", "color: #000");
 	}
 }
 
@@ -471,7 +487,7 @@ Array.prototype.debug = function () { //Display in the console each elements of 
 	for(var i = 0; i < this.length; i++) Essence.say(i + ": " + this[i])
 }
 
-Array.prototype.getOccurences = function (simplified) { //Gets the number of occurences of each elements in an array as well as the positions of each occurence
+Array.prototype.getOccurrences = function (simplified) { //Gets the number of occurrences of each elements in an array as well as the positions of each occurrence
 	var arr = rmDuplicates(this), res = [];
 	for (var i = 0; i < arr.length; i++) res.push(arr[i] + ":" + this.count(arr[i]) + "{" + this.positions(arr[i]).toStr(true) + "}");
 	if (simplified) {
@@ -1192,7 +1208,7 @@ String.prototype.normal = function () { //More efficient codewise than a trim
 	return this.toLowerCase().remove(" ")
 }
 
-String.prototype.getOccurences = Array.prototype.getOccurences;
+String.prototype.getOccurrences = Array.prototype.getOccurrences;
 
 String.prototype.get = function (start, end) { //Get the sub-string starting at the start index and ending at the end index (no trickness from substr/substring)
 	var res = "";
@@ -1529,8 +1545,8 @@ function toMaxSize () { //Resize the window to maximum size of the client/screen
 		else if(frame.X) frame.resizeTo(frame.X, frame.Y);
 		else if(frame.x) frame.resizeTo(frame.x, frame.y);
 		else return false
-	}catch(e){
-		Essence.say("An error occurec when trying to maximise the size Because of " + e, "err");
+	} catch(e) {
+		Essence.say("An error occurred when trying to maximise the size Because of %c" + e, "err", "text-decoration: underline;");
 	}
 }
 
@@ -1547,7 +1563,7 @@ function getCookie (c_name) { //Gather the cookie with the name c_name
 	for (var i = 0; i < ARRcookies.length;i++) {
 		x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
 		y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
-		x = x.replace(/^\s + |\s + $/g,"");
+		x = x.replace(/^\s+|\s+$/g,"");
 		if(x === c_name) return unescape(y)
 	}
 }
@@ -1693,12 +1709,6 @@ function random16 () { //Random float from <0, 1> with 16 bits of randomness as 
 
 function randFloatSpread (range) { //Random float from <-range/2, range/2> interval
 	return range * (.5-Math.random())
-}
-
-function randArr (n, min, max, float, base) { //Generate an array with random numbers
-	var r = [];
-	for(var i = 0; i < n; i++) r[i] = base? conv(rand(min || 0, max || 100, !float || true), 10, base || 10): rand(min || 0, max || 100, !float || true);
-	return r
 }
 
 function genNearlySortedArr (n, min, max) { //Generate a nearly sorted array
@@ -1899,7 +1909,7 @@ function primeCheck (a, b) { //Check the primeness of a toward b
 }
 
 function getClosestRoot (x, n) { //Get the closest whole nth-root of x
-	if(!x) Essence.say("x must be initiated");
+	if(!x) Essence.say("x must be initiated !");
 	if(!n) n = 2;
 	var rof = 0, er = 0;
 	
@@ -1993,7 +2003,7 @@ function eqSolver (formula, res, a, b) { //Solve equations with a given formula 
 		reg = RegExp("e\\^" + expr);
 		formula = formula.replace(reg, "Math.exp($1)");
 	}
-	Essence.say("Formula now converted to " + formula, "info");
+	Essence.say("Formula now converted to %c" + formula, "info", "color: #00f;");
 	//Brute force using any values within [a, b]
 	for (var x = a; x <= b; x++) {
 		for (var y = a; y <= b; y++) {
@@ -2494,7 +2504,7 @@ function rgbList (inc, intOnly, debug) { //Loop through all the possible rgb col
 	for (var r = 0; r < 257; r += inc) {
 		for (var g = 0; g < 257; g += inc) {
 			for (var b = 0; b < 257; b += inc) {
-				if(debug) Essence.say("rgb(" + (intOnly? [Math.round(r), Math.round(g), Math.round(b)].join(", "): [r, g, b].join(", ")) + ")");
+				if(debug) Essence.sayClr(intOnly? [Math.round(r), Math.round(g), Math.round(b)]: [r, g, b]);
 				l.push("rgb(" + (intOnly? [Math.round(r), Math.round(g), Math.round(b)].join(", "): [r, g, b].join(", ")) + ")");
 			}
 		}
@@ -5139,8 +5149,47 @@ function alphabetSort (x) { //Sort alphabetically the elements in x
 	return res.trimAll("r")
 }
 
-function occurenceSort(arr) { //Sort the array from the most occurred element to the least the occured one
-	var count = arr.getOccurences(true);
+// function occurrenceSort(arr) { //Sort the array from the most occurred element to the least the occured one
+// 	var ol = occurrenceList(arr), res = arr;
+// 	console.log(ol);
+// 	for (var l in ol) {
+// 		if(ol.hasOwnProperty(l)) {
+// 			var c = l;
+// 			for (var i in ol) {
+// 				if(ol.hasOwnProperty(i) && ol[i] < ol[l]) c = i;
+// 			}
+// 			if(l != c) swap(res, l, c);
+// 		}
+// 	}
+// 	return res;
+// 	/*
+// function sSort(x){
+//   for(i = 1; i<x.length; i++){
+//     var k = i;
+//     for(j = i+1; j<x.length; i++){
+//        if(x[j] < x[k]) k = j;
+//     }
+//     if(i != k) swap(x, i, k);
+//     Essence.say(x);
+//   }
+//   return x;
+// }
+// 	*/
+// }
+
+function occurrenceSort(arr) { //Sort the array/string from the most occurring item to the least occurring one
+	var tmp = rmDuplicates(arr), res = [], counts = [];
+	for (var i = 0; i < tmp.length; i++) counts[i] = arr.count(tmp[i]);
+	while(tmp.length > 0) {
+		for (i = 0; i < tmp.length; i++) {
+			if(counts[i] === counts.max()) {
+				res.push(tmp[i]);
+				counts = counts.remove(counts[i]);
+				tmp = tmp.remove(tmp[i]);
+			}
+		}
+	}
+	return res;
 }
 
 function timeUp (act, pref, params) { //Time how long act() will take to be fully executed
@@ -5181,36 +5230,39 @@ function Archive (name, data) { //Compressed data using Huffman's approach while
 	this.name = name || "Archive";
 	this.data = data || ""; //Data to compress
 	this.dictionnary = []; //Values should be in the format: letter = bitcode
+	this.result = [];
 	this.updateDict = function () {
 		var lexiq = [], count, str = "", tmp = alphabetSort(data);
 		for (var i = 0; i < this.data.length - 1; i++) { //Fill lexiq
-			if(tmp[i] != tmp[i + 1]) lexiq.push(tmp[i]);
+			if(tmp[i] != tmp[i+ 1]) lexiq.push(tmp[i]);
 		}
 		lexiq = rmDuplicates(lexiq);
 		//lexiq.debug();
-		console.log(lexiq.getOccurences());
+		//console.log(lexiq.getOccurrences());
 		count = new Array(lexiq.length);
 		tmp = [];
 		for (i = 0; i < lexiq.length; i++) {
 			count[i] = data.count(lexiq[i]);
-			Essence.say("lexiq[" + i + "]=" + lexiq[i] + " is present " + timesLiteral(count[i]), "inf");
+			//Essence.say("lexiq[" + i + "]=" + lexiq[i] + " is present " + timesLiteral(count[i]), "inf");
 			tmp[i] = lexiq[i] + count[i];
 		}
-		Essence.say("Lexiq of " + this.name + ": " + lexiq + "\ncounts: " + count);
-		//Tree sorting
-		// for (i = 0; i < lexiq.length; i++) {
-		// 	if (count[i] === count.max()) { //Take off the most occurred character and h
-		// 		str += "0";
-		// 		lexiq = lexiq.remove(lexiq[i]);
-		// 		count = count.remove(count[i]);
-		// 	}else str += "1";
-	
-		// 	for (var j = 0; j < this.dictionnary.length; j++) {
-		// 		if(this.dictionnary[i][0] === lexiq[i]) this.dictionnary[i] += str;
-		// 	}		  
-		// }
+		//Essence.say("Lexiq of " + this.name + ": " + lexiq + "\ncounts: " + count);
 
-		this.dictionnary = occurenceSort(this.data);
+		this.dictionnary = occurrenceSort(this.data);
+
+		for (var i = 0; i < this.dictionnary.length; i++) {
+			this.result[i] = conv(i, 10, 2);
+		}
+	}
+
+	this.getResult = function () {
+		this.updateDict();
+		var res = "";
+		for (var i = 0; i < this.data.length; i++) {
+			res += this.data.replace(RegExpify(this.dictionnary[this.dictionnary.indexOf(this.data[i])]), this.result[i]);
+		}
+
+		return this.result + "\n" + res;
 	}
 	return this
 }
@@ -5998,4 +6050,20 @@ function RegExpify(list) { //Turn an string into a regular expression
 
 function unRegExpify(re) { //Turn a regular expression into a string
 	return re.toString().get(1, re.toString().lastIndexOf("/")-1).remove("\\");
+}
+
+function occurrenceList(list) { //Get the occurrence list
+	if(!list.isIterable()) throw new Error("It must be an iterable object !");
+	var nums = list.getOccurrences(true), chars = [], oc = list.getOccurrences(), res = {};
+	for (var i = 0; i < oc.length; i++) chars[i] = oc[i].split(":")[0];
+	for (i = 0; i < nums.length; i++) res[chars[i]] = nums[i];
+	return res;
+}
+
+function Objectify(keyArr, valArr) { //Join two arrays into an object
+	var res = {};
+	for (var i = 0; i < keyArr.length; i++) {
+		res[keyArr[i]] = valArr[i];
+	}
+	return res;
 }
