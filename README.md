@@ -42,7 +42,6 @@ Some ideas to add:
 -	Custom errors ?
 
 To fix/continue:
--	Huffman based data archieving (creating archive objects that takes datas and keep a dictionnary with the terms and binary versions)
 -	Path finding using A*\IDA* with Euclidian/Manhattan
 -	Cumultative probability
 -	Webpage templating
@@ -69,6 +68,7 @@ To fix/continue:
 -	Improve getClosestRoot
 -	Getting either weekDay or dayOfWeek right and deleting the other one
 -	Work on the Debugger
+-	archive.getResult()
 
 ##About the future of Essence.js
 1.	Once this library is heading toward a state where having everything in one single script will no longer be good for readability and maintenance causing it to be splitted into several files (modules) which would make it less portable and slower in some cases but it will be way more organised, more readable and more maintanable.
