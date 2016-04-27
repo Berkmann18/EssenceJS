@@ -8,13 +8,13 @@ var Essence = {
 	element: $n,
 	handleError: function (msg, url, line) {
 		getType(msg, "Error")? alert("[Essence.js] An error has occurred (line/column " + msg.lineNumber + "/" + msg.columnNumber + " of " + msg.fileName + ").\n\nMessage: " + msg.stack()): alert("[Essence.js] An error has occurred (line " + line + " of " + url + ").\n\nMessage: " + msg)
-	}, say: function (msg, type) { //Say something in the console
+	}, say: function (msg, type, style, style0) { //Say something in the console
 		type = (isNon(type))? "": type.slice(0, 4).toLowerCase();
-		if(type === "info") console.info(" %c[Essence.js] %c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
-		else if(type === "erro") console.error(" %c[Essence.js] %c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
-		else if(type === "warn") console.warn(" %c[Essence.js] %c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
-		else if(type === "succ") console.log(" %c[Essence.js] %c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
-		else console.log(" %c[Essence.js] %c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
+		if(type === "info") console.info("%c[Essence.js]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
+		else if(type === "erro") console.error("%c[Essence.js]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
+		else if(type === "warn") console.warn("%c[Essence.js]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
+		else if(type === "succ") console.log("%c[Essence.js]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
+		else console.log("%c[Essence.js]%c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
 	},
 	css: "@charset: 'UTF-8'; *{font-family:Calibrie,Verdana,Segoe UI} body{height:100 %;width:auto;padding:0} table{background:#000}table,td,th{border:1px solid #000;color:#000;background:#fff;cellspacing:0;cellpadding:2;border-collapse:true;}tr:nth-child(even) td{background:#ddd}.none,.none td,.none th{border:none}tr:hover td{background:#888																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							}.inf{color:#008}.succ{color:#0f0}.err{color:#f00}.quest{color:#00f}.warn{color:#fc0}.info{border-color:#008;background-color:#00008f}.success{border-color:#080;background-color:#008f00}.error{border-color:#800;background-color:#8f0000}.question{border-color:#00f;background-color:#0000f8}.warning{border-color:#f8c808;background-color:#fc0}.block{color:#fff;background-repeat:repeat;background-position:0 center;border-style:solid;border-width:1px;-webkit-appearance:none;outline:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;width:100 %;height:1.1em;line-height:200 %;white-space:nowrap;min-height:16px;position:relative;margin:2px;padding:.3em 2px;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-touch-callout:none;border-radius:7px;-webkit-border-radius:7px;-moz-border-radius:7px}.icon{width:64px;height:64px;border:none;margin:2px} kbd{border:3px outset #ccc;background:#ccc;border-radius:5px;-webkit-border-radius:7px;-moz-border-radius:7px;-o- border-radius:7px;padding:2px;font-family:Consolas,Tahoma,Segoe UI}h1.title{text-decoration:underline} h2{color:#088} h3{color:#0ff}.code-tag,.code-inst{color:#00f}.code-cmt{color:#0f0}.code-str,.code-id{color:#00c0c0}.code-num,.code-class{color:#f00}.code-attr{color:#c00}.code-val{color:#fc0}.code-type{color:#800080}.code-doc, .code-op{color:#0ff},.code-var{color:#0000c0}.code-keyword{color:#f0f}",
 	applyCSS: function () {
@@ -40,7 +40,7 @@ var Essence = {
 		for (var i = 0; i < scriptArr.length; i ++) {
 			if(scriptArr[i].src.indexOf("essence.js")>-1 || scriptArr[i].src.indexOf("essence.min.js")>-1) scriptArr[i].src = this.source || Essence.source;
 		}
-		Essence.say("Essence.(min).js has been updated", "succ");
+		Essence.say("%cEssence.(min).js%c has been updated", "succ", "text-decoration: underline", "text-decoration: none");
 	}, e: Math.exp(1),//Napier's constant
 	eps: Math.pow(2,-52),//Matlab's epsilon (useful when dealing with null values to keep them in the real range or just not null
 	gcd: function (a, b) { //Greatest Common Divisor
@@ -80,9 +80,9 @@ var Essence = {
 		$G["t2"] = new Date();
 		$G["t2"] = $G["t2"].getSeconds() * 1000 + $G["t2"].getMilliseconds();
 		$G["t"] = ($G["t2"] - $G["t1"] > 1000)? ($G["t2"] - $G["t1"])/1000 + "s": ($G["t2"] - $G["t1"]) + "ms";
-		Essence.say("Page loaded in " + $G["t"], "succ");
-	}, time: function(msg) { //Like Essence.say(msg) but with the timestamp
-		console.log("[%c" + getTimestamp(true) + "%c] "+msg, "color: #f00;", "color: #000;")
+		Essence.say("Page loaded in %c" + $G["t"] + "%c", "succ", "font-style: italic", "font-style: none");
+	}, time: function(msg, style, style0) { //Like Essence.say(msg) but with the timestamp
+		console.log("[%c" + getTimestamp(true) + "%c] "+msg, "color: #f00;", "color: #000;", style, style0)
 	}
 }
 
@@ -467,20 +467,15 @@ Array.prototype.remove = function (c) { //Remove c from the array without affect
 }
 
 Array.prototype.debug = function () { //Display in the console each elements of the array
-	Essence.say("Debugging the following array: " + this);
+	Essence.say("%cDebugging the following array:%c " + this, "text-decoration: bold", "text-decoration: none");
 	for(var i = 0; i < this.length; i++) Essence.say(i + ": " + this[i])
 }
 
 Array.prototype.getOccurences = function (simplified) { //Gets the number of occurences of each elements in an array as well as the positions of each occurence
 	var arr = rmDuplicates(this), res = [];
-	for (var i = 0; i < arr.length; i++) {
-		res.push(arr[i] + ":" + this.count(arr[i]) + "{" + this.positions(arr[i]).toStr(true) + "}");
-		//Essence.say(arr[i] + ": " + this.positions(arr[i]).toStr(true));
-	}
+	for (var i = 0; i < arr.length; i++) res.push(arr[i] + ":" + this.count(arr[i]) + "{" + this.positions(arr[i]).toStr(true) + "}");
 	if (simplified) {
-		for (i = 0; i < res.length; i++) {
-			res[i] = parseInt(res[i].replace(/(?:.*?)\:(\d+)\{(.*?)\}/g, "$1"));
-		}
+		for (i = 0; i < res.length; i++) res[i] = parseInt(res[i].replace(/(?:.*?)\:(\d+)\{(.*?)\}/g, "$1"));
 	}
 	return res
 }
@@ -1227,15 +1222,15 @@ String.prototype.zip = function () { //Compress the string
 String.prototype.unzip = function (noPairs) { //Decompress the string (when being compressed using String.zip()) with(out) pairs
 	var res = "";
 	for (var i = 0; i < this.length; i++) {
-		if(/[\S\s](\@)(\d + )/g.test(this[i])) res += this[i][0].repeat(this[i][this[i].indexOf("@") + 1]);
+		if (/[\S\s](\@)(\d + )/g.test(this[i])) res += this[i][0].repeat(this[i][this[i].indexOf("@") + 1]);
 		else res += this[i];
 	}
 	return noPairs? res.split("").join(""): res;
 }
 
 String.prototype.replaceAll = function(str, nstr, sep) { //Replace every occurrences of str instead of just the first one
-	//caution: do not use with sep = ("" || false) when str.length > 1 as it will run into an infinite loop and eventually crash the script
 	var res = sep? this.split(sep).replace(str, nstr) : this.replace(str, nstr), i = 0;
+	if (sep === "") return this.replace(RegExpify(str), nstr); //Avoid the infinite loop caused by sep = ""
 	while (res.indexOf(str) > -1 || i === this.length) { //Look up the occurrences until there's none of them left or the interpreter reached the end
 		res = this.replace(str, nstr);
 		i++;
@@ -1244,7 +1239,7 @@ String.prototype.replaceAll = function(str, nstr, sep) { //Replace every occurre
 }
 
 Number.prototype.length = function () { //Count how many digits is in x (including seperatly the decimales when there's some)
-	if((this + "").indexOf(".") != -1) return [parseInt((this + "").split(".")[0]).length(), parseInt((this + "").split(".")[1]).length()]
+	if ((this + "").indexOf(".") != -1) return [parseInt((this + "").split(".")[0]).length(), parseInt((this + "").split(".")[1]).length()]
 	var l = 0, x = this;
 	while (Math.floor(x) != 0) {
 		x /= 10;
@@ -5468,8 +5463,9 @@ function htmlInput (id, type, lbl) { //Dynamic HTML input with an animation
 	return "<label for='" + id + "' id='lbl_" + id + "'>&ensp;</label><br /><input type='" + (type || "text") + "' id='" + id + "' value='" + lbl + "' onFocus='labelFieldSwap(\"" + id + "\", \"" + lbl + "\")' onBlur='labelFieldSwap(\"" + id + "\", \"" + lbl + "\")' />"
 }
 
-function WebPage (title, name, path, author, ver, stct, type) { //Web page builder
+function WebPage (title, name, path, author, ver, stct, type, subtitle) { //Web page builder
 	this.title = title || "My web page";
+	this.subtitle = subtitle || "A simple web page";
 	this.type = type.normal() || "html";
 	this.name = name + this.type || "index." + this.type;
 	this.path = path + "/" + this.name || this.name;
@@ -5478,6 +5474,7 @@ function WebPage (title, name, path, author, ver, stct, type) { //Web page build
 	this.structure = stct || "header!h-menu!content|aside!footer";
 	this.code = "";
 	this.template = "";
+	this.page = null;
 	/* Structure:
 	Components:
 		- header: header with a title and a logo
@@ -5496,15 +5493,15 @@ function WebPage (title, name, path, author, ver, stct, type) { //Web page build
 	//Templating /(\{\{)\w * (\}\}) */g
 	
 	this.word2code = function (word) {
-		switch (word.norm()) {
+		switch (word.normal()) {
 			case "header": return "<header><img src='img/icon.png' /><hgroup><h1>{{title}}</h1><h3>{{subtitle}}</h3></hgroup></header>"
 			case "h-menu": return "<menu class='h-menu'><li onClick=''>{{0}}</li><li onClick=''>{{1}}</li><li onClick=''>{{2}}</li></menu>"
 			case "v-menu": return "<menu class='v-menu'><li onClick=''>{{0}}</li><li onClick=''>{{1}}</li><li onClick=''>{{2}}</li></menu>"
 			case "content": return "<div id='content'>{{content}}</div>"
 			case "aside": return "<aside>{{aside}}</aside>"
 			case "footer": return "<footer>{{footer}}</footer>"
-			case "article": return "<article id='{{article_title}}'><header>{{article_title}}</header>{{content}}<footer>{{article_footer}}</footer></div>"
-			case "searc": return "<form action='search.php' method='post'><input type='search' name='search' /><input type='image' src='img/search.png' alt='?' /></form>"
+			case "article": return "<article id='{{article_title}}'><header>{{article_title}}</header>{{article_content}}<footer>{{article_footer}}</footer></div>"
+			case "search": return "<form action='search.php' method='post'><input type='search' name='search' /><input type='image' src='img/search.png' alt='?' /></form>"
 			default: return word
 		}
 	}
@@ -5523,8 +5520,21 @@ function WebPage (title, name, path, author, ver, stct, type) { //Web page build
 		return this.template
 	}
 	
-	this.genPage = function () { //Transform the template into a page
-		
+	this.genPage = function (params) { //Transform the template into a page
+		this.page = new Template(this.title, this.name, this.template, ["title", "subtitle", "content", "aside", "footer", "0", "1", "2", "article_title", "article_content", "article_footer"]);
+		return this.page.gen({
+			title: this.title,
+			subtitle: this.subtitle,
+			content: params.content || $G["lorem"],
+			aside: params.aside || "At the side",
+			footer: params.footer || "An EssenceJS powered web page",
+			article_content: params.articleContent || "Bla bla bla",
+			article_title: params.articleTitle || "An article",
+			article_footer: params.articleFooter || "By John Doe",
+			0: "Home",
+			1: "About us",
+			2: "Contact us"
+		});
 	}
 }
 
@@ -5534,7 +5544,7 @@ function WebApp (name, path, author, ver, stct) {
 	this.version = ver || 1.0;
 	this.author = author || "Maximilian Berkmann";
 	this.dirs = ["img", "script", "style"] //All dirs which are subdirectories of the path
-	this.pages = [new WebPage(this.name, "index", this.path, this.author, this.ver, this.stct), new WebPage("Contact us", "contact", this.path, this.author, this.ver, this.stct), new WebPage("About us", "about", this.path, this.author, this.ver, this.stct)]
+	this.pages = [new WebPage(this.name, "index", this.path, this.author, this.ver, stct), new WebPage("Contact us", "contact", this.path, this.author, this.ver, stct), new WebPage("About us", "about", this.path, this.author, this.ver, stct)]
 
 	this.build = function () { //Generate
 		for(var i = 0; i < this.pages.length; i++) this.pages[i].genPage();
@@ -5920,18 +5930,22 @@ function getHTTPMsg (status) { //Status: xhr.status
 	}
 }
 
-function Template (name, path, txt, params) { //JavaScript templating + conversion
+function Template (name, path, txt, params, consoleSpecial) { //JavaScript templating + conversion
 	this.name = name || "Template";
 	this.path = path || this.name + ".jst";
 	this.params = params || ["name", "description", "version", "title", "path"] //{{params}}
-	this.special = ["tab", "date", "time", "timestamp"] // %special%
-	this.specialEq = ["&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", getDate(), getTime(), getTimestamp()];
+	this.special = ["tab", "date", "time", "timestamp", "br"] // %special%
+	this.specialEq = ["&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", getDate(), getTime(), getTimestamp(), "<br />"];
+	if(consoleSpecial) {
+		this.specialEq[0] = "\t";
+		this.specialEq[4] = "\n";
+	}
 	this.text = txt || ""; //Text/code containing the {{params}}
 	this.gen = function (obj) { //Generate a text/code from the template using the keys of the object
 		var res = this.text, k = keyList(obj, true);
 		for(var i = 0; i < k.length; i++) res = res.replace(RegExpify("{{" + k[i] + "}}"), obj[k[i]]);
 		if(res.index)
-		for(i = 0; i < this.special.length; i++) res = res.replaceAll(RegExpify("%"+ this.special[i] + "%"), this.specialEq[i], " ");
+		for(i = 0; i < this.special.length; i++) res = res.replace(RegExpify("%" + this.special[i] + "%"), this.specialEq[i], " ");
 		return res
 	}
 	this.save = function (obj, name, ext) { //Save the template into a file or the converted version
@@ -5979,7 +5993,7 @@ window.onkeypress = function (keyStroke) {
 }
 
 function RegExpify(list) { //Turn an string into a regular expression
-	return new RegExp(list.replace(/[|\\{}()[\]^$+*?.:\'<>]/g, "\\$&"), "gm");
+	return new RegExp(list.replace(/[|\\{}()[\]^$+*?.:\'<>%]/g, "\\$&"), "gm");
 }
 
 function unRegExpify(re) { //Turn a regular expression into a string
