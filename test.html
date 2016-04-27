@@ -91,16 +91,8 @@
 		print("</fieldset>", true);
 	}
 	
-	var t1 = new Date(), t2 = 0, t;
-	function init(){
-		t1 = t1.getSeconds()*1000+t1.getMilliseconds();
-	}
-	
 	function postHTMLinit(){
-		t2 = new Date();
-		t2 = t2.getSeconds()*1000+t2.getMilliseconds();
-		t = (t2-t1>1000)? (t2-t1)/1000+"s": (t2-t1)+"ms";
-		Essence.say("Page loaded in "+t, "succ");
+		Essence.init();
 		if(isNon($n("#btn"))){
 			Essence.say("I couldn't find the node #btn !\The element is the following:\n"+$e("#btn"));
 			Essence.say("$e('#btn').node= "+$e("#btn").node, "info");
@@ -123,7 +115,7 @@
 	
 	</script>
 </head>
-<body onpageshow='postHTMLinit()' onload='init()'>
+<body onpageshow='postHTMLinit()' onload='Essence.preInit()'>
 	<span id="test">lorent</span>
 	<div id="ColourTest" onMouseover='effect()' onClick="effect2()" onMouseout="effect3()">
 		<span id='ba'>Black</span> <span id='r'>Red</span> <span id='g'>Green</span> <span id='b'>Blue</span>
