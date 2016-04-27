@@ -94,7 +94,7 @@
 - TreeNode, Node, Path, Node, NTreeNode
 - Set, SortedSet, Stack, StackArray, StackList, Queue, QueueArray, QueueList
 - Astar, IDAstar
-- alphabetSort, occurenceSort
+- alphabetSort, occurrenceSort
 - binarySearch
 - Archive
 - virtualHistory
@@ -131,3 +131,5 @@
 - Sys
 - asciiTable
 - RegExpify, unRegExpify
+- occurrencesList
+- Objectify
