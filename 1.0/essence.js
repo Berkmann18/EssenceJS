@@ -55,7 +55,7 @@ var Essence = {
 			if(scriptArr[i].src.indexOf("essence.js")>-1 || scriptArr[i].src.indexOf("essence.min.js")>-1) scriptArr[i].src = this.source || Essence.source;
 		}
 		Essence.say("%cEssence.(min).js%c has been updated", "succ", "text-decoration: underline", "text-decoration: none");
-	}, e: Math.exp(1),//Napier's constant
+	},
 	eps: Math.pow(2,-52),//Matlab's epsilon (useful when dealing with null values to keep them in the real range or just not null
 	gcd: function (a, b) { //Greatest Common Divisor
 		return b? Essence.gcd(b, a % b): Math.abs(a)
@@ -369,12 +369,21 @@ Object.prototype.isIterable = function () { //Check if an object is iteral hence
 }
 
 Object.prototype.delete = function () { //Delete the object source: https://Google.github.io/styleguide/javascriptguide.xml?showone = delete#delete
-	this.property_ = null;
+	this.property_ = null
 }
 
 Object.prototype.equals = function(obj) { //Check if obj and the current object are the same
 	return this.toString() === obj.toString() || this.toLocaleString() === obj.toLocaleString()
 }
+
+/*
+{Array[][]} rules Rules containing (RegExp|String)/(RegExp|String) pairs
+*/
+Object.prototype.multiReplace = function(rules) { //Like Object.replace(...).[...].replace(...) but less cumbersum
+	var res = this.replace(rules[0][0], rules[0][1]);
+	for (var i = 0; i < rules.length; i++) res = res.replace(rules[i][0], rules[i][1]);
+	return res
+};
 
 Array.prototype.first = function (nval) { //Get the first element of an array
 	return nval? this[0] = nval: this[0]
@@ -446,16 +455,6 @@ Array.prototype.minLength = function () { //Return the length of the shortest ce
 
 Array.prototype.Fill2D = function (c) { //Same as fill() but it fill the array with c into two dimensions rather than one
 	return this.fill(new Array(this.length).fill(c))
-}
-
-Array.prototype.all = function (callback) { //Check if all items of the array applies to the conditions specified by the callback function
-	var bool = callback(this[0])//Callback can only be of the type boolean
-	if(!bool) return false;
-	for(var i = 1; i < this.length; i++){
-		if(!bool) return false;
-		bool = bool && callback(this[i]);
-	}
-	return bool
 }
 
 Array.prototype.remove = function (c) { //Remove c from the array without affecting the initial array
@@ -1801,8 +1800,12 @@ function nthroot (x, n, nDec) { //Nth-root of x
 	return r.toNDec(nDec || 20)
 }
 
-function log (y, x) { //LOGy(x) (log x to the base y)
-	return Math.log(y)/Math.log(x || 2)
+function log (x, y) { //LOGy(x) (log x to the base y)
+	return Math.log(x)/Math.log(y || 10)
+}
+
+function ln(x) {
+	return log(x, Math.E);
 }
 
 function Bin (n, p, r) { //Binomial distrib. where X~Bin(n, p) and it returns P(X = r)
@@ -1927,7 +1930,11 @@ function getClosestRoot (x, n) { //Get the closest whole nth-root of x
 	if(Math.pow(er, n) <= x) return er
 	else er = (Math.pow(n, -2) + x / Math.pow(n, 4)-x / Math.pow(n, 5) + Math.pow(x, n) / (Math.pow(n, Math.pow(n, 3) + 3)) + x / Math.pow(n, 2)) / 2;
 	if(Math.pow(er, n) > x) er = (er + rof) / 2;
-	return (x / er + er) / 2
+	var res = [rof, er, (x / er + er) / 2, (er + rof) / 2];
+	var resMap = res.map(function (x) {
+		return Math.pow(x, n);
+	});
+	return res[resMap.lookFor(getClosest(x, resMap))] * .9956973041;
 }
 
 function simpleInterest (po, i, t) {
@@ -6044,15 +6051,15 @@ window.onkeypress = function (keyStroke) {
 	Sys.in.record(keyStroke)
 }
 
-function RegExpify(list) { //Turn an string into a regular expression
+function RegExpify (list) { //Turn an string into a regular expression
 	return new RegExp(list.replace(/[|\\{}()[\]^$+*?.:\'<>%]/g, "\\$&"), "gm");
 }
 
-function unRegExpify(re) { //Turn a regular expression into a string
-	return re.toString().get(1, re.toString().lastIndexOf("/")-1).remove("\\");
+function unRegExpify (re) { //Turn a regular expression into a string
+	return re.toString().get(1, re.toString().lastIndexOf("/") - 1).remove("\\");
 }
 
-function occurrenceList(list) { //Get the occurrence list
+function occurrenceList (list) { //Get the occurrence list
 	if(!list.isIterable()) throw new Error("It must be an iterable object !");
 	var nums = list.getOccurrences(true), chars = [], oc = list.getOccurrences(), res = {};
 	for (var i = 0; i < oc.length; i++) chars[i] = oc[i].split(":")[0];
@@ -6060,10 +6067,46 @@ function occurrenceList(list) { //Get the occurrence list
 	return res;
 }
 
-function Objectify(keyArr, valArr) { //Join two arrays into an object
+function Objectify (keyArr, valArr) { //Join two arrays into an object
 	var res = {};
 	for (var i = 0; i < keyArr.length; i++) {
 		res[keyArr[i]] = valArr[i];
 	}
 	return res;
+}
+
+function isCloser (x, a, b) { //Is a closer to x than b
+	return Math.abs(x - a) < Math.abs(x - b);
+}
+
+function getClosest (x, opt) { //Get the closest option from itself to x
+	var closest = opt[0];
+	for (var i = 1; i < opt.length; i++) closest = isCloser(x, opt[i - 1], opt[i])? opt[i - 1]: opt[i];
+	return closest;
+}
+
+function Stream (initVal, formula, nbVals) {
+	this.start = initVal || 0;
+	this.formula = formula;
+	this.data = [this.start];
+
+	this.next = function () {
+		this.data.push(eval(this.formula.multiReplace([
+				[/x/g, this.data.last()], [/x0/g, this.start],
+				[/x\(n-2\)/g, this.data[this.data.length - 2]],
+				[/pi/ig, Math.PI], [/e/ig, Math.E], [/sqrt(2)/ig, Math.SQRT2],
+				[/(pow|max|min)\((.*?),(| )(.*?)\)/, Math["$1"]("$2", "$3")],
+				[/(sqrt|cbrt|cos|sin|tan|acos|asin|cosh|sinh|tanh|acosh|asinh|atanh|exp|abs|)\((.*?)\)/, Math["$1"]("$2")],
+				[/(ln|log|nthroot|clampTop|clampBottom)\((.*?),(| )(.*?)\)/, window["$1"]("$2", "$3")],
+				[/(clamp)\((.*?),(| )(.*?),(| )(.*?)\)/, window["$1"]("$2", "$3", "$4")],
+			])));
+	}
+
+	if (nbVals) {
+		for (var i = 1; i < nbVals; i++) this.next();
+	}
+
+	this.toString = function () {
+		return "Stream(start=" + this.start + ", formula=" + this.formula + ", data=" + this.data.toStr(true) + ")";
+	}
 }
