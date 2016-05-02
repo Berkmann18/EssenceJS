@@ -1480,8 +1480,8 @@ function escapeHTML (str) { //Get the html equivalent of the string
 
 function unescapeHTML (str) { //Get the string equivalent of the html code
 	var span = document.createElement("span");
-	span.removeChild(document.createTextNode(str));
-	return span.innerText
+	span.innerHTML = str;
+	return span.innerText;
 }
 
 function isNon (val) { //Like isEmpty
@@ -1865,6 +1865,10 @@ function Po2Norm (l, y) { //Poisson to Normal
 
 function clamp (x, a, b) { //Clamp value to range <a, b> to keep it in
 	return (x < a)? a: ((x > b)? b: x)
+}
+
+function revClamp(x, a, b) { //Like clamp but that would reject x values that clamp would leave unchanged
+	return (a <= x && x <= b)? getClosest(x, [a, b]): x; 
 }
 
 function clampBottom (x, a) { //Clamp value to range <a, inf<
@@ -4417,7 +4421,7 @@ function abcEncode (txt) { //Encode the alphabet (regardless of the case) to hex
 				case "?": code[i] = 0x1E;break;
 				case "(": code[i] = 0x1F;break;
 				case ")": code[i] = 0x20;break;
-				case ": ":code[i] = 0x21;break;
+				case ":":code[i] = 0x21;break;
 				case ";": code[i] = 0x22;break;
 				case "@": code[i] = 0x23;break;
 				case "~": code[i] = 0x24;break;
@@ -4432,9 +4436,9 @@ function abcEncode (txt) { //Encode the alphabet (regardless of the case) to hex
 				case "£": code[i] = 0x2D;break;
 				case "$": code[i] = 0x2E;break;
 				case "€": code[i] = 0x2F;break;
-				case " + ": code[i] = 0x30;break;
-				case " * ": code[i] = 0x31;break;
-				case " % ": code[i] = 0x32;break;
+				case "+": code[i] = 0x30;break;
+				case "*": code[i] = 0x31;break;
+				case "%": code[i] = 0x32;break;
 				case "^": code[i] = 0x33;break;
 				case "°": code[i] = 0x34;break;
 				default: code[i] = "x";
@@ -4498,9 +4502,9 @@ function abcDecode (txt) { //Encode the alphabet (regardless of the case) to hex
 				case "45": code[i] = "£";break;
 				case "46": code[i] = "$";break;
 				case "47": code[i] = "€";break;
-				case "48": code[i] = " + ";break;
-				case "49": code[i] = " * ";break;
-				case "50": code[i] = " % ";break;
+				case "48": code[i] = "+";break;
+				case "49": code[i] = "*";break;
+				case "50": code[i] = "%";break;
 				case "51": code[i] = "^";break;
 				case "52": code[i] = "°";break;
 				default: code[i] = 0;
@@ -4509,6 +4513,33 @@ function abcDecode (txt) { //Encode the alphabet (regardless of the case) to hex
 		return isType(txt, "string")? code.join(""): code
 	}
 	return Essence.say("The parameter of abcDecode must be a string or an array.", "err")
+}
+
+function ilEncrypt(data) {
+	var res = isType(data, "String")? data.split(""): data;
+	for (var i = 0; i < res.length; i++) res[i] = String.fromCharCode(abcModulus(data[i].charCodeAt(0) * data.length));
+	return isType(data, "String")? res.join(""): res;
+}
+
+function ilDecrypt(data) {
+	var res = isType(data, "String")? data.split(""): data;
+	for (var i = 0; i < res.length; i++) res[i] = String.fromCharCode(abcModulus(data[i].charCodeAt(0) / data.length));
+	return isType(data, "String")? res.join(""): res;
+}
+
+function abcClamp(code) { //Keeps an ascii code in the alphabetical range in the ascii table
+	return code === 32? 32: revClamp(clamp(code, 65, 122), 90, 97);
+}
+
+function modRange(x, a, b) { //Like x % b but that forbids values x < a
+	var r = x % (b + 1);
+	return r + (r < a)? a + r: 0;
+}
+
+function abcModulus(code) {
+	var m = code % 123;
+	if(90 < m && m < 97) return m + abcModulus(Math.abs(getClosest(m, [90, 97]) - m));
+	return m + ((m < 65 && m != 32)? 65 + m: 0); 
 }
 
 function addFav (url, title, elmId) { //Url = http://Www...." title = "My Website"
