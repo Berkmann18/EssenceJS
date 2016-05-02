@@ -53,10 +53,10 @@
 - min2dec, dec2min
 - toS, sec2time
 - nthroot, getClosestRoot
-- log
+- log, ln
 - Bin, BinCumul, Norm, StdNorm, Po, PoCumul, C, Bin2Norm, Bin2Po, Po2Norm
 - factorial
-- clamp, clampBottom, clampTop
+- clamp, clampBottom, clampTop, revClamp, abcClamp
 - mapLinear
 - deg2rad, rad2deg, cels2fahr, fahr2cels
 - primeN, primeCheck
@@ -72,6 +72,8 @@
 - union, intersection, complement, symDif, bitStr, And, Or, Xor, Imply
 - manhattanDist, euclidianDist, diagDist, h
 - readCoord
+- isCloser, getClosest
+- abcModulus, modRange
 
 # File
 - stripPath
@@ -98,6 +100,8 @@
 - binarySearch
 - Archive
 - virtualHistory
+- occurenceList
+- Stream
 
 # UI
 - toMaxSize
@@ -114,7 +118,7 @@
 - 
 
 # Security
-- encrypt, decrypt
+- encrypt, decrypt, ilEncrypt, ilDecrypt, 
 - abcEncode, abcDecode
 - genPassword, genHash
 
@@ -131,5 +135,4 @@
 - Sys
 - asciiTable
 - RegExpify, unRegExpify
-- occurrencesList
 - Objectify
