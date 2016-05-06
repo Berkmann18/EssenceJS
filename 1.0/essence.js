@@ -11,28 +11,28 @@ var Essence = {
 	}, say: function (msg, type, style, style0) { //Say something in the console
 		type = (isNon(type))? "": type.slice(0, 4).toLowerCase();
 		if (style && !style0) {
-			if(type === "info") console.info("%c[Essence.js]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
-			else if(type === "erro") console.error("%c[Essence.js]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
-			else if(type === "warn") console.warn("%c[Essence.js]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
-			else if(type === "succ") console.log("%c[Essence.js]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
+			if (type === "info") console.info("%c[Essence.js]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
+			else if (type === "erro") console.error("%c[Essence.js]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
+			else if (type === "warn") console.warn("%c[Essence.js]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
+			else if (type === "succ") console.log("%c[Essence.js]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
 			else console.log("%c[Essence.js]%c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
 		} else if (style0 && style0) {
-			if(type === "info") console.info("%c[Essence.js]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
-			else if(type === "erro") console.error("%c[Essence.js]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
-			else if(type === "warn") console.warn("%c[Essence.js]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
-			else if(type === "succ") console.log("%c[Essence.js]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
+			if (type === "info") console.info("%c[Essence.js]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
+			else if (type === "erro") console.error("%c[Essence.js]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
+			else if (type === "warn") console.warn("%c[Essence.js]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
+			else if (type === "succ") console.log("%c[Essence.js]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
 			else console.log("%c[Essence.js]%c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
 		} else {
-			if(type === "info") console.info("%c[Essence.js]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
-			else if(type === "erro") console.error("%c[Essence.js]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
-			else if(type === "warn") console.warn("%c[Essence.js]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
-			else if(type === "succ") console.log("%c[Essence.js]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
+			if (type === "info") console.info("%c[Essence.js]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
+			else if (type === "erro") console.error("%c[Essence.js]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
+			else if (type === "warn") console.warn("%c[Essence.js]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
+			else if (type === "succ") console.log("%c[Essence.js]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
 			else console.log("%c[Essence.js]%c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
 		}
 	},
 	css: "@charset: 'UTF-8'; *{font-family:Calibrie,Verdana,Segoe UI} body{height:100 %;width:auto;padding:0} table{background:#000}table,td,th{border:1px solid #000;color:#000;background:#fff;cellspacing:0;cellpadding:2;border-collapse:true;}tr:nth-child(even) td{background:#ddd}.none,.none td,.none th{border:none}tr:hover td{background:#888																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							}.inf{color:#008}.succ{color:#0f0}.err{color:#f00}.quest{color:#00f}.warn{color:#fc0}.info{border-color:#008;background-color:#00008f}.success{border-color:#080;background-color:#008f00}.error{border-color:#800;background-color:#8f0000}.question{border-color:#00f;background-color:#0000f8}.warning{border-color:#f8c808;background-color:#fc0}.block{color:#fff;background-repeat:repeat;background-position:0 center;border-style:solid;border-width:1px;-webkit-appearance:none;outline:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;width:100 %;height:1.1em;line-height:200 %;white-space:nowrap;min-height:16px;position:relative;margin:2px;padding:.3em 2px;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-touch-callout:none;border-radius:7px;-webkit-border-radius:7px;-moz-border-radius:7px}.icon{width:64px;height:64px;border:none;margin:2px} kbd{border:3px outset #ccc;background:#ccc;border-radius:5px;-webkit-border-radius:7px;-moz-border-radius:7px;-o- border-radius:7px;padding:2px;font-family:Consolas,Tahoma,Segoe UI}h1.title{text-decoration:underline} h2{color:#088} h3{color:#0ff}.code-tag,.code-inst{color:#00f}.code-cmt{color:#0f0}.code-str,.code-id{color:#00c0c0}.code-num,.code-class{color:#f00}.code-attr{color:#c00}.code-val{color:#fc0}.code-type{color:#800080}.code-doc, .code-op{color:#0ff},.code-var{color:#0000c0}.code-keyword{color:#f0f}",
 	applyCSS: function () {
-		if(isNon($n("style")) || $e("style").isEmpty()) $e("head").write($n("head").outerHTML + "<style type = 'text/css'>" + Essence.css + "</style>", true);
+		if (isNon($n("style")) || $e("style").isEmpty()) $e("head").write($n("head").outerHTML + "<style type = 'text/css'>" + Essence.css + "</style>", true);
 		else $n("style").innerHTML += Essence.css;
 		if ($e("html").val(true).indexOf("<body></body>")>-1) {
 			var ix = $e("html").val(true).indexOf("<body></body>");
@@ -52,7 +52,7 @@ var Essence = {
 	}, update: function () { //To keep the script updated !!
 		var scriptArr = $e(" * script");
 		for (var i = 0; i < scriptArr.length; i ++) {
-			if(scriptArr[i].src.indexOf("essence.js")>-1 || scriptArr[i].src.indexOf("essence.min.js")>-1) scriptArr[i].src = this.source || Essence.source;
+			if (scriptArr[i].src.indexOf("essence.js")>-1 || scriptArr[i].src.indexOf("essence.min.js")>-1) scriptArr[i].src = this.source || Essence.source;
 		}
 		Essence.say("%cEssence.(min).js%c has been updated", "succ", "text-decoration: underline", "text-decoration: none");
 	},
@@ -82,7 +82,7 @@ var Essence = {
 	addToPrinter: function (txt, type) { //Allow the usage of print without having to directly touch to txt2print
 		txt.indexOf("\n\r")>-1? this.print(txt, type): this.txt2print += txt;
 	}, print: function (txt, type) { //Works like the print in Java
-		if(txt) this.txt2print += txt;
+		if (txt) this.txt2print += txt;
 		this.txt2print = this.txt2print.split("\b");
 		for (var i = 0; i < this.txt2print.length; i++) {
 			this.say(this.txt2print[i], type);
@@ -113,27 +113,27 @@ var $e = function (selector) { //THE selector !!
 }
 
 function Element (selector) { //The element object
-	if(/^([\#\.\* _-\`\~\&]\W * |\S|undefined|null|())$/.test(selector)) throw new SyntaxError("Element cannot accept the selector '" + selector + "' as it's invalid.")//Reject invalid selectors
-	if(selector[0] === "#") this.node = document.querySelector(selector) || document.getElementById(selector.slice(1, selector.length))//Id
-	else if(selector[0] === ".") this.node = document.querySelector(selector) || document.getElementByClassName(selector.slice(1, selector.length))//Class
-	else if(selector[0] === "*") this.node = document.querySelectorAll(selector.slice(1, selector.length)) || document.getElementsByTagName(selector.slice(1, selector.length))//Node array
+	if (/^([\#\.\* _-\`\~\&]\W * |\S|undefined|null|())$/.test(selector)) throw new InvalidParamError("Element cannot accept the selector '" + selector + "' as it's invalid.")//Reject invalid selectors
+	if (selector[0] === "#") this.node = document.querySelector(selector) || document.getElementById(selector.slice(1, selector.length))//Id
+	else if (selector[0] === ".") this.node = document.querySelector(selector) || document.getElementByClassName(selector.slice(1, selector.length))//Class
+	else if (selector[0] === "*") this.node = document.querySelectorAll(selector.slice(1, selector.length)) || document.getElementsByTagName(selector.slice(1, selector.length))//Node array
 	else this.node = document.querySelector(selector);
 	this.val = function (getHTML, withTags) { //Get the value of the element's node
 		if (isType(this.node, "array")) {
 			var arr = [];
 			for (var i = 0; i < this.node.length; i++) {
-				if(this.node[i].value && !getHTML && !withTags) arr.push(this.node[i].value);
-				else if(this.node[i].innerHTML && getHTML && !withTags) arr.push(this.node[i].innerHTML);
-				else if(this.node[i].innerText && !getHTML && !withTags) arr.push(this.node[i].innerText);
-				else if(this.node[i].outerHTML && !getHTML && withTags) arr.push(this.node[i].outerHTML);
+				if (this.node[i].value && !getHTML && !withTags) arr.push(this.node[i].value);
+				else if (this.node[i].innerHTML && getHTML && !withTags) arr.push(this.node[i].innerHTML);
+				else if (this.node[i].innerText && !getHTML && !withTags) arr.push(this.node[i].innerText);
+				else if (this.node[i].outerHTML && !getHTML && withTags) arr.push(this.node[i].outerHTML);
 				else arr.push(this.node[i].value? this.node[i].value: this.node[i].innerText);
 			}
 			return arr
 		}
-		if(this.node.value && !getHTML && !withTags) return this.node.value
-		else if(this.node.innerHTML && getHTML && !withTags) return this.node.innerHTML
-		else if(this.node.innerText && !getHTML && !withTags) return this.node.innerText
-		else if(this.node.outerHTML && !getHTML && withTags) return this.node.outerHTML
+		if (this.node.value && !getHTML && !withTags) return this.node.value
+		else if (this.node.innerHTML && getHTML && !withTags) return this.node.innerHTML
+		else if (this.node.innerText && !getHTML && !withTags) return this.node.innerText
+		else if (this.node.outerHTML && !getHTML && withTags) return this.node.outerHTML
 		else return this.node.value? this.node.value: this.innerText
 	}
 			
@@ -149,61 +149,61 @@ function Element (selector) { //The element object
 		//This.val(parseToHTML, incTags) = nval;
 		if (isType(this.node, "array")) {
 			for (var i = 0; i < this.node.length; i++) {
-				if(this.node[i].value && !parseToHTML && !incTags) this.node[i].value = isType(nval, "array")? nval[i]: nval;
-				else if(this.node[i].innerHTML && parseToHTML && !incTags) this.node[i].innerHTML = isType(nval, "array")? nval[i]: nval;
-				else if(this.node[i].innerText && !parseToHTML && !incTags)this.node[i].innerText = isType(nval, "array")? nval[i]: nval;
-				else if(this.node[i].outerHTML && !parseToHTML && incTags) this.node[i].outerHTML = isType(nval, "array")? nval[i]: nval;
+				if (this.node[i].value && !parseToHTML && !incTags) this.node[i].value = isType(nval, "array")? nval[i]: nval;
+				else if (this.node[i].innerHTML && parseToHTML && !incTags) this.node[i].innerHTML = isType(nval, "array")? nval[i]: nval;
+				else if (this.node[i].innerText && !parseToHTML && !incTags)this.node[i].innerText = isType(nval, "array")? nval[i]: nval;
+				else if (this.node[i].outerHTML && !parseToHTML && incTags) this.node[i].outerHTML = isType(nval, "array")? nval[i]: nval;
 				else this.node[i].value? (this.node[i].value = isType(nval, "array")? nval[i]: nval): (this.node[i].innerText = isType(nval, "array")? nval[i]: nval);
 			}
 		}
 		
-		if(this.node.value && !parseToHTML && !incTags) this.node.value = nval;
-		else if(this.node.innerHTML && parseToHTML && !incTags) this.node.innerHTML = nval;
-		else if(this.node.innerText && !parseToHTML && !incTags) this.node.innerText = nval;
-		else if(this.node.outerHTML && incTags && !parseToHTML) this.node.outerHTML = nval;
+		if (this.node.value && !parseToHTML && !incTags) this.node.value = nval;
+		else if (this.node.innerHTML && parseToHTML && !incTags) this.node.innerHTML = nval;
+		else if (this.node.innerText && !parseToHTML && !incTags) this.node.innerText = nval;
+		else if (this.node.outerHTML && incTags && !parseToHTML) this.node.outerHTML = nval;
 		else this.node.value? this.node.value = nval: this.innerText = nval;
 	}
 
 	this.before = function (nval, parseToHTML, incTags) { //Write before (like a string/code unshift)
 		if (isType(this.node, "array")) {
 			for (var i = 0; i < this.node.length; i++) {
-				if(this.node[i].value && !parseToHTML && !incTags) this.node[i].value = isType(nval, "array")? nval[i] + this.node[i].value: nval + this.node[i].value;
-				else if(this.node[i].innerHTML && parseToHTML && !incTags) this.node[i].innerHTML = isType(nval, "array")? nval[i] + this.node[i].innerHTML: nval+ this.node[i].innerHTML;
-				else if(this.node[i].innerText && !parseToHTML && !incTags) this.node[i].innerText = isType(nval, "array")? nval[i] + this.node[i].innerText: nval + this.node[i].innerText;
-				else if(this.node[i].outerHTML && !parseToHTML && incTags) this.node[i].outerHTML = isType(nval, "array")? nval[i] + this.node[i].outerHTML: nval + this.node[i].outerHTML;
+				if (this.node[i].value && !parseToHTML && !incTags) this.node[i].value = isType(nval, "array")? nval[i] + this.node[i].value: nval + this.node[i].value;
+				else if (this.node[i].innerHTML && parseToHTML && !incTags) this.node[i].innerHTML = isType(nval, "array")? nval[i] + this.node[i].innerHTML: nval+ this.node[i].innerHTML;
+				else if (this.node[i].innerText && !parseToHTML && !incTags) this.node[i].innerText = isType(nval, "array")? nval[i] + this.node[i].innerText: nval + this.node[i].innerText;
+				else if (this.node[i].outerHTML && !parseToHTML && incTags) this.node[i].outerHTML = isType(nval, "array")? nval[i] + this.node[i].outerHTML: nval + this.node[i].outerHTML;
 				else this.node[i].value? (this.node[i].value = isType(nval, "array")? nval[i] + this.node[i].value: nval + this.node[i].value): (this.node[i].innerText = isType(nval, "array")? nval[i] + this.node[i].innerText: nval + this.node[i].innerText);
 			}
 		}
 		
-		if(this.node.value && !parseToHTML && !incTags) this.node.value = nval + this.node.value;
-		else if(this.node.innerHTML && parseToHTML && !incTags) this.node.innerHTML = nval + this.node.innerHTML;
-		else if(this.node.innerText && !parseToHTML && !incTags) this.node.innerText = nval + this.node.innerText;
-		else if(this.node.outerHTML && incTags && !parseToHTML) this.node.outerHTML = nval + this.node.outerHTML;
+		if (this.node.value && !parseToHTML && !incTags) this.node.value = nval + this.node.value;
+		else if (this.node.innerHTML && parseToHTML && !incTags) this.node.innerHTML = nval + this.node.innerHTML;
+		else if (this.node.innerText && !parseToHTML && !incTags) this.node.innerText = nval + this.node.innerText;
+		else if (this.node.outerHTML && incTags && !parseToHTML) this.node.outerHTML = nval + this.node.outerHTML;
 		else this.node.value? this.node.value = nval + this.node.value: this.innerText = nval + this.innerText;
 	}
 	
 	this.after = function (nval, parseToHTML, incTags) { //Write after (like an array push)
 		if (isType(this.node, "array")) {
 			for (var i = 0; i < this.node.length; i++) {
-				if(this.node[i].value && !parseToHTML && !incTags) this.node[i].value += isType(nval, "array")? nval[i]: nval;
-				else if(this.node[i].innerHTML && parseToHTML && !incTags) this.node[i].innerHTML += isType(nval, "array")? nval[i]: nval;
-				else if(this.node[i].innerText && !parseToHTML && !incTags)this.node[i].innerText += isType(nval, "array")? nval[i]: nval;
-				else if(this.node[i].outerHTML && !parseToHTML && incTags) this.node[i].outerHTML += isType(nval, "array")? nval[i]: nval;
+				if (this.node[i].value && !parseToHTML && !incTags) this.node[i].value += isType(nval, "array")? nval[i]: nval;
+				else if (this.node[i].innerHTML && parseToHTML && !incTags) this.node[i].innerHTML += isType(nval, "array")? nval[i]: nval;
+				else if (this.node[i].innerText && !parseToHTML && !incTags)this.node[i].innerText += isType(nval, "array")? nval[i]: nval;
+				else if (this.node[i].outerHTML && !parseToHTML && incTags) this.node[i].outerHTML += isType(nval, "array")? nval[i]: nval;
 				else this.node[i].value? (this.node[i].value += isType(nval, "array")? nval[i]: nval): (this.node[i].innerText += isType(nval, "array")? nval[i]: nval);
 			}
 		}
 		
-		if(this.node.value && !parseToHTML && !incTags) this.node.value += nval;
-		else if(this.node.innerHTML && parseToHTML && !incTags) this.node.innerHTML += nval;
-		else if(this.node.innerText && !parseToHTML && !incTags) this.node.innerText += nval;
-		else if(this.node.outerHTML && incTags && !parseToHTML) this.node.outerHTML += nval;
+		if (this.node.value && !parseToHTML && !incTags) this.node.value += nval;
+		else if (this.node.innerHTML && parseToHTML && !incTags) this.node.innerHTML += nval;
+		else if (this.node.innerText && !parseToHTML && !incTags) this.node.innerText += nval;
+		else if (this.node.outerHTML && incTags && !parseToHTML) this.node.outerHTML += nval;
 		else this.node.value? this.node.value += nval: this.innerText += nval;
 	}
 	
 	this.remove = function (c, r) { //Remove the character from the string/array/number and return it with the r character as a joiner or a blank when r isn't specified
 		if (isType(this.val(c, "Array"))) {
 			for (var i = 0; i < this.size(); i++) {
-				if(this.val()[i] == c) this.write(this.val().slice(0, i).concat(this.val().slice(i + 1, this.size())));
+				if (this.val()[i] == c) this.write(this.val().slice(0, i).concat(this.val().slice(i + 1, this.size())));
 			}
 		}
 		this.write(this.val().split(c).join(r || "")) //Silent removing
@@ -247,10 +247,10 @@ function Element (selector) { //The element object
 	this.addClass = function (className) { //Add a class to the element's node
 		if (isType(this.node, "array")) {
 			for (var i = 0; i < this.node.length; i++) {
-				if(!this.node[i].hasClass(clasName)) this.node[i].className += " " + clasName;
+				if (!this.node[i].hasClass(clasName)) this.node[i].className += " " + clasName;
 			}
 		} else {
-			if(!this.hasClass(className)) this.node.className += " " + className;
+			if (!this.hasClass(className)) this.node.className += " " + className;
 		}
 }
 
@@ -278,7 +278,7 @@ function Element (selector) { //The element object
 		}else if (prop === "enabled") {
 			(this.css("enabled") === "enabled")? this.setCSS("enabled", "disabled"): this.setCSS("enabled", "enabled");
 		}else if (!isNon(prop) && !isNon(params)) { //For color, bgcolor, opacity, font-size, ...
-			if(isNon(this.css(prop))) this.setCSS(prop, params[0]);
+			if (isNon(this.css(prop))) this.setCSS(prop, params[0]);
 			for (var i = 0; i < params.length; i++) { //Slide through the parameters and go to the next one if the one already set is present
 				if (this.css(prop) === params[i]) {
 					this.setCSS(prop, params[(i + 1) % params.length]);
@@ -306,13 +306,18 @@ function Element (selector) { //The element object
 		"progress", "ratechange", "reset", "resize", "scroll", "search", "seeked", "seeking", "select", "show", "stalled", "storage", "submit", "suspend", "timeupdate", "toggle",
 		"transitionend", "unload", "volumechange", "waiting", "webkitanimationend", "webkitanimationiteration", "webkitanimationstart", "webkittransitionend", "wheel"];
 		for (var i = 0; i < evts.length; i++) {
-			if(evt.normal() === evts[i]) this.node.addEventListener(evt, act, false);
+			if (evt.normal() === evts[i]) this.node.addEventListener(evt, act, false);
 		}
 	}
 	
 	this.toString = function () {
 		return "[object Element]"
 	}
+
+	this.tagName = function() { //get the enclosing tag's name
+		return this.node.tagName.toLowerCase()
+	}
+
 	return this
 }
 
@@ -321,21 +326,21 @@ function $n(selector){ //To get directly the node without having to use $e(selec
 }
 
 function include (file, type) { //Include an external file/resource as a child of the document
-	if(!type) type = (file.indexOf(".js")>0)? "script": "link";
+	if (!type) type = (file.indexOf(".js") > 0)? "script": "link";
 	var el = document.createElement(type);
-	if(type === "script") el.src = file;
+	if (type === "script") el.src = file;
 	else el.href = file;
 	el.type = (type === "script")? "text/javascript": "text/css";
 	document.head.appendChild(el)
 }
 
 function print (st, isHTML, sw) { //Print something somewhere
-	if(!sw) sw = "body";
+	if (!sw) sw = "body";
 	$e(sw).after(st, isHTML)
 }
 
 function println (st, sw) { //Same as print but with a new line just like in Java
-	if(!sw) sw = "body";
+	if (!sw) sw = "body";
 	$e(sw).after(st + "<br />", true)
 }
 
@@ -351,7 +356,7 @@ return this.name !== undefined? this.name: this.title
 Object.prototype.count = function (c) { //Counts how many times a character/property/number c is present in the object
 	var n = 0;
 	for (var i = 0; i < this.length; i++) {
-		if(this[i] === c) n++;
+		if (this[i] === c) n++;
 	}
 	return n
 }
@@ -359,7 +364,7 @@ Object.prototype.count = function (c) { //Counts how many times a character/prop
 Object.prototype.positions = function (c) { //Get all the positions of a character/property/number c
 	var pos = [];
 	for (var i = 0; i < this.length; i++) {
-		if(this[i] === c) pos.push(i);
+		if (this[i] === c) pos.push(i);
 	}
 	return pos
 }
@@ -415,8 +420,8 @@ Array.prototype.odd = function () { //Get all the elements at an odd position
 
 Array.prototype.max = function (start, end) { //Get the maximum value of the array
 	var m = this[start || 0];
-	if((!start && !end) || (start === 0 && end >= this.length-1)) for(var i = 1; i < this.length; i++) m = Math.max(m, this[i]);
-	else if(start && !end) for(i = start + 1; i < this.length; i++) m = Math.max(m, this[i]);
+	if ((!start && !end) || (start === 0 && end >= this.length-1)) for(var i = 1; i < this.length; i++) m = Math.max(m, this[i]);
+	else if (start && !end) for(i = start + 1; i < this.length; i++) m = Math.max(m, this[i]);
 	else for(i = start + 1; i <= end; i++) m = Math.max(m, this[i]);
 	return m
 }
@@ -431,8 +436,8 @@ Array.prototype.median = function (nval) { //Median (middle cell)
 
 Array.prototype.min = function (start, end) { //Get the minimum value of the array
 	var m = this[start || 0];
-	if((!start && !end) || (start === 0 && end >= this.length-1)) for(var i = 1; i < this.length; i++) m = Math.min(m, this[i]);
-	else if(start && !end) for(i = start + 1; i < this.length; i++) m = Math.min(m, this[i]);
+	if ((!start && !end) || (start === 0 && end >= this.length-1)) for(var i = 1; i < this.length; i++) m = Math.min(m, this[i]);
+	else if (start && !end) for(i = start + 1; i < this.length; i++) m = Math.min(m, this[i]);
 	else for(i = start + 1; i <= end; i++) m = Math.min(m, this[i]);
 	return m
 }
@@ -465,7 +470,7 @@ Array.prototype.remove = function (c) { //Remove c from the array without affect
 		return arr;
 	} else {
 		for (i = 0; i < this.length; i++) {
-			if(arr[i] === c) arr = arr.slice(0, i).concat(arr.slice(i + 1, arr.length));
+			if (arr[i] === c) arr = arr.slice(0, i).concat(arr.slice(i + 1, arr.length));
 		}
 		arr = arr.map(function (x) { //Double check
 			return x === c? undefined: x
@@ -473,7 +478,7 @@ Array.prototype.remove = function (c) { //Remove c from the array without affect
 		if (arr.indexOf(undefined)!=-1 && arr.length > 0) {
 			var w = [];
 			for ( i = 0; i < arr.length; i++) {
-				if(arr[i] !== undefined) w.push(isType(arr[i], "Number")? parseFloat(arr[i]): arr[i]);
+				if (arr[i] !== undefined) w.push(isType(arr[i], "Number")? parseFloat(arr[i]): arr[i]);
 			}
 			arr = w;
 		}
@@ -497,23 +502,23 @@ Array.prototype.getOccurrences = function (simplified) { //Gets the number of oc
 
 Array.prototype.replace = function (Ci, Cf, toStr) { //Replace all the characters Ci by Cf in the array (if there's any Ci characters in the array)
 	for (var i = 0; i < this.length; i++) {
-		if(this[i] === Ci) this[i] = Cf;
+		if (this[i] === Ci) this[i] = Cf;
 	}
 	return toStr? this.toString(): this;
 }
 
 Array.prototype.sum = function (start, end) { //The sum of every terms of the array
 	var s = 0;
-	if((!start && !end) || (start === 0 && end >= this.length-1)) for(var i = 0; i < this.length; i++) s += this[i];
-	else if(start && !end) for(i = start; i < this.length; i++) s += this[i];
+	if ((!start && !end) || (start === 0 && end >= this.length-1)) for(var i = 0; i < this.length; i++) s += this[i];
+	else if (start && !end) for(i = start; i < this.length; i++) s += this[i];
 	else for(i = start; i <= end; i++) s += this[i];
 	return s
 }
 
 Array.prototype.prod = function (start, end) { //The product of every terms of the array
 	var s = 0;
-	if((!start && !end) || (start === 0 && end >= this.length-1)) for(var i = 0; i < this.length; i++) s *= this[i];
-	else if(start && !end) for(i = start; i < this.length; i++) s *= this[i];
+	if ((!start && !end) || (start === 0 && end >= this.length-1)) for(var i = 0; i < this.length; i++) s *= this[i];
+	else if (start && !end) for(i = start; i < this.length; i++) s *= this[i];
 	else for(i = start; i <= end; i++) s *= this[i];
 	return s
 }
@@ -537,15 +542,15 @@ Array.prototype.sum2d = function (start, end) { //Sum for 2D arrays where start 
 }
 
 Array.prototype.mean = function (nbDec, start, end) { //Mean of a numerical array
-	if(!start) start = 0;
-	if(!end) end = this.lastIndex();
+	if (!start) start = 0;
+	if (!end) end = this.lastIndex();
 	var sum = this.sum(start, end);
 	return (sum/(this.length-start)).toNDec(nbDec) + 0 //To avoid getting the Number object representation rather than the actual result
 }
 
 Array.prototype.avg = function (nbDec, start, end) { //Timewise average of a numerical array
-	if(!start) start = 0;
-	if(!end) end = this.lastIndex();
+	if (!start) start = 0;
+	if (!end) end = this.lastIndex();
 	var sum = this.sum(start, end)-this.slice(start, end + 1).max()-this.slice(start, end + 1).min();
 	return (sum/(this.length-2- start)).toNDec(nbDec) + 0
 }
@@ -597,11 +602,11 @@ Array.prototype.iqr = function (nbDec) { //Inter-Quartile Range
 
 Array.prototype.get = function (start, end) { //Get the sub-array starting at the start index and ending at the end index
 	var res = [];
-	if(start < 0 && !end){
+	if (start < 0 && !end){
 		end = start;
 		start = 0;
 	}
-	if(end < 0) end = this.length + end - 1;
+	if (end < 0) end = this.length + end - 1;
 	for(var i = (start || 0); i <= (end || this.length-1); i++) res.push(this[i]);
 	return res.remove()
 }
@@ -624,8 +629,8 @@ Array.prototype.quickSort = function (left, right) { //Fastest sorting algorithm
 				j--;
 			}
 		}
-		if(left < i-1) this.quickSort(left, i-1);
-		if(i < right) this.quickSort(i, right);
+		if (left < i-1) this.quickSort(left, i-1);
+		if (i < right) this.quickSort(i, right);
 	}
 	return this
 }
@@ -648,8 +653,8 @@ Array.prototype.revSort = function (left, right) { //QuickSort but in the opposi
 				j--;
 			}
 		}
-		if(left > i-1) this.revSort(left, i-1);
-		if(i > right) this.revSort(i, right);
+		if (left > i-1) this.revSort(left, i-1);
+		if (i > right) this.revSort(i, right);
 	}
 	return this
 }
@@ -665,14 +670,14 @@ Array.prototype.bubbleSort = function (order) { //My version of the Bubble Sort
 					s = true;
 				}
 				if (i < arr.length-(j + 1)) {
-					if(arr[i]>arr[i + 2]) arr = swap(arr, i, i + 2);
+					if (arr[i]>arr[i + 2]) arr = swap(arr, i, i + 2);
 					if (arr[i + 1]>arr[i + 2]) {
 						arr = swap(arr, i + 1, i + 2) 
 						s = true;
 					}
 				}
 				if (i < arr.length-(j + 2)) {
-					if(arr[i]>arr[i + 3]) arr = swap(arr, i, i + 3);
+					if (arr[i]>arr[i + 3]) arr = swap(arr, i, i + 3);
 					if (arr[i + 1]>arr[i + 3]) {
 						arr = swap(arr, i + 1, i + 3) 
 						//s = true;
@@ -690,14 +695,14 @@ Array.prototype.bubbleSort = function (order) { //My version of the Bubble Sort
 					s = true;
 				}
 				if (i < arr.length-(j + 1)) {
-					if(arr[i]<arr[i + 2]) arr = swap(arr, i, i + 2);
+					if (arr[i]<arr[i + 2]) arr = swap(arr, i, i + 2);
 					if (arr[i + 1]<arr[i + 2]) {
 						arr = swap(arr, i + 1, i + 2) 
 						s = true;
 					}
 				}
 				if (i < arr.length-(j + 2)) {
-					if(arr[i]<arr[i + 3]) arr = swap(arr, i, i + 3);
+					if (arr[i]<arr[i + 3]) arr = swap(arr, i, i + 3);
 					if (arr[i + 1]<arr[i + 3]) {
 						arr = swap(arr, i + 1, i + 3) 
 						//s = true
@@ -738,23 +743,23 @@ Array.prototype.maxSort = function () { //My own sorting algorithm
 		res[3 * res.length/4] = q3;
 	}
 	for (var i = 1; i < this.length-1; i++) { //Add elements in the correct order that belongs to x
-		if(this[i] === Math.floor(res[0] + i*inc)) res[i] = this[i];
-		else if(this[i] === Math.round(res[0] + i*inc)) res[i] = this[i];
-		else if(this[i] == Math.ceil(res[0] + i*inc)) res[i] = this[i];
-		else if(this[i] >= Math.floor(res[0] + i*inc) && this[i]<= Math.ceil(res[0] + i*inc)) res[i] = this[i]
+		if (this[i] === Math.floor(res[0] + i*inc)) res[i] = this[i];
+		else if (this[i] === Math.round(res[0] + i*inc)) res[i] = this[i];
+		else if (this[i] == Math.ceil(res[0] + i*inc)) res[i] = this[i];
+		else if (this[i] >= Math.floor(res[0] + i*inc) && this[i]<= Math.ceil(res[0] + i*inc)) res[i] = this[i]
 	}
 	for (i = this.length-1; i > 1; i--) { //Same thing but from the end to complete the missing ones
-		if(this[i] === Math.floor(res[res.length-1]-i*inc) && isNon(res[i])) res[i] = this[i];
-		else if(this[i] === Math.round(res[res.length-1]-i*inc) && isNon(res[i])) res[i] = this[i];
-		else if(this[i] === Math.ceil(res[res.length-1] + i*inc) && isNon(res[i])) res[i] = this[i];
-		else if(this[i] >= Math.floor(res[res.length-1] + i*inc) && this[i]<= Math.ceil(res[0] + i*inc) && isNon(res[i])) res[i] = this[i]
+		if (this[i] === Math.floor(res[res.length-1]-i*inc) && isNon(res[i])) res[i] = this[i];
+		else if (this[i] === Math.round(res[res.length-1]-i*inc) && isNon(res[i])) res[i] = this[i];
+		else if (this[i] === Math.ceil(res[res.length-1] + i*inc) && isNon(res[i])) res[i] = this[i];
+		else if (this[i] >= Math.floor(res[res.length-1] + i*inc) && this[i]<= Math.ceil(res[0] + i*inc) && isNon(res[i])) res[i] = this[i]
 	}
 	for (i = 1; i < this.length-1; i++) {
 		for (var j = 0; j < this.length; j++) {
-			if(this[j] === Math.floor(res[0] + i*inc)) res[i] = this[j];
-			else if(this[j] === Math.round(res[0] + i*inc)) res[i] = this[j];
-			else if(this[j] === Math.ceil(res[0] + i*inc)) res[i] = this[j];
-			else if(this[j] >= Math.floor(res[0] + i*inc) && this[j]<= Math.ceil(res[0] + i*inc)) res[i] = this[j];
+			if (this[j] === Math.floor(res[0] + i*inc)) res[i] = this[j];
+			else if (this[j] === Math.round(res[0] + i*inc)) res[i] = this[j];
+			else if (this[j] === Math.ceil(res[0] + i*inc)) res[i] = this[j];
+			else if (this[j] >= Math.floor(res[0] + i*inc) && this[j]<= Math.ceil(res[0] + i*inc)) res[i] = this[j];
 		}
 	}
 	return res
@@ -767,7 +772,7 @@ Array.prototype.cenSort = function (l, r) { //Centre sort (similar to QuickSort)
 		l = Math.floor(this.length/2);
 		r = Math.ceil(this.length/2);
 	}
-	if(this.length <= 1) return;
+	if (this.length <= 1) return;
 	var pivot = this[Math.floor((r + l)/2)], j = r, i = l;
 	while (i <= j) {
 		while(this[i] < pivot) i--;
@@ -779,8 +784,8 @@ Array.prototype.cenSort = function (l, r) { //Centre sort (similar to QuickSort)
 		}
 	}
 	
-	if(l > i-1) this.cenSort(l, i-1);
-	if(i > r) this.cenSort(i, r);
+	if (l > i-1) this.cenSort(l, i-1);
+	if (i > r) this.cenSort(i, r);
 	return res
 }
 
@@ -795,7 +800,7 @@ Array.prototype.setSort = function () { //A faster algorithm than quickSort only
 	for(var i = 0; i < 1000; i++) t[i] = 0;
 	for(i = 0; i < l; i++) t[this[i]] = 1;
 	for (i = 0; i < 1000; i++) {
-		if(1 === t[i]) narr.push(i);
+		if (1 === t[i]) narr.push(i);
 	}
 	return narr
 }
@@ -803,7 +808,7 @@ Array.prototype.setSort = function () { //A faster algorithm than quickSort only
 Array.prototype.clean = function (noDuplic) { //Remove undesirable items
 	var arr = [], j = 0;
 	for (var i = 0; i < this.length; i++) {
-		if(!isNon(this[i])) arr[j++] = this[i];
+		if (!isNon(this[i])) arr[j++] = this[i];
 	}
 	return noDuplic? rmDuplicates(arr).remove(undefined): arr//Take off (or not) duplicates of actual values and double clean it
 }
@@ -835,7 +840,7 @@ Array.prototype.exchange = function(arr, s, e) { //Exchange every elements from 
 
 Array.prototype.rot = function (deg) { //Rotate a matrix by n % 90 degrees. Useful for Rubik's cubes simulator and other matrix based simulations/calculations!
 	var tmp;
-	if(deg % 90 != 0) throw new Error("The absolute degree of rotation must be either 90° or 180°");
+	if (deg % 90 != 0) throw new Error("The absolute degree of rotation must be either 90° or 180°");
 	if (this.numElm() === 4 && this.length === 2) { //2x2 matrix
 		if (deg === 90) {
 			tmp = this[0][0];
@@ -934,7 +939,7 @@ Array.prototype.size = function (str) { //Get the w * h size of the array
 
 Array.prototype.det = function () { //Determinant of a matrix
 	var d = 0;
-	if(this.numElm() === 4 && this.length === 2) d = this[0][0] * this[1][1]-this[0][1] * this[1][0];
+	if (this.numElm() === 4 && this.length === 2) d = this[0][0] * this[1][1]-this[0][1] * this[1][0];
 	else if (this.numElm() === 9 && this.length === 3) {
 		d = this[0][0] * (this[1][1] * this.last().last()-this[1].last() * this.last()[1])-this[0][1] * (this[1][0] * this.last().last()-this[1].last() * this.last()[0]) + this[0].last() * (this[1][0] * this.last()[1]-this[1][1] * this.last()[0]);
 	}else Essence.say("Unsupported matrix format", "error");
@@ -961,7 +966,7 @@ Array.prototype.translate = function () {
 
 Array.prototype.lookFor = function (x) { //Look for an element x in the array and get its position
 	for (var i = 0; i < this.length; i++) {
-		if(this[i] === x) return i //I is the row number and j the column which oppose j being the x-coord and i the y-coord
+		if (this[i] === x) return i //I is the row number and j the column which oppose j being the x-coord and i the y-coord
 	}
 	return -1
 }
@@ -989,6 +994,10 @@ Array.prototype.getAdjoint = function () { //This^*
 	}else Essence.say("Unsupported matrix format", "error");
 	return res
 }
+
+Array.prototype.isInversible = function() { 
+	return this.det() != 0
+};
 
 Array.prototype.dotProd = function (a) { //A.this where a is a scalar and this a matrix
 	var res = [];
@@ -1032,7 +1041,7 @@ Array.prototype.toStr = function (clean) { //Str[]->str  str[][]->str
 	var str = "";
 	if (is2dArray(this)) {
 		for (var i in this) {
-			if(this.hasOwnProperty(i)) str += clean? this[i].join(", "): this[i].join("");
+			if (this.hasOwnProperty(i)) str += clean? this[i].join(", "): this[i].join("");
 		}
 		return clean? this.toStr().split("").join(", "): str
 	}else return this.join(clean? ", ": "")
@@ -1041,13 +1050,13 @@ Array.prototype.toStr = function (clean) { //Str[]->str  str[][]->str
 Array.prototype.toInt = function () { //Int[]->int
 	var n = 0;
 	for (var i in this) {
-		if(this.hasOwnProperty(i)) n += this[i] * Math.pow(10, this.length- i - 1);
+		if (this.hasOwnProperty(i)) n += this[i] * Math.pow(10, this.length- i - 1);
 	}
 	return n
 }
 
 Array.prototype.inv = function () { //This^-1
-	return this.dotProd(1/this.det(), this.getAdjoint())
+	return this.isInvertible()? this.dotProd(1/this.det(), this.getAdjoint()): false;
 }
 
 Array.prototype.mix = function () { //Mix up the array
@@ -1067,7 +1076,7 @@ Array.prototype.preppend = function (arr) { //Unshifting every elements of the a
 Array.prototype.unique = function () { //List all the unique values of the array
 	var u = [];
 	for (var i = 0; i < this.length; i++) {
-		if(this.count(this[i]) === 1) u.push(this[i]);
+		if (this.count(this[i]) === 1) u.push(this[i]);
 	}
 	return u
 }
@@ -1101,7 +1110,7 @@ Array.prototype.zip = function () { //Compress the array
 Array.prototype.unzip = function (noPairs) { //Decompress the array (when being compressed using Array.zip()) with(out) pairs
 	var res = [];
 	for (var i = 0; i < this.length; i++) {
-		if(/[\S\s](\@)(\d + )/g.test(this[i])) res.push(this[i][0].repeat(this[i][this[i].indexOf("@") + 1]));
+		if (/[\S\s](\@)(\d + )/g.test(this[i])) res.push(this[i][0].repeat(this[i][this[i].indexOf("@") + 1]));
 		else res.push(this[i]);
 	}
 	return noPairs? res.join("").split(""): res;
@@ -1115,19 +1124,19 @@ Array.prototype.trimAll = function(side) { //Trimes every elements
 }
 
 Array.prototype.isSorted = function() { //Check if the array is sorted
-	if(this[0] > this[1]) return false;
+	if (this[0] > this[1]) return false;
 	for (var i = 1; i < this.length; i++) {
-		if(this[i] > this[i+1]) return false
+		if (this[i] > this[i+1]) return false
 	}
 	return true
 }
 
 Array.prototype.uniquePush = function(obj) { //Post-init duplicate safe push
-	if(isType(obj, "Array")){
+	if (isType(obj, "Array")){
 		for (var i = 0; i < obj.length; i++) {
-			if(this.indexOf(obj[i]) === -1) this.push(obj[i]);
+			if (this.indexOf(obj[i]) === -1) this.push(obj[i]);
 		}
-	} else if(this.indexOf(obj) > -1) throw "the object " + obj.toString() + "is already present in " + this.toString();
+	} else if (this.indexOf(obj) > -1) throw "the object " + obj.toString() + "is already present in " + this.toString();
 }
 
 Array.prototype.replaceAll = function(str, nstr) { //Replace every occurrences of str instead of just the first one
@@ -1137,6 +1146,28 @@ Array.prototype.replaceAll = function(str, nstr) { //Replace every occurrences o
 		i++;
 	}
 	return res;
+}
+
+Array.prototype.neighbour = function(y, x) { //Get the neighbours of a cell
+	if (is2dArray(this)) {
+		var neighbours = [];
+		try {
+			if (this[y - 1][x]) neighbours.push(this[y - 1][x]);
+			if (this[y + 1][x]) neighbours.push(this[y + 1][x]);
+			if (this[y][x - 1]) neighbours.push(this[y][x - 1]);
+			if (this[y][x + 1]) neighbours.push(this[y][x + 1]);
+			if (this[y - 1][x - 1]) neighbours.push(this[y - 1][x - 1]);
+			if (this[y + 1][x - 1]) neighbours.push(this[y + 1][x - 1]);
+			if (this[y - 1][x + 1]) neighbours.push(this[y - 1][x + 1]);
+			if (this[y + 1][x + 1]) neighbours.push(this[y + 1][x + 1]);
+		} catch (e) {}
+	} else {
+		try {
+			if (this[y - 1]) neighbours.push(this[y - 1]);
+			if (this[y + 1]) neighbours.push(this[y + 1])
+		} catch (e) {}
+	}
+	return neighbours;
 }
 
 String.prototype.remove = function (c) { //Remove c from the string
@@ -1211,11 +1242,11 @@ String.prototype.getOccurrences = Array.prototype.getOccurrences;
 
 String.prototype.get = function (start, end) { //Get the sub-string starting at the start index and ending at the end index (no trickness from substr/substring)
 	var res = "";
-	if(start < 0 && !end){
+	if (start < 0 && !end){
 		end = start;
 		start = 0;
 	}
-	if(end < 0) end = this.length + end - 1;
+	if (end < 0) end = this.length + end - 1;
 	for(var i = (start || 0); i <= (end || this.length-1); i++) res += this[i];
 	
 	return res
@@ -1283,16 +1314,16 @@ Number.prototype.sign = function (str) { //Get the sign of the number
 
 Number.prototype.isPrime = function (n) { //Check the primeness of n
 	for (var i = 2; i < n; i++) {
-		if(primeCheck(i, n)) return false
+		if (primeCheck(i, n)) return false
 	}
 	return true
 }
 
 Number.prototype.clean = function (nbDec) { //Clean the number to make it "normal"
-if(this == 0) return 0
-	else if(this > 0 && this[0] == "+") return nbDec? this.slice(1, this.length).toNDec(nbDec): this.slice(1, this.length)
-		else if(this == "-") return this + 1
-			else if(this == "+") return 1
+if (this == 0) return 0
+	else if (this > 0 && this[0] == "+") return nbDec? this.slice(1, this.length).toNDec(nbDec): this.slice(1, this.length)
+		else if (this == "-") return this + 1
+			else if (this == "+") return 1
 				else return nbDec? this.toNDec(nbDec): this
 			}
 
@@ -1320,9 +1351,9 @@ Function.prototype.inheritsFrom = function (parentClassOrObj) {
 }
 
 function exclude (file, type) { //Remove an external resource
-	if(!type) type = (file.indexOf(".js")>0)? "script": "link";
+	if (!type) type = (file.indexOf(".js")>0)? "script": "link";
 	var el = document.createElement(type);
-	if(type === "script") el.src = file;
+	if (type === "script") el.src = file;
 	else el.href = file;
 	el.type = (type === "script")? "text/javascript": "text/css";
 	document.head.removeChild(el)
@@ -1330,7 +1361,7 @@ function exclude (file, type) { //Remove an external resource
 
 function addMetaData (n, ctt, httpe) { //Temporarily add a meta data (so until the page is closed)
 	var el = document.createElement("meta");
-	if(httpe) el.httpEquiv = httpe;
+	if (httpe) el.httpEquiv = httpe;
 	else el.name = n;
 	el.content = ctt;
 	document.head.appendChild(el)
@@ -1345,12 +1376,12 @@ function noRightClick () { //Disable right clicks
 }
 
 function reloadPage (lvl) { //Reload the page with 2 different level of reload
-	if(lvl === 2) location.href = location.href //Update the hyper reference of the window's location
+	if (lvl === 2) location.href = location.href //Update the hyper reference of the window's location
 	else location.reload() //Reload the location of the window (implying lvl = 0||1)
 }
 
 function redirect (to, dt, divId) { //Redirect to #to in #dt ms
-	if(!dt) dt = 3e3 //If dt hasn't an assign value so it will assign a default one
+	if (!dt) dt = 3e3 //If dt hasn't an assign value so it will assign a default one
 	var s = Math.floor(dt/1e3) //Convert from ms to s
 	$e("#" + divId).write("<h2 > Redirecting to <ins>" + to + "</ins> ...<br />in <span id = 'timeleft'>" + s+"</span > s</h2>", true)//Write the Redirecting message to the screen
 	s-- //Countdown
@@ -1419,16 +1450,16 @@ function isValid (txt, type) { //Check if a text (generally from a field) is val
 }
 
 function validate (fm, ignoreRequired) { //Check if a form is valid
-	if(!fm) fm = document.forms[0];
+	if (!fm) fm = document.forms[0];
 	var valid = true;
 	for (var i = 0; i < fm.length; i++) {
 		if (ignoreRequired || fm[i].required) {
 			//Missing: select, datetime, datetime-local, time, month, range, search, week, url
-			if(fm[i].name === "username" || fm[i].name === "price") valid = valid && isValid(fm[i].value, fm[i].name);
-			else if(fm[i].type === "password" || fm[i].type === "email" || fm[i].type === "tel" || fm[i].type === "date" || fm[i].type === "hex" || fm[i].type === "variable" || fm[i].type === "file" || fm[i].type === "hidden") valid = valid && isValid(fm[i].value, fm[i].type);
-			else if(fm[i].name === "price") valid = valid && isValid(fm[i].value, fm[i].name);
-			else if(fm[i].name.indexOf("name") >= 0) valid = valid && isValid(fm[i].value, "name");
-			else if(fm[i].type === "checkbox" && fm[i].checked) valid = valid && true;
+			if (fm[i].name === "username" || fm[i].name === "price") valid = valid && isValid(fm[i].value, fm[i].name);
+			else if (fm[i].type === "password" || fm[i].type === "email" || fm[i].type === "tel" || fm[i].type === "date" || fm[i].type === "hex" || fm[i].type === "variable" || fm[i].type === "file" || fm[i].type === "hidden") valid = valid && isValid(fm[i].value, fm[i].type);
+			else if (fm[i].name === "price") valid = valid && isValid(fm[i].value, fm[i].name);
+			else if (fm[i].name.indexOf("name") >= 0) valid = valid && isValid(fm[i].value, "name");
+			else if (fm[i].type === "checkbox" && fm[i].checked) valid = valid && true;
 			else valid = valid && !isNon(fm[i].value)//Radio, 
 		}
 	}
@@ -1451,14 +1482,14 @@ function getType (obj, preserve) { //Only works for native types. preserve would
 
 function getCustomType (obj, preserve) { //Same as getType but for custom types which won't work for native types
 	var t = obj.toLocaleString();
-	if(t.indexOf("[") > -1) return preserve? t: t.split(" ")[1].slice(0, t.split(" ")[1].length-1) //[object Type]
+	if (t.indexOf("[") > -1) return preserve? t: t.split(" ")[1].slice(0, t.split(" ")[1].length-1) //[object Type]
 	else return t.split("(")[0].trim()
 }
 
 function is2dArray (obj) { //Check if an array has 2 dimensions (nxm matrix)
 	if (isType(obj, "Array")) {
 		for (var i = 0; i < obj.length; i++) {
-			if(isType(obj[i], "Array")) return true
+			if (isType(obj[i], "Array")) return true
 		}
 	} else return false
 }
@@ -1489,11 +1520,11 @@ function isNon (val) { //Like isEmpty
 }
 
 function copy (el) { //Returns a copy of an element in order to do mutation-safe operations with it
-	if(isType(el, "String") || isType(el, "Number") || isType(el, "Boolean")) return el //As they are immutable types  
+	if (isType(el, "String") || isType(el, "Number") || isType(el, "Boolean")) return el //As they are immutable types  
 	else{
 		var clone;
 		for (var i in el) {
-			if(el.hasOwnProperty(i)) clone[i] = el[i];
+			if (el.hasOwnProperty(i)) clone[i] = el[i];
 		}
 		return clone
 	}
@@ -1501,48 +1532,48 @@ function copy (el) { //Returns a copy of an element in order to do mutation-safe
 
 function toMaxSize () { //Resize the window to maximum size of the client/screen/device with the support of ActiveX, Java (mainly Processing) and VBS
 	try{
-		if(clientWidth || ActiveX || ActiveXObject) window.resizeTo(clientWidth, clientHeight);
-		else if(client.Width) window.resizeTo(client.Width, client.Height);
-		else if(client.width) window.resizeTo(client.width, client.height);
-		else if(clientX) window.resizeTo(clientX, clientY);
-		else if(client.X) window.resizeTo(client.X, client.Y);
-		else if(client.x) window.resizeTo(client.x, client.y);
-		else if(screenWidth) window.resizeTo(screenWidth, screenHeight);
-		else if(screen.Width) window.resizeTo(screen.Width, screen.Height);
-		else if(screen.width) window.resizeTo(screen.width, screen.height);
-		else if(screenX) window.resizeTo(screenX, screenY);
-		else if(screen.X) window.resizeTo(screen.X, screen.Y);
-		else if(screen.x) window.resizeTo(screen.x, screen.y);
-		else if(deviceWidth) window.resizeTo(deviceWidth, deviceHeight);
-		else if(device.Width) window.resizeTo(device.Width, device.Height);
-		else if(device.width) window.resizeTo(device.width, device.height);
-		else if(deviceX) window.resizeTo(deviceX, deviceY);
-		else if(device.X) window.resizeTo(device.X, device.Y);
-		else if(device.x) window.resizeTo(device.x, device.y);
-		else if(pageWidth) window.resizeTo(pageWidth, pageHeight);
-		else if(page.Width) window.resizeTo(page.Width, page.Height);
-		else if(page.width) window.resizeTo(page.width, page.height);
-		else if(pageX) window.resizeTo(pageX, pageY);
-		else if(page.X) window.resizeTo(page.X, page.Y);
-		else if(page.x) window.resizeTo(page.x, page.y);
-		else if(windowWidth) window.resizeTo(windowWidth, windowHeight);
-		else if(window.Width) window.resizeTo(window.Width, window.Height);
-		else if(window.width) window.resizeTo(window.width, window.height);
-		else if(windowX) window.resizeTo(windowX, windowY);
-		else if(window.X) window.resizeTo(window.X, window.Y);
-		else if(window.x) window.resizeTo(window.x, window.y);
-		else if(monitorWidth) monitor.resizeTo(monitorWidth, monitorHeight);
-		else if(monitor.Width) monitor.resizeTo(monitor.Width, monitor.Height);
-		else if(monitor.width) monitor.resizeTo(monitor.width, monitor.height);
-		else if(monitorX) monitor.resizeTo(monitorX, monitorY);
-		else if(monitor.X) monitor.resizeTo(monitor.X, monitor.Y);
-		else if(monitor.x) monitor.resizeTo(monitor.x, monitor.y);
-		else if(frameWidth) frame.resizeTo(frameWidth, frameHeight);
-		else if(frame.Width) frame.resizeTo(frame.Width, frame.Height);
-		else if(frame.width) frame.resizeTo(frame.width, frame.height);
-		else if(frameX) frame.resizeTo(frameX, frameY);
-		else if(frame.X) frame.resizeTo(frame.X, frame.Y);
-		else if(frame.x) frame.resizeTo(frame.x, frame.y);
+		if (clientWidth || ActiveX || ActiveXObject) window.resizeTo(clientWidth, clientHeight);
+		else if (client.Width) window.resizeTo(client.Width, client.Height);
+		else if (client.width) window.resizeTo(client.width, client.height);
+		else if (clientX) window.resizeTo(clientX, clientY);
+		else if (client.X) window.resizeTo(client.X, client.Y);
+		else if (client.x) window.resizeTo(client.x, client.y);
+		else if (screenWidth) window.resizeTo(screenWidth, screenHeight);
+		else if (screen.Width) window.resizeTo(screen.Width, screen.Height);
+		else if (screen.width) window.resizeTo(screen.width, screen.height);
+		else if (screenX) window.resizeTo(screenX, screenY);
+		else if (screen.X) window.resizeTo(screen.X, screen.Y);
+		else if (screen.x) window.resizeTo(screen.x, screen.y);
+		else if (deviceWidth) window.resizeTo(deviceWidth, deviceHeight);
+		else if (device.Width) window.resizeTo(device.Width, device.Height);
+		else if (device.width) window.resizeTo(device.width, device.height);
+		else if (deviceX) window.resizeTo(deviceX, deviceY);
+		else if (device.X) window.resizeTo(device.X, device.Y);
+		else if (device.x) window.resizeTo(device.x, device.y);
+		else if (pageWidth) window.resizeTo(pageWidth, pageHeight);
+		else if (page.Width) window.resizeTo(page.Width, page.Height);
+		else if (page.width) window.resizeTo(page.width, page.height);
+		else if (pageX) window.resizeTo(pageX, pageY);
+		else if (page.X) window.resizeTo(page.X, page.Y);
+		else if (page.x) window.resizeTo(page.x, page.y);
+		else if (windowWidth) window.resizeTo(windowWidth, windowHeight);
+		else if (window.Width) window.resizeTo(window.Width, window.Height);
+		else if (window.width) window.resizeTo(window.width, window.height);
+		else if (windowX) window.resizeTo(windowX, windowY);
+		else if (window.X) window.resizeTo(window.X, window.Y);
+		else if (window.x) window.resizeTo(window.x, window.y);
+		else if (monitorWidth) monitor.resizeTo(monitorWidth, monitorHeight);
+		else if (monitor.Width) monitor.resizeTo(monitor.Width, monitor.Height);
+		else if (monitor.width) monitor.resizeTo(monitor.width, monitor.height);
+		else if (monitorX) monitor.resizeTo(monitorX, monitorY);
+		else if (monitor.X) monitor.resizeTo(monitor.X, monitor.Y);
+		else if (monitor.x) monitor.resizeTo(monitor.x, monitor.y);
+		else if (frameWidth) frame.resizeTo(frameWidth, frameHeight);
+		else if (frame.Width) frame.resizeTo(frame.Width, frame.Height);
+		else if (frame.width) frame.resizeTo(frame.width, frame.height);
+		else if (frameX) frame.resizeTo(frameX, frameY);
+		else if (frame.X) frame.resizeTo(frame.X, frame.Y);
+		else if (frame.x) frame.resizeTo(frame.x, frame.y);
 		else return false
 	} catch(e) {
 		Essence.say("An error occurred when trying to maximise the size Because of %c" + e, "err", "text-decoration: underline;");
@@ -1563,7 +1594,7 @@ function getCookie (c_name) { //Gather the cookie with the name c_name
 		x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
 		y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
 		x = x.replace(/^\s+|\s+$/g,"");
-		if(x === c_name) return unescape(y)
+		if (x === c_name) return unescape(y)
 	}
 }
 
@@ -1589,23 +1620,23 @@ function getResources (rmEmpty) { //Get all the resources of a page apart from t
 	var links = $n(" * link"), scripts = $n(" * script"), stylesheets = $n(" * style"), rsc = [], hypertxt = $n(" * a"), img = $n(" * img"), btnImg = $n(" * input image"),
 	inCSS = [$n(" * div"), $n(" * section"), $n(" * td"), $n(" * th"), $n(" * li")];
 	for (var i = 0; i < links.length; i++) {
-		if(!isNon(links[i])) rsc[i] = links[i].href;
+		if (!isNon(links[i])) rsc[i] = links[i].href;
 		Essence.say(links[i].href.split("/")[links[i].href.split("/").length-1] + " has been added to the resources getter.", "info");
 	}
 	for (i = 0; i < scripts.length; i++) {
-		if(!isNon(scripts[i])) rsc.push(scripts[i].src);
+		if (!isNon(scripts[i])) rsc.push(scripts[i].src);
 		Essence.say(scripts[i].src.split("/")[scripts[i].src.split("/").length-1] + " has been added to the resources getter.", "info")
 	}
 	for (i = 0; i < hypertxt.length; i++) {
-		if(!isNon(hypertxt[i])) rsc.push(hypertxt[i].href);
+		if (!isNon(hypertxt[i])) rsc.push(hypertxt[i].href);
 		Essence.say(hypertxt[i].href.split("/")[hypertxt[i].href.split("/").length-1] + " has been added to the resources getter.", "info")
 	}
 	for (i = 0; i < img.length; i++) {
-		if(!isNon(img[i])) rsc.push(img[i].src);
+		if (!isNon(img[i])) rsc.push(img[i].src);
 		Essence.say(img[i].src.split("/")[img[i].src.split("/").length-1] + " has been added to the resources getter.", "info")
 	}
 	for (i = 0; i < btnImg.length; i++) {
-		if(!isNon(btnImg[i])) rsc.push(btnImg[i].src);
+		if (!isNon(btnImg[i])) rsc.push(btnImg[i].src);
 		Essence.say(btnImg[i].src.split("/")[btnImg[i].src.split("/").length-1] + " has been added to the resources getter.", "info")
 	}
 	for ( i = 0; i < inCSS.length; i++) {
@@ -1634,10 +1665,10 @@ function gatherStylesheets (asList) { //Same as gatherScripts but for stylesheet
 }
 
 function include_once (file, type, parentPath) { //Avoid including a file if it's already included
-	if(!type) type = (file.indexOf(".js") > 0)? "script": "style";
+	if (!type) type = (file.indexOf(".js") > 0)? "script": "style";
 	var r = type === "script"? gatherScripts(true): gatherStylesheets(true);
-	if(parentPath && (keyList(r, true).indexOf(parentPath + file) > -1 || valList(r, true).indexOf(parentPath + file) > -1)) return;
-	else if(keyList(r, true).indexOf(file) > -1 || valList(r, true).indexOf(file) > -1) return;
+	if (parentPath && (keyList(r, true).indexOf(parentPath + file) > -1 || valList(r, true).indexOf(parentPath + file) > -1)) return;
+	else if (keyList(r, true).indexOf(file) > -1 || valList(r, true).indexOf(file) > -1) return;
 	else include(file, type)
 }
 
@@ -1654,7 +1685,7 @@ function getFilename(withExt) { //Get the name of the current file
 }
 
 function getLocalPath (path, localPath) { //A bit like stripPath but which would preserve the directories that aren't listed in the local path
-	if(!localPath) localPath = "file:///";
+	if (!localPath) localPath = "file:///";
 	var parts = path.split("/"), res = "", pParts = localPath.split("/"), i = 0, j = 0;
 	while(localPath.indexOf(parts[i]) > -1) i++;
 	res = parts.get(i).join("/")
@@ -1676,7 +1707,7 @@ function filenameList (list) { //List containing only file names so no paths
 }
 
 function getDirectoryPath (path) { //Get the directory's path of the file (so it's the opposite of of stripPath)
-	if(!path) path = location.href;
+	if (!path) path = location.href;
 	return path.get(0, path.indexOf(stripPath(path))-1)
 }
 
@@ -1698,7 +1729,7 @@ function randVar (var1, var2, integer) { //Return a random number between var1 a
 }
 
 function lenRand (len, if0) { //Same as rand() but with the length instead of the max and min so it's a range based randomness
-	if(if0) return Math.floor(Math.random() * (len + 1))//If the first term is 0
+	if (if0) return Math.floor(Math.random() * (len + 1))//If the first term is 0
 	else return Math.floor(Math.random() * len)//Otherwise if it's 1
 }
 
@@ -1716,14 +1747,14 @@ function genNearlySortedArr (n, min, max) { //Generate a nearly sorted array
 	for (var i = 0; i < aI.length; i++) {
 		var r = rand(0, ic, true);
 		res.push(aI[i]);
-		if(i > 0 && r === 0) swap(res, i, i-1);
-		else if(i > 1 && r === ic) swap(res, i, i-2);
+		if (i > 0 && r === 0) swap(res, i, i-1);
+		else if (i > 1 && r === ic) swap(res, i, i-2);
 	}
 	return res
 }
 
 function sumPow2 (arr, nbDec) { //For stddevs
-	if(!isType(arr, "Array")) return false
+	if (!isType(arr, "Array")) return false
 	var sum = 0;
 	for(var i = 0; i < arr.length;i++) sum += Math.pow(arr[i], 2);
 	return sum.toNDec(nbDec)
@@ -1750,9 +1781,9 @@ function dec2min (dec) {
 }
 
 function toS (i, withH) { //h:min:s.ms->s
-	if(!i) i = withH? "00:00:00.000": "00:00.000";//Avoid having errors
-	if(!isType(i, "String")) i += "";
-	if(i.length >= 4 && i.indexOf(":") == 1) return toS("0" + i, withH) //So times without the leading 0 or simply with a 1-digit first section could be read properly
+	if (!i) i = withH? "00:00:00.000": "00:00.000";//Avoid having errors
+	if (!isType(i, "String")) i += "";
+	if (i.length >= 4 && i.indexOf(":") == 1) return toS("0" + i, withH) //So times without the leading 0 or simply with a 1-digit first section could be read properly
 	
 	var t = i.split(":");
 
@@ -1854,12 +1885,12 @@ function Bin2Norm (n, p, r, sign) { //Binomial to Normal
 }
 
 function Bin2Po (n, p, r) { //Binomial to Poisson
-	if(n > 50 && p < .1) return Po(n * p, r)
+	if (n > 50 && p < .1) return Po(n * p, r)
 	else return false
 }
 
 function Po2Norm (l, y) { //Poisson to Normal
-	if(l > 10) return StdNorm(y, Math.sqrt(y))
+	if (l > 10) return StdNorm(y, Math.sqrt(y))
 	else return false
 }
 
@@ -1902,38 +1933,38 @@ function fahr2cels (fahr) { //Fahrenheit to celsius
 function primeN (arr) { //Return the prime numbers of arr where non prime numbers that doesn't have divisors in the array are considered prime
 	var newArr = arr.quickSort();
 	for (var i = 0; i < arr.length; i++) {
-		if(arr[i] % 2 === 0 && arr[i] != 2) newArr[i] = "x";
+		if (arr[i] % 2 === 0 && arr[i] != 2) newArr[i] = "x";
 		for (var j = 0; j < i; j++) {
-			if(primeCheck(newArr[j], newArr[i])) newArr[i] = "x";
+			if (primeCheck(newArr[j], newArr[i])) newArr[i] = "x";
 		}
 	}
 	return newArr.remove("x")
 }
 
 function primeCheck (a, b) { //Check the primeness of a toward b
-	if(a > 1 && b > 1 && b % a === 0 && b != a) return true
+	if (a > 1 && b > 1 && b % a === 0 && b != a) return true
 	else return false
 }
 
 function getClosestRoot (x, n) { //Get the closest whole nth-root of x
-	if(!x) Essence.say("x must be initiated !");
-	if(!n) n = 2;
+	if (!x) Essence.say("x must be initiated !");
+	if (!n) n = 2;
 	var rof = 0, er = 0;
 	
-	if((x / 2 * x / 2) / 2 - 2 <= x) rof = x / 2;
-	else if(x / 3 * x / 3 <= x) rof = x / 3;
+	if ((x / 2 * x / 2) / 2 - 2 <= x) rof = x / 2;
+	else if (x / 3 * x / 3 <= x) rof = x / 3;
 	else rof = x / 4;
-	if(Math.pow(rof, n) === x) return rof;
+	if (Math.pow(rof, n) === x) return rof;
 
 	for (var p = 1; p <= n; p++) {
 		for (var i = 1; i < x; i++) {
-			if(Math.pow(i, p) === x || Math.pow(i, p - 1) * i === x) er = i;
-			else if(Math.pow(i, p) > x || Math.pow(i, p - 1) * i > x) er = i - .5;
+			if (Math.pow(i, p) === x || Math.pow(i, p - 1) * i === x) er = i;
+			else if (Math.pow(i, p) > x || Math.pow(i, p - 1) * i > x) er = i - .5;
 		}
 	}
-	if(Math.pow(er, n) <= x) return er
+	if (Math.pow(er, n) <= x) return er
 	else er = (Math.pow(n, -2) + x / Math.pow(n, 4)-x / Math.pow(n, 5) + Math.pow(x, n) / (Math.pow(n, Math.pow(n, 3) + 3)) + x / Math.pow(n, 2)) / 2;
-	if(Math.pow(er, n) > x) er = (er + rof) / 2;
+	if (Math.pow(er, n) > x) er = (er + rof) / 2;
 	var res = [rof, er, (x / er + er) / 2, (er + rof) / 2];
 	var resMap = res.map(function (x) {
 		return Math.pow(x, n);
@@ -1950,19 +1981,19 @@ function compoundInterest (po, i, t, n) {
 }
 
 function non0 (x) { //To get a number that is everything but not 0 (generally x >= 0.0...1)
-	if(x === 0) return Essence.eps
+	if (x === 0) return Essence.eps
 	else return x
 }
 
 function toFrac (n, prec, up) { //Returns the fraction form of n (from StackOverFlow)
 	var s = String(n), p = s.indexOf(".");
-	if(p == -1) return s
+	if (p == -1) return s
 		
 	var i = Math.floor(n) || "", dec = s.substring(p),  m = prec || Math.pow(10, dec.length-1), num = up? Math.ceil(dec * m): Math.round(dec * m), den = m, 
 	g = Essence.gcd(num, den);
 	
-	if(den/g === 1) return String(i + (num/g))
-	if(i) i += " and ";
+	if (den/g === 1) return String(i + (num/g))
+	if (i) i += " and ";
 	return i + String(num/g) + "/" + String(den/g)
 }
 
@@ -2022,7 +2053,7 @@ function eqSolver (formula, res, a, b) { //Solve equations with a given formula 
 		}
 	}
 	return r.filter(function (n) {
-		if(n.split(") ")[1] == res) return n.split(") ")[0] + ")"
+		if (n.split(") ")[1] == res) return n.split(") ")[0] + ")"
 	})//Filter out the values which doesn't match the result and returns only (x, y)
 }
 
@@ -2033,18 +2064,18 @@ function manuEqSolver (eq, max, dim, r) {
 		if (dim === 2) {
 			for (var y = 0; y < res.length; y++) {
 				res[x][y] = eval(eq);
-				if(res[x][y] === r) p.push("x = " + x + ", y = " + y);
+				if (res[x][y] === r) p.push("x = " + x + ", y = " + y);
 			}
 		} else if (dim === 3) {
 			for (y = 0; y < res.length; y++) {
 				for (var z = 0; z < res.length; z++) {
 					res[x][y][z] = eval(eq);
-					if(res[x][y][z] === r) p.push("x = " + x + ", y = " + y + ", z = " + z);
+					if (res[x][y][z] === r) p.push("x = " + x + ", y = " + y + ", z = " + z);
 				}
 			}
 		} else {
 			res[x] = eval(eq);
-			if(res[x] === r) p.push("x = " + x);
+			if (res[x] === r) p.push("x = " + x);
 		}
 	}
 	return p
@@ -2191,10 +2222,10 @@ function AX (filename, text2write, close, remove) { //Manipulate a file with Act
 	- Read read to the specified number of characters. */
 	otf.ReadAll();
 	if (close) {
-		if(confirm("Do you realy want to close this file")) otf.Close();
+		if (confirm("Do you realy want to close this file")) otf.Close();
 	}
 	if (remove) {
-		if(confirm("Do you realy want to delete this file")) fso.DeleteFile(filename)
+		if (confirm("Do you realy want to delete this file")) fso.DeleteFile(filename)
 	}
 }
 
@@ -2213,7 +2244,7 @@ function save (txt, name, type) { //Save into a file of the corresponding type
 	var dlLink = document.createElement("a");
 	dlLink.download = name;
 	dlLink.innerHTML = "Download File";
-	if(window.webkitURL != null) dlLink.href = window.webkitURL.createObjectURL(txtfile)//Chrome allows the link to be clicked without actually adding it to the DOM.
+	if (window.webkitURL != null) dlLink.href = window.webkitURL.createObjectURL(txtfile)//Chrome allows the link to be clicked without actually adding it to the DOM.
 	else{ //Firefox requires the link to be added to the DOM before it can be clicked.
 		dlLink.href = window.URL.createObjectURL(txtfile);
 		dlLink.onclick = function (evt) {
@@ -2262,21 +2293,21 @@ function getTimestamp (readable) { //dd/MM/yyyy hh:mm:ss | ddMMM-hh-mm-ss
 }
 
 function asciiTable(start, end) { //ASCII table
-	if(start === "A-Z" && !end){
+	if (start === "A-Z" && !end){
 		start = 65;
 		end = 90;
-	} else if(start === "a-z" && !end){
+	} else if (start === "a-z" && !end){
 		start = 97;
 		end = 122;
-	} else if(start === "A-z" && !end){
+	} else if (start === "A-z" && !end){
 		start = 65;
 		end = 122;
-	} else if(start === "printable" && !end){
+	} else if (start === "printable" && !end){
 		start = 32;
 		end = 126;
 	}
-	if(!start) start = 0;
-	if(!end) end = 255;
+	if (!start) start = 0;
+	if (!end) end = 255;
 	var res = [];
 
 	for (var i = start; i <= end; i++) res.push(String.fromCharCode(i));
@@ -2307,9 +2338,9 @@ function genStr (len, filter) { //Generate a string
 		str += c;
 		i++;
 	}
-	if(str.length < len) str += charlist.rand();
-	else if(str.length > len) str = str.slice(0, len + 1);
-	if(str === "") genStr(len, filter)//May cause overflows
+	if (str.length < len) str += charlist.rand();
+	else if (str.length > len) str = str.slice(0, len + 1);
+	if (str === "") genStr(len, filter)//May cause overflows
 	return str
 }
 
@@ -2362,7 +2393,7 @@ function Colour (r, g, b, a) { //Processing's Color()
 		this.red = 255 - parseInt(this.red);
 		this.green = 255 - parseInt(this.green);
 		this.blue = 255 - parseInt(this.blue);
-		if(withAlpha) this.alpha = 255 - parseInt(this.alpha);
+		if (withAlpha) this.alpha = 255 - parseInt(this.alpha);
 		this.update();
 	}
 
@@ -2402,7 +2433,7 @@ function Colour (r, g, b, a) { //Processing's Color()
 	}
 	
 	this.increment = function (i) {
-		if(isNon(i)) i = 63.75;
+		if (isNon(i)) i = 63.75;
 		this.blue += i;
 		if (this.blue >= 255) {
 			this.blue -= 255;
@@ -2511,11 +2542,11 @@ function colourName2Hex (clr) { //Get the hexadecimal equivalent of the colour n
 
 function rgbList (inc, intOnly, debug) { //Loop through all the possible rgb colours mod inc
 	var l = [];
-	if(isNon(inc)) inc = 63.75;
+	if (isNon(inc)) inc = 63.75;
 	for (var r = 0; r < 257; r += inc) {
 		for (var g = 0; g < 257; g += inc) {
 			for (var b = 0; b < 257; b += inc) {
-				if(debug) Essence.sayClr(intOnly? [Math.round(r), Math.round(g), Math.round(b)]: [r, g, b]);
+				if (debug) Essence.sayClr(intOnly? [Math.round(r), Math.round(g), Math.round(b)]: [r, g, b]);
 				l.push("rgb(" + (intOnly? [Math.round(r), Math.round(g), Math.round(b)].join(", "): [r, g, b].join(", ")) + ")");
 			}
 		}
@@ -2541,7 +2572,7 @@ function Person (fname, sname, lname, title, surname, num, country, city, sex, b
 	this.toString = function () { //Weirdly showing "getName" which isn't the case of toLocaleString() 
 		var str = "Person(";
 		for (var p in this) {
-			if(this.hasOwnProperty(p) && p !="toString") str += p + "=" + this[p] + ", ";
+			if (this.hasOwnProperty(p) && p !="toString") str += p + "=" + this[p] + ", ";
 		}
 		return str.substring(0, str.length-2) + ")"
 	}
@@ -2565,7 +2596,7 @@ function Item (name, cat, price, amr, nb) { //An item like the ones that can be 
 	this.toString = function () {
 		var str = "";
 		for (var p in this) {
-			if(this.hasOwnProperty(p) && p != "toString" && !isType(p, "function")) str += p + "=" + this[p] + ", ";
+			if (this.hasOwnProperty(p) && p != "toString" && !isType(p, "function")) str += p + "=" + this[p] + ", ";
 		}
 		return str.substring(0, str.length-2)
 	}
@@ -2574,11 +2605,11 @@ function Item (name, cat, price, amr, nb) { //An item like the ones that can be 
 
 function range (min, inc, max) { //Matlab min:inc:max range
 	var val = [], n = 0;
-	if(min && !inc && !max && max != 0) return range(0, 1, min)
-	else if(min && inc && !max && max != 0) return range(0, inc, min)
-	if(!min) min = 0;
-	if(!inc) inc = 1;
-	if(!max) max = 100;
+	if (min && !inc && !max && max != 0) return range(0, 1, min)
+	else if (min && inc && !max && max != 0) return range(0, inc, min)
+	if (!min) min = 0;
+	if (!inc) inc = 1;
+	if (!max) max = 100;
 	if (inc > 0) { //Ascending order
 		for(var i = min; i <= max; i += inc) val[n++] = i;
 	} else { //Descending order
@@ -2627,7 +2658,7 @@ function mixedRange (min, inc, max, noRepeat) { //Like Array.rand() but with opt
 function mkArray (len, dim, fill) { //Make an array of len^dim
 	var arr = [];
 	if (dim === 1) {
-		if(!fill) arr = new Array(len);
+		if (!fill) arr = new Array(len);
 		else {
 			for(var i = 0; i < len; i++) arr[i] = fill;
 		}
@@ -2712,7 +2743,7 @@ function swap (obj, e1, e2) { //Swap two proprietary elements or two elements
 function fisherYatesShuffle (obj) { //Inspired by https://Github.com/duereg/js-algorithms/blob/master/lib/algorithms/1-strings/shuffle.js
 	var l = obj.length;
 	while (l > 0) {
-		if(obj.hasOwnProperty(l)) swap(obj, l, Math.floor(Math.random() * l-- ));
+		if (obj.hasOwnProperty(l)) swap(obj, l, Math.floor(Math.random() * l-- ));
 	}
 	return obj
 }
@@ -2750,8 +2781,8 @@ function intersection (a, b, c, toSort) { //A intersection b (intersection c)
 	c = c? c.quickSort(): false;
 
 	for (var i in a) {
-		if(b.indexOf(a[i]) > -1 && isNon(c)) inter.push(a[i]);
-		else if(b.indexOf(a[i]) > -1 && c.indexOf(a[i]) > -1) inter.push(a[i]);
+		if (b.indexOf(a[i]) > -1 && isNon(c)) inter.push(a[i]);
+		else if (b.indexOf(a[i]) > -1 && c.indexOf(a[i]) > -1) inter.push(a[i]);
 	}
 	return toSort? rmDuplicates(inter).quickSort(): rmDuplicates(inter)
 }
@@ -2763,8 +2794,8 @@ function complement (a, b, c, toSort) { //A\b(\c) => a xor b (xor c)
 	c = c? c.quickSort(): false;
 
 	for (var i in a) {
-		if(b.indexOf(a[i]) === -1 && isNon(c)) cpt.push(a[i]);
-		else if(b.indexOf(a[i]) === -1 && c.indexOf(a[i]) === -1) cpt.push(a[i]);
+		if (b.indexOf(a[i]) === -1 && isNon(c)) cpt.push(a[i]);
+		else if (b.indexOf(a[i]) === -1 && c.indexOf(a[i]) === -1) cpt.push(a[i]);
 	}
 	return toSort? rmDuplicates(cpt).quickSort(): rmDuplicates(cpt)
 }
@@ -2775,16 +2806,16 @@ function symDif (a, b, c, toSort) { //Symmetric difference: a union b-a intersec
 	b = b.quickSort();
 	c = c? c.quickSortort(): false;
 	for (var i in a) {
-		if(b.indexOf(a[i]) === -1 && isNon(c)) sd.push(a[i]);
-		else if(b.indexOf(a[i]) === -1 && c.indexOf(a[i]) === -1) sd.push(a[i]);
+		if (b.indexOf(a[i]) === -1 && isNon(c)) sd.push(a[i]);
+		else if (b.indexOf(a[i]) === -1 && c.indexOf(a[i]) === -1) sd.push(a[i]);
 	}
 	for (i in b) {
-		if(a.indexOf(b[i]) === -1 && isNon(c)) sd.push(b[i]);
-		else if(a.indexOf(b[i]) === -1 && c.indexOf(b[i]) === -1) sd.push(b[i])
+		if (a.indexOf(b[i]) === -1 && isNon(c)) sd.push(b[i]);
+		else if (a.indexOf(b[i]) === -1 && c.indexOf(b[i]) === -1) sd.push(b[i])
 	}
 	if (c) {
 		for (i in c) {
-			if(a.indexOf(c[i]) === -1 && b.indexOf(c[i]) === -1) sd.push(c[i]);
+			if (a.indexOf(c[i]) === -1 && b.indexOf(c[i]) === -1) sd.push(c[i]);
 		}   
 	}
 	return toSort? rmDuplicates(sd).quickSort(): rmDuplicates(sd)
@@ -2798,8 +2829,8 @@ function bitStr (a, b) { //Bit string of a mathematical set in relation to an ot
 }
 
 function toSameLength (a, b, cr) { //Make sure that a and b are of the same lengths and fill the empty spaces with cr
-	if(!a.isIterable() || !b.isIterable()) throw new Error("invalid length equality operation on non-iterable objects");
-	if(!cr) cr = " ";
+	if (!a.isIterable() || !b.isIterable()) throw new Error("invalid length equality operation on non-iterable objects");
+	if (!cr) cr = " ";
 	if (a.length > b.length) {
 		for(var i = b.length; i < a.length; i++) isType(b[i], "String")? b += cr: b.push(cr);
 	} else if (a.length < b.length) {
@@ -2812,7 +2843,7 @@ function And (a, b, cr, toArr) { //Logical a&b where a and b are sets
 	toSameLength(a, b, cr || null);
 	var res = toArr? new Array(a.length): (a[0] && b[0]);
 	for (var i in a) {
-		if(toArr) res[i] = a[i] && b[i];
+		if (toArr) res[i] = a[i] && b[i];
 		else res = (res && a[i] && b[i]);
 	}
 	return res
@@ -2822,7 +2853,7 @@ function Or (a, b, cr, toArr) { //Logical a|b where a and b are sets
 	toSameLength(a, b, cr || null);
 	var res = toArr? new Array(a.length): (a[0] || b[0]);
 	for (var i in a) {
-		if(toArr) res[i] = a[i] || b[i];
+		if (toArr) res[i] = a[i] || b[i];
 		else res = (res || a[i] || b[i]);
 	}
 	return res
@@ -2832,7 +2863,7 @@ function Xor (a, b, cr, toArr) { //Logical a^b where a and b are sets
 	toSameLength(a, b, cr || null);
 	var res = toArr? new Array(a.length): xor(a[0], b[0]);
 	for (var i in a) {
-		if(toArr) res[i] = xor(a[i], b[i]);
+		if (toArr) res[i] = xor(a[i], b[i]);
 		else res = xor(res, xor(a[i], b[i]));
 	}
 	return res
@@ -2842,7 +2873,7 @@ function Imply (a, b, cr, toArr) { //Logical a = >b where a and b are sets
 	toSameLength(a, b, cr || null);
 	var res = toArr? new Array(a.length): (!a[0] || b[0]);
 	for (var i in a) {
-		if(toArr) res[i] = (!a[i] || b[i]);
+		if (toArr) res[i] = (!a[i] || b[i]);
 		else res = (!res || (!a[i] || b[i]));
 	}
 	return res
@@ -2875,7 +2906,7 @@ function h (mtx, solvedMtx, hrt) { //(heuristic) manhattan distance of each elem
 function lookfor (x, mtx, toCoord) { //Look for an element x in a matrix mtx
 	for (var i = 0; i < mtx.length; i++) {
 		for (var j = 0; j < mtx[i].length; j++) {
-			if(mtx[i][j] === x) return toCoord? [j, i]: [i, j]//I is the row number and j the column which oppose j being the x-coord and i the y-coord
+			if (mtx[i][j] === x) return toCoord? [j, i]: [i, j]//I is the row number and j the column which oppose j being the x-coord and i the y-coord
 		}
 	}
 	return -1
@@ -2883,10 +2914,10 @@ function lookfor (x, mtx, toCoord) { //Look for an element x in a matrix mtx
 
 function keyList (map, propOnly) { //Returns a list of keys of a map (like keys in ES6)
 	var list = [];
-	//ES6 only: if(propOnly) return keys(map)
+	//ES6 only: if (propOnly) return keys(map)
 	if (propOnly) {
 		for (var key in map) {
-			if(map.hasOwnProperty(key)) list.push(key);
+			if (map.hasOwnProperty(key)) list.push(key);
 		}
 	}else for(key in map) list.push(key);
 	return list
@@ -2894,10 +2925,10 @@ function keyList (map, propOnly) { //Returns a list of keys of a map (like keys 
 
 function valList (map, propOnly) { //Returns a list of values of a map (like values in ES6)
 	var list = [];
-	//ES6 only: if(propOnly) return values(map)
+	//ES6 only: if (propOnly) return values(map)
 	if (propOnly) {
 		for (var key in map) {
-			if(map.hasOwnProperty(key)) list.push(map[key]);
+			if (map.hasOwnProperty(key)) list.push(map[key]);
 		}
 	}else for(key in map) list.push(map[key]);
 	return list
@@ -2939,97 +2970,97 @@ function TreeNode (pl, l, r) { //Binary tree
 	}
 	this.addLeft = function (childs) {
 		for (var i = 0; i < childs.length; i++) {
-			if(i === 0) this.left = childs[0];
+			if (i === 0) this.left = childs[0];
 			else childs[i-1].left = childs[i];
 		}
 	}
 	this.addRight = function (childs) {
 		for (var i in childs) {
-			if(i === 0) this.righttChild = childs[0];
+			if (i === 0) this.righttChild = childs[0];
 			else childs[i-1].right = childs[i];
 		}
 	}
 	this.traverse = function () {
-		if(this.left) this.left.traverse();
-		if(this.right) this.right.traverse();
+		if (this.left) this.left.traverse();
+		if (this.right) this.right.traverse();
 		return this
 	}
 	//Console printing
 	this.printInOrder = function () {
-		if(this.left) this.left.printInOrder();
+		if (this.left) this.left.printInOrder();
 		Essence.addToPrinter(this.payload + "->");
-		if(this.right) this.right.printInOrder();
+		if (this.right) this.right.printInOrder();
 		Essence.addToPrinter("\r\n");
 	}
 	this.printPreOrder = function () {
 		Essence.addToPrinter(this.payload + "->");
-		if(this.left) this.left.printPreOrder();
-		if(this.right) this.right.printPreOrder();
+		if (this.left) this.left.printPreOrder();
+		if (this.right) this.right.printPreOrder();
 		Essence.addToPrinter("\r\n")
 	}
 	this.printPostOrder = function () {
-		if(this.left) this.left.printPreOrder();
-		if(this.right) this.right.printPreOrder();
+		if (this.left) this.left.printPreOrder();
+		if (this.right) this.right.printPreOrder();
 		Essence.addToPrinter(this.payload + "->");
 		Essence.addToPrinter("\r\n")
 	}
 	//Window printing
 	this.inOrder = function (t, s, d, sym) {
-		if(!t) t = "";
-		if(!s) s = "&nbsp;&nbsp;";
-		if(!d) d = 0;
-		if(!sym) sym = "|-";
+		if (!t) t = "";
+		if (!s) s = "&nbsp;&nbsp;";
+		if (!d) d = 0;
+		if (!sym) sym = "|-";
 		
-		if(this.left) this.left.inOrder(t + s, s, d + 1, sym);
+		if (this.left) this.left.inOrder(t + s, s, d + 1, sym);
 		println(t + sym + this.payload + s+" (deepth = " + d+")");
-		if(this.right) this.right.inOrder(t + s, s, d + 1, sym);
+		if (this.right) this.right.inOrder(t + s, s, d + 1, sym);
 	}
 	this.preOrder = function (t, s, d, sym) {
-		if(!t) t = "";
-		if(!s) s = "&nbsp;&nbsp;";
-		if(!d) d = 0;
-		if(!sym) sym = "|-";
+		if (!t) t = "";
+		if (!s) s = "&nbsp;&nbsp;";
+		if (!d) d = 0;
+		if (!sym) sym = "|-";
 		
 		println(t + sym + this.payload + s+" (deepth = " + d+")");
-		if(this.left) this.left.preOrder(t + s, s, d + 1, sym);
-		if(this.right) this.right.preOrder(t + s, s, d + 1, sym)
+		if (this.left) this.left.preOrder(t + s, s, d + 1, sym);
+		if (this.right) this.right.preOrder(t + s, s, d + 1, sym)
 	}
 	this.postOrder = function (t, s, d, sym) {
-		if(!t) t = "";
-		if(!s) s = "&nbsp;&nbsp;";
-		if(!d) d = 0;
-		if(!sym) sym = "|-";
+		if (!t) t = "";
+		if (!s) s = "&nbsp;&nbsp;";
+		if (!d) d = 0;
+		if (!sym) sym = "|-";
 		
-		if(this.left) this.left.postOrder(t + s, s, d + 1, sym);
-		if(this.right) this.right.postOrder(t + s, s, d + 1, sym);
+		if (this.left) this.left.postOrder(t + s, s, d + 1, sym);
+		if (this.right) this.right.postOrder(t + s, s, d + 1, sym);
 		println(t + sym + this.payload + s+" (deepth = " + d+")")
 	}
 
 	//Getter
 	this.getInOrder = function (sym) {
-		if(!sym) sym = "->";
+		if (!sym) sym = "->";
 		var order = "";
 		
-		if(this.left) order += this.left.getInOrder(sym);
+		if (this.left) order += this.left.getInOrder(sym);
 		order += sym + this.payload;
-		if(this.right) order += this.right.getInOrder(sym);
+		if (this.right) order += this.right.getInOrder(sym);
 		return order
 	}
 	this.getPreOrder = function (sym) {
-		if(!sym) sym = "->";
+		if (!sym) sym = "->";
 		var order = "";
 		
 		order += sym + this.payload;
-		if(this.left) order += this.left.getPreOrder(sym);
-		if(this.right) order += this.right.getPreOrder(sym);
+		if (this.left) order += this.left.getPreOrder(sym);
+		if (this.right) order += this.right.getPreOrder(sym);
 		return order
 	}
 	this.getPostOrder = function (sym) {
-		if(!sym) sym = "->";
+		if (!sym) sym = "->";
 		var order = "";
 		
-		if(this.left) order += this.left.getPostOrder(sym);
-		if(this.right) order += this.right.getPostOrder(sym);
+		if (this.left) order += this.left.getPostOrder(sym);
+		if (this.right) order += this.right.getPostOrder(sym);
 		return order + sym + this.payload
 	}
 	this.isLeaf = function () { //Is it an end of branch ?
@@ -3039,80 +3070,80 @@ function TreeNode (pl, l, r) { //Binary tree
 		return (method.normal() === "bfs")? this.bfs(n): this.dfs(n)
 	}
 	this.dfs = function (n, d, td) { //Deepth First Search
-		if(!d) d = 0//Deepth
-		if(!td) td = 0//Total deepth
+		if (!d) d = 0//Deepth
+		if (!td) td = 0//Total deepth
 		var stack = [];
 		stack.push(this);
 		while (stack != []) {
 			d = 0;
 			var cur = stack.pop();
 			try{
-				if(cur.payload === n) return [d, td]
+				if (cur.payload === n) return [d, td]
 			}catch(e){
 				return [-1, td]
 			}
-			if(cur.left) stack.push(cur.left);
-			if(cur.right) stack.push(cur.right);
+			if (cur.left) stack.push(cur.left);
+			if (cur.right) stack.push(cur.right);
 			d++;
 			td++;
 		}
 	}
 	this.bfs = function (n, b, tb) { //Breadth First Search
-		if(!b) b = 0//Breadth
-		if(!tb) tb = 0//Total breadth
+		if (!b) b = 0//Breadth
+		if (!tb) tb = 0//Total breadth
 		var queue = [];
 		queue.unshift(this)//Add as the end
 		while (queue != []) {
 			b = 0;
 			var cur = queue.pop()//Get the first element of the queue
 			try{
-				if(cur.payload === n) return [b, tb]
+				if (cur.payload === n) return [b, tb]
 			}catch(e){
 				return [-1, tb]
 			}
-			if(cur.left) queue.unshift(cur.left);
-			if(cur.right) queue.unshift(cur.right);
+			if (cur.left) queue.unshift(cur.left);
+			if (cur.right) queue.unshift(cur.right);
 			b++;
 			tb++;
 		}
 	}
 	this.sum = function () {
 		var s = this.payload;
-		if(this.left) s += this.left.sum();
-		if(this.right) s += this.right.sum();
+		if (this.left) s += this.left.sum();
+		if (this.right) s += this.right.sum();
 		return s
 	}
 	this.min = function () {
 		var m = this.payload;
-		if(this.left) m = Math.min(m, this.left.min());
-		if(this.right) m = Math.min(m, this.right.min());
+		if (this.left) m = Math.min(m, this.left.min());
+		if (this.right) m = Math.min(m, this.right.min());
 		return m
 	}
 	this.max = function () {
 		var m = this.payload;
-		if(this.left) m = Math.max(m, this.left.max());
-		if(this.right) m = Math.max(m, this.right.max());
+		if (this.left) m = Math.max(m, this.left.max());
+		if (this.right) m = Math.max(m, this.right.max());
 		return m
 	}
 	this.nbOfBranches = function (n) {
-		if(!n) n = 0;
-		if(this.left) n = this.left.nbOfBranches(n + 1);
-		if(this.right) n = this.right.nbOfBranches(n + 1);
+		if (!n) n = 0;
+		if (this.left) n = this.left.nbOfBranches(n + 1);
+		if (this.right) n = this.right.nbOfBranches(n + 1);
 		return n
 	}
 	this.avg = function () {
 		return this.sum()/this.nbOfBranches()
 	}
 	this.printBFS = function (sym) {
-		if(!sym) sym = "->";
+		if (!sym) sym = "->";
 		var queue = [], res = "";
 		queue.unshift(this)//Add as the end
 		while (queue!=[]) {
 			var cur = queue.pop()//Get the first element of the queue
 			res += cur + sym;
 			try{
-				if(cur.left) queue.unshift(cur.left);
-				if(cur.right) queue.unshift(cur.right);
+				if (cur.left) queue.unshift(cur.left);
+				if (cur.right) queue.unshift(cur.right);
 			}catch(e){
 				Essence.say(e + " caused " + this + ".printBFS(" + sym + ") to go wrong", "err");
 			}
@@ -3124,15 +3155,15 @@ function TreeNode (pl, l, r) { //Binary tree
 		this.printInOrder();
 		return "Tree(" + Essence.txt2print + ")" */
 		var str = "TreeNode(payload = " + this.payload + ", ";
-		if(this.left) str += "left = " + this.left.toString();
-		if(this.right) str += "right = " + this.right.toString();
+		if (this.left) str += "left = " + this.left.toString();
+		if (this.right) str += "right = " + this.right.toString();
 		return str.substring(0, str.length) + ")"
 	}
 	this.toArray = function (singly) {
 		var arr = [];
-		if(this.left) singly? arr.push(this.left.toArray().toString().split(",")): arr.push(this.left.toArray());
+		if (this.left) singly? arr.push(this.left.toArray().toString().split(",")): arr.push(this.left.toArray());
 		arr.push(this.payload);
-		if(this.right) singly? arr.push(this.right.toArray().toString().split(",")): arr.push(this.right.toArray());
+		if (this.right) singly? arr.push(this.right.toArray().toString().split(",")): arr.push(this.right.toArray());
 		return singly? arr.toString().split(","): arr
 	}
 }
@@ -3143,23 +3174,23 @@ function Node (pl, nx, pv) {
 	this.prev = pv || null;
 	
 	this.traverse = function () {
-		if(this.next != null) this.next.traverse();
+		if (this.next != null) this.next.traverse();
 		Essence.say("payload: " + this.payload);
 	}
 	
 	this.print = function () {
-		if(this.next != null) this.next.print();
+		if (this.next != null) this.next.print();
 		Essence.print(this.payload + "=>");
 	}
 	
 	this.printList = function () {
-		if(this.next === null) Essence.txt2print += "->" + this.v;
+		if (this.next === null) Essence.txt2print += "->" + this.v;
 		else this.next.printList();
 		Essence.print("");
 	}
 	
 	this.last = function () {
-		if(this.next === null) return this
+		if (this.next === null) return this
 		else return this.next.last()
 	}
 	
@@ -3177,7 +3208,7 @@ function Node (pl, nx, pv) {
 	}
 
 	this.reverse = function () {
-		if(this.next == null) return this
+		if (this.next == null) return this
 		else {
 			var newHead = this.next.reverse();
 			newHead.next = this;
@@ -3197,9 +3228,9 @@ function Node (pl, nx, pv) {
 	}
 	
 	this.find = function (n, d) {
-		if(!d) d = 0;
-		if(this.payload === n) return d
-		if(this.next) return this.next.find(n, d + 1)
+		if (!d) d = 0;
+		if (this.payload === n) return d
+		if (this.next) return this.next.find(n, d + 1)
 		return [-1, d]
 	}
 }
@@ -3218,85 +3249,85 @@ function NTreeNode (pl, ch) { //N-ary tree
 	}
 	this.traverse = function () {
 		for (var c in this.childs) {
-			if(this.childs.hasOwnProperty(c)) c.traverse();
+			if (this.childs.hasOwnProperty(c)) c.traverse();
 		}
 		return this
 	}
 	//Console printing
 	this.printInOrder = function () {
-		if(this.left) this.left.printInOrder();
+		if (this.left) this.left.printInOrder();
 		Essence.addToPrinter(this.payload + "->");
-		if(this.right) this.right.printInOrder();
+		if (this.right) this.right.printInOrder();
 		Essence.addToPrinter("\r\n");
 	}
 	this.printPreOrder = function () {
 		Essence.addToPrinter(this.payload + "->");
-		if(this.left) this.left.printPreOrder();
-		if(this.right) this.right.printPreOrder();
+		if (this.left) this.left.printPreOrder();
+		if (this.right) this.right.printPreOrder();
 		Essence.addToPrinter("\r\n")
 	}
 	this.printPostOrder = function () {
-		if(this.left) this.left.printPreOrder();
-		if(this.right) this.right.printPreOrder();
+		if (this.left) this.left.printPreOrder();
+		if (this.right) this.right.printPreOrder();
 		Essence.addToPrinter(this.payload + "->");
 		Essence.addToPrinter("\r\n")
 	}
 	//Window printing
 	this.inOrder = function (t, s, d, sym) {
-		if(!t) t = "";
-		if(!s) s = "&nbsp;&nbsp;";
-		if(!d) d = 0;
-		if(!sym) sym = "|-";
+		if (!t) t = "";
+		if (!s) s = "&nbsp;&nbsp;";
+		if (!d) d = 0;
+		if (!sym) sym = "|-";
 		
-		if(this.left) this.left.inOrder(t + s, s, d + 1, sym);
+		if (this.left) this.left.inOrder(t + s, s, d + 1, sym);
 		println(t + sym + this.payload + s+" (deepth = " + d+")");
-		if(this.right) this.right.inOrder(t + s, s, d + 1, sym);
+		if (this.right) this.right.inOrder(t + s, s, d + 1, sym);
 	}
 	this.preOrder = function (t, s, d, sym) {
-		if(!t) t = "";
-		if(!s) s = "&nbsp;&nbsp;";
-		if(!d) d = 0;
-		if(!sym) sym = "|-";
+		if (!t) t = "";
+		if (!s) s = "&nbsp;&nbsp;";
+		if (!d) d = 0;
+		if (!sym) sym = "|-";
 		
 		println(t + sym + this.payload + s+" (deepth = " + d+")");
-		if(this.left) this.left.preOrder(t + s, s, d + 1, sym);
-		if(this.right) this.right.preOrder(t + s, s, d + 1, sym)
+		if (this.left) this.left.preOrder(t + s, s, d + 1, sym);
+		if (this.right) this.right.preOrder(t + s, s, d + 1, sym)
 	}
 	this.postOrder = function (t, s, d, sym) {
-		if(!t) t = "";
-		if(!s) s = "&nbsp;&nbsp;";
-		if(!d) d = 0;
-		if(!sym) sym = "|-";
+		if (!t) t = "";
+		if (!s) s = "&nbsp;&nbsp;";
+		if (!d) d = 0;
+		if (!sym) sym = "|-";
 		
-		if(this.left) this.left.postOrder(t + s, s, d + 1, sym);
-		if(this.right) this.right.postOrder(t + s, s, d + 1, sym);
+		if (this.left) this.left.postOrder(t + s, s, d + 1, sym);
+		if (this.right) this.right.postOrder(t + s, s, d + 1, sym);
 		println(t + sym + this.payload + s+" (deepth = " + d+")")
 	}
 	//Getter
 	this.getInOrder = function (sym) {
-		if(!sym) sym = "->";
+		if (!sym) sym = "->";
 		var order = "";
 		
-		if(this.left) order += this.left.getInOrder(sym);
+		if (this.left) order += this.left.getInOrder(sym);
 		order += sym + this.payload;
-		if(this.right) order += this.right.getInOrder(sym);
+		if (this.right) order += this.right.getInOrder(sym);
 		return order
 	}
 	this.getPreOrder = function (sym) {
-		if(!sym) sym = "->";
+		if (!sym) sym = "->";
 		var order = "";
 		
 		order += sym + this.payload;
-		if(this.left) order += this.left.getPreOrder(sym);
-		if(this.right) order += this.right.getPreOrder(sym);
+		if (this.left) order += this.left.getPreOrder(sym);
+		if (this.right) order += this.right.getPreOrder(sym);
 		return order
 	}
 	this.getPostOrder = function (sym) {
-		if(!sym) sym = "->";
+		if (!sym) sym = "->";
 		var order = "";
 		
-		if(this.left) order += this.left.getPostOrder(sym);
-		if(this.right) order += this.right.getPostOrder(sym);
+		if (this.left) order += this.left.getPostOrder(sym);
+		if (this.right) order += this.right.getPostOrder(sym);
 		return order + sym + this.payload
 	}
 	this.isLeaf = function () { //Is it an end of branch ?
@@ -3307,24 +3338,24 @@ function NTreeNode (pl, ch) { //N-ary tree
 		return (method.normal() === "bfs")? this.bfs(n): this.dfs(n)
 	}
 	this.dfs = function (n, d, td) { //Deepth First Search
-		if(!d) d = 0//Deepth
-		if(!td) td = 0//Total deepth
+		if (!d) d = 0//Deepth
+		if (!td) td = 0//Total deepth
 		for (var c in this.childs) {
-			if(this.childs.hasOwnProperty(c)) c.dfs(n, d + 1, td++);
+			if (this.childs.hasOwnProperty(c)) c.dfs(n, d + 1, td++);
 		}
 		return [-1, td]
 	}
 	this.bfs = function (n, b, tb) { //Breadth First Search
-		if(!b) b = 0//Breadth
-		if(!tb) tb = 0//Total breadth
+		if (!b) b = 0//Breadth
+		if (!tb) tb = 0//Total breadth
 		var queue = [];
 		queue.unshift(this)//Add as the end
 		while (queue != []) {
 			b = 0;
 			var cur = new TreeNode(queue.pop())//Get the first element of the queue
-			if(cur.payload === n) return [b, tb]
-			if(cur.left) queue.unshift(cur.left);
-			if(cur.right) queue.unshift(cur.right);
+			if (cur.payload === n) return [b, tb]
+			if (cur.left) queue.unshift(cur.left);
+			if (cur.right) queue.unshift(cur.right);
 			b++;
 			tb++;
 		}
@@ -3332,26 +3363,26 @@ function NTreeNode (pl, ch) { //N-ary tree
 	}
 	this.sum = function () {
 		var s = this.payload;
-		if(this.left) s += this.left.sum();
-		if(this.right) s += this.right.sum();
+		if (this.left) s += this.left.sum();
+		if (this.right) s += this.right.sum();
 		return s
 	}
 	this.min = function () {
 		var m = this.payload;
-		if(this.left) m = Math.min(m, this.left.min());
-		if(this.right) m = Math.min(m, this.right.min());
+		if (this.left) m = Math.min(m, this.left.min());
+		if (this.right) m = Math.min(m, this.right.min());
 		return m
 	}
 	this.max = function () {
 		var m = this.payload;
-		if(this.left) m = Math.max(m, this.left.max());
-		if(this.right) m = Math.max(m, this.right.max());
+		if (this.left) m = Math.max(m, this.left.max());
+		if (this.right) m = Math.max(m, this.right.max());
 		return m
 	}
 	this.nbOfBranches = function (n) {
-		if(!n) n = 0;
-		if(this.left) n = this.left.nbOfBranches(n + 1);
-		if(this.right) n = this.right.nbOfBranches(n + 1);
+		if (!n) n = 0;
+		if (this.left) n = this.left.nbOfBranches(n + 1);
+		if (this.right) n = this.right.nbOfBranches(n + 1);
 		return n
 	}
 	this.avg = function () {
@@ -3364,8 +3395,8 @@ function NTreeNode (pl, ch) { //N-ary tree
 			var cur = new TreeNode(queue.pop())//Get the first element of the queue
 			println(tab + ">" + cur.payload);
 			tab += "-";
-			if(cur.left) queue.unshift(cur.left);
-			if(cur.right) queue.unshift(cur.right);
+			if (cur.left) queue.unshift(cur.left);
+			if (cur.right) queue.unshift(cur.right);
 		}
 	}
 	this.toString = function () {
@@ -3373,15 +3404,15 @@ function NTreeNode (pl, ch) { //N-ary tree
 		this.printInOrder();
 		return "Tree(" + Essence.txt2print + ")" */
 		var str = "TreeNode(payload = " + this.payload + ", ";
-		if(this.left) str += "left = " + this.left.toString();
-		if(this.right) str += "right = " + this.right.toString();
+		if (this.left) str += "left = " + this.left.toString();
+		if (this.right) str += "right = " + this.right.toString();
 		return str.substring(0, str.length) + ")"
 	}
 	this.toArray = function (singly) {
 		var arr = [];
-		if(this.left) singly? arr.push(this.left.toArray().toString().split(",")): arr.push(this.left.toArray());
+		if (this.left) singly? arr.push(this.left.toArray().toString().split(",")): arr.push(this.left.toArray());
 		arr.push(this.payload);
-		if(this.right) singly? arr.push(this.right.toArray().toString().split(",")): arr.push(this.right.toArray());
+		if (this.right) singly? arr.push(this.right.toArray().toString().split(",")): arr.push(this.right.toArray());
 		return singly? arr.toString().split(","): arr
 	}
 }
@@ -3394,7 +3425,7 @@ function Set (arr) { //Mathematical set
 	
 	this.add = function (item) {
 		if (this.value.indexOf(item) === -1) {	
-			if(isType(item, "array")) this.value = this.value.concat(item);
+			if (isType(item, "array")) this.value = this.value.concat(item);
 			else this.value.push(item)
 		}
 	}
@@ -3419,7 +3450,7 @@ function Set (arr) { //Mathematical set
 		if (isType(item, "array")) {
 			var c = true;
 			for (var i = 0; i < item.length; i++) {
-				if(!c) return false //Reduce the cost of the operation by not doing any unecessary work
+				if (!c) return false //Reduce the cost of the operation by not doing any unecessary work
 				c = c && this.contains(item[i]);
 			}
 			return c
@@ -3431,10 +3462,10 @@ function Set (arr) { //Mathematical set
 	}
 
 	this.isSame = function (s) { //Check if both sets have the same elements but not necessarily in the same order
-		if(this.equals(s)) return true
+		if (this.equals(s)) return true
 		var same = true;
 		for (var i = 0; i < s.size(); i++) {
-			if(!same) return false
+			if (!same) return false
 			same = same && this.contains(s.value[i]);
 		}
 		return same
@@ -3478,7 +3509,7 @@ function SortedSet (arr) {
 	this.value = arr || [];
 	this.add = function (item) {
 		if (this.value.indexOf(item) ==-1) {
-			if(isType(item, "array")) this.value = this.value.concat(item);
+			if (isType(item, "array")) this.value = this.value.concat(item);
 			else this.value.push(item);
 		}
 		this.value.quickSort();
@@ -3488,7 +3519,7 @@ function SortedSet (arr) {
 function Stack (arr, lim) {
 	this.value = isType(lim, "Number")? new Array(lim): [];
 	this.limit = lim || null;
-	if(arr) this.value.push(arr);
+	if (arr) this.value.push(arr);
 	
 	this.peek = function () { //Returns the top value
 		return this.value.last()
@@ -3499,12 +3530,12 @@ function Stack (arr, lim) {
 	}
 	
 	this.push = function (item) {
-		if(this.isFull()) throw new Error("Stack overflow !");
+		if (this.isFull()) throw new Error("Stack overflow !");
 		isType(item, "array")? this.value.append(item): this.value.push(item);
 	}
 	
 	this.pop = function () {
-		if(this.isEmpty()) throw new Error("Stack underflow !") 
+		if (this.isEmpty()) throw new Error("Stack underflow !") 
 		var it = this.peek();
 		this.value.pop(it);
 		return it
@@ -3540,7 +3571,7 @@ function StackArray (sz) {
 	}
 	
 	this.push = function (item) {
-		if(this.isFull()) throw new Error("Stack overflow !");
+		if (this.isFull()) throw new Error("Stack overflow !");
 		if (isType(item, "array")) {
 			for(var i = 0; i < item.length; i++) this.push(item[i]);
 		} else {
@@ -3550,7 +3581,7 @@ function StackArray (sz) {
 	}
 	
 	this.pop = function (item) {
-		if(this.isEmpty()) throw new Error("Stack underflow !") 
+		if (this.isEmpty()) throw new Error("Stack underflow !") 
 		if (isType(item, "array")) {
 			for(var i = 0; i < item.length; i++) this.pop(item[i]);
 		} else {
@@ -3597,10 +3628,10 @@ function StackList (arr) {
 		}
 		return this
 	}
-	if(arr) this.push(arr);
+	if (arr) this.push(arr);
 
 	this.pop = function (n) {
-		if(!this.isEmpty()) throw new Error("I can't pop from an empty stack list");
+		if (!this.isEmpty()) throw new Error("I can't pop from an empty stack list");
 		if (n) {
 			for(var i = 0; i < n; i++) this.pop();
 		} else {
@@ -3622,15 +3653,15 @@ function StackList (arr) {
 function Queue (arr, lim) {
 	this.value = isType(lim, "Number")? new Array(lim): [];
 	this.limit = lim || null;
-	if(arr) this.value.push(arr);
+	if (arr) this.value.push(arr);
 	
 	this.enqueue = function (item) {
-		if(this.isFull()) throw new Error("Queue overflow !");
+		if (this.isFull()) throw new Error("Queue overflow !");
 		isType(item, "array")? this.value.preppend(item): this.value.unshift(item);
 	}
 	
 	this.dequeue = function () {
-		if(this.isEmpty()) throw new Error("Queue underflow !") 
+		if (this.isEmpty()) throw new Error("Queue underflow !") 
 		var it = this.head();
 		this.value.pop();
 		return it
@@ -3674,7 +3705,7 @@ function QueueArray (arr) {
 		if (isType(item, "array")) {
 			for(var i = 0; i < item.length; i++) this.enqueue(item[i]);
 		} else {
-			if(this.isFull()) throw new Error("The queue is full");
+			if (this.isFull()) throw new Error("The queue is full");
 			if (this.isEmpty()) {
 				this.front++;
 				this.back++;
@@ -3688,7 +3719,7 @@ function QueueArray (arr) {
 	
 	this.dequeue = function () {
 		var val;
-		if(this.isEmpty()) throw new Error("I can't dequeue from an empty queue");
+		if (this.isEmpty()) throw new Error("I can't dequeue from an empty queue");
 		if (this.front === this.back) {
 			val = this.value[this.front];
 			this.front = this.back = -1;
@@ -3730,7 +3761,7 @@ function QueueList () {
 			for(var i = 0; i < item.length; i++) this.enqueue(item[i]);
 		} else {
 			var n = this.back != null? new Node(item, this.back, null): new Node(item);
-			if(this.back.prev != null) this.back.prev = n;
+			if (this.back.prev != null) this.back.prev = n;
 			this.back = n;
 			this.len++;
 		}
@@ -3738,7 +3769,7 @@ function QueueList () {
 	}
 	
 	this.dequeue = function () {
-		if(this.isEmpty()) throw new Error("I can't dequeue an empty queue list");
+		if (this.isEmpty()) throw new Error("I can't dequeue an empty queue list");
 		this.front = this.front.prev;
 		this.len--;
 		return this.front
@@ -3768,46 +3799,48 @@ function QueueList () {
 	this.remove = function (pl) {
 		var crt = this.front;
 		while (crt != null) {
-			if(crt.payload != null && (crt.payload == pl || crt.payload.equals(pl))) crt = null;
+			if (crt.payload != null && (crt.payload == pl || crt.payload.equals(pl))) crt = null;
 			crt = crt.next;
 		}
 	}
 	
 	this.insertAt = function (i, pl) {
 		this.back.next = new Node(pl);
-		if(i === 0) this.front = new Node(pl);
-		else if(i === this.len) this.back = new Node(pl);
-		else if(i > this.len) this.enqueue(pl);
+		if (i === 0) this.front = new Node(pl);
+		else if (i === this.len) this.back = new Node(pl);
+		else if (i > this.len) this.enqueue(pl);
 	}
 }
 
-function Astar () { //A* path finding alg
+function Astar (start, goal) { //A* path finding alg
 	//Inspired from http://Heyes-jones.com/pseudocode.php
-	//Node.f (score) = g (sum of all cost to get at this point) + h (heuristic: estimate of what it will take to get the goal)
-	var nodeGoal, nodeStart, nodeCurrent, nodeSucessor, _h;
+	//PathNode.f (score) = g (sum of all cost to get at this point) + h (heuristic: estimate of what it will take to get the goal)
+	var nodeGoal = goal, nodeStart = start, nodeCurrent, nodeSucessor, _h;
 	var openList = [nodeStart], closedList = [];
-	while (openList!=[]) {
+	while (openList.length > 0) {
 		var scores = [], minScore = openList[0].f;
 		for (var i in openList) {
-			scores.push(openList[i].f);
-			minScore = Math.min(minScore, openList[i].f);
+			if (openList.hasOwnProperty(i)) {
+				scores.push(openList[i].f);
+				minScore = Math.min(minScore, openList[i].f);
+			}
 		}
 		nodeCurrent = openList.filter(function (x) {
-			if(x.f === minScore) return x
+			if (x.f === minScore) return x
 		})[0];
 		openList = openList.filter(function (x) {
-			if(x.f != minScore) return x
+			if (x.f != minScore) return x
 		});
 		if (nodeCurrent === nodeGoal) {
 			//Generate each states nodeSucessor that can come after nodeCurrent
 			for(nodeSucessor in nodeCurrent){
-				if(nodeCurrent.hasOwnProperty(nodeSuccessor)){
+				if (nodeCurrent.hasOwnProperty(nodeSuccessor)){
 					nodeSuccessor.f = nodeCurrent.f + h(nodeSuccessor, nodeCurrent);
 					var l = lookfor(nodeSuccessor, openList);
 					if (l != -1) {
 						l = l[0];
 						//If the current node is better then continue
-						if(nodeCurrent.f < openList[l] || (lookfor(nodeSuccessor, closedList)!=-1 && nodeCurrent.f < openList[lookfor(nodeSuccessor, closedList)][0])) continue;
+						if (nodeCurrent.f < openList[l] || (lookfor(nodeSuccessor, closedList) != -1 && nodeCurrent.f < openList[lookfor(nodeSuccessor, closedList)][0])) continue;
 						openList = openList.remove(nodeSuccessor);
 						closedList = closedList.remove(nodeSuccessor);
 						nodeSuccessor.parent = nodeCurrent;
@@ -3822,6 +3855,38 @@ function Astar () { //A* path finding alg
 	}
 }
 
+function A(start, goal, grid) { //JS version of https://en.wikipedia.org/wiki/A*_search_algorithm
+	var closedSet = [], openSet = [start], cameFrom = [], gScore = [0], fScore = [euclidianDist(start, goal)];
+
+	while (openSet.length > 0) {
+		var current = openSet[fScore.indexOf(fScore.min())];
+		if (current === goal) return reconPath(cameFrom, current, grid);
+		openSet = openSet.remove(current);
+		closedSet.push(current);
+		var n = grid.neighbours(current);
+		for (var i = 0; i < n; i++) {
+			if (closedSet.indexOf(n[i]) > -1) continue;
+			var tentativeGScore = gScore[closedSet.indexOf(current)] + 1;
+			if (closedSet.indexOf(n[i]) === -1) openSet.push(n[i]);
+			else if (tentativeGScore >= gScore[i]) continue;
+		}
+
+		cameFrom[i] = current;
+		gScore[i] = tentativeGScore;
+		fScore[i] = gScore[i] + euclidianDist(n[i], goal);
+	}
+	return false;
+}
+
+function reconPath(cameFrom, current, grid) {
+	var totalPath = [current];
+	while (current in keyList(cameFrom)) {
+		current = cameFrom[grid.lookFor(current)];
+		totalPath.append(current);
+	}
+	return totalPath;
+}
+
 function IDAstar () { //Iterative Depending A* path finding alg (for 15-puzzle or huge structures)
 	
 }
@@ -3829,17 +3894,17 @@ function IDAstar () { //Iterative Depending A* path finding alg (for 15-puzzle o
 function readCoord (str, isInt) { //Read and convert coordinates of the form (a, b) and gives the a and b
 	var c = str.slice(1, str.length-1).split(", ");
 	return isInt? [parseInt(c[0]), parseInt(c[1])]: c
-}
+} 
 
 function rmConsecDuplicates (arr) { //Remove the consecutive duplicated values in an array
 	var out = [];
 	var j = 0;
 	for (var i = 0; i < arr.length; i++) {
-		if(i === 0 || arr[i] != arr[i-1]) out[j++] = arr[i];
+		if (i === 0 || arr[i] != arr[i-1]) out[j++] = arr[i];
 	}
 	j = 0;
 	for (i = 0; i < arr.length-1; i++) { //Double enforced check
-		if(arr[i] != arr[i + 1]) out[j++] = arr[i];
+		if (arr[i] != arr[i + 1]) out[j++] = arr[i];
 	}
 	return out
 }
@@ -3848,11 +3913,11 @@ function rmDuplicates (arr) { //Remove the duplicated values in an array
 	var out = rmConsecDuplicates(arr), j = 0;
 	
 	for (var i = 0; i < arr.length; i++) { //Pre-filtering
-		if(i === 0 || arr[i] != arr[i-1] || (i >= 1 && arr[i] != arr[i-2]) || (i >= 2 && arr[i] != arr[i-3])) out[j++] = arr[i];
+		if (i === 0 || arr[i] != arr[i-1] || (i >= 1 && arr[i] != arr[i-2]) || (i >= 2 && arr[i] != arr[i-3])) out[j++] = arr[i];
 	}
 	for (i = 0; i < out.length; i++) {
 		for (j = 0; j < out.length; j++) {
-			if(i != j && out[i] === out[j]) out[j] = undefined;
+			if (i != j && out[i] === out[j]) out[j] = undefined;
 		}
 	}
 	return out.remove(undefined)
@@ -4159,7 +4224,7 @@ function Polygon (pts, b, v) {
 	this.equals = function (a) {
 		var eq = true;
 		for (var p in this.points) {
-			if(this.points.hasOwnProperty(p) && a.points.hasOwnProperty(p)) eq = eq && this.points[p].equals(a.points[p]);
+			if (this.points.hasOwnProperty(p) && a.points.hasOwnProperty(p)) eq = eq && this.points[p].equals(a.points[p]);
 		}
 		return eq && this.border === a.border && this.vel.equals(a.vel)
 	}
@@ -4167,7 +4232,7 @@ function Polygon (pts, b, v) {
 	this.toString = function () {
 		var ptStr = "[";
 		for (var p in this.points) {
-			if(this.points.hasOwnProperty(p)) ptStr += this.points[p].toString() + ", ";
+			if (this.points.hasOwnProperty(p)) ptStr += this.points[p].toString() + ", ";
 		}
 		ptStr += "]";
 		return "Polygon(points = " + ptStr + ", velocity = " + this.vel.toString() + ", border = " + this.border + ")"
@@ -4302,14 +4367,14 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
 		this.setStorage();
 	}
 	this.update = function () {
-		if(localStorage[this.name]) this.val = JSON.parse(localStorage[this.name]);
+		if (localStorage[this.name]) this.val = JSON.parse(localStorage[this.name]);
 		else this.setStorage()
 	}
 	this.searchAndRemove = function (vals) { //Vals = range|..
 		for (var n = 0; n < vals.length; n++) {
 			for (var i = 0; i < this.val.length; i++) {
 				for (var j = 0; j < this.val.length; j++) {
-					if(this.val[i][j] == vals[n]) this.val[i][j] = null;
+					if (this.val[i][j] == vals[n]) this.val[i][j] = null;
 				}
 			}
 		}
@@ -4351,9 +4416,9 @@ function encrypt (txt, key) {
 		var mid = Math.floor(len/2);
 		
 		mid = (len % 2 === 0)? txt.charCodeAt(mid): (txt.charCodeAt(txt[mid-1]) + txt.charCodeAt(txt[mid]))/2;
-		if(mid >= 97 && mid <= 122) extra = 2;
-		else if(mid >= 65 && mid <= 90) extra = 1;
-		else if(mid - Math.floor(mid/2) * 2 === 0) extra = -1;
+		if (mid >= 97 && mid <= 122) extra = 2;
+		else if (mid >= 65 && mid <= 90) extra = 1;
+		else if (mid - Math.floor(mid/2) * 2 === 0) extra = -1;
 		else extra = 2;
 		
 		key = Math.round((Math.pow(2, 7) + txt.sum()-48)/txt.prod()) + extra;
@@ -4538,13 +4603,13 @@ function modRange(x, a, b) { //Like x % b but that forbids values x < a
 
 function abcModulus(code) {
 	var m = code % 123;
-	if(90 < m && m < 97) return m + abcModulus(Math.abs(getClosest(m, [90, 97]) - m));
+	if (90 < m && m < 97) return m + abcModulus(Math.abs(getClosest(m, [90, 97]) - m));
 	return m + ((m < 65 && m != 32)? 65 + m: 0); 
 }
 
 function addFav (url, title, elmId) { //Url = http://Www...." title = "My Website"
 	var place = elmId? "#" + elmId: "body";
-	if(navigator.appName.substring(0,3) === "Mic" && navigator.appVersion.substring(0,1) >= 4) $e(place).write("<a href = \"#\" onClick = \"window.external.AddFavorite(" + url + ", " + title + ");return(false);\">Bookmark this webpage</a><br />", true);
+	if (navigator.appName.substring(0,3) === "Mic" && navigator.appVersion.substring(0,1) >= 4) $e(place).write("<a href = \"#\" onClick = \"window.external.AddFavorite(" + url + ", " + title + ");return(false);\">Bookmark this webpage</a><br />", true);
 	else $e(place).write("Press CTRL + D to add this webpage to your bookmarks!", true)
 }
 
@@ -4570,8 +4635,8 @@ var BrowserDetect = { //Browser detection system
 			var dataString = data[i].string, dataProp = data[i].prop;
 			this.versionSearchString = data[i].versionSearch || data[i].identity;
 			if (dataString) {
-				if(dataString.indexOf(data[i].subString) !=-1) return data[i].identity
-			}else if(dataProp) return data[i].identity
+				if (dataString.indexOf(data[i].subString) !=-1) return data[i].identity
+			}else if (dataProp) return data[i].identity
 		}
 	},
 	searchVersion: function (dataString) {
@@ -4636,15 +4701,15 @@ function dateTime (id) { //Display the date and time at #id
 	var d = date.getDate(), day = date.getDay(), h = date.getHours();
 	var days = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saterday");
 	var tt = "", GMT = date.getTimezoneOffset(), m, s;
-	if(h < 10) h = "0" + h;
+	if (h < 10) h = "0" + h;
 	m = date.getMinutes();
 	if (h > 12) {
 		h -= 12;
 		tt = "PM";
 	} else tt = "AM";
-	if(m < 10) m = "0" + m;
+	if (m < 10) m = "0" + m;
 	s = date.getSeconds();
-	if(s < 10) s = "0" + s;
+	if (s < 10) s = "0" + s;
 	GMT = (GMT >= 0)? "GMT + "+ GMT: "GMT-"+ GMT;
 	var result = "We're " + days[day] + " " + d+" " + months[month] + " " + year + " and it's " + h+":" + m+":" + s+" " + tt + " " + GMT;
 	$e("#" + id).write(result, true);
@@ -4672,13 +4737,13 @@ function process (name, auth, summup, ctt) {
 	this.sig = this.name[0] + this.name[this.name.length-1] + this.name.prod() + this.author.slice(0, 2) + "-" + (getType(this.content))[0];
 	//Rights/privileges ?!
 	this.update = function () {
-		if(this.author != auth || this.author === "Anonymous" || isNon(this.author)) this.sig = this.name[0] + this.name[this.name.length-1] + "-" + this.name.prod() + this.author.slice(0, 2) + "-" + getType(this.content)[0]//H4ck
+		if (this.author != auth || this.author === "Anonymous" || isNon(this.author)) this.sig = this.name[0] + this.name[this.name.length-1] + "-" + this.name.prod() + this.author.slice(0, 2) + "-" + getType(this.content)[0]//H4ck
 		else this.sig = this.name[0] + this.name[this.name.length-1] + this.name.prod() + this.author.slice(0, 2) + "-" + (getType(this.content))[0];
-		if(this.sig[this.sig.length-1] === "N") this.bitsize = 8 * conv(this.content, 10, 2).sum();
-		else if(this.sig[this.sig.length-1] === "B") this.bitsize = 8;
-		else if(this.sig[this.sig.length-1] === "A") this.bitsize = (is2dArray(this.content))? 8 * numElm(this.content): 8 * this.content.length;
-		else if(this.sig[this.sig.length-1] === "O") this.bitsize = 0;
-		else if(this.sig[this.sig.length-1] === "S") this.bitsize = 8 * this.content.length;
+		if (this.sig[this.sig.length-1] === "N") this.bitsize = 8 * conv(this.content, 10, 2).sum();
+		else if (this.sig[this.sig.length-1] === "B") this.bitsize = 8;
+		else if (this.sig[this.sig.length-1] === "A") this.bitsize = (is2dArray(this.content))? 8 * numElm(this.content): 8 * this.content.length;
+		else if (this.sig[this.sig.length-1] === "O") this.bitsize = 0;
+		else if (this.sig[this.sig.length-1] === "S") this.bitsize = 8 * this.content.length;
 		else this.bitsize = null;
 	}
 	this.update();
@@ -4702,15 +4767,15 @@ function server (name, admin, type, ver, mxsz) { //Content<->> database issues t
 	this.slots = mkArray(this.nb_slots, 1, "empty");
 	this.type = type || "data";
 	this.type = this.type.toLowerCase();
-	if(this.type === "data") this.data = new database(this.name, range(1, 1, this.maxsize), this.slots, ["Index", "Value"], this.admin, this.version);
-	else if(this.type === "process") this.data = new database(this.name, range(1, 1, this.maxsize), this.slots, ["N°", "Name", "Author", "Description", "Content", "Bit size"], this.admin, this.version);
-	else if(this.type === "storage") this.data = new database(this.name, range(1, 1, this.maxsize), this.slots, ["Key", "Value"], this.admin, this.version);
-	else if(this.type === "authentification") this.data = new database(this.name, range(1, 1, this.maxsize), this.slots, ["Username", "Password", "Email", "Hash"], this.admin, this.version);
-	else if(this.type === "register" || this.type =="details") this.data = new database(this.name, range(1, 1, this.maxsize), this.slots, ["First name", "Last Name", "Title", "Email", "Phone", "Sex", "City/Country", "Birthday", "Websites", "Job", "Quote"], this.admin, this.version);
-	else if(this.type === "location") this.data = new database(this.name, range(1, 1, this.maxsize), this.slots, ["Name", "Longitude", "Latitude"], this.admin, this.version);
+	if (this.type === "data") this.data = new database(this.name, range(1, 1, this.maxsize), this.slots, ["Index", "Value"], this.admin, this.version);
+	else if (this.type === "process") this.data = new database(this.name, range(1, 1, this.maxsize), this.slots, ["N°", "Name", "Author", "Description", "Content", "Bit size"], this.admin, this.version);
+	else if (this.type === "storage") this.data = new database(this.name, range(1, 1, this.maxsize), this.slots, ["Key", "Value"], this.admin, this.version);
+	else if (this.type === "authentification") this.data = new database(this.name, range(1, 1, this.maxsize), this.slots, ["Username", "Password", "Email", "Hash"], this.admin, this.version);
+	else if (this.type === "register" || this.type =="details") this.data = new database(this.name, range(1, 1, this.maxsize), this.slots, ["First name", "Last Name", "Title", "Email", "Phone", "Sex", "City/Country", "Birthday", "Websites", "Job", "Quote"], this.admin, this.version);
+	else if (this.type === "location") this.data = new database(this.name, range(1, 1, this.maxsize), this.slots, ["Name", "Longitude", "Latitude"], this.admin, this.version);
 	else throw new Error(this.type + " is an invalid server type.");
 	this.addProcess = function (pcs) {
-		if(pcs.sig.last() === "-" || pcs.bitsize > this.maxsize/this.nb_slots) console.log("[Server:" + name + "] The process named " + pcs.name + " has been rejected");
+		if (pcs.sig.last() === "-" || pcs.bitsize > this.maxsize/this.nb_slots) console.log("[Server:" + name + "] The process named " + pcs.name + " has been rejected");
 		else{
 			var pos;
 			for (var i = 0; i < this.nb_slots; i++) {
@@ -4760,7 +4825,7 @@ function server (name, admin, type, ver, mxsz) { //Content<->> database issues t
 	}
 	this.fire = function (pcs) {
 		for (var i in this.slots) {
-			if(this.slots[i][0] == pcs.name && this.slots[i][1] == pcs.author) this.rm(i);
+			if (this.slots[i][0] == pcs.name && this.slots[i][1] == pcs.author) this.rm(i);
 		}
 	}
 	this.reset = function () {
@@ -4771,10 +4836,10 @@ function server (name, admin, type, ver, mxsz) { //Content<->> database issues t
 
 function CECheck (id, src, sz, delay, maxDelay) { //Launch the verification of the connexion
 	window.defaultStatus = "Evalue the connexion and see the downloading speed";
-	if(!src) src = "img/random2000x2000.jpg";
-	if(!sz) sz = 61784; //7.723kB -> kb
-	if(!delay) delay = 100; //ms
-	if(!maxDelay) maxDelay = 2e4
+	if (!src) src = "img/random2000x2000.jpg";
+	if (!sz) sz = 61784; //7.723kB -> kb
+	if (!delay) delay = 100; //ms
+	if (!maxDelay) maxDelay = 2e4
 	var img = new Image();
 	$G["t1"] = new Date().getTime();
 	$G["t2"] = 0;
@@ -4787,7 +4852,7 @@ function CECheck (id, src, sz, delay, maxDelay) { //Launch the verification of t
 function CETimer (id, img, nb, delay, maxDelay, size) { //Connexion Evaluation Timer
 	nb++;
 	$e("#" + id).write("Verification in progress...");
-	if(nb * delay >= maxDelay) $e("#" + id).write(evalDownload(0))//End of the maximimun delay
+	if (nb * delay >= maxDelay) $e("#" + id).write(evalDownload(0))//End of the maximimun delay
 	else {
 		if (img.complete) {
 			$G["t2"] = new Date().getTime();
@@ -4825,34 +4890,34 @@ upload speed:
 	*/
 function evalDownload (kbps) {
 	var res = "";
-	if(kbps === 0) res = "No connexion";
-	else if(kbps > 0 && kbps <= 56) res = "Low debit";
-	else if(kbps > 56 && kbps <= 8e3) res = "ADSL debit";
-	else if(kbps > 8e3 && kbps <= 2e4) res = "ADSL2 + ";
-	else if(kbps > 2e4 && kbps <= 5e4) res = "wire";
-	else if(kbps > 5e4 && kbps <= 1e5) res = "optical fibre";
+	if (kbps === 0) res = "No connexion";
+	else if (kbps > 0 && kbps <= 56) res = "Low debit";
+	else if (kbps > 56 && kbps <= 8e3) res = "ADSL debit";
+	else if (kbps > 8e3 && kbps <= 2e4) res = "ADSL2 + ";
+	else if (kbps > 2e4 && kbps <= 5e4) res = "wire";
+	else if (kbps > 5e4 && kbps <= 1e5) res = "optical fibre";
 	else res = "Ethernet";
 	return res + " (" + kbps.toNDigits(3) +" kbps)"
 }
 
 function evalUpload (kbps) {
 	var res = "";
-	if(kbps === 0) res = "No connexion";
-	else if(kbps > 0 && kbps <= 56) res = "Low debit";
-	else if(kbps > 56 && kbps <= 1e3) res = "ADSL + ";
-	else if(kbps > 1e3 && kbps <= 5e3) res = "wire";
+	if (kbps === 0) res = "No connexion";
+	else if (kbps > 0 && kbps <= 56) res = "Low debit";
+	else if (kbps > 56 && kbps <= 1e3) res = "ADSL + ";
+	else if (kbps > 1e3 && kbps <= 5e3) res = "wire";
 	else res = "Ethernet";
 	return res + " (" + kbps.toNDigits(3) +" kbps)"
 }
 
 function evalPing (ms) {
 	var res = "";
-	if(ms > 0 && ms <= 30) res = "Excellent";
-	else if(ms > 30 && ms <= 60) res = "Really good";
-	else if(ms > 60 && ms <= 100) res = "Good";
-	else if(ms > 100 && ms <= 200) res = "Okay";
-	else if(ms > 200 && ms <= 300) res = "Poor";
-	else if(ms > 300 && ms <= 400) res = "Bad";
+	if (ms > 0 && ms <= 30) res = "Excellent";
+	else if (ms > 30 && ms <= 60) res = "Really good";
+	else if (ms > 60 && ms <= 100) res = "Good";
+	else if (ms > 100 && ms <= 200) res = "Okay";
+	else if (ms > 200 && ms <= 300) res = "Poor";
+	else if (ms > 300 && ms <= 400) res = "Bad";
 	else res = "Really bad";
 	return res + " (" + ms +" ms)"
 }
@@ -4866,7 +4931,7 @@ var base64 = {
 		 Minimal or no improvement in performance by using an
 		 object with properties mapping chars to value (eg. 'A': 0)" */
 		i = this.ALPHA.indexOf(s.charAt(i || 0));
-		if(i === -1) throw "Cannot decode base64";
+		if (i === -1) throw "Cannot decode base64";
 		return i
 	},
 	decode: function (s) { // convert to string
@@ -4874,13 +4939,13 @@ var base64 = {
 		var gb64 = this.gb64;
 		var pads, i, b10;
 		var imax = s.length;
-		if(imax === 0) return s
-		if(imax % 4 != 0) throw "Cannot decode base64";
+		if (imax === 0) return s
+		if (imax % 4 != 0) throw "Cannot decode base64";
 		
 		pads = 0;
 		if (s.charAt(imax-1) === base64.PADCHAR) {
 			pads = 1;
-			if(s.charAt(imax-2) === base64.PADCHAR) pads = 2;
+			if (s.charAt(imax-2) === base64.PADCHAR) pads = 2;
 			// either way, we want to ignore this last block
 			imax -= 4;
 		}
@@ -4905,7 +4970,7 @@ var base64 = {
 	},
 	getbyte: function (s, i) {
 		var x = s.charCodeAt(i || 0);
-		if(x > 255) throw "INVALID_CHARACTER_ERR: DOM Exception 5";
+		if (x > 255) throw "INVALID_CHARACTER_ERR: DOM Exception 5";
 		return x
 	},
 	encode: function (s) {
@@ -4920,7 +4985,7 @@ var base64 = {
 		
 		var imax = s.length-s.length % 3;
 		
-		if(s.length === 0) return s
+		if (s.length === 0) return s
 		for (i = 0; i < imax; i += 3) {
 			b10 = (gb(s, i) << 16) || (gb(s, i + 1) << 8) || gb(s, i + 2);
 			x.push(alpha.charAt(b10 >> 18));
@@ -5002,20 +5067,20 @@ function msgBox (type, title, text, isHTML, style, customIcon) {
 		console.log("[Essence.js] " + title + ": " + text + "...");
 	} else if (type === "custom") {
 		icon = customIcon; alt = " ";
-		if(style.borderColor) dS.borderColor = style.borderColor;
-		if(style.borderSize) dS.borderSize = style.borderSize;
-		if(style.borderRadius) dS.borderRadius = style.borderRadius;
-		if(style.backgroundColor) dS.backgroundColor = style.backgroundColor;
-		if(style.textColor) dS.textColor = style.textColor;
-		if(style.textSize) dS.textSize = style.textSize;
-		if(style.textFont) dS.textFont = style.textFont;
-		if(style.buttonBorderColor) dS.buttonBorderColor = style.buttonBorderColor;
-		if(style.buttonBorderSize) dS.buttonBorderSize = style.buttonBorderSize;
-		if(style.buttonBorderRadius) dS.buttonBorderRadius = style.buttonBorderRadius;
-		if(style.buttonColor) dS.buttonColor = style.buttonColor;
-		if(style.buttonTextColor) dS.buttonTextColor = style.buttonTextColor;
-		if(style.buttonTextSize) dS.buttonTextSize = style.buttonTextSize;
-		if(style.buttonText) dS.buttonText = style.buttonText;
+		if (style.borderColor) dS.borderColor = style.borderColor;
+		if (style.borderSize) dS.borderSize = style.borderSize;
+		if (style.borderRadius) dS.borderRadius = style.borderRadius;
+		if (style.backgroundColor) dS.backgroundColor = style.backgroundColor;
+		if (style.textColor) dS.textColor = style.textColor;
+		if (style.textSize) dS.textSize = style.textSize;
+		if (style.textFont) dS.textFont = style.textFont;
+		if (style.buttonBorderColor) dS.buttonBorderColor = style.buttonBorderColor;
+		if (style.buttonBorderSize) dS.buttonBorderSize = style.buttonBorderSize;
+		if (style.buttonBorderRadius) dS.buttonBorderRadius = style.buttonBorderRadius;
+		if (style.buttonColor) dS.buttonColor = style.buttonColor;
+		if (style.buttonTextColor) dS.buttonTextColor = style.buttonTextColor;
+		if (style.buttonTextSize) dS.buttonTextSize = style.buttonTextSize;
+		if (style.buttonText) dS.buttonText = style.buttonText;
 		console.log("[Essence.js] " + title + ": " + text);
 	} else icon = false;
 	var msg = document.createElement("div"), header = document.createElement("span"), ctt = document.createElement("p"), btn = document.createElement("input"), img = "<img src = " + icon + " alt = '" + alt + "' />";
@@ -5038,7 +5103,7 @@ function msgBox (type, title, text, isHTML, style, customIcon) {
 	if ($e("#overlay").isEmpty()) {
 		Essence.handleError("The #overlay element is voided", "essence.js", 1336) 
 		$e("#overlay").write("<div id = 'overlay'></div>", true);
-		if(!$n("#overlay")) document.body.appendChild(document.createElement("div").id = "overlay")
+		if (!$n("#overlay")) document.body.appendChild(document.createElement("div").id = "overlay")
 	}
 	$e("#overlay").setStyles(["visibility", "hidden", "position", "absolute", "left", 0, "top", 0, "width", "100 % ", "height", "100 % ", "text-align", "center", "z-index", "1000", "background", "rgba(127,127,127,.5)"]);
 	$e("div#overlay").setStyles(["width", "300px", "margin", "100px auto", "background", dS.backgroundColor, "border", dS.borderSize + " solid " + dS.borderColor, "padding", "15px", "textAlign", "center", "boxShadow", "3px 3px 3px #333", "borderRadius", dS.borderRadius]);
@@ -5056,12 +5121,12 @@ function msgBox (type, title, text, isHTML, style, customIcon) {
 function genPassword () { //Generate a password
 	var chars = [], sym = ["&", "~", "\"", "#", "\'", "{", "[", "(", "-", "|", "`", "_", "\\", "^", "@", ")", "]", " + ", "=", "}", " % ", " * ", "?", ",", ";", ".", "/", ":", "!", " ", ""], word = "";
 	for (var i = 65; i < 123; i++) {
-		if(i <= 90 || i >= 97) chars[i-65] = String.fromCharCode(i);
+		if (i <= 90 || i >= 97) chars[i-65] = String.fromCharCode(i);
 	}
 	chars = chars.concat(sym, range(0, 1, 9)).remove(undefined);
-	if(chars.indexOf(undefined) > -1) chars = chars.concat(sym, range(0, 1, 9)).remove(undefined);
+	if (chars.indexOf(undefined) > -1) chars = chars.concat(sym, range(0, 1, 9)).remove(undefined);
 	while (word.length < 20) word += chars[randTo(chars.length-1)];
-	if(word.length < 20) word += chars[randTo(chars.length-1)];
+	if (word.length < 20) word += chars[randTo(chars.length-1)];
 	return word
 }
 
@@ -5071,7 +5136,7 @@ function genHash (password) { //To fix
 		rest = password.charCodeAt(i) + k.toNDigits(1) % 255;
 		//c = clamp(password.charCodeAt(i) + k, 32, 126);
 		c = Math.abs(password.charCodeAt(i) + k).toNDigits(1);
-		if(c < 32) c += 48;
+		if (c < 32) c += 48;
 		//console.log("k= " + k + "\trest (" + password.charCodeAt(i) + " + " + k + ")=" + rest + "\tc=" + c);
 		//console.log("Adjust: " + parseInt(48 + Math.round(password.charCodeAt(password.length - 1) / 10 + rest)));
 		hash += String.fromCharCode(clamp(c % 127, 32, 126));
@@ -5089,9 +5154,9 @@ function weekDay (d) { //D must be in the form dd/mm/yyyy and it gives the day o
 function dayOfWeek (d) { //Daniel "Kinch" Sheppard's method
 	var day = parseInt(d.split("/")[0]), m = [0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5], days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]//Months from Jan to Dec
 	var y = parseInt(d.split("/").last()) % 100 + Math.floor(d.split("/").last()/4), c = Math.floor(d.split("/").last()/100 % 4), cCode;
-	if(c === 0) cCode = 6;
-	else if(c === 1) cCode = 4;
-	else if(c === 2) cCode = 2;
+	if (c === 0) cCode = 6;
+	else if (c === 1) cCode = 4;
+	else if (c === 2) cCode = 2;
 	else cCode = 0;
 	//console.log("m = " + m[parseInt(d.split("/")[1])-1] + "\ny = " + y+"\n" + "\ncCode = " + cCode + "\nRes = " + day + m[parseInt(d.split("/")[1])-1] + y+ cCode);
 	return days[(day + m[parseInt(d.split("/")[1]) - 1] + y + cCode) % 7]
@@ -5119,7 +5184,7 @@ function parseURL (p, action) { //Doing some PHP without PHP :) !!
 				for (var i = 0; i < urlTerms.length; i++) {
 					var param = urlTerms[i].split("=");
 					if (param[0] === p[j]) {
-						if(isType(action, "Array")) action[j](param[1], param[0]);
+						if (isType(action, "Array")) action[j](param[1], param[0]);
 						else action(param[1], param[0]);
 					}
 				}
@@ -5127,14 +5192,14 @@ function parseURL (p, action) { //Doing some PHP without PHP :) !!
 		} else {
 			for (i = 0; i < urlTerms.length; i++) {
 				param = urlTerms[i].split("=");
-				if(param[0] === p) action(param[1]);
+				if (param[0] === p) action(param[1]);
 			}
 		}
 	}
 }
 
 function GET (name) { //HTTP GET request, method <=> parseURL(name, function (x) {this = x})
-	if(name === (new RegExp("[?&]" + encodeURIComponent(name) + "=([^&] * )")).exec(location.search)) return decodeURIComponent(name[1])
+	if (name === (new RegExp("[?&]" + encodeURIComponent(name) + "=([^&] * )")).exec(location.search)) return decodeURIComponent(name[1])
 	return;
 }
 
@@ -5165,8 +5230,8 @@ function DELETE () { //HTTP DELETE request
 }
 
 function alphabetSort (x) { //Sort alphabetically the elements in x
-	if(!x.isIterable()) throw new Error("alphabetSort cannot sort non iterable objects");
-	if(isType(x, "String")) return x.split("").quickSort().join("")
+	if (!x.isIterable()) throw new Error("alphabetSort cannot sort non iterable objects");
+	if (isType(x, "String")) return x.split("").quickSort().join("")
 
 	var res = x.uniform(), s = true, j = 1;
 	while (s) {
@@ -5176,7 +5241,7 @@ function alphabetSort (x) { //Sort alphabetically the elements in x
 				if (k == 0 && res[i].charAt(k) > res[i + 1].charAt(k)) { //Sort the by the first letter
 					swap(res, i, i + 1);
 					s = true;
-				}else if(res[i].charAt(k - 1) === res[i + 1].charAt(k - 1) && res[i].charAt(k) > res[i + 1].charAt(k)){
+				}else if (res[i].charAt(k - 1) === res[i + 1].charAt(k - 1) && res[i].charAt(k) > res[i + 1].charAt(k)){
 					swap(res, i, i + 1);
 					s = true;
 				}
@@ -5191,12 +5256,12 @@ function alphabetSort (x) { //Sort alphabetically the elements in x
 // 	var ol = occurrenceList(arr), res = arr;
 // 	console.log(ol);
 // 	for (var l in ol) {
-// 		if(ol.hasOwnProperty(l)) {
+// 		if (ol.hasOwnProperty(l)) {
 // 			var c = l;
 // 			for (var i in ol) {
-// 				if(ol.hasOwnProperty(i) && ol[i] < ol[l]) c = i;
+// 				if (ol.hasOwnProperty(i) && ol[i] < ol[l]) c = i;
 // 			}
-// 			if(l != c) swap(res, l, c);
+// 			if (l != c) swap(res, l, c);
 // 		}
 // 	}
 // 	return res;
@@ -5205,9 +5270,9 @@ function alphabetSort (x) { //Sort alphabetically the elements in x
 //   for(i = 1; i<x.length; i++){
 //     var k = i;
 //     for(j = i+1; j<x.length; i++){
-//        if(x[j] < x[k]) k = j;
+//        if (x[j] < x[k]) k = j;
 //     }
-//     if(i != k) swap(x, i, k);
+//     if (i != k) swap(x, i, k);
 //     Essence.say(x);
 //   }
 //   return x;
@@ -5220,7 +5285,7 @@ function occurrenceSort(arr) { //Sort the array/string from the most occurring i
 	for (var i = 0; i < tmp.length; i++) counts[i] = arr.count(tmp[i]);
 	while(tmp.length > 0) {
 		for (i = 0; i < tmp.length; i++) {
-			if(counts[i] === counts.max()) {
+			if (counts[i] === counts.max()) {
 				res.push(tmp[i]);
 				counts = counts.remove(counts[i]);
 				tmp = tmp.remove(tmp[i]);
@@ -5236,8 +5301,8 @@ function timeUp (act, pref, params) { //Time how long act() will take to be full
 	act(params);
 	t2 = new Date();
 	t2 = (t2.getMinutes() * 60 + t2.getSeconds()) * 1000 + t2.getMilliseconds();
-	if(isNon(pref) || pref.slice(0, 4).toLowerCase() === "auto" || pref.slice(0, 4).toLowerCase() === "none") return (t2-t1 > 1000)? (t2-t1)/1000 + "s": (t2-t1) + "ms"
-	else if(pref.toLowerCase() === "ms" || pref.slice(0, 8).toLowerCase() === "millisec") return (t2-t1) + "ms"
+	if (isNon(pref) || pref.slice(0, 4).toLowerCase() === "auto" || pref.slice(0, 4).toLowerCase() === "none") return (t2-t1 > 1000)? (t2-t1)/1000 + "s": (t2-t1) + "ms"
+	else if (pref.toLowerCase() === "ms" || pref.slice(0, 8).toLowerCase() === "millisec") return (t2-t1) + "ms"
 	else return (t2-t1)/1000 + "s"
 }
 
@@ -5245,7 +5310,7 @@ function binarySearch (list, x) { //Find if x exist in list
 	list.quickSort();
 	var i = 2, term = list[Math.floor(list.length/i)];
 	while (term != x && i > 0) {
-		if(term === x) return true
+		if (term === x) return true
 		else {
 			i *= 2;
 			term = term < x? list[Math.floor(list.length/i)]: list[3 * Math.floor(list.length/i)];
@@ -5257,9 +5322,9 @@ function binarySearch (list, x) { //Find if x exist in list
 $G["dnM"] = false;
 function daynightMode (exch) { //Switch between enabled or not for Day/Night page vision
 	var h = new Date().getHours();
-	if(exch) $G["dnM"] = !$G["dnM"];
+	if (exch) $G["dnM"] = !$G["dnM"];
 	if ($G["dnM"]) {
-		if(h >= 21) $e("body").setStyles(["backgroundColor", "#000", "color", "#fff"]);
+		if (h >= 21) $e("body").setStyles(["backgroundColor", "#000", "color", "#fff"]);
 		else $e("body").setStyles(["backgroundColor", "#fff", "color", "#000"]);
 	} else Essence.say("You cannot use the day/night modder if it\'s disabled.", "warn")
 }
@@ -5272,7 +5337,7 @@ function Archive (name, data) { //Compressed data using Huffman's approach while
 	this.updateDict = function () {
 		var lexiq = [], count, str = "", tmp = alphabetSort(data);
 		for (var i = 0; i < this.data.length - 1; i++) { //Fill lexiq
-			if(tmp[i] != tmp[i+ 1]) lexiq.push(tmp[i]);
+			if (tmp[i] != tmp[i+ 1]) lexiq.push(tmp[i]);
 		}
 		lexiq = rmDuplicates(lexiq);
 		//lexiq.debug();
@@ -5359,7 +5424,7 @@ function Machine (name, ver, cpy, type) {
 	}
 	
 	this.inv = function (data) {
-		if(!isType(data, "String")) data += "";
+		if (!isType(data, "String")) data += "";
 		for(var i = 0; i < data.length; i++) data[i] = parseInt(this.base) - 1 - parseFloat(data[i]);
 		return data
 	}
@@ -5370,7 +5435,7 @@ function Machine (name, ver, cpy, type) {
 	}
 	
 	this.parse = function (data) { //Turn the machine string into a human readable one
-		if(!isType(data, "Array")) data = this.base === 2? data.divide(8): data.divide(2);
+		if (!isType(data, "Array")) data = this.base === 2? data.divide(8): data.divide(2);
 		var res = "", deconvs = [];
 		for (var i = 0; i < data.length; i++) {
 			deconvs[i] = conv(data[i], this.base);
@@ -5420,25 +5485,25 @@ function Memory (cpy, type, prefix) { //Stack memory
 	this.free = 0;
 	this.save = function () {
 		for (var i = 0; i < this.slots.length; i++) {
-			if(this.type === "local") localStorage.setItem(this.name + "#" + i, this.slots[i]);
+			if (this.type === "local") localStorage.setItem(this.name + "#" + i, this.slots[i]);
 			else sessionStorage.setItem(this.name + "#" + i, this.slots[i]);
 		}
 	}
 	
 	this.remove = function (data) {
 		this.slots.remove(JSON.stringify(data));
-		if(this.type === "local") localStorage.setItem(this.getLocation(data), undefined);
+		if (this.type === "local") localStorage.setItem(this.getLocation(data), undefined);
 		else sessionStorage.setItem(this.getLocation(data), undefined);
 	}
 	
 	this.getLocation = function (data) { //Get the memory location of a data
 		if (this.type === "local") {
 			for (var i in localStorage) {
-				if(localStorage[i] === JSON.stringify(data)) return i
+				if (localStorage[i] === JSON.stringify(data)) return i
 			}
 		} else {
 			for (i in sessionStorage) {
-				if(sessionStorage[i] === JSON.stringify(data)) return i
+				if (sessionStorage[i] === JSON.stringify(data)) return i
 			}
 		}
 		return -1
@@ -5449,11 +5514,11 @@ function Memory (cpy, type, prefix) { //Stack memory
 		this.free = 0;
 		if (this.type === "local") {
 			for (var i in localStorage) {
-				if(i.indexOf(this.name) > -1) localStorage.removeItem(i);
+				if (i.indexOf(this.name) > -1) localStorage.removeItem(i);
 			}
 		} else {
 			for (i in sessionStorage) {
-				if(i.indexOf(this.name) > -1) sessionStorage.removeItem(i);
+				if (i.indexOf(this.name) > -1) sessionStorage.removeItem(i);
 			}
 		}
 	}
@@ -5474,7 +5539,7 @@ function Memory (cpy, type, prefix) { //Stack memory
 	}
 	
 	this.pop = function () {
-		if(this.type === "local") localStorage.removeItem(this.getLocation(this.slots.last()));
+		if (this.type === "local") localStorage.removeItem(this.getLocation(this.slots.last()));
 		else sessionStorage.removeItem(this.getLocation(this.slots.last()));
 		this.free--;
 		this.slots.pop();
@@ -5491,17 +5556,42 @@ function EvtShow (evt) { //Show some infos about the event
 
 function evtLog (event) { //Event log
 	for(var atr in event){
-		if(event.hasOwnProperty(atr)) Essence.say(atr + ": " + event[atr])
+		if (event.hasOwnProperty(atr)) Essence.say(atr + ": " + event[atr])
 	}
 }
+/* Types
+- EvalError: instance representing an error that occurs regarding the global function eval()
+- InternalError: instance representing an error that occurs when an internal error in the JavaScript engine is thrown. E.g. "too much recursion"
+- RangeError: instance representing an error that occurs when a numeric variable or parameter is outside of its valid range
+- ReferenceError: instance representing an error that occurs when de-referencing an invalid reference
+- SynthaxError: instance representing a syntax error that occurs while parsing code in eval()
+- TypeError: instance representing an error that occurs when a variable or parameter is not of a valid type
+- URIError: instance representing an error that occurs when encodeURI() or decodeURI() are passed invalid parameters
 
-/* function MyError(message) { //From Mozilla ?
+function MyError(message) { //From Mozilla ?
   this.name = 'MyError';
   this.message = message || 'Default Message';
   this.stack = (new Error()).stack
 }
 MyError.prototype = Object.create(Error.prototype);
 MyError.prototype.constructor = MyError; */
+
+InvalidParamError.inheritsFrom(Error);
+function InvalidParamError(msg, fname, lineNum) { //Invalid parameter
+	this.name = "Invalid parameter error";
+	this.fileName = fname;
+	this.lineNumber = lineNum;
+	this.message = msg || "The parameter used at " + this.lineNumber + " is invalid !";
+	this.stack = (new Error()).stack;
+}
+
+function testErr(err) {
+	try {
+		throw err;
+	} catch (e) {
+		Essence.say("%cTested error%c:\n" + e.stack, "erro", "text-decoration: underline; color: #000;", "text-decoration: none; color: #000;");
+	}
+}
 
 function noobTest (fx, params) { //Source: https://scontent-lhr3-1.xx.fbcdn.net/hphotos-xfl1/v/t1.0-9/12705609_1071795346206130_3757520485028328706_n.jpg?oh = cb99a4624d9732414b787f7eb8437c73&oe = 57383223
 	try {
@@ -5528,14 +5618,14 @@ function moveHTMLRange (id, n) { //Moove an HTML range left or right which was m
 }
 
 function htmlRange (id, min, val, max) { //Dynamic HTML range
-	if(!id) throw new Error("htmlRange needs to know the id of the element implementing the range");
+	if (!id) throw new Error("htmlRange needs to know the id of the element implementing the range");
 	Essence.addCSS(".arrow{cursor: pointer;font-size: 20px;vertical-align: middle}");
 	return "<b class=\"arrow\" onClick=\"moveHTMLRange('" + id + "', -1)\">&triangleleft;</b><input type=\"range\" value=" + (val || 0) + " max=" + (max || 100) + " min=" + (min || 0) + " id=\"" + id + "\" onChange=\"$e('#" + id + "_val').write(this.value);\" /><b class=\"arrow\" onClick=\"moveHTMLRange('" + id + "', 1)\">&triangleright;</b><span id=\"" + id + "_val\">" + (val || "") + "</span>"
 }
 
 function labelFieldSwap (id, lbl) { //HTML/JS animation swapping the field with the label
-	//If(!$e("#" + id).isEmpty() && $e("#" + id).val()!= lbl && $e("#" + id).val()!=$e("#lbl_" + id).val()) return false
-	if($e("#lbl_" + id).isEmpty()) $e("#lbl_" + id).write("&ensp;", true);
+	//if (!$e("#" + id).isEmpty() && $e("#" + id).val()!= lbl && $e("#" + id).val()!=$e("#lbl_" + id).val()) return false
+	if ($e("#lbl_" + id).isEmpty()) $e("#lbl_" + id).write("&ensp;", true);
 	if ($e("#" + id).isEmpty() || $e("#" + id).val() === "\b" || ($e("#" + id).val()!= lbl && $e("#" + id).size() < 2)) { //The field isn't being filled so label inside the field
 		//Console.log("lbl inside");
 		$e("#" + id).write($e("#lbl_" + id).val());
@@ -5543,13 +5633,13 @@ function labelFieldSwap (id, lbl) { //HTML/JS animation swapping the field with 
 	} else { //The field is being filled up so label shown and no placeholding value in the field
 		//Console.log("lbl outside");
 		$e("#lbl_" + id).write(lbl || $e("#" + id).val());
-		if($e("#" + id).val() === lbl || $e("#" + id).val() === "") $e("#" + id).write("\b");
+		if ($e("#" + id).val() === lbl || $e("#" + id).val() === "") $e("#" + id).write("\b");
 	}
 }
 
 function htmlInput (id, type, lbl) { //Dynamic HTML input with an animation
-	if(!id) throw new Error("htmlInput needs to know the id of the element implementing the input");
-	if(!lbl) lbl = type || id;
+	if (!id) throw new Error("htmlInput needs to know the id of the element implementing the input");
+	if (!lbl) lbl = type || id;
 	return "<label for='" + id + "' id='lbl_" + id + "'>&ensp;</label><br /><input type='" + (type || "text") + "' id='" + id + "' value='" + lbl + "' onFocus='labelFieldSwap(\"" + id + "\", \"" + lbl + "\")' onBlur='labelFieldSwap(\"" + id + "\", \"" + lbl + "\")' />"
 }
 
@@ -5652,7 +5742,7 @@ function virtualHistory (elm) { //State history allowing undos and redos on the 
 	}
 	
 	this.update = function (elm) { //Update the current state if needed
-		if(this.src != elm) this.add(elm);
+		if (this.src != elm) this.add(elm);
 	}
 	
 	this.add = function (val) { //Add a state
@@ -5670,13 +5760,13 @@ function virtualHistory (elm) { //State history allowing undos and redos on the 
 	}
 
 	this.undo = function () {
-		if(this.state == 0) throw new Error("Set underflow, it's not possible to undo to a non-existent state.");
+		if (this.state == 0) throw new Error("Set underflow, it's not possible to undo to a non-existent state.");
 		this.state--;
 		this.src = this.get(this.state);
 	}
 	
 	this.redo = function () {
-		if(this.state ==(this.states.size()-1)) throw new Error("Set overflow, it's not possible to redo to a non-existent state.");
+		if (this.state ==(this.states.size()-1)) throw new Error("Set overflow, it's not possible to redo to a non-existent state.");
 		this.state++;
 		this.src = this.get(this.state);
 	}
@@ -5707,9 +5797,9 @@ function Editor (id, language, prev, parser, tb) {
 		$e("#" + id).setCSS("background", ($e("#" + id).css("background") === "rgba(0, 0, 0, 0)")? "red": "rgba(0, 0, 0, 0)");
 	}
 	this.update = function (n) {
-		if(this.node != $n(this.id)) this.node = $n(this.id);
-		if(this.linesNode != $n(this.linesId)) this.linesNode = $n(this.linesId);
-		if(this.code != $e(this.id).val()) this.code = $e(this.id).val();
+		if (this.node != $n(this.id)) this.node = $n(this.id);
+		if (this.linesNode != $n(this.linesId)) this.linesNode = $n(this.linesId);
+		if (this.code != $e(this.id).val()) this.code = $e(this.id).val();
 		
 		n = n || (toPixel($e(this.id).css("height"))/(toPixel($e(this.id).css("fontSize")) * 1.12));
 		$e(this.linesId).write("", true);
@@ -5756,7 +5846,7 @@ function Editor (id, language, prev, parser, tb) {
 		$e(this.id).write($G["fct"])
 	}
 	this.generate = function () { //Save the parsed code
-		if(this.previewer) /\<\?php([\s\S] * ?)\?\>/.test($e(this.id).val())? save($e(this.previewer.id).val(true), "script" + getTimestamp() + ".php", "php"): save($e(this.previewer.id).val(true), "script" + getTimestamp() + ".html", "html");
+		if (this.previewer) /\<\?php([\s\S] * ?)\?\>/.test($e(this.id).val())? save($e(this.previewer.id).val(true), "script" + getTimestamp() + ".php", "php"): save($e(this.previewer.id).val(true), "script" + getTimestamp() + ".html", "html");
 		else /\<\?php([\s\S] * ?)\?\>$/g.test($e(this.id).val())? save($e("#preview").val(true), "script" + getTimestamp() + ".php", "php"): save($e(prev.id).val(true), "script" + getTimestamp() + ".html", "html")
 	}
 	this.view = function () {
@@ -5824,7 +5914,7 @@ function Preview (id, language, parser, editor) {
 	this.associatedParser = parser || new Parser();
 	this.associatedEditor = editor || new Editor();
 	this.update = function () {
-		if(this.node!=$n(this.id)) this.node = $n(this.id);
+		if (this.node!=$n(this.id)) this.node = $n(this.id);
 	}
 	this.run = function (txt, parseFirst) {
 		$e(this.id).write(parseFirst? this.associatedParser.run(txt): txt, true)
@@ -5843,7 +5933,7 @@ function Debugger (id, language) {
 	this.node = $n(this.id);
 	this.language = language || "none";
 	this.update = function () {
-		if(this.node != $n(this.id)) this.node = $n(this.id);
+		if (this.node != $n(this.id)) this.node = $n(this.id);
 	}
 	this.run = function () {
 		//Useful node stuff: reportValidity(), validity{}, setCustomValidity()
@@ -5902,7 +5992,7 @@ function Toolbar (id, tools, mdl) {
 	this.fn = [];
 	this.for = mdl;
 	this.update = function () {
-		if(this.node != $n(this.id)) this.node = $n(this.id);
+		if (this.node != $n(this.id)) this.node = $n(this.id);
 		for(var i = 0; i < this.tools.length; i++) this.fn[i] = this.for[this.tools[i]]//Doesn't work out of Editor's scope
 		/* $e(this.id).write("");
 		for (var i = 0; i < this.tools.length; i++) {
@@ -5939,7 +6029,7 @@ function IDE (lang, edt, prev, ps, dbg, tb) { //Integrated Development Environme
 function loadDoc (url, callback) {
 	var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
 	xhr.onreadystatechange = function () {
-		if(xhr.readyState === 4 && xhr.status === 200) callback(xhr);
+		if (xhr.readyState === 4 && xhr.status === 200) callback(xhr);
 	};
 	xhr.open("GET", url, true);
 	xhr.send()
@@ -5956,7 +6046,7 @@ function AJAXpost (data, to, xml) {
 		3: processing request 
 		4: request finished and response is ready
 		*/
-		if(xhr.readyState === 4 && xhr.status === 200) res = xml? xhr.responseXML: xhr.responseText;
+		if (xhr.readyState === 4 && xhr.status === 200) res = xml? xhr.responseXML: xhr.responseText;
 	};
 	xhr.open("POST", to, true);
 	if (xml) {
@@ -6026,7 +6116,7 @@ function Template (name, path, txt, params, consoleSpecial) { //JavaScript templ
 	this.params = params || ["name", "description", "version", "title", "path"] //{{params}}
 	this.special = ["tab", "date", "time", "timestamp", "br"] // %special%
 	this.specialEq = ["&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", getDate(), getTime(), getTimestamp(), "<br />"];
-	if(consoleSpecial) {
+	if (consoleSpecial) {
 		this.specialEq[0] = "\t";
 		this.specialEq[4] = "\n";
 	}
@@ -6034,12 +6124,12 @@ function Template (name, path, txt, params, consoleSpecial) { //JavaScript templ
 	this.gen = function (obj) { //Generate a text/code from the template using the keys of the object
 		var res = this.text, k = keyList(obj, true);
 		for(var i = 0; i < k.length; i++) res = res.replace(RegExpify("{{" + k[i] + "}}"), obj[k[i]]);
-		if(res.index)
+		if (res.index)
 		for(i = 0; i < this.special.length; i++) res = res.replace(RegExpify("%" + this.special[i] + "%"), this.specialEq[i], " ");
 		return res
 	}
 	this.save = function (obj, name, ext) { //Save the template into a file or the converted version
-		if(obj) save(this.gen(obj), (name || this.name) + "." + (ext || ".js"), ext || "javascript");
+		if (obj) save(this.gen(obj), (name || this.name) + "." + (ext || ".js"), ext || "javascript");
 		else save(this.text, this.path, "javascript")
 	}
 }
@@ -6048,7 +6138,7 @@ var Sys = { //System
 	in: {
 		recording: false,
 	record: function (keyStroke) { //Record the user input
-		if(this.recording) this.data.push(getKey(keyStroke)[0]);
+		if (this.recording) this.data.push(getKey(keyStroke)[0]);
 	},
 	startRecording: function (keyStroke) {
 		this.recording = true;
@@ -6091,7 +6181,7 @@ function unRegExpify (re) { //Turn a regular expression into a string
 }
 
 function occurrenceList (list) { //Get the occurrence list
-	if(!list.isIterable()) throw new Error("It must be an iterable object !");
+	if (!list.isIterable()) throw new Error("It must be an iterable object !");
 	var nums = list.getOccurrences(true), chars = [], oc = list.getOccurrences(), res = {};
 	for (var i = 0; i < oc.length; i++) chars[i] = oc[i].split(":")[0];
 	for (i = 0; i < nums.length; i++) res[chars[i]] = nums[i];
