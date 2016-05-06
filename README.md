@@ -41,7 +41,7 @@ Some ideas to add:
 -	Prim's alg
 -	Kruskal's alg
 -	More maths stuff (from the booklet or/and the Discrete Maths book) ?
--	
+-	Graph
 
 To fix/continue:
 -	Path finding using A*\IDA* with Euclidian/Manhattan
@@ -72,6 +72,7 @@ To fix/continue:
 -	Stream.next()'s RegExps
 -	InvalidParamError
 -	A(), reconPath()
+-	neighbour() fixed -> Array.neighbour()
 
 ##About the future of Essence.js
 1.	Once this library is heading toward a state where having everything in one single script will no longer be good for readability and maintenance causing it to be splitted into several files (modules) which would make it less portable and slower in some cases but it will be way more organised, more readable and more maintanable.
