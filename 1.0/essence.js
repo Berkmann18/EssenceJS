@@ -1149,25 +1149,29 @@ Array.prototype.replaceAll = function(str, nstr) { //Replace every occurrences o
 }
 
 Array.prototype.neighbour = function(y, x) { //Get the neighbours of a cell
-	if (is2dArray(this)) {
-		var neighbours = [];
+	var n;
+	try {
+		n = is2dArray(this)? [this[y - 1][x], this[y - 1][x + 1], this[y][x + 1], this[y + 1][x + 1], this[y + 1][x], this[y + 1][x - 1], this[y][x - 1], this[y - 1][x - 1]]: [this[y - 1], this[y + 1]];
+	} catch (e) {}
+	return n.remove();
+}
+
+function neighbours(arr, y, x) {
+	var n = [], seq = [[-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1]];
+	y = parseInt(y);
+	x = parseInt(x);
+	for (var i = 0; i < seq.length; i++) {
 		try {
-			if (this[y - 1][x]) neighbours.push(this[y - 1][x]);
-			if (this[y + 1][x]) neighbours.push(this[y + 1][x]);
-			if (this[y][x - 1]) neighbours.push(this[y][x - 1]);
-			if (this[y][x + 1]) neighbours.push(this[y][x + 1]);
-			if (this[y - 1][x - 1]) neighbours.push(this[y - 1][x - 1]);
-			if (this[y + 1][x - 1]) neighbours.push(this[y + 1][x - 1]);
-			if (this[y - 1][x + 1]) neighbours.push(this[y - 1][x + 1]);
-			if (this[y + 1][x + 1]) neighbours.push(this[y + 1][x + 1]);
-		} catch (e) {}
-	} else {
-		try {
-			if (this[y - 1]) neighbours.push(this[y - 1]);
-			if (this[y + 1]) neighbours.push(this[y + 1])
-		} catch (e) {}
+			Essence.say("seq[" + i + "]=" + seq[i]);
+			if(arr[y + seq[i][0]][x + seq[i][1]]) {
+				n.push(arr[y + seq[i][0]][x + seq[i][1]]);
+				Essence.say("Adding " + arr[y + seq[i][0]][x + seq[i][1]]);
+			}
+		} catch (e) {
+			Essence.say("Caught: " + e, "info");
+		}
 	}
-	return neighbours;
+	return n;
 }
 
 String.prototype.remove = function (c) { //Remove c from the string
@@ -3850,7 +3854,7 @@ function Astar (start, goal) { //A* path finding alg
 					closedList.push(nodeCurrent);
 				}
 			}
-			throw "Solution found !";
+			throw "Solution found !"
 		}
 	}
 }
@@ -3863,7 +3867,8 @@ function A(start, goal, grid) { //JS version of https://en.wikipedia.org/wiki/A*
 		if (current === goal) return reconPath(cameFrom, current, grid);
 		openSet = openSet.remove(current);
 		closedSet.push(current);
-		var n = grid.neighbours(current);
+		var n = grid.neighbour(current);
+		Essence.say("neighbour of " + current + ":\n" + n.toStr(true), "info");
 		for (var i = 0; i < n; i++) {
 			if (closedSet.indexOf(n[i]) > -1) continue;
 			var tentativeGScore = gScore[closedSet.indexOf(current)] + 1;
