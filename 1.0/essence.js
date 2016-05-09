@@ -100,24 +100,25 @@ var Essence = {
 	}, sayClr: function (clrs) { //Display a RGB(A) coloured console log
 		clrs.length === 4? console.log("%cr%cg%cb%ca(%c" + clrs.join(", %c") + "%c)", "color: #f00", "color: #0f0", "color: #00f", "color: #00f", "color: #000", "color: #f00", "color: #0f0", "color: #00f", "color: #00f", "color: #000"): console.log("%cr%cg%cb%c(%c" + clrs.join(", %c") + "%c)", "color: #f00", "color: #0f0", "color: #00f", "color: #00f", "color: #000", "color: #f00", "color: #0f0", "color: #00f", "color: #00f", "color: #000");
 	}
-}
+};
 
 var $G = { //Globals won't be globals !!
 	t1: new Date(),
 	t2: 0,
 	t: null
-}
+};
 
 var $e = function (selector) { //THE selector !!
 	return new Element(selector)
-}
+};
 
 function Element (selector) { //The element object
-	if (/^([\#\.\* _-\`\~\&]\W * |\S|undefined|null|())$/.test(selector)) throw new InvalidParamError("Element cannot accept the selector '" + selector + "' as it's invalid.")//Reject invalid selectors
+	if (/^([#\.\* _-`~&]\W * |\S|undefined|null|())$/.test(selector)) throw new InvalidParamError("Element cannot accept the selector '" + selector + "' as it's invalid.")//Reject invalid selectors
 	if (selector[0] === "#") this.node = document.querySelector(selector) || document.getElementById(selector.slice(1, selector.length))//Id
 	else if (selector[0] === ".") this.node = document.querySelector(selector) || document.getElementByClassName(selector.slice(1, selector.length))//Class
 	else if (selector[0] === "*") this.node = document.querySelectorAll(selector.slice(1, selector.length)) || document.getElementsByTagName(selector.slice(1, selector.length))//Node array
 	else this.node = document.querySelector(selector);
+
 	this.val = function (getHTML, withTags) { //Get the value of the element's node
 		if (isType(this.node, "array")) {
 			var arr = [];
@@ -130,20 +131,20 @@ function Element (selector) { //The element object
 			}
 			return arr
 		}
-		if (this.node.value && !getHTML && !withTags) return this.node.value
-		else if (this.node.innerHTML && getHTML && !withTags) return this.node.innerHTML
-		else if (this.node.innerText && !getHTML && !withTags) return this.node.innerText
-		else if (this.node.outerHTML && !getHTML && withTags) return this.node.outerHTML
+		if (this.node.value && !getHTML && !withTags) return this.node.value;
+		else if (this.node.innerHTML && getHTML && !withTags) return this.node.innerHTML;
+		else if (this.node.innerText && !getHTML && !withTags) return this.node.innerText;
+		else if (this.node.outerHTML && !getHTML && withTags) return this.node.outerHTML;
 		else return this.node.value? this.node.value: this.innerText
-	}
+	};
 			
 	this.size = function () {
 		return this.val().length
-	}
+	};
 				
 	this.isEmpty = function () { //Check if the value is empty/unexistent
 		return this.val() === false || this.val() === undefined || this.val() === null || this.val() === "" || this.val() === [] || this.val() === {}
-	}
+	};
 	
 	this.write = function (nval, parseToHTML, incTags) { //Assign #nval as the value of the element's node
 		//This.val(parseToHTML, incTags) = nval;
@@ -162,7 +163,7 @@ function Element (selector) { //The element object
 		else if (this.node.innerText && !parseToHTML && !incTags) this.node.innerText = nval;
 		else if (this.node.outerHTML && incTags && !parseToHTML) this.node.outerHTML = nval;
 		else this.node.value? this.node.value = nval: this.innerText = nval;
-	}
+	};
 
 	this.before = function (nval, parseToHTML, incTags) { //Write before (like a string/code unshift)
 		if (isType(this.node, "array")) {
@@ -180,7 +181,7 @@ function Element (selector) { //The element object
 		else if (this.node.innerText && !parseToHTML && !incTags) this.node.innerText = nval + this.node.innerText;
 		else if (this.node.outerHTML && incTags && !parseToHTML) this.node.outerHTML = nval + this.node.outerHTML;
 		else this.node.value? this.node.value = nval + this.node.value: this.innerText = nval + this.innerText;
-	}
+	};
 	
 	this.after = function (nval, parseToHTML, incTags) { //Write after (like an array push)
 		if (isType(this.node, "array")) {
@@ -198,7 +199,7 @@ function Element (selector) { //The element object
 		else if (this.node.innerText && !parseToHTML && !incTags) this.node.innerText += nval;
 		else if (this.node.outerHTML && incTags && !parseToHTML) this.node.outerHTML += nval;
 		else this.node.value? this.node.value += nval: this.innerText += nval;
-	}
+	};
 	
 	this.remove = function (c, r) { //Remove the character from the string/array/number and return it with the r character as a joiner or a blank when r isn't specified
 		if (isType(this.val(c, "Array"))) {
@@ -206,18 +207,18 @@ function Element (selector) { //The element object
 				if (this.val()[i] == c) this.write(this.val().slice(0, i).concat(this.val().slice(i + 1, this.size())));
 			}
 		}
-		this.write(this.val().split(c).join(r || "")) //Silent removing
-	}
+		this.write(this.val().split(c).join(r || "")); //Silent removing
+	};
 
 	this.setCSS = function (prop, val) { //Change the css property
 		if (isType(this.node, "array")) {
 			for (var i = 0; i < this.node.length; i++) this.node[i].style[prop] = isType(val, "array")? val[i]: val;
 		} else this.node.style[prop] = val;
-	}
+	};
 
 	this.setStyles = function (sAndV) { //Style and vals: [style0, val0, style1, val1, ...]
 		for(var i = 0; i < sAndV.length-1; i += 2) this.setCSS(sAndV[i], sAndV[i + 1]);
-	}
+	};
 
 	this.css = function (prop) { //Get the CSS property of the element's node
 		if (isType(this.node, "array")) {
@@ -226,15 +227,15 @@ function Element (selector) { //The element object
 			return arr
 		}
 		return this.node.style[prop]
-	}
+	};
 
 	this.hasClass = function (className) { //Check if the element's node has the specified CSS class
 		if (isType(this.node, "array")) {
 			var arr = [];
 			for(var i = 0; i < this.node.length; i++) arr.push(new RegExp(" " + className + " ").test(" " + this.node[i].className + " ") || new RegExp(" " + className + " ").test(" " + this.node[i][className] + " ") || this.node[i].style.clasName == className);
 		}
-		return new RegExp(" " + className + " ").test(" " + this.node.className + " ") || new RegExp(" " + className + " ").test(" " + this.node[className] + " ") || this.node.style.clasName == className
-	}
+		return new RegExp(" " + className + " ").test(" " + this.node.className + " ") || new RegExp(" " + className + " ").test(" " + this.node[className] + " ") || this.node.style.className == className
+	};
 
 	this.hasCSS = function (prop) { //Check if the element's node has the specified CSS property
 		if (isType(this.node, "array")) {
@@ -242,24 +243,24 @@ function Element (selector) { //The element object
 			for(var i = 0; i < this.node.length; i++) arr.push(new RegExp(" " + prop + " ").test(" " + this.node[i].style[prop] + " ") || new RegExp(" " + prop + " ").test(" " + this.node[i][prop] + " "));
 		}
 		return new RegExp(" " + prop + " ").test(" " + this.node.style[prop] + " ") || new RegExp(" " + prop + " ").test(" " + this.node[prop] + " ")
-	}
+	};
 
 	this.addClass = function (className) { //Add a class to the element's node
 		if (isType(this.node, "array")) {
 			for (var i = 0; i < this.node.length; i++) {
-				if (!this.node[i].hasClass(clasName)) this.node[i].className += " " + clasName;
+				if (!this.node[i].hasClass(className)) this.node[i].className += " " + className;
 			}
 		} else {
 			if (!this.hasClass(className)) this.node.className += " " + className;
 		}
-}
+    };
 
 	this.rmClass = function (className) { //Remove the class from the element's node
 		var newClass = " " + this.node.className.replace(/[\t\r\n]/g, " ") + " ";
 		if (isType(this.node, "array")) {
 			for (var i = 0; i < this.node.length; i++) {
 				newClass = " " + this.node[i].className.replace(/[\t\r\n]/g, " ") + " ";
-				if (this.node[i].hasClass(clasName)) {
+				if (this.node[i].hasClass(className)) {
 					while(newClass.indexOf(" " + className + " ") >= 0) newClass = newClass.replace(" " + className + " ", " ");
 					this.node[i].className = newClass.replace(/^\s + |\s + $/g, "");
 				}
@@ -270,7 +271,7 @@ function Element (selector) { //The element object
 				this.node.className = newClass.replace(/^\s + |\s + $/g, "");
 			}
 		}
-	}
+	};
 
 	this.toggleCSS = function (prop, params) { //Toggle between two or more values
 		if (prop === "visibility") {
@@ -286,17 +287,17 @@ function Element (selector) { //The element object
 				}
 			}
 		}
-	}
+	};
 
 	this.show = function () {
 		this.setCSS("opacity", 1);
 		this.setCSS("display", "block");
-	}
+	};
 
 	this.hide = function () {
 		this.setCSS("opacity", 0);
 		this.setCSS("display", "none");
-	}
+	};
 
 	this.on = function (evt, act) { //OnEvt handler
 		var evts = ["abort", "autocomplete", "autocompleteerror", "beforeunload", "blur", "cancel", "canplay", "canplaythrough", "change", "click", "close", "contextmenu", "cuechange",
@@ -308,18 +309,18 @@ function Element (selector) { //The element object
 		for (var i = 0; i < evts.length; i++) {
 			if (evt.normal() === evts[i]) this.node.addEventListener(evt, act, false);
 		}
-	}
+	};
 	
 	this.toString = function () {
 		return "[object Element]"
-	}
+	};
 
 	this.tagName = function() { //get the enclosing tag's name
 		return this.node.tagName.toLowerCase()
-	}
+	};
 
 	return this
-}
+};
 
 function $n(selector){ //To get directly the node without having to use $e(selector).node
 	return $e(selector).node
@@ -347,11 +348,11 @@ function println (st, sw) { //Same as print but with a new line just like in Jav
 //DOM object modifications
 Object.prototype.hasName = function () {
 	return this.name !== undefined || this.title !== undefined
-}
+};
 
 Object.prototype.getName = function () { //Get the object's name assuming it has one
 return this.name !== undefined? this.name: this.title
-}
+};
 
 Object.prototype.count = function (c) { //Counts how many times a character/property/number c is present in the object
 	var n = 0;
@@ -359,7 +360,7 @@ Object.prototype.count = function (c) { //Counts how many times a character/prop
 		if (this[i] === c) n++;
 	}
 	return n
-}
+};
 
 Object.prototype.positions = function (c) { //Get all the positions of a character/property/number c
 	var pos = [];
@@ -367,19 +368,19 @@ Object.prototype.positions = function (c) { //Get all the positions of a charact
 		if (this[i] === c) pos.push(i);
 	}
 	return pos
-}
+};
 
 Object.prototype.isIterable = function () { //Check if an object is iteral hence if it's a string/array/object
 	return isType(this, "String") || isType(this, "Array") || isType(this, "Object")
-}
+};
 
 Object.prototype.delete = function () { //Delete the object source: https://Google.github.io/styleguide/javascriptguide.xml?showone = delete#delete
 	this.property_ = null
-}
+};
 
 Object.prototype.equals = function(obj) { //Check if obj and the current object are the same
 	return this.toString() === obj.toString() || this.toLocaleString() === obj.toLocaleString()
-}
+};
 
 /*
 {Array[][]} rules Rules containing (RegExp|String)/(RegExp|String) pairs
@@ -391,32 +392,32 @@ Object.prototype.multiReplace = function(rules) { //Like Object.replace(...).[..
 };
 
 Array.prototype.first = function (nval) { //Get the first element of an array
-	return nval? this[0] = nval: this[0]
-}
+	return !isNon(nval)? this[0] = nval: this[0]
+};
 
 Array.prototype.last = function (nval) { //Get the last element of an array
-	return nval? this[this.length-1] = nval: this[this.length-1]
-}
+	return !isNon(nval)? this[this.length-1] = nval: this[this.length-1]
+};
 
 Array.prototype.lastIndex = function () { //Get the index of the last element 
 	return this.length-1
-}
+};
 
 Array.prototype.midIndex = function (under) { //Get the index of the middle element, if over is specified it get the right middle index
 	return under? Math.floor(this.length/2)-1: Math.floor(this.length/2)
-}
+};
 
 Array.prototype.even = function () { //Get all the elements at an even position
 	var e = [];
 	for(var i = 0; i < this.length; i += 2) e.push(this[i]);
 	return e
-}
+};
 
 Array.prototype.odd = function () { //Get all the elements at an odd position
 	var e = [];
 	for(var i = 1; i < this.length; i += 2) e.push(this[i]);
 	return e
-}
+};
 
 Array.prototype.max = function (start, end) { //Get the maximum value of the array
 	var m = this[start || 0];
@@ -424,7 +425,7 @@ Array.prototype.max = function (start, end) { //Get the maximum value of the arr
 	else if (start && !end) for(i = start + 1; i < this.length; i++) m = Math.max(m, this[i]);
 	else for(i = start + 1; i <= end; i++) m = Math.max(m, this[i]);
 	return m
-}
+};
 
 Array.prototype.median = function (nval) { //Median (middle cell)
 	var arr = this.sort(function (a,b) {
@@ -432,7 +433,7 @@ Array.prototype.median = function (nval) { //Median (middle cell)
 	});
 	var half = Math.floor(arr.length/2);
 	return arr.length % 2? (nval? arr[half] = nval: arr[half]): (arr[half-1] + arr[half])/2
-}
+};
 
 Array.prototype.min = function (start, end) { //Get the minimum value of the array
 	var m = this[start || 0];
@@ -440,27 +441,27 @@ Array.prototype.min = function (start, end) { //Get the minimum value of the arr
 	else if (start && !end) for(i = start + 1; i < this.length; i++) m = Math.min(m, this[i]);
 	else for(i = start + 1; i <= end; i++) m = Math.min(m, this[i]);
 	return m
-}
+};
 
 Array.prototype.shuffle = function (n) { //Shuffle the array n times
 	for(var i = 0; i<(n || this.length); i++) swap(this, randTo(this.length-1), randTo(this.length-1))
-}
+};
 
 Array.prototype.maxLength = function () { //Return the length of the longest cell
 	var ml = 0;
 	for(var i = 0; i < this.length; i++) ml = Math.max(ml, this[i].length);
 	return ml
-}
+};
 
 Array.prototype.minLength = function () { //Return the length of the shortest cell
 	var ml = this[0].length;
 	for(var i = 0; i < this.length; i++) ml = Math.min(ml, this[i].length);
 	return ml
-}
+};
 
 Array.prototype.Fill2D = function (c) { //Same as fill() but it fill the array with c into two dimensions rather than one
 	return this.fill(new Array(this.length).fill(c))
-}
+};
 
 Array.prototype.remove = function (c) { //Remove c from the array without affecting the initial array
 	//Note: it will automatically remove undefined and it goes bunckers when trying to remove objects
@@ -484,28 +485,28 @@ Array.prototype.remove = function (c) { //Remove c from the array without affect
 		}
 		return arr
 	}
-}
+};
 
 Array.prototype.debug = function () { //Display in the console each elements of the array
 	Essence.say("%cDebugging the following array:%c " + this, "text-decoration: bold", "text-decoration: none");
 	for(var i = 0; i < this.length; i++) Essence.say(i + ": " + this[i])
-}
+};
 
 Array.prototype.getOccurrences = function (simplified) { //Gets the number of occurrences of each elements in an array as well as the positions of each occurrence
 	var arr = rmDuplicates(this), res = [];
 	for (var i = 0; i < arr.length; i++) res.push(arr[i] + ":" + this.count(arr[i]) + "{" + this.positions(arr[i]).toStr(true) + "}");
 	if (simplified) {
-		for (i = 0; i < res.length; i++) res[i] = parseInt(res[i].replace(/(?:.*?)\:(\d+)\{(.*?)\}/g, "$1"));
+		for (i = 0; i < res.length; i++) res[i] = parseInt(res[i].replace(/(?:.*?):(\d+)\{(.*?)\}/g, "$1"));
 	}
 	return res
-}
+};
 
 Array.prototype.replace = function (Ci, Cf, toStr) { //Replace all the characters Ci by Cf in the array (if there's any Ci characters in the array)
 	for (var i = 0; i < this.length; i++) {
 		if (this[i] === Ci) this[i] = Cf;
 	}
 	return toStr? this.toString(): this;
-}
+};
 
 Array.prototype.sum = function (start, end) { //The sum of every terms of the array
 	var s = 0;
@@ -513,7 +514,7 @@ Array.prototype.sum = function (start, end) { //The sum of every terms of the ar
 	else if (start && !end) for(i = start; i < this.length; i++) s += this[i];
 	else for(i = start; i <= end; i++) s += this[i];
 	return s
-}
+};
 
 Array.prototype.prod = function (start, end) { //The product of every terms of the array
 	var s = 0;
@@ -521,7 +522,7 @@ Array.prototype.prod = function (start, end) { //The product of every terms of t
 	else if (start && !end) for(i = start; i < this.length; i++) s *= this[i];
 	else for(i = start; i <= end; i++) s *= this[i];
 	return s
-}
+};
 
 Array.prototype.sum2d = function (start, end) { //Sum for 2D arrays where start = [i, j] and end [i, j]
 	var s = 0;
@@ -539,30 +540,30 @@ Array.prototype.sum2d = function (start, end) { //Sum for 2D arrays where start 
 		}
 	}
 	return s
-}
+};
 
 Array.prototype.mean = function (nbDec, start, end) { //Mean of a numerical array
 	if (!start) start = 0;
 	if (!end) end = this.lastIndex();
 	var sum = this.sum(start, end);
-	return (sum/(this.length-start)).toNDec(nbDec) + 0 //To avoid getting the Number object representation rather than the actual result
-}
+	return (sum/(this.length-start)).toNDec(nbDec) + 0; //To avoid getting the Number object representation rather than the actual result
+};
 
 Array.prototype.avg = function (nbDec, start, end) { //Timewise average of a numerical array
 	if (!start) start = 0;
 	if (!end) end = this.lastIndex();
 	var sum = this.sum(start, end)-this.slice(start, end + 1).max()-this.slice(start, end + 1).min();
 	return (sum/(this.length-2- start)).toNDec(nbDec) + 0
-}
+};
 
 Array.prototype.variance = function (nbDec) { //Variance = SumOf(N^2)/N-Mean^2
 	return (sumPow2(this, nbDec)/this.length-Math.pow(this.mean(nbDec), 2)).toNDec(nbDec)
-}
+};
 
 Array.prototype.stddev = function (nbDec) { //Standard deviation = sqrt(variance)
 	var stdDev = Math.sqrt(this.variance(nbDec));
 	return stdDev.toNDec(nbDec)
-}
+};
 
 Array.prototype.rand = function (n) { //Get a random cell of the array
 	if (n>0) {
@@ -570,35 +571,35 @@ Array.prototype.rand = function (n) { //Get a random cell of the array
 		for (var i = 0; i < n; i++) res.push(this.rand());
 		return res
 	}else return this[Math.floor(randTo(this.length-1) % this.length)]
-}
+};
 
 Array.prototype.quartile = function (n, nbDec) { //Q1, Q2, Q3
 	return this.length % 2 === 0? ((this[Math.floor(n * this.length/4)-1] + this[Math.floor(n * this.length/4)])/2).toNDec(nbDec): (this[Math.floor(n * this.length/4)]).toNDec(nbDec)
-}
+};
 
 Array.prototype.quintile = function (n, nbDec) { //Q1, ..., Q4
 	return this.length % 2 === 0? ((this[Math.floor(n * this.length/5)-1] + this[Math.floor(n * this.length/5)])/2).toNDec(nbDec): (this[Math.floor(n * this.length/5)]).toNDec(nbDec)
-}
+};
 
 Array.prototype.decile = function (n, nbDec) { //D1, ..., D9
 	return this.length % 2 === 0? ((this[Math.floor(n * this.length/10)-1] + this[Math.floor(n * this.length/10)])/2).toNDec(nbDec): (this[Math.floor(n * this.length/10)]).toNDec(nbDec)
-}
+};
 
 Array.prototype.percentile = function (n, nbDec) { //P1, ..., P99
 	return this.length % 2 === 0? ((this[Math.floor(n * this.length/100)-1] + this[Math.floor(n * this.length/100)])/2).toNDec(nbDec): (this[Math.floor(n * this.length/100)]).toNDec(nbDec)
-}
+};
 
 Array.prototype.getIncrement = function (nbDec) { //Get the average increment between the values of the array
 	return nbDec == 0? parseInt(((this.max()-this.min())/(this.length-1))):((this.max()-this.min())/(this.length-1)).toNDec(nbDec)
-}
+};
 
 Array.prototype.increment = function (n) {
 	for(var i = 0; i < this.length; i++) this[i] += n || 1
-}
+};
 
 Array.prototype.iqr = function (nbDec) { //Inter-Quartile Range
 	return this.quartile(3, nbDec)-this.quartile(1, nbDec).toNDec(nbDec)
-}
+};
 
 Array.prototype.get = function (start, end) { //Get the sub-array starting at the start index and ending at the end index
 	var res = [];
@@ -609,7 +610,7 @@ Array.prototype.get = function (start, end) { //Get the sub-array starting at th
 	if (end < 0) end = this.length + end - 1;
 	for(var i = (start || 0); i <= (end || this.length-1); i++) res.push(this[i]);
 	return res.remove()
-}
+};
 
 Array.prototype.quickSort = function (left, right) { //Fastest sorting algorithm re-adapted from https://Www.nczonline.net/blog/2012/11/27/computer-science-in-javascript-quicksort/
 	if (!left && !right) {
@@ -633,7 +634,7 @@ Array.prototype.quickSort = function (left, right) { //Fastest sorting algorithm
 		if (i < right) this.quickSort(i, right);
 	}
 	return this
-}
+};
 
 Array.prototype.revSort = function (left, right) { //QuickSort but in the opposite order
 	if (!left && !right) {
@@ -657,7 +658,7 @@ Array.prototype.revSort = function (left, right) { //QuickSort but in the opposi
 		if (i > right) this.revSort(i, right);
 	}
 	return this
-}
+};
 
 Array.prototype.bubbleSort = function (order) { //My version of the Bubble Sort
 	var arr = this, j = 1, s = true;
@@ -672,14 +673,14 @@ Array.prototype.bubbleSort = function (order) { //My version of the Bubble Sort
 				if (i < arr.length-(j + 1)) {
 					if (arr[i]>arr[i + 2]) arr = swap(arr, i, i + 2);
 					if (arr[i + 1]>arr[i + 2]) {
-						arr = swap(arr, i + 1, i + 2) 
+						arr = swap(arr, i + 1, i + 2);
 						s = true;
 					}
 				}
 				if (i < arr.length-(j + 2)) {
 					if (arr[i]>arr[i + 3]) arr = swap(arr, i, i + 3);
 					if (arr[i + 1]>arr[i + 3]) {
-						arr = swap(arr, i + 1, i + 3) 
+						arr = swap(arr, i + 1, i + 3);
 						//s = true;
 					}
 				}
@@ -697,14 +698,14 @@ Array.prototype.bubbleSort = function (order) { //My version of the Bubble Sort
 				if (i < arr.length-(j + 1)) {
 					if (arr[i]<arr[i + 2]) arr = swap(arr, i, i + 2);
 					if (arr[i + 1]<arr[i + 2]) {
-						arr = swap(arr, i + 1, i + 2) 
+						arr = swap(arr, i + 1, i + 2);
 						s = true;
 					}
 				}
 				if (i < arr.length-(j + 2)) {
 					if (arr[i]<arr[i + 3]) arr = swap(arr, i, i + 3);
 					if (arr[i + 1]<arr[i + 3]) {
-						arr = swap(arr, i + 1, i + 3) 
+						arr = swap(arr, i + 1, i + 3);
 						//s = true
 					}
 				}
@@ -713,7 +714,7 @@ Array.prototype.bubbleSort = function (order) { //My version of the Bubble Sort
 		}
 	}
 	return arr
-}
+};
 
 Array.prototype.bruteForceSort = function () {
 	for (var i = 0; i < this.length; i++) {
@@ -729,7 +730,7 @@ Array.prototype.bruteForceSort = function () {
 		this[pos] = temp;
 	}
 	return this
-}
+};
 
 Array.prototype.maxSort = function () { //My own sorting algorithm
 	//Ignores repeated values and loose data
@@ -763,7 +764,7 @@ Array.prototype.maxSort = function () { //My own sorting algorithm
 		}
 	}
 	return res
-}
+};
 
 Array.prototype.cenSort = function (l, r) { //Centre sort (similar to QuickSort)
 	//Ignores repeated values and loose data
@@ -787,13 +788,7 @@ Array.prototype.cenSort = function (l, r) { //Centre sort (similar to QuickSort)
 	if (l > i-1) this.cenSort(l, i-1);
 	if (i > r) this.cenSort(i, r);
 	return res
-}
-
-Array.prototype.spreadSort = function () { //Unfinished, lost the sources
-	var mid = this[this.midIndex()], l, r;
-	l = r = mid;
-	//more stuff but what ??
-}
+};
 
 Array.prototype.setSort = function () { //A faster algorithm than quickSort only for integers where the extremities are known
 	var t = [], l = this.length, narr = [];
@@ -803,7 +798,7 @@ Array.prototype.setSort = function () { //A faster algorithm than quickSort only
 		if (1 === t[i]) narr.push(i);
 	}
 	return narr
-}
+};
 
 Array.prototype.clean = function (noDuplic) { //Remove undesirable items
 	var arr = [], j = 0;
@@ -811,24 +806,24 @@ Array.prototype.clean = function (noDuplic) { //Remove undesirable items
 		if (!isNon(this[i])) arr[j++] = this[i];
 	}
 	return noDuplic? rmDuplicates(arr).remove(undefined): arr//Take off (or not) duplicates of actual values and double clean it
-}
+};;
 
 Array.prototype.xclean = function () { //Remove a righty of undesirable items
 	return this.clean(true).remove([undefined, "undefined", null, "null"]) 
-}
+};
 Array.prototype.chg = function(arr, s, e) { //Susbsitute every elements from s to e with the elements from s to e of arr
 	s = s || 0;
 	e = e || this.length-1;
-	var a = this.get(s, e), b = arr.get(s, e)
+	var a = this.get(s, e), b = arr.get(s, e);
 
 	for (var i = 0; i < a.length; i++) a[i] = b[i]
 	return a;
-}
+};
 
 Array.prototype.exchange = function(arr, s, e) { //Exchange every elements from s to e between the array and arr
 	s = s || 0;
 	e = e || this.length-1;
-	var a = this.get(s, e), b = arr.get(s, e)
+	var a = this.get(s, e), b = arr.get(s, e);
 
 	for (var i = 0; i < a.length; i++) {
 		var tmp = a[i];
@@ -836,7 +831,7 @@ Array.prototype.exchange = function(arr, s, e) { //Exchange every elements from 
 		b[i] = tmp;
 	}
 	return a;
-}
+};
 
 Array.prototype.rot = function (deg) { //Rotate a matrix by n % 90 degrees. Useful for Rubik's cubes simulator and other matrix based simulations/calculations!
 	var tmp;
@@ -896,15 +891,22 @@ Array.prototype.rot = function (deg) { //Rotate a matrix by n % 90 degrees. Usef
 	}else if (this.numElm() === 16 && this.length === 4) { //4x4 matrix although I'm trying to make this as responsive as I get for 4x4+ matrices
 		if (deg === 90) {
 			tmp = this[0].get(-1)//Get all but the last element of the first row
-			this[0][0] = this.last()[0];
-			this.last()[0] = this.last().last();
-			this.last().last(this[0].last());
-			this[0].last(tmp[0]);
-			this[0][1] = this[1][0];
-			this[1][0] = this.last()[1];
-			this.last()[1] = this[1].last();
-			this[1].last(tmp[1]);
-		}else if (deg === -90) {
+			for (var j = 0; j < 1/*this.length / 2*/; j++) { //weird error
+				tmp = this[j].get(-1)
+				for (var i = 0; i < this.maxLength() - 1; i++) {
+					if(j > 0) Essence.say("#" + i);
+					if(j > 0) Essence.say(this[j][i] + "<-" +  this[this.length - 1 - i][j]);
+					this[j][i] = this[this.length - 1 - i][j];
+					if(j > 0) Essence.say(this[this.length - 1 - i][j] + "<-" +  this[this.length - 1 - j][this.length - 1 - i]);
+					this[this.length - 1 - i][j] = this[this.length - 1 - j][this.length - 1 - i];
+					if(j > 0) Essence.say(this[this.length - 1 - j][this.length - 1 - i] + "<-" +  this[i][this.length - 1 - j]);
+					this[this.length - 1 - j][this.length - 1 - i] = this[i][this.length - 1 - j];
+					if(j > 0) Essence.say(this[i][this.length - 1 - j] + "<-" +  tmp[i]);
+					this[i][this.length - 1 - j] = tmp[i];
+				}
+			}
+			
+		} else if (deg === -90) {
 			tmp = [this[0][0], this[0][1]];
 			this[0][0] = this[0].last();
 			this[0].last(this.last().last());
@@ -914,7 +916,7 @@ Array.prototype.rot = function (deg) { //Rotate a matrix by n % 90 degrees. Usef
 			this[1].last(this.last()[1]);
 			this.last()[1] = this[1][0];
 			this[1][0] = tmp[1];
-		}else if (Math.abs(deg) === 180) {
+		} else if (Math.abs(deg) === 180) {
 			tmp = [this[0][0], this[0][1], this[0].last(), this[1][0]];
 			this[0][0] = this.last().last();
 			this.last().last(tmp[0]);
@@ -927,15 +929,15 @@ Array.prototype.rot = function (deg) { //Rotate a matrix by n % 90 degrees. Usef
 		}
 	}else throw "Unsupported matrix. Please wait or contact the developer to add this matrix\' support.";
 	return this
-}
+};
 
 Array.prototype.numElm = function () { //Get the number of elements in the N-dimensional array
 	return this.toString().split(",").length
-}
+};
 
 Array.prototype.size = function (str) { //Get the w * h size of the array
 	return str? this.length + "x" + this.maxLength(): [this.length, this.maxLength()]
-}
+};
 
 Array.prototype.det = function () { //Determinant of a matrix
 	var d = 0;
@@ -944,7 +946,7 @@ Array.prototype.det = function () { //Determinant of a matrix
 		d = this[0][0] * (this[1][1] * this.last().last()-this[1].last() * this.last()[1])-this[0][1] * (this[1][0] * this.last().last()-this[1].last() * this.last()[0]) + this[0].last() * (this[1][0] * this.last()[1]-this[1][1] * this.last()[0]);
 	}else Essence.say("Unsupported matrix format", "error");
 	return d
-}
+};
 
 Array.prototype.translate = function () {
 	for (var i = 0; i < Math.round(this.length/2); i++) {
@@ -962,14 +964,14 @@ Array.prototype.translate = function () {
 		this.last()[3] = t
 	}
 	return this
-}
+};
 
 Array.prototype.lookFor = function (x) { //Look for an element x in the array and get its position
 	for (var i = 0; i < this.length; i++) {
-		if (this[i] === x) return i //I is the row number and j the column which oppose j being the x-coord and i the y-coord
+		if (this[i] === x) return i; //I is the row number and j the column which oppose j being the x-coord and i the y-coord
 	}
 	return -1
-}
+};
 
 Array.prototype.divide = function (n) { //Divide the array into chunks of size = n
 	var res = new Array(Math.round(this.length/n)).fill(""), k = 0;
@@ -977,7 +979,7 @@ Array.prototype.divide = function (n) { //Divide the array into chunks of size =
 		for(var j = 0; j < n; j++) res[i] += this[k++];
 	}
 	return res
-}
+};
 
 Array.prototype.getAdjoint = function () { //This^*
 	var m = this.translate(), res = mkArray(this.length, 2, Essence.eps);
@@ -993,7 +995,7 @@ Array.prototype.getAdjoint = function () { //This^*
 		res.last([m[0][1] * m[1].last()-m[0].last() * m[1][1], -(m[0][0] * m[1].last()-m[0].last() * m[1][0]), m[0][0] * m[1][1]-m[0][1] * m[1][0]]);
 	}else Essence.say("Unsupported matrix format", "error");
 	return res
-}
+};
 
 Array.prototype.isInversible = function() { 
 	return this.det() != 0
@@ -1006,7 +1008,7 @@ Array.prototype.dotProd = function (a) { //A.this where a is a scalar and this a
 		for(var j = 0; j < this[i].length; j++) res[i][j] = a * this[i][j];
 	}
 	return res
-}
+};
 
 Array.prototype.dotAdd = function (a) {
 	var res = [];
@@ -1015,7 +1017,7 @@ Array.prototype.dotAdd = function (a) {
 		for(var j = 0; j < this[i].length; j++) res[i][j] = a + this[i][j];
 	}
 	return res
-}
+};
 
 Array.prototype.dotSub = function (a, order) {
 	var res = [];
@@ -1025,7 +1027,7 @@ Array.prototype.dotSub = function (a, order) {
 		for(var j = 0; j < this[i].length; j++) res[i][j] = (order === "a-b")? a-this[i][j]: this[i][j]-a;
 	}
 	return res
-}
+};
 
 Array.prototype.dotFrac = function (a, order) { //Can also be used with doProd(1/a, this) when the order is b/a
 	var res = [];
@@ -1035,7 +1037,7 @@ Array.prototype.dotFrac = function (a, order) { //Can also be used with doProd(1
 		for(var j = 0; j < this[i].length; j++) res[i][j] = (order === "a/b")? a/this[i][j]: this[i][j]/a;
 	}
 	return res
-}
+};
 
 Array.prototype.toStr = function (clean) { //Str[]->str  str[][]->str
 	var str = "";
@@ -1045,7 +1047,7 @@ Array.prototype.toStr = function (clean) { //Str[]->str  str[][]->str
 		}
 		return clean? this.toStr().split("").join(", "): str
 	}else return this.join(clean? ", ": "")
-}
+};
 
 Array.prototype.toInt = function () { //Int[]->int
 	var n = 0;
@@ -1053,25 +1055,25 @@ Array.prototype.toInt = function () { //Int[]->int
 		if (this.hasOwnProperty(i)) n += this[i] * Math.pow(10, this.length- i - 1);
 	}
 	return n
-}
+};
 
 Array.prototype.inv = function () { //This^-1
 	return this.isInvertible()? this.dotProd(1/this.det(), this.getAdjoint()): false;
-}
+};
 
 Array.prototype.mix = function () { //Mix up the array
 	var randPos = mixedRange(0, 1, this.length-1), res = [];
 	for(var i = 0; i < this.length; i++) res[i] = this[randPos[i]];
 		return res
-}
+};
 
 Array.prototype.append = function (arr) { //Pushing every elements of the array into the current one
 	for(var i = 0; i < arr.length; i++) this.push(arr[i])
-}
+};
 
 Array.prototype.preppend = function (arr) { //Unshifting every elements of the array into the current one
 	for(var i = 0; i < arr.length; i++) this.unshift(arr[i])
-}
+};
 
 Array.prototype.unique = function () { //List all the unique values of the array
 	var u = [];
@@ -1079,12 +1081,12 @@ Array.prototype.unique = function () { //List all the unique values of the array
 		if (this.count(this[i]) === 1) u.push(this[i]);
 	}
 	return u
-}
+};
 Array.prototype.to1d = function (jointer) { //N-dimensional arrays to 1D arrays
 	var res = this;
 	for(var i = 0; i < res.length; i++) res[i] = res[i].join(jointer || "");
 	return res
-}
+};
 
 Array.prototype.uniform = function (cr) { //Ensure that all elements in the array are of the same length
 	var res = this, ml = res.maxLength();
@@ -1092,7 +1094,7 @@ Array.prototype.uniform = function (cr) { //Ensure that all elements in the arra
 		while(res[i].length < ml) isType(res[i], "Array")? res[i].push(cr || " "): res[i] += cr || " ";
 	}
 	return res
-}
+};
 
 Array.prototype.zip = function () { //Compress the array
 	var res = [], j;
@@ -1104,8 +1106,8 @@ Array.prototype.zip = function () { //Compress the array
 			i += j-1;
 		}else res.push(this[i]);
 	}
-	return res.length<this.length? res: this //Make sure that the compressed array isn't longer than the initial one
-}
+	return res.length<this.length? res: this; //Make sure that the compressed array isn't longer than the initial one
+};
 
 Array.prototype.unzip = function (noPairs) { //Decompress the array (when being compressed using Array.zip()) with(out) pairs
 	var res = [];
@@ -1114,14 +1116,14 @@ Array.prototype.unzip = function (noPairs) { //Decompress the array (when being 
 		else res.push(this[i]);
 	}
 	return noPairs? res.join("").split(""): res;
-}
+};
 
 Array.prototype.trimAll = function(side) { //Trimes every elements
 	var res = [];
 	side = side? side[0].toLowerCase(): "";
 	for (var i = 0; i < this.length; i++) res[i] = (side === "l")? this[i].trimLeft(): ((side === "r")? this[i].trimRight(): this[i].trim());
 	return res
-}
+};
 
 Array.prototype.isSorted = function() { //Check if the array is sorted
 	if (this[0] > this[1]) return false;
@@ -1129,7 +1131,7 @@ Array.prototype.isSorted = function() { //Check if the array is sorted
 		if (this[i] > this[i+1]) return false
 	}
 	return true
-}
+};
 
 Array.prototype.uniquePush = function(obj) { //Post-init duplicate safe push
 	if (isType(obj, "Array")){
@@ -1137,7 +1139,7 @@ Array.prototype.uniquePush = function(obj) { //Post-init duplicate safe push
 			if (this.indexOf(obj[i]) === -1) this.push(obj[i]);
 		}
 	} else if (this.indexOf(obj) > -1) throw "the object " + obj.toString() + "is already present in " + this.toString();
-}
+};
 
 Array.prototype.replaceAll = function(str, nstr) { //Replace every occurrences of str instead of just the first one
 	var res = this.replace(str, nstr), i = 0;
@@ -1146,33 +1148,34 @@ Array.prototype.replaceAll = function(str, nstr) { //Replace every occurrences o
 		i++;
 	}
 	return res;
-}
+};
 
 Array.prototype.neighbour = function(y, x) { //Get the neighbours of a cell
-	var n;
-	try {
-		n = is2dArray(this)? [this[y - 1][x], this[y - 1][x + 1], this[y][x + 1], this[y + 1][x + 1], this[y + 1][x], this[y + 1][x - 1], this[y][x - 1], this[y - 1][x - 1]]: [this[y - 1], this[y + 1]];
-	} catch (e) {}
-	return n.remove();
-}
-
-function neighbours(arr, y, x) {
-	var n = [], seq = [[-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1]];
-	y = parseInt(y);
-	x = parseInt(x);
-	for (var i = 0; i < seq.length; i++) {
-		try {
-			Essence.say("seq[" + i + "]=" + seq[i]);
-			if(arr[y + seq[i][0]][x + seq[i][1]]) {
-				n.push(arr[y + seq[i][0]][x + seq[i][1]]);
-				Essence.say("Adding " + arr[y + seq[i][0]][x + seq[i][1]]);
-			}
-		} catch (e) {
-			Essence.say("Caught: " + e, "info");
+	var n = [], seq;
+	if (isType(y, "Array")) {
+		x = parseInt(y[1]);
+		y = parseInt(y[0]);
+	} else {
+		y = parseInt(y);
+		x = parseInt(x);
+	}
+	if (y >= this.length) throw new RangeError("The y-coord is out of bounds");
+	if (x >= this.maxLength()) throw new RangeError("The x-coord is out of bounds");
+	if (is2dArray(this)) {
+		seq = [[-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1]];
+		for (var i = 0; i < seq.length; i++) {
+			try {
+				if(!isNon(this[y + seq[i][0]][x + seq[i][1]])) n.push(this[y + seq[i][0]][x + seq[i][1]]);
+			} catch (e) {}
 		}
+	} else {
+		try {
+			if(!isNon(this[y - 1])) n.push(this[y - 1]);
+			if(!isNon(this[y + 1])) n.push(this[y + 1]);
+		} catch (e) {}
 	}
 	return n;
-}
+};
 
 String.prototype.remove = function (c) { //Remove c from the string
 	var str = this;
@@ -1184,7 +1187,7 @@ String.prototype.remove = function (c) { //Remove c from the string
 		}).join("");
 		return (v.indexOf(undefined) != -1)? str.remove(): v
 	}
-}
+};
 
 String.prototype.toNDigits = function (n) { //Get the string (representing a number) to be a n-digit string
 	var i = this;
@@ -1193,15 +1196,15 @@ String.prototype.toNDigits = function (n) { //Get the string (representing a num
 		while(i.split(".")[0].length < n) i = "0" + i;
 	}
 	return i
-}
+};
 
 String.prototype.mix = function (separator, jointer) { //Mix up the string
-	seperator = isNon(separator)? "": separator;
+	separator = isNon(separator)? "": separator;
 	jointer = !jointer? separator: jointer;
-	var randPos = mixedRange(0, 1, this.length-1), iStr = this.split(seperator), fStr = [];
+	var randPos = mixedRange(0, 1, this.length - 1), iStr = this.split(separator), fStr = [];
 	for(var i = 0; i < this.length; i++) fStr[i] = iStr[randPos[i]];
 	return fStr.join(jointer)
-}
+};
 
 String.prototype.divide = function (n) { //Divide the string into equal n sized chunks
 	var res = new Array(Math.round(this.length/n)).fill(""), k = 0;
@@ -1209,7 +1212,7 @@ String.prototype.divide = function (n) { //Divide the string into equal n sized 
 		for(var j = 0; j < n; j++) res[i] += this[k++];
 	}
 	return res
-}
+};
 
 String.prototype.capitalize = function (whole) { //Capitalize the first word or all
 	var res = this.toString(); //Because it will return the String object rather than the actual string
@@ -1218,29 +1221,29 @@ String.prototype.capitalize = function (whole) { //Capitalize the first word or 
 		for(var i = 0; i < str.length; i++) str[i] = str[i].capitalize();
 		return str.join(" ")
 	}else return this.charAt(0).toUpperCase() + this.slice(1); //http://stackoverflow.com/questions/1026069/capitalize-the-first-letter-of-string-in-javascript/1026087#1026087
-}
+};
 
 String.prototype.sum = function () { //Ascii sum
 	var sum = 0;
 	for(var i = 0; i < this.length; i++) sum += this.charCodeAt(i);
 	return sum
-}
+};
 
 String.prototype.prod = function () {
 	var prod = 1;
 	for(var i = 0; i < this.length; i++) prod *= this.charCodeAt(i);
 	return prod
-}
+};
 
 String.prototype.mean = function () {
 	var strArr = [];
 	for(var i = 0; i < this.length; i++) strArr[i] = this.charCodeAt(i);
 	return strArr.mean(2)
-}
+};
 
 String.prototype.normal = function () { //More efficient codewise than a trim
 	return this.toLowerCase().remove(" ")
-}
+};
 
 String.prototype.getOccurrences = Array.prototype.getOccurrences;
 
@@ -1254,7 +1257,7 @@ String.prototype.get = function (start, end) { //Get the sub-string starting at 
 	for(var i = (start || 0); i <= (end || this.length-1); i++) res += this[i];
 	
 	return res
-}
+};
 
 String.prototype.zip = function () { //Compress the string
 	var res = "", j;
@@ -1266,8 +1269,8 @@ String.prototype.zip = function () { //Compress the string
 			i += j - 1;
 		} else res += this[i];
 	}
-	return res.length < this.length? res: this //Make sure that the compression doesn't end up making the string longer
-}
+	return res.length < this.length? res: this; //Make sure that the compression doesn't end up making the string longer
+};
 
 String.prototype.unzip = function (noPairs) { //Decompress the string (when being compressed using String.zip()) with(out) pairs
 	var res = "";
@@ -1276,7 +1279,7 @@ String.prototype.unzip = function (noPairs) { //Decompress the string (when bein
 		else res += this[i];
 	}
 	return noPairs? res.split("").join(""): res;
-}
+};
 
 String.prototype.replaceAll = function(str, nstr, sep) { //Replace every occurrences of str instead of just the first one
 	var res = sep? this.split(sep).replace(str, nstr) : this.replace(str, nstr), i = 0;
@@ -1286,22 +1289,22 @@ String.prototype.replaceAll = function(str, nstr, sep) { //Replace every occurre
 		i++;
 	}
 	return sep? res.join(sep): res;
-}
+};
 
 Number.prototype.length = function () { //Count how many digits is in x (including seperatly the decimales when there's some)
-	if ((this + "").indexOf(".") != -1) return [parseInt((this + "").split(".")[0]).length(), parseInt((this + "").split(".")[1]).length()]
+	if ((this + "").indexOf(".") != -1) return [parseInt((this + "").split(".")[0]).length(), parseInt((this + "").split(".")[1]).length()];
 	var l = 0, x = this;
 	while (Math.floor(x) != 0) {
 		x /= 10;
 		l++;
 	}
 	return l
-}
+};
 
 Number.prototype.toNDec = function (n) { //A bit like .toFixed(n) and .toPrecision(n) but returning a double instead of a string
 	var pow10s = Math.pow(10, n || 2);
 	return (n)? Math.round(pow10s * this) / pow10s: this
-}
+};
 
 Number.prototype.toNDigits = function (n) { //Get the number to be a n-digit number
 	var i = this + ""; //Because it won't work with other types than strings
@@ -1310,26 +1313,26 @@ Number.prototype.toNDigits = function (n) { //Get the number to be a n-digit num
 		while (i.split(".")[0].length < n)  i = "0" + i;
 	}
 	return i
-}
+};
 
 Number.prototype.sign = function (str) { //Get the sign of the number
 	return str? (this < 0? "-": (this > 0? " + ": "")): (this < 0? -1: (this > 0? 1: 0))
-}
+};
 
 Number.prototype.isPrime = function (n) { //Check the primeness of n
 	for (var i = 2; i < n; i++) {
 		if (primeCheck(i, n)) return false
 	}
 	return true
-}
+};
 
 Number.prototype.clean = function (nbDec) { //Clean the number to make it "normal"
-if (this == 0) return 0
-	else if (this > 0 && this[0] == "+") return nbDec? this.slice(1, this.length).toNDec(nbDec): this.slice(1, this.length)
-		else if (this == "-") return this + 1
-			else if (this == "+") return 1
+if (this == 0) return 0;
+	else if (this > 0 && this[0] == "+") return nbDec? this.slice(1, this.length).toNDec(nbDec): this.slice(1, this.length);
+		else if (this == "-") return this + 1;
+			else if (this == "+") return 1;
 				else return nbDec? this.toNDec(nbDec): this
-			}
+			};
 
 Number.prototype.toArr = function () { //Number->Number[]
 	var arr = new Array(this.length()), i = 0, n = this;
@@ -1339,7 +1342,7 @@ Number.prototype.toArr = function () { //Number->Number[]
 		n /= 10;
 	}
 	return n
-}
+};
 
 Function.prototype.inheritsFrom = function (parentClassOrObj) { 
 	if (parentClassOrObj.constructor === Function){ //Normal Inheritance 
@@ -1352,7 +1355,7 @@ Function.prototype.inheritsFrom = function (parentClassOrObj) {
 		this.prototype.parent = parentClassOrObj;
 	} 
 	return this
-}
+};
 
 function exclude (file, type) { //Remove an external resource
 	if (!type) type = (file.indexOf(".js")>0)? "script": "link";
@@ -1380,52 +1383,52 @@ function noRightClick () { //Disable right clicks
 }
 
 function reloadPage (lvl) { //Reload the page with 2 different level of reload
-	if (lvl === 2) location.href = location.href //Update the hyper reference of the window's location
-	else location.reload() //Reload the location of the window (implying lvl = 0||1)
+	if (lvl === 2) location.href = location.href; //Update the hyper reference of the window's location
+	else location.reload(); //Reload the location of the window (implying lvl = 0||1)
 }
 
 function redirect (to, dt, divId) { //Redirect to #to in #dt ms
-	if (!dt) dt = 3e3 //If dt hasn't an assign value so it will assign a default one
-	var s = Math.floor(dt/1e3) //Convert from ms to s
+	if (!dt) dt = 3e3; //If dt hasn't an assign value so it will assign a default one
+	var s = Math.floor(dt/1e3); //Convert from ms to s
 	$e("#" + divId).write("<h2 > Redirecting to <ins>" + to + "</ins> ...<br />in <span id = 'timeleft'>" + s+"</span > s</h2>", true)//Write the Redirecting message to the screen
-	s-- //Countdown
+	s--; //Countdown
 	$e("#timeleft").write(s);
-	setTimeout("location = '" + to + "';", dt) //Set the timeout for the redirection
-}
+	setTimeout("location = '" + to + "';", dt); //Set the timeout for the redirection
+};
 
 function isValid (txt, type) { //Check if a text (generally from a field) is valid according to the given type
 	var pattern, lenOK = true;
 	switch (type.toLowerCase()) {
-		case "email": 
+		case "email":
 			pattern = /[a-z0-9!#$ % &' *+/=?^_`{|}~-]+(?:\.[a-z0-9!#$ % &' *+/=?^_`{|}~-]+) * @(?:[a-z0-9](?:[a-z0-9-] * [a-z0-9])?\.) + [a-z0-9](?:[a-z0-9-] * [a-z0-9])?///From SO
 			lenOK = txt.length >= 9 && txt.length < 64;
 			break;
 		case "tel":
 			pattern = /^\ + (?:[0-9] ?){6,14}[0-9]$/; //From somewhere
 			break;
-		case "username": 
+		case "username":
 			pattern = /^[A-Za-z_0-9-] + $/;
 			lenOK = txt.length > 3 && txt.length <= 16;
 			break;
 		case "name":
 			pattern = /^[:alpha:]{2,35}$/;
 			break;
-		case "price": 
+		case "price":
 			pattern = /^[0-9] * \x2e[0-9]{2}$/;
 			lenOK = txt.length > 3;
 			break;
 		case "number":
 			pattern = /\d/; // /^(\x2d|)[0-9] * $/ wouldn't accept floats
 			break;
-		case "date": 
-			pattern = /(\d{1, 2}\/d{1, 2}\/d{2, 4})/; // /^([0-9]{2}\x2f){2}\x2f([0-9]{2}|[0-9]{4})$/; //Accept d/m/y*
-			lenOK = txt.split("/")[0]<= 31 && txt.split("/")[1]<= 12;
+		case "date":
+			pattern = /(\d{1,2}\/d{1,2}\/d{2,4})/; // /^([0-9]{2}\x2f){2}\x2f([0-9]{2}|[0-9]{4})$/; //Accept d/m/y*
+            lenOK = txt.split("/")[1] <= 12 && txt.split("/")[0] <= 31;
 			break;
 		case "hex":
 			pattern = /(#|0x)?([A-Fa-f0-9]){3}(([A-Fa-f0-9]){3})?/; //From CheatSheets (iOS)
 			break;
 		case "tag": //From CheatSheets (iOS)
-			pattern = /(\<(\/?[^\>] + )\>)/;
+			pattern = /(<(\/?[^>] + )>)/;
 			break;
 		case "password":
 			pattern = /|^\c]\w{8,}/;
@@ -1434,22 +1437,22 @@ function isValid (txt, type) { //Check if a text (generally from a field) is val
 			pattern = /^[\S] + ([A-Za-z0-9_] * \.(jpg|png|gif|ico|bmp))$/;
 			break;
 		case "variable":
-			pattern = /^[A-Za-z_$$] + [0-9] * [A-Za-z_$$] + $/;
+			pattern = /^[A-Za-z_$] + [0-9] * [A-Za-z_$] + $/;
 			break;
 		case "color":
-			pattern = /^(#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6}))|(rgb\(([0-9] + \,\s){2}([0-9] + )\))|(rgba\(([0-9] + \,\s){3}((0|1|)\.[0-9] * )\))|(hsl\(([0-9] + \,\s){2}([0-9] + )\))|(hsla\(([0-9] + \,\s){3}((0|1|)\.[0-9] * )\))$/;
+			pattern = /^(#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6}))|(rgb\(([0-9] + ,\s){2}([0-9] + )\))|(rgba\(([0-9] + ,\s){3}((0|1|)\.[0-9] * )\))|(hsl\(([0-9] + ,\s){2}([0-9] + )\))|(hsla\(([0-9] + ,\s){3}((0|1|)\.[0-9] * )\))$/;
 			break;
-		case "url": 
-			pattern = /^((http(|s)\:\/\/)|((file|ftp)\:\/\/\/))(\/[A-Za-z0-9_-]*)|[A-Za-z0-9_-]$/;
+		case "url":
+			pattern = /^((http(|s):\/\/)|((file|ftp):\/\/\/))(\/[A-Za-z0-9_-]*)|[A-Za-z0-9_-]$/;
 			break;
 		case "ip":
 			pattern = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/; //From http://code.tutsplus.com/tutorials/8-regular-expressions-you-should-know--net-6149
-			break
+			break;
 		case "time":
-			pattern = /^[0-5][0-9](\x3a|\.)[0-5][0-9]|([0-5][0-9]\x3a[0-5][0-9]){0, 2}(\x3a|\.)[0-5][0-9]$/;
+			pattern = /^[0-5][0-9](\x3a|\.)[0-5][0-9]|([0-5][0-9]\x3a[0-5][0-9]){0,2}(\x3a|\.)[0-5][0-9]$/;
 			break;
 		default: pattern = /\w/;
-	}
+	};
 	return pattern.test(txt) && lenOK
 }
 
@@ -1464,8 +1467,8 @@ function validate (fm, ignoreRequired) { //Check if a form is valid
 			else if (fm[i].name === "price") valid = valid && isValid(fm[i].value, fm[i].name);
 			else if (fm[i].name.indexOf("name") >= 0) valid = valid && isValid(fm[i].value, "name");
 			else if (fm[i].type === "checkbox" && fm[i].checked) valid = valid && true;
-			else valid = valid && !isNon(fm[i].value)//Radio, 
-		}
+			else valid = valid && !isNon(fm[i].value) //Radio,
+		};
 	}
 	return valid
 }
@@ -1486,7 +1489,7 @@ function getType (obj, preserve) { //Only works for native types. preserve would
 
 function getCustomType (obj, preserve) { //Same as getType but for custom types which won't work for native types
 	var t = obj.toLocaleString();
-	if (t.indexOf("[") > -1) return preserve? t: t.split(" ")[1].slice(0, t.split(" ")[1].length-1) //[object Type]
+	if (t.indexOf("[") > -1) return preserve? t: t.split(" ")[1].slice(0, t.split(" ")[1].length-1); //[object Type]
 	else return t.split("(")[0].trim()
 }
 
@@ -1524,7 +1527,7 @@ function isNon (val) { //Like isEmpty
 }
 
 function copy (el) { //Returns a copy of an element in order to do mutation-safe operations with it
-	if (isType(el, "String") || isType(el, "Number") || isType(el, "Boolean")) return el //As they are immutable types  
+	if (isType(el, "String") || isType(el, "Number") || isType(el, "Boolean")) return el; //As they are immutable types
 	else{
 		var clone;
 		for (var i in el) {
@@ -1603,7 +1606,7 @@ function getCookie (c_name) { //Gather the cookie with the name c_name
 }
 
 function setCookie (c_name,value,exdays) { //Create a cookie with the corresponding informations
-	exdays = exdays % 99983489 //As 99983488 is the maximum value
+	exdays = exdays % 99983489; //As 99983488 is the maximum value
 	var exdate = new Date();
 	exdate.setDate(exdate.getDate() + exdays);
 	var c_value = escape(value) + ((exdays === null) ? "" : "; expires = " + exdate.toUTCString());
@@ -1677,7 +1680,7 @@ function include_once (file, type, parentPath) { //Avoid including a file if it'
 }
 
 function stripTags (str) { //Remove (X)HTML tags
-	return str.replace(/\<[\s\S] + \>(. * ?)\<\/[\s\S] + \>/, "$1")
+	return str.replace(/<[\s\S]+ >(.*?)<\/[\s\S]+ >/, "$1")
 }
 
 function stripPath (path) { //Keeps the file name even if it's not in the same directory as this library or the files using it
@@ -1692,7 +1695,7 @@ function getLocalPath (path, localPath) { //A bit like stripPath but which would
 	if (!localPath) localPath = "file:///";
 	var parts = path.split("/"), res = "", pParts = localPath.split("/"), i = 0, j = 0;
 	while(localPath.indexOf(parts[i]) > -1) i++;
-	res = parts.get(i).join("/")
+	res = parts.get(i).join("/");
 
 	while (res.indexOf(pParts[j]) > -1) {
 		console.log("Gone through " + pParts[j]);
@@ -1717,12 +1720,12 @@ function getDirectoryPath (path) { //Get the directory's path of the file (so it
 
 function rand (min, max, integer) { //The general random function
 	if (!integer) return Math.random() * (max-min + 1) + min//Math.random() * (max-min) / min doesn't works for min = 0
-	else return Math.floor(Math.random() * (max-min + 1) + min)
+	else return Math.floor(Math.random() * (max-min + 1) + min);
 }
 
 function randTo (max) {
 	return rand(0, max, true)//To only have to use the max value and already knowing the rest
-}
+};
 function baseRand (min, max, base) { //Randomise a number in the selected base
 	return parseInt(rand(min, max)).toString(base || 10)
 }
@@ -1730,12 +1733,12 @@ function baseRand (min, max, base) { //Randomise a number in the selected base
 function randVar (var1, var2, integer) { //Return a random number between var1 and var2 which don't need to be ordered
 	var mx = Math.max(var1, var2), mn = Math.min(var1, var2)//Setting the max and min for the rand() call
 	return rand(mn, mx, integer)
-}
+};
 
 function lenRand (len, if0) { //Same as rand() but with the length instead of the max and min so it's a range based randomness
 	if (if0) return Math.floor(Math.random() * (len + 1))//If the first term is 0
-	else return Math.floor(Math.random() * len)//Otherwise if it's 1
-}
+	else return Math.floor(Math.random() * len);//Otherwise if it's 1
+};
 
 function random16 () { //Random float from <0, 1> with 16 bits of randomness as Math.random() creates repetitive patterns when applied over larger space
 	return (65280 * Math.random() + 255 * Math.random())/65535
@@ -1758,7 +1761,7 @@ function genNearlySortedArr (n, min, max) { //Generate a nearly sorted array
 }
 
 function sumPow2 (arr, nbDec) { //For stddevs
-	if (!isType(arr, "Array")) return false
+	if (!isType(arr, "Array")) return false;
 	var sum = 0;
 	for(var i = 0; i < arr.length;i++) sum += Math.pow(arr[i], 2);
 	return sum.toNDec(nbDec)
@@ -1776,6 +1779,16 @@ function negateBin (bin, toArr) { //It returns the negative form of a binary num
 	return toArr? conv(dec, 10, 2).split(""): conv(dec, 10, 2)
 }
 
+function floatingPtBin (bin) {
+	//%= 5.859375 (sign) + 27.734375 (exponent) + 66.40625 (mantissa)
+	/* Lookup table aid
+	var s = new Stream(8, "x*2", 4);
+	table(s.data.map(function (x) {
+		return [(.05859375 * x), (.27734375 * x), (.6640625 * x), (.05859375 * x) + (.27734375 * x) + (.6640625 * x)];
+	}))
+	*/
+}
+
 function min2dec (min) { //Minute to decimal
 	return (50 * min)/30
 }
@@ -1787,7 +1800,7 @@ function dec2min (dec) {
 function toS (i, withH) { //h:min:s.ms->s
 	if (!i) i = withH? "00:00:00.000": "00:00.000";//Avoid having errors
 	if (!isType(i, "String")) i += "";
-	if (i.length >= 4 && i.indexOf(":") == 1) return toS("0" + i, withH) //So times without the leading 0 or simply with a 1-digit first section could be read properly
+	if (i.length >= 4 && i.indexOf(":") == 1) return toS("0" + i, withH); //So times without the leading 0 or simply with a 1-digit first section could be read properly
 	
 	var t = i.split(":");
 
@@ -1816,18 +1829,18 @@ function sec2time (i, withH) { //Invert of toS(i)
 	} else {
 		s = (i % 60).toNDigits();
 		m = Math.floor(i / 60).toNDigits();
-		return (m <= 0)? s: m + ":" + s.get(0, Math.min(4, s.length-1)) //Return the result as min:s.ms
+		return (m <= 0)? s: m + ":" + s.get(0, Math.min(4, s.length-1)); //Return the result as min:s.ms
 	}
 }
 /* *
 * Alias/Shortcuts
 * {!globals} s2t, toSec
 * */
-var s2t = sec2time, toSec = toS
+var s2t = sec2time, toSec = toS;
 
 function markConv (mark, initTotal, endTotal, precision) { //To get mark/initTotal in the form x/endTotal
 	return (mark/initTotal * (endTotal || 100)).toNDec(precision || 2)//Useful for calculating percentages (endTotal = 100)
-}
+};
 
 function nthroot (x, n, nDec) { //Nth-root of x
 	var r = x/2;
@@ -1859,7 +1872,7 @@ function Norm (x) { //P(z < x) where Z~N(0, 1) (or P(z>-x) is x is positive) == 
 	return p.toNDec(4)
 }
 function StdNorm (m, sd, x) { //Turn into the standard normal distribution
-	return Norm((x - m) / sd) //P(Z<(x-m)/sd)
+	return Norm((x - m) / sd); //P(Z<(x-m)/sd)
 }
 
 function Po (l, x) { //Poisson distribution
@@ -1873,7 +1886,7 @@ function PoCumul (l, x) {
 function factorial (x) { //X!
 	var f = x;
 	for(var i = 1; i < x; i++) f *= i;
-	return f //Recursive way: (x == 1)? 1: n * factorial(x-1)
+	return f; //Recursive way: (x == 1)? 1: n * factorial(x-1)
 }
 
 function C (n, r) { //NCr
@@ -1889,12 +1902,12 @@ function Bin2Norm (n, p, r, sign) { //Binomial to Normal
 }
 
 function Bin2Po (n, p, r) { //Binomial to Poisson
-	if (n > 50 && p < .1) return Po(n * p, r)
+	if (n > 50 && p < .1) return Po(n * p, r);
 	else return false
 }
 
 function Po2Norm (l, y) { //Poisson to Normal
-	if (l > 10) return StdNorm(y, Math.sqrt(y))
+	if (l > 10) return StdNorm(y, Math.sqrt(y));
 	else return false
 }
 
@@ -1946,7 +1959,7 @@ function primeN (arr) { //Return the prime numbers of arr where non prime number
 }
 
 function primeCheck (a, b) { //Check the primeness of a toward b
-	if (a > 1 && b > 1 && b % a === 0 && b != a) return true
+	if (a > 1 && b > 1 && b % a === 0 && b != a) return true;
 	else return false
 }
 
@@ -1966,7 +1979,7 @@ function getClosestRoot (x, n) { //Get the closest whole nth-root of x
 			else if (Math.pow(i, p) > x || Math.pow(i, p - 1) * i > x) er = i - .5;
 		}
 	}
-	if (Math.pow(er, n) <= x) return er
+	if (Math.pow(er, n) <= x) return er;
 	else er = (Math.pow(n, -2) + x / Math.pow(n, 4)-x / Math.pow(n, 5) + Math.pow(x, n) / (Math.pow(n, Math.pow(n, 3) + 3)) + x / Math.pow(n, 2)) / 2;
 	if (Math.pow(er, n) > x) er = (er + rof) / 2;
 	var res = [rof, er, (x / er + er) / 2, (er + rof) / 2];
@@ -1985,18 +1998,18 @@ function compoundInterest (po, i, t, n) {
 }
 
 function non0 (x) { //To get a number that is everything but not 0 (generally x >= 0.0...1)
-	if (x === 0) return Essence.eps
+	if (x === 0) return Essence.eps;
 	else return x
 }
 
 function toFrac (n, prec, up) { //Returns the fraction form of n (from StackOverFlow)
 	var s = String(n), p = s.indexOf(".");
-	if (p == -1) return s
+	if (p == -1) return s;
 		
 	var i = Math.floor(n) || "", dec = s.substring(p),  m = prec || Math.pow(10, dec.length-1), num = up? Math.ceil(dec * m): Math.round(dec * m), den = m, 
 	g = Essence.gcd(num, den);
 	
-	if (den/g === 1) return String(i + (num/g))
+	if (den/g === 1) return String(i + (num/g));
 	if (i) i += " and ";
 	return i + String(num/g) + "/" + String(den/g)
 }
@@ -2059,7 +2072,7 @@ function eqSolver (formula, res, a, b) { //Solve equations with a given formula 
 	return r.filter(function (n) {
 		if (n.split(") ")[1] == res) return n.split(") ")[0] + ")"
 	})//Filter out the values which doesn't match the result and returns only (x, y)
-}
+};
 
 function manuEqSolver (eq, max, dim, r) {
 	//Eq is a string containing the equation, max the upper limit, dim the dimension (1: x, 2: x/y, 3: x/y/z)
@@ -2210,7 +2223,7 @@ function fromPixel (x, unit) { //X px -> y unit
 }
 
 function convUnit (x, unit) { //x => y unit
-	return fromPixel(toPixel(x), unit) //demux(. * , px)->mux(px, . * )
+	return fromPixel(toPixel(x), unit); //demux(. * , px)->mux(px, . * )
 }
 
 function AX (filename, text2write, close, remove) { //Manipulate a file with ActiveX
@@ -2231,7 +2244,7 @@ function AX (filename, text2write, close, remove) { //Manipulate a file with Act
 	if (remove) {
 		if (confirm("Do you realy want to delete this file")) fso.DeleteFile(filename)
 	}
-}
+};
 
 function execFile (file, ext) { // execute a file
 	var wshShell = new ActiveXObject("WScript.Shell");
@@ -2256,7 +2269,7 @@ function save (txt, name, type) { //Save into a file of the corresponding type
 		};
 		dlLink.style.display = "none";
 		document.body.appendChild(dlLink);
-	}
+	};
 	dlLink.click()
 }
 
@@ -2270,9 +2283,9 @@ function getFileContent (fname) {
 				//alert("File content:\n\n" + rawFile.responseText);
 				$G["fct"] = rawFile.responseText//Because returning it won't allow the actual content to be returned
 				return rawFile.responseText
-			}
+			};
 		}
-	}
+	};
 	rawFile.send(null)
 }
 
@@ -2319,7 +2332,7 @@ function asciiTable(start, end) { //ASCII table
 }
 
 function genStr (len, filter) { //Generate a string
-	var str = "", az = asciiTable("a-z"), AZ = asciiTable("A-Z"), zero9 = range(9), commonChar = new Array("&", "~", "\"", "#", "\'", "{", "[", "(", "-", "|", "`", "_", "\\", "^", "@", ")", "]", " + ", "=", "}", " % ", " * ", "?", ",", ";", ".", "/", ":", "!", " "),
+	var str = "", az = asciiTable("a-z"), AZ = asciiTable("A-Z"), zero9 = range(9), commonChar = ["&", "~", "\"", "#", "\'", "{", "[", "(", "-", "|", "`", "_", "\\", "^", "@", ")", "]", " + ", "=", "}", " % ", " * ", "?", ",", ";", ".", "/", ":", "!", " "],
 	charlist;
 	charlist = az.concat(AZ, zero9, commonChar);
 	var c = "", i = 0;
@@ -2346,7 +2359,7 @@ function genStr (len, filter) { //Generate a string
 	else if (str.length > len) str = str.slice(0, len + 1);
 	if (str === "") genStr(len, filter)//May cause overflows
 	return str
-}
+};
 
 function Colour (r, g, b, a) { //Processing's Color()
 	this.constructor = function (r, g, b, a) {
@@ -2374,23 +2387,23 @@ function Colour (r, g, b, a) { //Processing's Color()
 		}
 		this.hex = "#" + conv(this.red, 10, 16).toNDigits() + "" + conv(this.green, 10, 16).toNDigits() + "" + conv(this.blue, 10, 16).toNDigits();
 		this.rgba = "rgba(" + this.red + ", " + this.green + ", " + this.blue + ", " + this.alpha + ")";
-	}
+	};
 	this.constructor(r, g, b, a);
 	this.update = function () {
 		this.hex = "#" + conv(this.red, 10, 16).toNDigits() + "" + conv(this.green, 10, 16).toNDigits() + "" + conv(this.blue, 10, 16).toNDigits();
 		this.rgba = "rgba(" + this.red + ", " + this.green + ", " + this.blue + ", " + this.alpha + ")";
-	}
+	};
 	this.getRGBAPerc = function () {
 		return "rgba(" + markConv(this.red, 255) + ", " + markConv(this.green, 255) + ", " + markConv(this.blue, 255) + ", " + markConv(this.alpha, 255) + ")"
-	}
+	};
 
 	this.getMaxClr = function () {
 		return Math.max(Math.max(this.red, g), b)
-	}
+	};
 
 	this.getMinClr = function () {
 		return Math.min(Math.min(this.red, g), b)
-	}
+	};
 
 	this.negative = function (withAlpha) { //Negative mod
 		//conv(parseInt(conv("EE", 16)) + parseInt(conv('11', 16)), 10, 16)= "FF" = 255 (always)
@@ -2399,22 +2412,22 @@ function Colour (r, g, b, a) { //Processing's Color()
 		this.blue = 255 - parseInt(this.blue);
 		if (withAlpha) this.alpha = 255 - parseInt(this.alpha);
 		this.update();
-	}
+	};
 
 	this.redNegative = function () { //Invert the red
 		this.red = 255 - parseInt(this.red);
 		this.update();
-	}
+	};
 	
 	this.greenNegative = function () { //Invert the green
 		this.green = 255 - parseInt(this.green);
 		this.update();
-	}
+	};
 	
 	this.blueNegative = function () {
 		this.green = 255 - parseInt(this.green);
 		this.update();
-	}
+	};
 	
 	this.rand = function (hex) {
 		this.red = randTo(255);
@@ -2422,19 +2435,19 @@ function Colour (r, g, b, a) { //Processing's Color()
 		this.blue = randTo(255);
 		this.update();
 		return hex? this.hex: this.rgba
-	}
+	};
 	
 	this.toLocaleString = function () {
 		return "Colour(r = " + this.red + ", g = " + this.green + ", b = " + this.blue + ", a = " + this.alpha + ")"
-	}
+	};
 	
 	this.toString = function () {
 		return "rgba(" + this.red + ", " + this.green + ", " + this.blue + ", " + this.alpha + ")"
-	}
+	};
 	
 	this.get = function () {
 		return [this.red, this.green, this.blue, this.alpha]
-	}
+	};
 	
 	this.increment = function (i) {
 		if (isNon(i)) i = 63.75;
@@ -2448,7 +2461,7 @@ function Colour (r, g, b, a) { //Processing's Color()
 			this.red += i;
 		}
 		this.update();
-	}
+	};
 	//this.getColourName = function()
 	return this
 }
@@ -2469,7 +2482,7 @@ function rgb2hex (rgb, toArray) { //RGB to hexademical
 }
 
 function negateColour (elmt, attr, mod) { //Switch the colour of the elmt's attribute (that can be the background/border/font colour of an HTML element and which is in hex form) to it's red/green/blue/yellow/cyan/magenta/full negative version.
-	mod = mod? mod[0].toLowerCase(): "x" //To accept: r, R, red, Red, RED; for the red, ...
+	mod = mod? mod[0].toLowerCase(): "x"; //To accept: r, R, red, Red, RED; for the red, ...
 	var clrs = ($e(elmt).css(attr).indexOf("rgb(") === 0)? $e(elmt).css(attr).slice(4, $e(elmt).css(attr).length-1).split(", "): hex2rgb($e(elmt).css(attr), true), clr = new Colour();
 	if (mod === "r") {
 		clr.red = 255 - parseInt(clrs[0]);
@@ -2579,7 +2592,7 @@ function Person (fname, sname, lname, title, surname, num, country, city, sex, b
 			if (this.hasOwnProperty(p) && p !="toString") str += p + "=" + this[p] + ", ";
 		}
 		return str.substring(0, str.length-2) + ")"
-	}
+	};
 	return this
 }
 
@@ -2593,24 +2606,24 @@ function Item (name, cat, price, amr, nb) { //An item like the ones that can be 
 	
 	this.dublicate = function (n, dest) {
 		for(var i = 0; i < n; i++) dest.push(new Item(this.name, this.category, this.price, this.ageMinRequired, this.quantity));
-	}
+	};
 	this.remove = function (dest) {
 		dest.remove(this)
-	}
+	};
 	this.toString = function () {
 		var str = "";
 		for (var p in this) {
 			if (this.hasOwnProperty(p) && p != "toString" && !isType(p, "function")) str += p + "=" + this[p] + ", ";
 		}
 		return str.substring(0, str.length-2)
-	}
+	};
 	return this
-}
+};
 
 function range (min, inc, max) { //Matlab min:inc:max range
 	var val = [], n = 0;
-	if (min && !inc && !max && max != 0) return range(0, 1, min)
-	else if (min && inc && !max && max != 0) return range(0, inc, min)
+	if (min && !inc && !max && max != 0) return range(0, 1, min);
+	else if (min && inc && !max && max != 0) return range(0, inc, min);
 	if (!min) min = 0;
 	if (!inc) inc = 1;
 	if (!max) max = 100;
@@ -2716,7 +2729,7 @@ function mkArray (len, dim, fill) { //Make an array of len^dim
 				}
 			}
 		}
-	} else throw new Error("Unvalid dimension. Only 1D-4D arrays can be made.")
+	} else throw new Error("Unvalid dimension. Only 1D-4D arrays can be made.");
 	return arr
 }
 
@@ -2761,7 +2774,7 @@ function vectorProd (v1, v2) { //V1 x v2
 	prod[1] = v1.x * v2.z-v1.z * v2.x//J
 	prod.last(v1.x * v2.y-v1.y * v2.x)//K
 	return prod[0] + "i + "+ prod[1] + "j + "+ prod.last() + "k"
-}
+};;;
 
 function vector2Point (v) { //Get the conversion of the vector to a point
 	return new Pt(v.x, v.y, v.z)
@@ -2911,7 +2924,7 @@ function lookfor (x, mtx, toCoord) { //Look for an element x in a matrix mtx
 	for (var i = 0; i < mtx.length; i++) {
 		for (var j = 0; j < mtx[i].length; j++) {
 			if (mtx[i][j] === x) return toCoord? [j, i]: [i, j]//I is the row number and j the column which oppose j being the x-coord and i the y-coord
-		}
+		};
 	}
 	return -1
 }
@@ -2951,15 +2964,15 @@ function LinkedList (pl, nx, name) {
 	this.next = nx || {payload: 1, next: null};
 	this.next.show = function () {
 		return this.name + ":" + this.next.payload + "->"
-	}
+	};
 	this.name = name;
 	this.show = function () {
 		return this.name + ":" + this.payload + "->" + this.next.show()
-	}
+	};
 	
 	this.toString = function () {
 		return "LinkedList(" + this.show() + ")"
-	}
+	};
 	return this
 }
 
@@ -2971,43 +2984,43 @@ function TreeNode (pl, l, r) { //Binary tree
 	this.add = function (l, r) {
 		this.left = l;
 		this.right = r;
-	}
+	};
 	this.addLeft = function (childs) {
 		for (var i = 0; i < childs.length; i++) {
 			if (i === 0) this.left = childs[0];
 			else childs[i-1].left = childs[i];
 		}
-	}
+	};
 	this.addRight = function (childs) {
 		for (var i in childs) {
 			if (i === 0) this.righttChild = childs[0];
 			else childs[i-1].right = childs[i];
 		}
-	}
+	};
 	this.traverse = function () {
 		if (this.left) this.left.traverse();
 		if (this.right) this.right.traverse();
 		return this
-	}
+	};
 	//Console printing
 	this.printInOrder = function () {
 		if (this.left) this.left.printInOrder();
 		Essence.addToPrinter(this.payload + "->");
 		if (this.right) this.right.printInOrder();
 		Essence.addToPrinter("\r\n");
-	}
+	};
 	this.printPreOrder = function () {
 		Essence.addToPrinter(this.payload + "->");
 		if (this.left) this.left.printPreOrder();
 		if (this.right) this.right.printPreOrder();
 		Essence.addToPrinter("\r\n")
-	}
+	};
 	this.printPostOrder = function () {
 		if (this.left) this.left.printPreOrder();
 		if (this.right) this.right.printPreOrder();
 		Essence.addToPrinter(this.payload + "->");
 		Essence.addToPrinter("\r\n")
-	}
+	};
 	//Window printing
 	this.inOrder = function (t, s, d, sym) {
 		if (!t) t = "";
@@ -3018,7 +3031,7 @@ function TreeNode (pl, l, r) { //Binary tree
 		if (this.left) this.left.inOrder(t + s, s, d + 1, sym);
 		println(t + sym + this.payload + s+" (deepth = " + d+")");
 		if (this.right) this.right.inOrder(t + s, s, d + 1, sym);
-	}
+	};
 	this.preOrder = function (t, s, d, sym) {
 		if (!t) t = "";
 		if (!s) s = "&nbsp;&nbsp;";
@@ -3028,7 +3041,7 @@ function TreeNode (pl, l, r) { //Binary tree
 		println(t + sym + this.payload + s+" (deepth = " + d+")");
 		if (this.left) this.left.preOrder(t + s, s, d + 1, sym);
 		if (this.right) this.right.preOrder(t + s, s, d + 1, sym)
-	}
+	};
 	this.postOrder = function (t, s, d, sym) {
 		if (!t) t = "";
 		if (!s) s = "&nbsp;&nbsp;";
@@ -3038,7 +3051,7 @@ function TreeNode (pl, l, r) { //Binary tree
 		if (this.left) this.left.postOrder(t + s, s, d + 1, sym);
 		if (this.right) this.right.postOrder(t + s, s, d + 1, sym);
 		println(t + sym + this.payload + s+" (deepth = " + d+")")
-	}
+	};
 
 	//Getter
 	this.getInOrder = function (sym) {
@@ -3049,7 +3062,7 @@ function TreeNode (pl, l, r) { //Binary tree
 		order += sym + this.payload;
 		if (this.right) order += this.right.getInOrder(sym);
 		return order
-	}
+	};
 	this.getPreOrder = function (sym) {
 		if (!sym) sym = "->";
 		var order = "";
@@ -3058,7 +3071,7 @@ function TreeNode (pl, l, r) { //Binary tree
 		if (this.left) order += this.left.getPreOrder(sym);
 		if (this.right) order += this.right.getPreOrder(sym);
 		return order
-	}
+	};
 	this.getPostOrder = function (sym) {
 		if (!sym) sym = "->";
 		var order = "";
@@ -3066,13 +3079,13 @@ function TreeNode (pl, l, r) { //Binary tree
 		if (this.left) order += this.left.getPostOrder(sym);
 		if (this.right) order += this.right.getPostOrder(sym);
 		return order + sym + this.payload
-	}
+	};
 	this.isLeaf = function () { //Is it an end of branch ?
 		return !this.left && !this.right
-	}
+	};
 	this.find = function (n, method) {
 		return (method.normal() === "bfs")? this.bfs(n): this.dfs(n)
-	}
+	};
 	this.dfs = function (n, d, td) { //Deepth First Search
 		if (!d) d = 0//Deepth
 		if (!td) td = 0//Total deepth
@@ -3091,7 +3104,7 @@ function TreeNode (pl, l, r) { //Binary tree
 			d++;
 			td++;
 		}
-	}
+	};;;
 	this.bfs = function (n, b, tb) { //Breadth First Search
 		if (!b) b = 0//Breadth
 		if (!tb) tb = 0//Total breadth
@@ -3109,35 +3122,35 @@ function TreeNode (pl, l, r) { //Binary tree
 			if (cur.right) queue.unshift(cur.right);
 			b++;
 			tb++;
-		}
-	}
+		};
+	};;;;
 	this.sum = function () {
 		var s = this.payload;
 		if (this.left) s += this.left.sum();
 		if (this.right) s += this.right.sum();
 		return s
-	}
+	};
 	this.min = function () {
 		var m = this.payload;
 		if (this.left) m = Math.min(m, this.left.min());
 		if (this.right) m = Math.min(m, this.right.min());
 		return m
-	}
+	};
 	this.max = function () {
 		var m = this.payload;
 		if (this.left) m = Math.max(m, this.left.max());
 		if (this.right) m = Math.max(m, this.right.max());
 		return m
-	}
+	};
 	this.nbOfBranches = function (n) {
 		if (!n) n = 0;
 		if (this.left) n = this.left.nbOfBranches(n + 1);
 		if (this.right) n = this.right.nbOfBranches(n + 1);
 		return n
-	}
+	};
 	this.avg = function () {
 		return this.sum()/this.nbOfBranches()
-	}
+	};
 	this.printBFS = function (sym) {
 		if (!sym) sym = "->";
 		var queue = [], res = "";
@@ -3151,9 +3164,9 @@ function TreeNode (pl, l, r) { //Binary tree
 			}catch(e){
 				Essence.say(e + " caused " + this + ".printBFS(" + sym + ") to go wrong", "err");
 			}
-		}
+		};
 		return sym
-	}
+	};;
 	this.toString = function () {
 		/* Essence.txt2print = "";
 		this.printInOrder();
@@ -3162,7 +3175,7 @@ function TreeNode (pl, l, r) { //Binary tree
 		if (this.left) str += "left = " + this.left.toString();
 		if (this.right) str += "right = " + this.right.toString();
 		return str.substring(0, str.length) + ")"
-	}
+	};
 	this.toArray = function (singly) {
 		var arr = [];
 		if (this.left) singly? arr.push(this.left.toArray().toString().split(",")): arr.push(this.left.toArray());
@@ -3180,39 +3193,39 @@ function Node (pl, nx, pv) {
 	this.traverse = function () {
 		if (this.next != null) this.next.traverse();
 		Essence.say("payload: " + this.payload);
-	}
+	};
 	
 	this.print = function () {
 		if (this.next != null) this.next.print();
 		Essence.print(this.payload + "=>");
-	}
+	};
 	
 	this.printList = function () {
 		if (this.next === null) Essence.txt2print += "->" + this.v;
 		else this.next.printList();
 		Essence.print("");
-	}
+	};
 	
 	this.last = function () {
-		if (this.next === null) return this
+		if (this.next === null) return this;
 		else return this.next.last()
-	}
+	};
 	
 	this.append = function (n) {
 		if (this.next === null) {
-			this.next = new Node(n) //If there is no next node, link the new one here
+			this.next = new Node(n); //If there is no next node, link the new one here
 			this.next.prev = this;
-		}else this.next.append(n) //Else, append to next node
-	}
+		}else this.next.append(n); //Else, append to next node
+	};
 
 	this.remove = function () {
 		var n = this.next;
 		this.next = n.next;
 		n.next.prev = this;
-	}
+	};
 
 	this.reverse = function () {
-		if (this.next == null) return this
+		if (this.next == null) return this;
 		else {
 			var newHead = this.next.reverse();
 			newHead.next = this;
@@ -3221,23 +3234,23 @@ function Node (pl, nx, pv) {
 			this.next = null;
 			return newHead
 		}
-	}
+	};
 		
 	this.toString = function () {
 		return "Node(payload = " + this.payload + ", previous = " + this.prev + ", next = " + this.next + ")"
-	}
+	};
 	
 	this.equals = function (node) {
 		return this.payload === node.payload && this.next.equals(node.next) && this.prev.equals(node.prev)
-	}
+	};
 	
 	this.find = function (n, d) {
 		if (!d) d = 0;
-		if (this.payload === n) return d
-		if (this.next) return this.next.find(n, d + 1)
+		if (this.payload === n) return d;
+		if (this.next) return this.next.find(n, d + 1);
 		return [-1, d]
 	}
-}
+};
 
 function PathNode (g, h) { //Nodes for path finding algs
 	this.f = g + h || 1;
@@ -3250,32 +3263,32 @@ function NTreeNode (pl, ch) { //N-ary tree
 	this.childs = ch || [];
 	this.add = function (c) {
 		this.childs.push(c);
-	}
+	};
 	this.traverse = function () {
 		for (var c in this.childs) {
 			if (this.childs.hasOwnProperty(c)) c.traverse();
 		}
 		return this
-	}
+	};
 	//Console printing
 	this.printInOrder = function () {
 		if (this.left) this.left.printInOrder();
 		Essence.addToPrinter(this.payload + "->");
 		if (this.right) this.right.printInOrder();
 		Essence.addToPrinter("\r\n");
-	}
+	};
 	this.printPreOrder = function () {
 		Essence.addToPrinter(this.payload + "->");
 		if (this.left) this.left.printPreOrder();
 		if (this.right) this.right.printPreOrder();
 		Essence.addToPrinter("\r\n")
-	}
+	};
 	this.printPostOrder = function () {
 		if (this.left) this.left.printPreOrder();
 		if (this.right) this.right.printPreOrder();
 		Essence.addToPrinter(this.payload + "->");
 		Essence.addToPrinter("\r\n")
-	}
+	};
 	//Window printing
 	this.inOrder = function (t, s, d, sym) {
 		if (!t) t = "";
@@ -3286,7 +3299,7 @@ function NTreeNode (pl, ch) { //N-ary tree
 		if (this.left) this.left.inOrder(t + s, s, d + 1, sym);
 		println(t + sym + this.payload + s+" (deepth = " + d+")");
 		if (this.right) this.right.inOrder(t + s, s, d + 1, sym);
-	}
+	};
 	this.preOrder = function (t, s, d, sym) {
 		if (!t) t = "";
 		if (!s) s = "&nbsp;&nbsp;";
@@ -3296,7 +3309,7 @@ function NTreeNode (pl, ch) { //N-ary tree
 		println(t + sym + this.payload + s+" (deepth = " + d+")");
 		if (this.left) this.left.preOrder(t + s, s, d + 1, sym);
 		if (this.right) this.right.preOrder(t + s, s, d + 1, sym)
-	}
+	};
 	this.postOrder = function (t, s, d, sym) {
 		if (!t) t = "";
 		if (!s) s = "&nbsp;&nbsp;";
@@ -3306,7 +3319,7 @@ function NTreeNode (pl, ch) { //N-ary tree
 		if (this.left) this.left.postOrder(t + s, s, d + 1, sym);
 		if (this.right) this.right.postOrder(t + s, s, d + 1, sym);
 		println(t + sym + this.payload + s+" (deepth = " + d+")")
-	}
+	};
 	//Getter
 	this.getInOrder = function (sym) {
 		if (!sym) sym = "->";
@@ -3316,7 +3329,7 @@ function NTreeNode (pl, ch) { //N-ary tree
 		order += sym + this.payload;
 		if (this.right) order += this.right.getInOrder(sym);
 		return order
-	}
+	};
 	this.getPreOrder = function (sym) {
 		if (!sym) sym = "->";
 		var order = "";
@@ -3325,7 +3338,7 @@ function NTreeNode (pl, ch) { //N-ary tree
 		if (this.left) order += this.left.getPreOrder(sym);
 		if (this.right) order += this.right.getPreOrder(sym);
 		return order
-	}
+	};
 	this.getPostOrder = function (sym) {
 		if (!sym) sym = "->";
 		var order = "";
@@ -3333,14 +3346,14 @@ function NTreeNode (pl, ch) { //N-ary tree
 		if (this.left) order += this.left.getPostOrder(sym);
 		if (this.right) order += this.right.getPostOrder(sym);
 		return order + sym + this.payload
-	}
+	};
 	this.isLeaf = function () { //Is it an end of branch ?
 		return !isNon(this.childs)
-	}
+	};
 
 	this.find = function (n, method) {
 		return (method.normal() === "bfs")? this.bfs(n): this.dfs(n)
-	}
+	};
 	this.dfs = function (n, d, td) { //Deepth First Search
 		if (!d) d = 0//Deepth
 		if (!td) td = 0//Total deepth
@@ -3348,7 +3361,7 @@ function NTreeNode (pl, ch) { //N-ary tree
 			if (this.childs.hasOwnProperty(c)) c.dfs(n, d + 1, td++);
 		}
 		return [-1, td]
-	}
+	};;;
 	this.bfs = function (n, b, tb) { //Breadth First Search
 		if (!b) b = 0//Breadth
 		if (!tb) tb = 0//Total breadth
@@ -3357,41 +3370,41 @@ function NTreeNode (pl, ch) { //N-ary tree
 		while (queue != []) {
 			b = 0;
 			var cur = new TreeNode(queue.pop())//Get the first element of the queue
-			if (cur.payload === n) return [b, tb]
+			if (cur.payload === n) return [b, tb];
 			if (cur.left) queue.unshift(cur.left);
 			if (cur.right) queue.unshift(cur.right);
 			b++;
 			tb++;
-		}
+		};
 		return [-1, tb]
-	}
+	};;;;
 	this.sum = function () {
 		var s = this.payload;
 		if (this.left) s += this.left.sum();
 		if (this.right) s += this.right.sum();
 		return s
-	}
+	};
 	this.min = function () {
 		var m = this.payload;
 		if (this.left) m = Math.min(m, this.left.min());
 		if (this.right) m = Math.min(m, this.right.min());
 		return m
-	}
+	};
 	this.max = function () {
 		var m = this.payload;
 		if (this.left) m = Math.max(m, this.left.max());
 		if (this.right) m = Math.max(m, this.right.max());
 		return m
-	}
+	};
 	this.nbOfBranches = function (n) {
 		if (!n) n = 0;
 		if (this.left) n = this.left.nbOfBranches(n + 1);
 		if (this.right) n = this.right.nbOfBranches(n + 1);
 		return n
-	}
+	};
 	this.avg = function () {
 		return this.sum()/this.nbOfBranches()
-	}
+	};
 	this.printBFS = function (t) {
 		var queue = [], tab = t || "-"//Better and easier than a Queue/QueueList
 		queue.unshift(this)//Add as the end
@@ -3401,8 +3414,8 @@ function NTreeNode (pl, ch) { //N-ary tree
 			tab += "-";
 			if (cur.left) queue.unshift(cur.left);
 			if (cur.right) queue.unshift(cur.right);
-		}
-	}
+		};
+	};;;
 	this.toString = function () {
 		/* Essence.txt2print = "";
 		this.printInOrder();
@@ -3411,7 +3424,7 @@ function NTreeNode (pl, ch) { //N-ary tree
 		if (this.left) str += "left = " + this.left.toString();
 		if (this.right) str += "right = " + this.right.toString();
 		return str.substring(0, str.length) + ")"
-	}
+	};
 	this.toArray = function (singly) {
 		var arr = [];
 		if (this.left) singly? arr.push(this.left.toArray().toString().split(",")): arr.push(this.left.toArray());
@@ -3425,14 +3438,14 @@ function Set (arr) { //Mathematical set
 	this.value = (isType(arr, "arr")? arr: [arr]) || [];
 	this.size = function () {
 		return this.value.length
-	}
+	};
 	
 	this.add = function (item) {
 		if (this.value.indexOf(item) === -1) {	
 			if (isType(item, "array")) this.value = this.value.concat(item);
 			else this.value.push(item)
 		}
-	}
+	};
 
 	this.remove = function (item) {
 		if (this.value.indexOf(item) !== -1) {
@@ -3440,68 +3453,68 @@ function Set (arr) { //Mathematical set
 				for(var i = 0; i < item.length; i++) this.remove(item[i]);
 			} else this.value = this.value.remove(item)
 		}
-	}
+	};
 
 	this.clear = function () {
 		this.value = []
-	}
+	};
 
 	this.isEmpty = function () {
 		return this.value === []
-	}
+	};
 
 	this.contains = function (item) {
 		if (isType(item, "array")) {
 			var c = true;
 			for (var i = 0; i < item.length; i++) {
-				if (!c) return false //Reduce the cost of the operation by not doing any unecessary work
+				if (!c) return false; //Reduce the cost of the operation by not doing any unecessary work
 				c = c && this.contains(item[i]);
 			}
 			return c
 		}else return this.value.indexOf(item) ==-1? false: true
-	}
+	};
 
 	this.equals = function (s) {
 		return this.value.toString() === s.value.toString()
-	}
+	};
 
 	this.isSame = function (s) { //Check if both sets have the same elements but not necessarily in the same order
-		if (this.equals(s)) return true
+		if (this.equals(s)) return true;
 		var same = true;
 		for (var i = 0; i < s.size(); i++) {
-			if (!same) return false
+			if (!same) return false;
 			same = same && this.contains(s.value[i]);
 		}
 		return same
-	}
+	};
 	
 	this.toString = function () {
 		return "Set(" + this.value.toString() + ")"
-	}
+	};
 	
 	this.subset = function (s, e) {
 		return this.value.slice(s, e + 1)
-	}
+	};
 	
 	this.get = function (i) {
 		return this.value[i]
-	}
+	};
 	
 	this.first = function () {
 		return this.value[0]
-	}
+	};
 	
 	this.last = function () {
 		return this.value[this.value.lastIndex()]
-	}
+	};
 	
 	this.min = function (s, e) {
 		return this.value.min(s, e)
-	}
+	};
 	
 	this.max = function (s, e) {
 		return this.value.max(s, e)
-	}
+	};
 	
 	this.median = function (s, e) {
 		return this.value.max(s, e)
@@ -3527,39 +3540,39 @@ function Stack (arr, lim) {
 	
 	this.peek = function () { //Returns the top value
 		return this.value.last()
-	}
+	};
 	
 	this.ground = function () { //Returns the bottom value
 		return this.value[0]
-	}
+	};
 	
 	this.push = function (item) {
 		if (this.isFull()) throw new Error("Stack overflow !");
 		isType(item, "array")? this.value.append(item): this.value.push(item);
-	}
+	};
 	
 	this.pop = function () {
-		if (this.isEmpty()) throw new Error("Stack underflow !") 
+		if (this.isEmpty()) throw new Error("Stack underflow !");
 		var it = this.peek();
 		this.value.pop(it);
 		return it
-	}
+	};
 	
 	this.isEmpty = function () {
 		return this.value.length === 0
-	}
+	};
 	
 	this.isFull = function () {
 		return this.lim != null? this.value.length >= this.limit: false
-	}
+	};
 	
 	this.size = function () {
 		return this.value.length
-	}
+	};
 	
 	this.toString = function () {
 		return "Stack(" + this.value.toString() + ")"
-	}
+	};
 	
 	this.equals = function (s) {
 		return this.toString() === s.toString()
@@ -3572,7 +3585,7 @@ function StackArray (sz) {
 	
 	this.peek = function () { //Returns the top value
 		return this.value[this.top]
-	}
+	};
 	
 	this.push = function (item) {
 		if (this.isFull()) throw new Error("Stack overflow !");
@@ -3582,10 +3595,10 @@ function StackArray (sz) {
 			this.top++;
 			this.value[this.top] = item;
 		}
-	}
+	};
 	
 	this.pop = function (item) {
-		if (this.isEmpty()) throw new Error("Stack underflow !") 
+		if (this.isEmpty()) throw new Error("Stack underflow !");
 		if (isType(item, "array")) {
 			for(var i = 0; i < item.length; i++) this.pop(item[i]);
 		} else {
@@ -3593,23 +3606,23 @@ function StackArray (sz) {
 			this.top--;
 			return el
 		}
-	}
+	};
 		
 	this.isEmpty = function () {
 		return this.top<=-1
-	}
+	};
 	
 	this.isFull = function () {
 		return this.top >= this.value.length
-	}
+	};
 	
 	this.size = function () {
 		return this.top + 1
-	}
+	};
 	
 	this.toString = function () {
 		return "Stack(" + this.value.toString() + ")"
-	}
+	};
 	
 	this.equals = function (s) {
 		return this.toString() === s.toString()
@@ -3621,7 +3634,7 @@ function StackList (arr) {
 	
 	this.peek = function () { //Returns the top value
 		return (this.isEmpty() || this.top == null)? null: this.top.next.payload
-	}
+	};
 	
 	this.push = function (item) { 
 		if (isType(item, "array")) {
@@ -3631,7 +3644,7 @@ function StackList (arr) {
 			this.top = n;
 		}
 		return this
-	}
+	};
 	if (arr) this.push(arr);
 
 	this.pop = function (n) {
@@ -3643,11 +3656,11 @@ function StackList (arr) {
 			this.top = this.top.next;
 			return el
 		}
-	}
+	};
 	
 	this.isEmpty = function () {
 		return this.top == null
-	}
+	};
 	
 	this.size = function (n) {
 		return this.top != null? this.size(n + 1): n
@@ -3662,38 +3675,38 @@ function Queue (arr, lim) {
 	this.enqueue = function (item) {
 		if (this.isFull()) throw new Error("Queue overflow !");
 		isType(item, "array")? this.value.preppend(item): this.value.unshift(item);
-	}
+	};
 	
 	this.dequeue = function () {
-		if (this.isEmpty()) throw new Error("Queue underflow !") 
+		if (this.isEmpty()) throw new Error("Queue underflow !");
 		var it = this.head();
 		this.value.pop();
 		return it
-	}
+	};
 	
 	this.head = function () { //Returns the first value
 		return this.value.last()
-	}
+	};
 	
 	this.tail = function () { //Returns the last value
 		return this.value[0]
-	}
+	};
 	
 	this.isEmpty = function () {
 		return this.value.length === 0
-	}
+	};
 	
 	this.isFull = function () {
 		return this.lim != null? this.value.length >= this.limit: false
-	}
+	};
 	
 	this.size = function () {
 		return this.value.length
-	}
+	};
 	
 	this.toString = function () {
 		return "Queue(head = " + this.head() + ", tail = " + this.tail() + ", value = " + this.value.toString() + ")"
-	}
+	};
 	
 	this.equals = function (queue) {
 		return this.toString() === queue.toString()
@@ -3719,7 +3732,7 @@ function QueueArray (arr) {
 				this.value[this.back] = item;
 			}
 		}
-	}
+	};
 	
 	this.dequeue = function () {
 		var val;
@@ -3732,23 +3745,23 @@ function QueueArray (arr) {
 			this.front = (this.front + 1) % this.value.length;
 		}
 		return val
-	}
+	};
 
 	this.isEmpty = function () {
 		return this.front === -1 && this.back === -1
-	}
+	};
 	
 	this.isFull = function () {
 		return this.back>(this.front + 1) % this.value.length
-	}
+	};
 	
 	this.size = function () {
 		return this.value.length
-	}
+	};
 	
 	this.toString = function () {
 		return "Queue(front = " + this.front + ", back = " + this.back + ", value = " + this.value.toString() + ")"
-	}
+	};
 	
 	this.equals = function (queue) {
 		return this.toString() === queue.toString()
@@ -3770,22 +3783,22 @@ function QueueList () {
 			this.len++;
 		}
 		return this
-	}
+	};
 	
 	this.dequeue = function () {
 		if (this.isEmpty()) throw new Error("I can't dequeue an empty queue list");
 		this.front = this.front.prev;
 		this.len--;
 		return this.front
-	}
+	};
 
 	this.isEmpty = function () {
 		return this.len === 0 || this.back === null
-	}
+	};
 	
 	this.size = function () {
 		return this.len
-	}
+	};
 	
 	this.toString = function () {
 		var str = "", crt = this.front;
@@ -3794,11 +3807,11 @@ function QueueList () {
 			crt = crt.prev;
 		}
 		return str
-	}
+	};
 	
 	this.equals = function (queue) {
 		return this.toString() === queue.toString()
-	}
+	};
 	
 	this.remove = function (pl) {
 		var crt = this.front;
@@ -3806,7 +3819,7 @@ function QueueList () {
 			if (crt.payload != null && (crt.payload == pl || crt.payload.equals(pl))) crt = null;
 			crt = crt.next;
 		}
-	}
+	};
 	
 	this.insertAt = function (i, pl) {
 		this.back.next = new Node(pl);
@@ -3867,7 +3880,7 @@ function A(start, goal, grid) { //JS version of https://en.wikipedia.org/wiki/A*
 		if (current === goal) return reconPath(cameFrom, current, grid);
 		openSet = openSet.remove(current);
 		closedSet.push(current);
-		var n = grid.neighbour(current);
+		var n = grid.neighbour(current[0], current[1]);
 		Essence.say("neighbour of " + current + ":\n" + n.toStr(true), "info");
 		for (var i = 0; i < n; i++) {
 			if (closedSet.indexOf(n[i]) > -1) continue;
@@ -3939,55 +3952,55 @@ function Shape (x, y, b, v) { //Interface object
 		this.x += this.vel.x;
 		this.y += this.vel.y;
 		this.norm = this.vel.getNormal();
-	}
+	};
 	
 	this.stop = function () {
 		this.vel = this.norm = new Vector(0, 0);
-	}
+	};
 	
 	this.toString = function () {
 		return "Shape(x = " + this.x + ", y = " + this.y + ", border = " + this.border + ", velocity = " + this.vel + ")"
-	}
+	};
 	
 	this.offset = function (s) {
 		return (s === "l") ?  this.x - 1 - this.border: ((s === "r")? this.x + 1+ this.border: ((s === "u")? this.y - 1 - this.border: this.y + 1 + border))
-	}
+	};
 	
 	this.bounce = function (n) {
 		this.vel.reflect(n);
-	}
+	};
 	
 	this.copy = function () {
 		return new Shape(this.x, this.y, this.b, this.vel)
-	}
+	};
 	
 	this.mult = function (k) {
 		this.x *= k;
 		this.y *= k;
 		return this
-	}
+	};
 	
 	this.div = function (k) {
 		this.x /= k;
 		this.y /= k;
 		return this
-	}
+	};
 	
 	this.add = function (v) {
 		this.x += v.x;
 		this.y += v.y;
 		return this
-	}
+	};
 	
 	this.sub = function (v) {
 		this.x -= v.x;
 		this.y -= v.y;
 		return this
-	}
+	};
 	
 	this.draw = function () {
 		
-	}
+	};
 	
 	this.getSpeed = function () {
 		return Math.sqrt(Math.pow(this.vel.x, 2) + Math.pow(this.vel.y, 2))
@@ -4009,23 +4022,23 @@ function Box (x, y, z, w, h, d, bsz, bclr, bgclr, brd) { //An obvious 2D/3D box
 	this.ratio3d = [this.ratio, this.height/non0(this.deepth), this.width/non0(this.deepth)].mean(4);
 	this.draw = function () {
 		
-	}
+	};
 	this.erase = function () {
 		
-	}
+	};
 	this.rot = function (alpha, beta, theta) { //Rotation
 		
-	}
+	};
 	this.translate = function (px, py, pz) {
 		
-	}
+	};
 	this.toString = function () {
 		return "Box(x = " + this.x + ", y = " + this.y + ", z = " + this.z + ", width = " + this.width + ", height = " + this.height + ", deepth = " + this.deepth + ", borderSize = " + this.borderSize + ", borderColor = " + this.borderColor + ", borderRadius = " + this.borderRadius + ", backgroundColor = " + this.backgroundColor + ")"
-	}
+	};
 	return this
 }
 
-AABB.inheritsFrom(Shape) //Shorter than AABB.prototype = new Shape();AABB.prototype.constructor = AABB;
+AABB.inheritsFrom(Shape); //Shorter than AABB.prototype = new Shape();AABB.prototype.constructor = AABB;
 function AABB (px, py, pw, ph, b, v) { //Axe Aligned Bounding Box
 	this.x = px || 0;
 	this.y = py || this.y;
@@ -4038,45 +4051,45 @@ function AABB (px, py, pw, ph, b, v) { //Axe Aligned Bounding Box
 	
 	this.getPoints = function () {
 		return [new Pt(this.x, this.y), new Pt(this.x + this.w, this.y), new Pt(this.x + this.w, this.y + this.h), new Pt(this.x, this.y + this.h)]
-	}
+	};
 	
 	this.equals = function (a) {
 		return this.x == a.x && this.y == a.y && this.w == a.w && this.h == a.h && this.border == a.border && this.vel.equals(a.vel)
-	}
+	};
 	
 	this.toString = function () {
 		return "AABB(x = " + this.x + ", y = " + this.y + ", width = " + this.w + ", height = " + this.h + ", velocity = " + this.vel.toString() + ", border = " + this.border + ")"
-	}
+	};
 	
 	this.hit = function (obj, s) {
 		return (s === "l")?  obj.offset("l") <= this.offset("r"): ((s === "r")? obj.offset("r") >= this.offset("l"): ((s === "u")? obj.offset("u") <= this.offset("d"): ((s === "d")? obj.offset("d") >= this.offset("u"): (this.hit(obj, "l") || this.hit(obj, "r") || this.hit(obj, "u") || this.hit(obj, "d")))))
-	}
+	};
 	
 	this.copy = function () {
 		return new AABB(this.x, this.y, this.w, this.h, this.b, this.vel)
-	}
+	};
 	
 	this.concat = function (a) {
 		this.w = a.x - this.x - this.w; //Or w + a.x + a.w
 		this.h = a.y - this.y - this.h; //Or h + a.y + a.h
-	}
+	};
 
 	this.deconcat = function (a) {
 		this.w = (a.x - this.x) / 2; //(a.x + a.w)/2
 		this.h = (a.y - this.y) / 2; //(a.y + a.h)/2
-	}
+	};
 
 	this.draw = function () {
 		
-	}
+	};
 
 	this.getPerimeter = function () {
 		return 2 * this.w + 2*this.h
-	}
+	};
 
 	this.getArea = function () {
 		return this.w * this.h
-	}
+	};
 
 	this.getDiag = function () { //Diagnal
 		return Math.sqrt(Math.pow(this.w, 2) + Math.pow(this.h, 2))
@@ -4094,15 +4107,15 @@ function Circ (px, py, pr, b, v) { //Circle
 	
 	this.offset = function (s) {
 		return (s === "l")?  this.x - this.r: ((s === "r")? this.x + this.r: ((s === "u")? this.y - this.r: this.y + this.r))
-	}
+	};
 	
 	this.equals = function (a) {
 		return this.x === a.x && this.y === a.y && this.r === a.r && this.border === a.border && this.vel.equals(a.vel)
-	}
+	};
 	
 	this.toString = function () {
 		return "Circ(x = " + this.x + ", y = " + this.y + ", radius = " + this.r + ", velocity = " + this.vel.toString() + ")"
-	}
+	};
 	
 	this.hit = function (obj, s) { //More like a getHit(obj) but for also circle/circle situations
 		if (obj.hit(this, "")) {
@@ -4111,11 +4124,11 @@ function Circ (px, py, pr, b, v) { //Circle
 			return true
 		}
 		return false
-	}
+	};
 	
 	this.draw = function () {
 		
-	}
+	};
 	
 	this.getCircumference = function () {
 		return 2 * this.r * Math.PI
@@ -4131,7 +4144,7 @@ function Pt (px, py) { //Point
 	
 	this.equals = function (p) {
 		return this.x == p.x && this.y == p.y
-	}
+	};
 	
 	this.toString = function () {
 		return "Pt(x = " + this.x + ", y = " + this.y + ")"
@@ -4145,7 +4158,7 @@ function Line (a, b) {
 	
 	this.equals = function (l) {
 		return this.s == l.s && this.e == l.e
-	}
+	};
 	
 	this.toString = function () {
 		return "Line(start = " + this.s.toString() + ", end = " + this.e.toString() + ")"
@@ -4160,59 +4173,59 @@ function Vector (px, py) {
 	
 	this.toString = function () {
 		return "Vector(x = " + this.x + ", y = " + this.y + ")"
-	}
+	};
 	
 	this.equals = function (v) {
 		return this.x == v.x && this.y == v.y
-	}
+	};
 	
 	this.copy = function () {
 		return new Vector(this.x, this.y)
-	}
+	};
 	
 	this.normalise = function () {
 		var v = Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
 		this.x /= v;
 		this.y /= v;
-	}
+	};
 	
 	this.getNormal = function () {
 		return new Vector(this.x / Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2)), this.y / Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2)))
-	}
+	};
 	
 	this.zero = function () {
 		this.x = this.y = 0;
 		return this
-	}
+	};
 	
 	this.neg = function () {
 		this.x = -this.x;
 		this.y = -this.y;
 		return this
-	}
+	};
 	
 	this.dot = function (v) {
 		return this.x * v.x + this.y * v.y
-	}
+	};
 	
 	this.cross = function (v) {
 		return this.x * v.y-this.y * v.x
-	}
+	};
 	
 	this.lenSq = function () {
 		return Math.pow(this.x, 2) + Math.pow(this.y, 2)
-	}
+	};
 	
 	this.length = function () {
 		return Math.sqrt(this.lenSq())
-	}
+	};
 	
 	this.reflect = function (normal) { //.. on a normal
 		var n = this.normal.copy();
 		n.mult(2 * this.dot(this.normal));
 		this.sub(n);
 		return this
-	}
+	};
 	
 	this.angle = function (v) {
 		return Math.acos((this.x * v.x + this.y * v.y)/(this.length() * v.length()))
@@ -4232,7 +4245,7 @@ function Polygon (pts, b, v) {
 			if (this.points.hasOwnProperty(p) && a.points.hasOwnProperty(p)) eq = eq && this.points[p].equals(a.points[p]);
 		}
 		return eq && this.border === a.border && this.vel.equals(a.vel)
-	}
+	};
 	
 	this.toString = function () {
 		var ptStr = "[";
@@ -4241,15 +4254,15 @@ function Polygon (pts, b, v) {
 		}
 		ptStr += "]";
 		return "Polygon(points = " + ptStr + ", velocity = " + this.vel.toString() + ", border = " + this.border + ")"
-	}
+	};
 	
 	this.hit = function (obj, s) {
 		return (s === "l")?  obj.offset("l") <= this.offset("r"): ((s === "r")? obj.offset("r") >= this.offset("l"): ((s === "u")? obj.offset("u") <= this.offset("d"): ((s === "d")? obj.offset("d") >= this.offset("u"): (this.hit(obj, "l") || this.hit(obj, "r") || this.hit(obj, "u") || this.hit(obj, "d")))))
-	}
+	};
 	
 	this.copy = function () {
 		return new Polygon(this.points, this.b, this.vel)
-	}
+	};
 	
 	this.draw = function () {
 		
@@ -4363,18 +4376,18 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
 	}
 	this.setStorage = function () {
 		localStorage[this.name] = JSON.stringify(this.val)
-	}
+	};
 	this.html = complexTable(this.name, this.headerRow, this.content, this.headerCol, name);
 	this.css = "<style> * {font-family: Consolas, Segoe UI, Tahoma;} table {background: #000;}table, td, th {border: 1px solid #000; color: #000; background: #fff;} tr:nth-child(even) td, tr:nth-child(even) th{background: #eee;}</style>";
 	this.disp = function (elmId) {
 		var place = (elmId)? "#" + elmId: "body";
 		$e(place).write(this.html + this.css,true);
 		this.setStorage();
-	}
+	};
 	this.update = function () {
 		if (localStorage[this.name]) this.val = JSON.parse(localStorage[this.name]);
 		else this.setStorage()
-	}
+	};
 	this.searchAndRemove = function (vals) { //Vals = range|..
 		for (var n = 0; n < vals.length; n++) {
 			for (var i = 0; i < this.val.length; i++) {
@@ -4383,7 +4396,7 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
 				}
 			}
 		}
-	}
+	};
 	this.remove = function (xs, ys) { //Vals = range|..
 		for (var i = 0; i < xs.length; i++) {
 			for (var j = 0; j < ys.length; j++) {
@@ -4447,9 +4460,9 @@ function decrypt (txt, key) {
 				res[i + 65536] += trans(txt[j], i % 65537);
 			}
 		}
-	}
+	};
 	console.log(console.table(res));
-	return (!key)? complexTable("Decryption result for <i>" + txt + "</i>", range(-65536, 1, 65536), res, ["Key", "Result"], "decrypted_" + txt, false, Essence.css): txt + " => " + res
+	return (!key)? complexTable("Decryption result for <i>" + txt + "</i>", range(-65536, 1, 65536), res, ["Key", "Result"], "decrypted_" + txt, false, Essence.css): txt + " => " + res;
 	//simpleTable("Decryption result for <i>" + txt + "</i>", , res, "decrypt_" + txt, Essence.css)
 }
 
@@ -4620,7 +4633,7 @@ function addFav (url, title, elmId) { //Url = http://Www...." title = "My Websit
 
 function checkBrowser () {
 	this.ver = navigator.appVersion;
-	this.dom = document.getElementById? 1: 0
+	this.dom = document.getElementById? 1: 0;
 	this.ie5 = (this.ver.indexOf("MSIE 5") > -1 && this.dom)? 1: 0;
 	this.ie4 = (document.all && !this.dom)? 1: 0;
 	this.ns5 = (this.dom && parseInt(this.ver) >= 5)? 1: 0;
@@ -4702,9 +4715,9 @@ function writeMsg (msg, where) { //Type a message
 function dateTime (id) { //Display the date and time at #id
 	var date = new Date();
 	var year = date.getFullYear(), month = date.getMonth();
-	var months = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+	var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 	var d = date.getDate(), day = date.getDay(), h = date.getHours();
-	var days = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saterday");
+	var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saterday"];
 	var tt = "", GMT = date.getTimezoneOffset(), m, s;
 	if (h < 10) h = "0" + h;
 	m = date.getMinutes();
@@ -4718,7 +4731,7 @@ function dateTime (id) { //Display the date and time at #id
 	GMT = (GMT >= 0)? "GMT + "+ GMT: "GMT-"+ GMT;
 	var result = "We're " + days[day] + " " + d+" " + months[month] + " " + year + " and it's " + h+":" + m+":" + s+" " + tt + " " + GMT;
 	$e("#" + id).write(result, true);
-	setTimeout("dateTime(\"" + id + "\");",1000) 
+	setTimeout("dateTime(\"" + id + "\");",1000);
 	return true
 }
 
@@ -4743,25 +4756,25 @@ function process (name, auth, summup, ctt) {
 	//Rights/privileges ?!
 	this.update = function () {
 		if (this.author != auth || this.author === "Anonymous" || isNon(this.author)) this.sig = this.name[0] + this.name[this.name.length-1] + "-" + this.name.prod() + this.author.slice(0, 2) + "-" + getType(this.content)[0]//H4ck
-		else this.sig = this.name[0] + this.name[this.name.length-1] + this.name.prod() + this.author.slice(0, 2) + "-" + (getType(this.content))[0];
+		else this.sig = this.name[0] + this.name[this.name.length-1] + this.name.prod() + this.author.slice(0, 2) + "-" + (getType(this.content))[0];;
 		if (this.sig[this.sig.length-1] === "N") this.bitsize = 8 * conv(this.content, 10, 2).sum();
 		else if (this.sig[this.sig.length-1] === "B") this.bitsize = 8;
 		else if (this.sig[this.sig.length-1] === "A") this.bitsize = (is2dArray(this.content))? 8 * numElm(this.content): 8 * this.content.length;
 		else if (this.sig[this.sig.length-1] === "O") this.bitsize = 0;
 		else if (this.sig[this.sig.length-1] === "S") this.bitsize = 8 * this.content.length;
 		else this.bitsize = null;
-	}
+	};
 	this.update();
 	this.askPermission = function (serv) {
 		this.update();
 		serv.add(this);
-	}
+	};
 	this.destroy = function () {
 		Essence.say("The process named " + this.name + " (created by " + this.author + ") has been destroyed !", "info");
 		this.delete();
-	}
+	};
 	Essence.addProcess(this)
-}
+};
 
 function server (name, admin, type, ver, mxsz) { //Content<->> database issues to fix
 	this.name = name;
@@ -4793,9 +4806,9 @@ function server (name, admin, type, ver, mxsz) { //Content<->> database issues t
 				if (this.slots[pos] != [pcs.name, pcs.author, pcs.description, pcs.content, pcs.bitsize] && this.nb_slots < this.maxsize) { //Check if the process was added to the server
 				this.nb_slots += this.maxsize / this.nb_slots//Extend by one slot
 				this.slots[this.nb_slots] = [pcs.name, pcs.author, pcs.description, pcs.content, pcs.bitsize];
-			}
+			};
 		}
-	}
+	};
 	this.add = function (data) {
 		var pos;
 		for (var i = 0; i < this.nb_slots; i++) {
@@ -4807,16 +4820,16 @@ function server (name, admin, type, ver, mxsz) { //Content<->> database issues t
 			}
 		}
 		if (this.slots[pos] != data && this.nb_slots < this.maxsize) { //Check if the process was added to the server
-			this.nb_slots += this.maxsize / this.nb_slots //Extend by one slot
+			this.nb_slots += this.maxsize / this.nb_slots; //Extend by one slot
 			this.slots[this.nb_slots] = JSON.stringify(this);
 		}
-	}
+	};
 	this.rm = function (n) {
 		this.slots[n] = null
-	}
+	};
 	this.store = function () {
 		localStorage["server_" + this.name] = JSON.stringify(this)
-	}
+	};
 	this.update = function () {
 		if (localStorage["server_" + this.name]) {
 			this.name = localStorage["server_" + this.name].name;
@@ -4827,15 +4840,15 @@ function server (name, admin, type, ver, mxsz) { //Content<->> database issues t
 			this.slots = JSON.parse(localStorage["server_" + this.name].slots);
 			this.data = localStorage["server_" + this.name].data;
 		}else this.store()
-	}
+	};
 	this.fire = function (pcs) {
 		for (var i in this.slots) {
 			if (this.slots[i][0] == pcs.name && this.slots[i][1] == pcs.author) this.rm(i);
 		}
-	}
+	};
 	this.reset = function () {
 		for(var i in this.slots) this.rm(i)
-	}
+	};
 	Essence.addServer(this)
 }
 
@@ -4844,7 +4857,7 @@ function CECheck (id, src, sz, delay, maxDelay) { //Launch the verification of t
 	if (!src) src = "img/random2000x2000.jpg";
 	if (!sz) sz = 61784; //7.723kB -> kb
 	if (!delay) delay = 100; //ms
-	if (!maxDelay) maxDelay = 2e4
+	if (!maxDelay) maxDelay = 2e4;
 	var img = new Image();
 	$G["t1"] = new Date().getTime();
 	$G["t2"] = 0;
@@ -4864,7 +4877,7 @@ function CETimer (id, img, nb, delay, maxDelay, size) { //Connexion Evaluation T
 			$e("#" + id).write(evalDownload(size / ($G["t2"] - $G["t1"])));
 			Essence.time("Connexion: " + (size / ($G["t2"] - $G["t1"]).toNDigits(3) + " kbps"));
 		} else setTimeout("CETimer(" + id + ", " + img + ", " + nb + ", " + delay + ", " + maxDelay + ", " + size + ")", delay);
-	}
+	};
 }
 /*
 ping (ms)
@@ -4944,7 +4957,7 @@ var base64 = {
 		var gb64 = this.gb64;
 		var pads, i, b10;
 		var imax = s.length;
-		if (imax === 0) return s
+		if (imax === 0) return s;
 		if (imax % 4 != 0) throw "Cannot decode base64";
 		
 		pads = 0;
@@ -4990,7 +5003,7 @@ var base64 = {
 		
 		var imax = s.length-s.length % 3;
 		
-		if (s.length === 0) return s
+		if (s.length === 0) return s;
 		for (i = 0; i < imax; i += 3) {
 			b10 = (gb(s, i) << 16) || (gb(s, i + 1) << 8) || gb(s, i + 2);
 			x.push(alpha.charAt(b10 >> 18));
@@ -5010,7 +5023,7 @@ var base64 = {
 		}
 		return x.join("")
 	}
-}
+};
 
 //BScripts functions (info/error/...)
 function msgBox (type, title, text, isHTML, style, customIcon) {
@@ -5106,7 +5119,7 @@ function msgBox (type, title, text, isHTML, style, customIcon) {
 		ctt.innerText = text;
 	}
 	if ($e("#overlay").isEmpty()) {
-		Essence.handleError("The #overlay element is voided", "essence.js", 1336) 
+		Essence.handleError("The #overlay element is voided", "essence.js", 1336);
 		$e("#overlay").write("<div id = 'overlay'></div>", true);
 		if (!$n("#overlay")) document.body.appendChild(document.createElement("div").id = "overlay")
 	}
@@ -5151,7 +5164,7 @@ function genHash (password) { //To fix
 
 function weekDay (d) { //D must be in the form dd/mm/yyyy and it gives the day of the week of that date
 	var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], k = parseInt(d.split("/")[0]), m = parseInt(d.split("/")[1]), y = parseInt(d.split("/").last()), c;
-	c = Math.floor(y / 100) //Centery
+	c = Math.floor(y / 100); //Centery
 	y = y % 100;
 	return days[Math.round((1 + 2.6 * m - 0.2 + k + y + y / 4 + c / 4 - 2 * c) % 7)-1]
 }
@@ -5165,7 +5178,7 @@ function dayOfWeek (d) { //Daniel "Kinch" Sheppard's method
 	else cCode = 0;
 	//console.log("m = " + m[parseInt(d.split("/")[1])-1] + "\ny = " + y+"\n" + "\ncCode = " + cCode + "\nRes = " + day + m[parseInt(d.split("/")[1])-1] + y+ cCode);
 	return days[(day + m[parseInt(d.split("/")[1]) - 1] + y + cCode) % 7]
-}
+};
 
 function linearGradient (clrI, clrF, n) {
 	var i = parseInt(conv(clrI, 16)), f = parseInt(conv(clrF, 16));
@@ -5183,7 +5196,7 @@ function radialGradient (clrI, clrF, n) {
 function parseURL (p, action) { //Doing some PHP without PHP :) !!
 	var urlQuery = location.href.split("?");
 	if (urlQuery.length > 1) {
-		var urlTerms = urlQuery[1].split("&")
+		var urlTerms = urlQuery[1].split("&");
 		if (isType(p, "Array")) { //Multi parameter parsing
 			for (var j = 0; j < p.length; j++) {
 				for (var i = 0; i < urlTerms.length; i++) {
@@ -5204,8 +5217,8 @@ function parseURL (p, action) { //Doing some PHP without PHP :) !!
 }
 
 function GET (name) { //HTTP GET request, method <=> parseURL(name, function (x) {this = x})
-	if (name === (new RegExp("[?&]" + encodeURIComponent(name) + "=([^&] * )")).exec(location.search)) return decodeURIComponent(name[1])
-	return;
+	if (name === (new RegExp("[?&]" + encodeURIComponent(name) + "=([^&] * )")).exec(location.search)) return decodeURIComponent(name[1]);
+
 }
 
 function POST (path, params) { //HTTP POST request from somewhere on stackoverflow
@@ -5236,7 +5249,7 @@ function DELETE () { //HTTP DELETE request
 
 function alphabetSort (x) { //Sort alphabetically the elements in x
 	if (!x.isIterable()) throw new Error("alphabetSort cannot sort non iterable objects");
-	if (isType(x, "String")) return x.split("").quickSort().join("")
+	if (isType(x, "String")) return x.split("").quickSort().join("");
 
 	var res = x.uniform(), s = true, j = 1;
 	while (s) {
@@ -5306,8 +5319,8 @@ function timeUp (act, pref, params) { //Time how long act() will take to be full
 	act(params);
 	t2 = new Date();
 	t2 = (t2.getMinutes() * 60 + t2.getSeconds()) * 1000 + t2.getMilliseconds();
-	if (isNon(pref) || pref.slice(0, 4).toLowerCase() === "auto" || pref.slice(0, 4).toLowerCase() === "none") return (t2-t1 > 1000)? (t2-t1)/1000 + "s": (t2-t1) + "ms"
-	else if (pref.toLowerCase() === "ms" || pref.slice(0, 8).toLowerCase() === "millisec") return (t2-t1) + "ms"
+	if (isNon(pref) || pref.slice(0, 4).toLowerCase() === "auto" || pref.slice(0, 4).toLowerCase() === "none") return (t2-t1 > 1000)? (t2-t1)/1000 + "s": (t2-t1) + "ms";
+	else if (pref.toLowerCase() === "ms" || pref.slice(0, 8).toLowerCase() === "millisec") return (t2-t1) + "ms";
 	else return (t2-t1)/1000 + "s"
 }
 
@@ -5315,7 +5328,7 @@ function binarySearch (list, x) { //Find if x exist in list
 	list.quickSort();
 	var i = 2, term = list[Math.floor(list.length/i)];
 	while (term != x && i > 0) {
-		if (term === x) return true
+		if (term === x) return true;
 		else {
 			i *= 2;
 			term = term < x? list[Math.floor(list.length/i)]: list[3 * Math.floor(list.length/i)];
@@ -5361,23 +5374,24 @@ function Archive (name, data) { //Compressed data using Huffman's approach while
 		for (var i = 0; i < this.dictionnary.length; i++) {
 			this.result[i] = conv(i, 10, 2);
 		}
-	}
+	};
 
 	this.getResult = function () {
 		this.updateDict();
-		var res = "";
+		var res = this.data;
 		for (var i = 0; i < this.data.length; i++) {
-			res += this.data.replace(RegExpify(this.dictionnary[this.dictionnary.indexOf(this.data[i])]), this.result[i]);
+			console.log(i + "// " + this.dictionnary[this.dictionnary.indexOf(this.data[i])]);
+			res = res.replace(RegExpify(this.dictionnary[this.dictionnary.indexOf(this.data[i])]), this.result[i]);
 		}
 
-		return this.result + "\n" + res;
-	}
+		return res;
+	};
 	return this
 }
 
 function Machine (name, ver, cpy, type) {
 	//ver (basis) := 1: binary, 2: ternary, 3: octal, 4: decimal, 5: hexadecimal, 6: base 36 
-	this.capacity = cpy || 1024 //pow(2, 10) bits = 128B
+	this.capacity = cpy || 1024; //pow(2, 10) bits = 128B
 	this.version = ver || 5;
 	this.name = name || "Machine_" + this.version;
 	
@@ -5426,18 +5440,18 @@ function Machine (name, ver, cpy, type) {
 			case ".=": return a.concat(b);
 			default: return a + "" + b;
 		}
-	}
+	};
 	
 	this.inv = function (data) {
 		if (!isType(data, "String")) data += "";
 		for(var i = 0; i < data.length; i++) data[i] = parseInt(this.base) - 1 - parseFloat(data[i]);
 		return data
-	}
+	};
 	
 	this.memory = new Memory(this.capacity, type || "", this.name);
 	this.send = function (msg, to) {
 		POST(to, "msg=" + this.parse(msg));
-	}
+	};
 	
 	this.parse = function (data) { //Turn the machine string into a human readable one
 		if (!isType(data, "Array")) data = this.base === 2? data.divide(8): data.divide(2);
@@ -5447,8 +5461,8 @@ function Machine (name, ver, cpy, type) {
 			res += String.fromCharCode(conv(data[i], this.base));
 		}
 		Essence.say(deconvs);
-		return JSON.parse(res) //prone to errors when this.base != 16
-	}
+		return JSON.parse(res); //prone to errors when this.base != 16
+	};
 	
 	this.unparse = function (data, noArr) { //Turn the data into a machine readable string
 		var nd = JSON.stringify(data), res = "", codes = [];
@@ -5458,24 +5472,24 @@ function Machine (name, ver, cpy, type) {
 		}
 		//Essence.say("\'" + data + "\'= " + codes, "info");
 		return noArr? res: (this.base === 2? res.divide(8): res.divide(2));
-	}
+	};
 	
 	this.store = function (data) {
 		this.memory.add(this.unparse(data));
 		this.memory.save();
-	}
+	};
 	
 	this.show = function () {
 		for(var i = 0; i < this.memory.slots.length; i++) Essence.say(this.memory.slots[i]);
-	}
+	};
 
 	this.specs = function () { //Specifications about the machine
 		return "Name: " + this.name + "\nCapacity: " + this.capacity + " bits\nMemory: \n" + this.memory.toString()
-	}
+	};
 
 	this.toString = function () {
 		return "Machine("+ this.specs() + ")";
-	}
+	};
 
 	this.conv = function (data, base) {
 		return conv(data, base || 36, this.base);
@@ -5493,13 +5507,13 @@ function Memory (cpy, type, prefix) { //Stack memory
 			if (this.type === "local") localStorage.setItem(this.name + "#" + i, this.slots[i]);
 			else sessionStorage.setItem(this.name + "#" + i, this.slots[i]);
 		}
-	}
+	};
 	
 	this.remove = function (data) {
 		this.slots.remove(JSON.stringify(data));
 		if (this.type === "local") localStorage.setItem(this.getLocation(data), undefined);
 		else sessionStorage.setItem(this.getLocation(data), undefined);
-	}
+	};
 	
 	this.getLocation = function (data) { //Get the memory location of a data
 		if (this.type === "local") {
@@ -5512,7 +5526,7 @@ function Memory (cpy, type, prefix) { //Stack memory
 			}
 		}
 		return -1
-	}
+	};
 
 	this.clear = function () {
 		this.slots = new Array(this.capacity);
@@ -5526,11 +5540,11 @@ function Memory (cpy, type, prefix) { //Stack memory
 				if (i.indexOf(this.name) > -1) sessionStorage.removeItem(i);
 			}
 		}
-	}
+	};
 
 	this.add = function (data) { //Added but not saved
 		this.slots[this.free++] = JSON.stringify(data);
-	}
+	};
 	
 	this.print = function () {
 		Essence.say(this.name + "\'s slots: ", "info");
@@ -5541,14 +5555,14 @@ function Memory (cpy, type, prefix) { //Stack memory
 				Essence.say(i + ": ")
 			}
 		}
-	}
+	};
 	
 	this.pop = function () {
 		if (this.type === "local") localStorage.removeItem(this.getLocation(this.slots.last()));
 		else sessionStorage.removeItem(this.getLocation(this.slots.last()));
 		this.free--;
 		this.slots.pop();
-	}
+	};
 	
 	this.toString = function () {
 		return this.type.capitalize() + " memory " + this.name + ": " + this.slots.toStr(true)
@@ -5679,17 +5693,17 @@ function WebPage (title, name, path, author, ver, stct, type, subtitle) { //Web 
 	
 	this.word2code = function (word) {
 		switch (word.normal()) {
-			case "header": return "<header><img src='img/icon.png' /><hgroup><h1>{{title}}</h1><h3>{{subtitle}}</h3></hgroup></header>"
-			case "h-menu": return "<menu class='h-menu'><li onClick=''>{{0}}</li><li onClick=''>{{1}}</li><li onClick=''>{{2}}</li></menu>"
-			case "v-menu": return "<menu class='v-menu'><li onClick=''>{{0}}</li><li onClick=''>{{1}}</li><li onClick=''>{{2}}</li></menu>"
-			case "content": return "<div id='content'>{{content}}</div>"
-			case "aside": return "<aside>{{aside}}</aside>"
-			case "footer": return "<footer>{{footer}}</footer>"
-			case "article": return "<article id='{{article_title}}'><header>{{article_title}}</header>{{article_content}}<footer>{{article_footer}}</footer></div>"
-			case "search": return "<form action='search.php' method='post'><input type='search' name='search' /><input type='image' src='img/search.png' alt='?' /></form>"
+			case "header": return "<header><img src='img/icon.png' /><hgroup><h1>{{title}}</h1><h3>{{subtitle}}</h3></hgroup></header>";
+			case "h-menu": return "<menu class='h-menu'><li onClick=''>{{0}}</li><li onClick=''>{{1}}</li><li onClick=''>{{2}}</li></menu>";
+			case "v-menu": return "<menu class='v-menu'><li onClick=''>{{0}}</li><li onClick=''>{{1}}</li><li onClick=''>{{2}}</li></menu>";
+			case "content": return "<div id='content'>{{content}}</div>";
+			case "aside": return "<aside>{{aside}}</aside>";
+			case "footer": return "<footer>{{footer}}</footer>";
+			case "article": return "<article id='{{article_title}}'><header>{{article_title}}</header>{{article_content}}<footer>{{article_footer}}</footer></div>";
+			case "search": return "<form action='search.php' method='post'><input type='search' name='search' /><input type='image' src='img/search.png' alt='?' /></form>";
 			default: return word
 		}
-	}
+	};
 	
 	this.genTemplate = function () { //Transform the structure into a template
 		var cpnt = this.structure.split("!");
@@ -5703,7 +5717,7 @@ function WebPage (title, name, path, author, ver, stct, type, subtitle) { //Web 
 		this.template += "</table>";
 		
 		return this.template
-	}
+	};
 	
 	this.genPage = function (params) { //Transform the template into a page
 		this.page = new Template(this.title, this.name, this.template, ["title", "subtitle", "content", "aside", "footer", "0", "1", "2", "article_title", "article_content", "article_footer"]);
@@ -5728,8 +5742,8 @@ function WebApp (name, path, author, ver, stct) {
 	this.path = path || "";
 	this.version = ver || 1.0;
 	this.author = author || "Maximilian Berkmann";
-	this.dirs = ["img", "script", "style"] //All dirs which are subdirectories of the path
-	this.pages = [new WebPage(this.name, "index", this.path, this.author, this.ver, stct), new WebPage("Contact us", "contact", this.path, this.author, this.ver, stct), new WebPage("About us", "about", this.path, this.author, this.ver, stct)]
+	this.dirs = ["img", "script", "style"]; //All dirs which are subdirectories of the path
+	this.pages = [new WebPage(this.name, "index", this.path, this.author, this.ver, stct), new WebPage("Contact us", "contact", this.path, this.author, this.ver, stct), new WebPage("About us", "about", this.path, this.author, this.ver, stct)];
 
 	this.build = function () { //Generate
 		for(var i = 0; i < this.pages.length; i++) this.pages[i].genPage();
@@ -5744,11 +5758,11 @@ function virtualHistory (elm) { //State history allowing undos and redos on the 
 	
 	this.reset = function () { //Go back to the default state
 		this.src = this.DEFAULT_STATE;
-	}
+	};
 	
 	this.update = function (elm) { //Update the current state if needed
 		if (this.src != elm) this.add(elm);
-	}
+	};
 	
 	this.add = function (val) { //Add a state
 		if (isType(val, "array")) {
@@ -5758,27 +5772,27 @@ function virtualHistory (elm) { //State history allowing undos and redos on the 
 			this.states.add(this.src);
 			this.state++;
 		}
-	}
+	};
 
 	this.get = function (i) {
 		return this.states.get(i)
-	}
+	};
 
 	this.undo = function () {
 		if (this.state == 0) throw new Error("Set underflow, it's not possible to undo to a non-existent state.");
 		this.state--;
 		this.src = this.get(this.state);
-	}
+	};
 	
 	this.redo = function () {
 		if (this.state ==(this.states.size()-1)) throw new Error("Set overflow, it's not possible to redo to a non-existent state.");
 		this.state++;
 		this.src = this.get(this.state);
-	}
+	};
 	
 	this.getStates = function () {
 		return this.states.toString()
-	}
+	};
 	
 	this.isStateDefault = function () { //Check if the current state is the default
 		return this.src == this.DEFAULT_STATE
@@ -5800,7 +5814,7 @@ function Editor (id, language, prev, parser, tb) {
 	this.toolbar.for = this;
 	this.toggleLine = function (id) {
 		$e("#" + id).setCSS("background", ($e("#" + id).css("background") === "rgba(0, 0, 0, 0)")? "red": "rgba(0, 0, 0, 0)");
-	}
+	};
 	this.update = function (n) {
 		if (this.node != $n(this.id)) this.node = $n(this.id);
 		if (this.linesNode != $n(this.linesId)) this.linesNode = $n(this.linesId);
@@ -5815,48 +5829,48 @@ function Editor (id, language, prev, parser, tb) {
 		this.codeHistory.update(this.code);
 		this.toolbar.update();
 		for(i = 0; i < this.toolbar.tools.length; i++) this.toolbar.fn[i] = this[this.toolbar.tools[i]]
-	}
+	};
 	this.write = function (txt) {
 		$e(this.id).after(txt);
-		this.codeHistory.update(this.code) //To avoid adding code states that are the same even if the set will take care of duplicates
-	}
+		this.codeHistory.update(this.code); //To avoid adding code states that are the same even if the set will take care of duplicates
+	};
 	this.clear = function () {
 		$e(this.id).write("");
 		this.codeHistory.reset()
-	}
+	};
 	this.undo = function () {
 		this.codeHistory.undo();
 		$e(this.id).write(this.codeHistory.src)
-	}
+	};
 	this.redo = function () {
 		this.codeHistory.redo();
 		$e(this.id).write(this.codeHistory.src)
-	}
+	};
 	this.save = function () { //Save the actual code
 		save($e(this.id).val(), "script" + getTimestamp() + ".ws", "webscript")
-	}
+	};
 	this.select = function () {
 		this.node.select()
-	}
+	};
 	this.copy = function () {
 		copyToClipboard($e(this.id).val(), "webscript")
-	}
+	};
 	this.paste = function (override) {
 		override? $e(this.id).write(clipboardData.getData("webscript")): this.write(clipboardData.getData("webscript"))
-	}
+	};
 	this.load = function () {
 		var file = prompt("File: ", ".ws");
 		this.clear();
 		getFileContent(file);
 		$e(this.id).write($G["fct"])
-	}
+	};
 	this.generate = function () { //Save the parsed code
 		if (this.previewer) /\<\?php([\s\S] * ?)\?\>/.test($e(this.id).val())? save($e(this.previewer.id).val(true), "script" + getTimestamp() + ".php", "php"): save($e(this.previewer.id).val(true), "script" + getTimestamp() + ".html", "html");
 		else /\<\?php([\s\S] * ?)\?\>$/g.test($e(this.id).val())? save($e("#preview").val(true), "script" + getTimestamp() + ".php", "php"): save($e(prev.id).val(true), "script" + getTimestamp() + ".html", "html")
-	}
+	};
 	this.view = function () {
 		this.previewer.run($e(this.id).val(), true)
-	}
+	};
 	this.highlightSynthax = function (code, lang) { //Highlight in the corresponding language and return an HTML result
 		var res = code;
 		switch (lang.normal()) {
@@ -5874,7 +5888,7 @@ function Editor (id, language, prev, parser, tb) {
 				break;
 			case "mips": 
 				//MIPS synthax highlighting rules
-				break
+				break;
 			case "batch": 
 				//Batch synthax highlighting rules
 				break;
@@ -5894,13 +5908,13 @@ function Editor (id, language, prev, parser, tb) {
 				//XML synthax highlighting rules
 				break;
 			case "webscript": 
-				code = code.replace(/(\<|\>|\/\>)([A-Za-z] * |)(\<|\>|\/\>)/g, "<span class = 'code-tag'>$1</span>");
-				code = code.replace(/(\"|\')(. * )(\"|\')/g, "<span class = 'code-str'>$1</span>");
-				code = code.replace(/(?!\"|\')(\d + )(?!\"|\')/g, "<span class = 'code-num'>$1</span>");
+				code = code.replace(/(\<|\>|\/\>)([A-Za-z]*|)(\<|\>|\/\>)/g, "<span class = 'code-tag'>$1</span>");
+				code = code.replace(/(\"|\')(.*)(\"|\')/g, "<span class = 'code-str'>$1</span>");
+				code = code.replace(/(?!\"|\')(\d+)(?!\"|\')/g, "<span class = 'code-num'>$1</span>");
 				code = code.replace(/([\s\S] * ?)(=)/g, "<span class = 'code-attr'>$1</span>");
-				code = code.replace(/\<\! --([\s\S] * )-- \>/g, "<span class = 'code-cmt'>$1</span>");
-				code = code.replace(/\/\/(. * ?)/g, "<span class = 'code-cmt'>$1</span>");
-				code = code.replace(/=[A-Za-z0-9\.] + (| )/g, "<span class = 'code-val'>$1</span>");
+				code = code.replace(/\<\!--([\s\S]*)--\>/g, "<span class = 'code-cmt'>$1</span>");
+				code = code.replace(/\/\/(.*?)/g, "<span class = 'code-cmt'>$1</span>");
+				code = code.replace(/=[A-Za-z0-9\.]+(| )/g, "<span class = 'code-val'>$1</span>");
 				code = code.replace(/[=\{\}\[\]\(\)\;]/g, "<span class = 'code-op'>$1</span>");
 				break;
 			case "markdown": 
@@ -5920,10 +5934,10 @@ function Preview (id, language, parser, editor) {
 	this.associatedEditor = editor || new Editor();
 	this.update = function () {
 		if (this.node!=$n(this.id)) this.node = $n(this.id);
-	}
+	};
 	this.run = function (txt, parseFirst) {
 		$e(this.id).write(parseFirst? this.associatedParser.run(txt): txt, true)
-	}
+	};
 	this.viewCode = function () {
 		var win = open("", "Resulting code", "width = 800,height = 600,location = no,menubar = yes,scrollbars = yes,status = no,toolbar = yes"), code = escapeHTML($e(this.id).val(true));
 		code = code.replace(/\n/g, "<br />");
@@ -5939,53 +5953,53 @@ function Debugger (id, language) {
 	this.language = language || "none";
 	this.update = function () {
 		if (this.node != $n(this.id)) this.node = $n(this.id);
-	}
+	};
 	this.run = function () {
 		//Useful node stuff: reportValidity(), validity{}, setCustomValidity()
 	}
 }
 
-$G["lorem"] = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,"
+$G["lorem"] = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,";
 
 function Parser (from, to, customParse) {
-	this.from = from|"WebScript";
+	this.from = from || "WebScript";
 	this.to = to || "DHTML";
 	this.run = customParse || function (code) {
 		var res = code;
-		res = res.replace(/\<tab \/\>/gm, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-		res = res.replace(/\{{tab}}/gm, "\t");
-		res = res.replace(/\<info\>(. * ?)\<\/info\>/gm, "<span class = 'block info'>$1</span>");
-		res = res.replace(/\<question\>(. * ?)\<\/question\>/gm, "<span class = 'block question'>$1</span>");
-		res = res.replace(/\<error\>(. * ?)\<\/error\>/gm, "<span class = 'block error'>$1</span>");
-		res = res.replace(/\<warning\>(. * ?)\<\/warning\>/gm, "<span class = 'block warning'>$1</span>");
-		res = res.replace(/\<success\>(. * ?)\<\/success\>/gm, "<span class = 'block success'>$1</span>");
-		res = res.replace(/(\{\{)LOREM(\}\})/ig, $G["lorem"]);
-		res = res.replace(/(?:\{\{)LOREM\x7c(\d + )-(\d + )(?:\}\})/ig, $G["lorem"].chunk("$1", "$2"));
-		res = res.replace(/(?:\{\{)HW(?:\}\})/ig, "Hello World !");
-		res = res.replace(/\<icon \/\>/gm, "<img src = 'img/icon.png' class = 'icon'/>");
-		res = res.replace(/\<icon size = (?:\"|\')(\w + )(?:\"|\') \/\>/gm, "<img src = 'img/icon.png' class = 'icon' style = 'width: $1; height: $1;' />");
-		res = res.replace(/\<icon name = (?:\"|\')(\w + )(?:\"|\') \/\>/gm, "<img src = 'img/$1.png' class = 'icon' />");
-		res = res.replace(/\<(s|m|l|xs|xl):icon name = (?:\"|\')(\w + )(?:\"|\') \/\>/gm, "<img src = 'img/$2.png' class = '$1-icon' />");
-		res = res.replace(/\<js\>([\s\S] * ?)\<\/js\>/gm,"\<script type = 'text/javascript'\>$1\<\/script\>");
-		res = res.replace(/\<js src = (?:\"|\')(\w + )(?:\"|\') \/\>/gm,"\<script type = 'text/javascript'\ src = '$1'>\<\/script\>");
-		res = res.replace(/\<vb\>([\s\S] * ?)\<\/vb\>/gm, "\<script type = 'text/vbscript'\>$1\<\/script\>");
-		res = res.replace(/\<vb src = (?:\"|\')(\w + )(?:\"|\') \/\>/gm,"\<script type = 'text/vbscript'\ src = '$1'>\<\/script\>");
-		res = res.replace(/\<css\>([\s\S] * ?)\<\/css\>/gm, "<style type = 'text/css'>$1</style>");
-		res = res.replace(/\<css href = (?:\"|\')([A-Za-z_ -\.] + )(?:\"|\') \/\>/gm, "<link rel = 'stylesheet' type = 'text/css' href = '$1' />");
-		res = res.replace(/\<charset = (?:\"|\')(\w + )(?:\"|\') \/\>/gm, "<meta charset = '$1' />");
-		res = res.replace(/\<author name = (?:\"|\')(\w + )(?:\"|\') href = (?:\"|\')(\w + )(?:\"|\') \/\>/gm, "<meta name = 'author' content = '$1' /><link rel = 'author' href = '$2' />");
-		res = res.replace(/\<desc\>(. * ?)\<\/desc\>/gm, "<meta name = 'description' content = '$1' />");
-		res = res.replace(/\<copy\>(. * ?)\<\/copy\>/gm, "<meta name = 'copyrights' content = '$1' />");
-		res = res.replace(/\<lbl\>(. * ?)\<\/lbl\>/gm, "<label>$1</label>");
-		res = res.replace(/\<submit \/\>/gm, "<input type = 'submit' />");
-		res = res.replace(/\<submit val = (?:\"|\')(\w + )(?:\"|\') \/\>/gm, "<input type = 'submit' value = '$1' />");
-		res = res.replace(/\<reset \/\>/gm, "<input type = 'reset' />");
-		res = res.replace(/\<reset val = (?:\"|\')(\w + )(?:\"|\') \/\>/gm, "<input type = 'reset' value = '$1' />");
-		res = res.replace(/\<hdn name = (?:\"|\')(\w + )(?:\"|\')\>(. * ?)\<\/hdn\>/gm, "<input type = 'hidden' name = '$1' value = '$2' />");
-		res = res.replace(/\<hdn name = (?:\"|\')(\w + )(?:\"|\') id = (?:\"|\')(\w + )(?:\"|\')\>(. * ?)\<\/hdn\>/gm, "<input type = 'hidden' name = '$1' value = '$3' id = '$2' />");
-		res = res.replace(/<txt ((?:id|name|class)(\=(?:\"|\')(\w + )(?:\"|\'))(| ))\/>/gm, "<input type = 'text' />")
-		res = res.replace(/\<sql query = (?:\"|\')(. * ?)(?:\"|\') \/\>/gm, "\<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\t$r = mysqli_query($$dbc, '$1');\n\t}else printMsg('error', 'No ping');\n\?>");
-		res = res.replace(/\<sqlt table = (?:\"|\')(\w + )(?:\"|\') query = (?:\"|\')(. * ?)(?:\"|\') \/\>/gm, "\<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\techo 'Last updated at '._time().\"<br />\";selectTable($dbc, '$1', '$2');\n\t}else printMsg('error', 'No ping');\n\?>");
+		res = res.replace(/<tab \/>/gm, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+		res = res.replace(/\{\{tab}}/gm, "\t");
+		res = res.replace(/<info>(.*?)<\/info>/gm, "<span class = 'block info'>$1</span>");
+		res = res.replace(/<question>(.*?)<\/question>/gm, "<span class = 'block question'>$1</span>");
+		res = res.replace(/<error>(.*?)<\/error>/gm, "<span class = 'block error'>$1</span>");
+		res = res.replace(/<warning>(.*?)<\/warning>/gm, "<span class = 'block warning'>$1</span>");
+		res = res.replace(/<success>(.*?)<\/success>/gm, "<span class = 'block success'>$1</span>");
+		res = res.replace(/(\{\{)LOREM(}})/ig, $G["lorem"]);
+		res = res.replace(/(?:\{\{)LOREM\x7c(\d + )-(\d + )(?:}})/ig, $G["lorem"].chunk("$1", "$2"));
+		res = res.replace(/(?:\{\{)HW(?:}})/ig, "Hello World !");
+		res = res.replace(/<icon \/>/gm, "<img src = 'img/icon.png' class = 'icon'/>");
+		res = res.replace(/<icon size = (?:"|')(\w + )(?:"|') \/>/gm, "<img src = 'img/icon.png' class = 'icon' style = 'width: $1; height: $1;' />");
+		res = res.replace(/<icon name = (?:"|')(\w + )(?:"|') \/>/gm, "<img src = 'img/$1.png' class = 'icon' />");
+		res = res.replace(/<(s|m|l|xs|xl):icon name = (?:\"|\')(\w + )(?:\"|\') \/>/gm, "<img src = 'img/$2.png' class = '$1-icon' />");
+		res = res.replace(/<js>([\s\S] * ?)<\/js>/gm,"<script type = 'text/javascript'>$1<\/script>");
+		res = res.replace(/<js src = (?:\"|\')(\w + )(?:\"|\') \/>/gm,"<script type = 'text/javascript'\ src = '$1'><\/script>");
+		res = res.replace(/<vb>([\s\S] * ?)<\/vb>/gm, "<script type = 'text/vbscript'>$1<\/script>");
+		res = res.replace(/<vb src = (?:\"|\')(\w + )(?:\"|\') \/>/gm,"<script type = 'text/vbscript'\ src = '$1'><\/script>");
+		res = res.replace(/<css>([\s\S] * ?)<\/css>/gm, "<style type = 'text/css'>$1</style>");
+		res = res.replace(/<css href = (?:\"|\')([A-Za-z_ -\.] + )(?:\"|\') \/>/gm, "<link rel = 'stylesheet' type = 'text/css' href = '$1' />");
+		res = res.replace(/<charset = (?:\"|\')(\w + )(?:\"|\') \/>/gm, "<meta charset = '$1' />");
+		res = res.replace(/<author name = (?:\"|\')(\w + )(?:\"|\') href = (?:\"|\')(\w + )(?:\"|\') \/>/gm, "<meta name = 'author' content = '$1' /><link rel = 'author' href = '$2' />");
+		res = res.replace(/<desc>(.*?)<\/desc>/gm, "<meta name = 'description' content = '$1' />");
+		res = res.replace(/<copy>(.*?)<\/copy>/gm, "<meta name = 'copyrights' content = '$1' />");
+		res = res.replace(/<lbl>(.*?)<\/lbl>/gm, "<label>$1</label>");
+		res = res.replace(/<submit \/>/gm, "<input type = 'submit' />");
+		res = res.replace(/<submit val = (?:\"|\')(\w + )(?:\"|\') \/>/gm, "<input type = 'submit' value = '$1' />");
+		res = res.replace(/<reset \/>/gm, "<input type = 'reset' />");
+		res = res.replace(/<reset val = (?:\"|\')(\w + )(?:\"|\') \/>/gm, "<input type = 'reset' value = '$1' />");
+		res = res.replace(/<hdn name = (?:\"|\')(\w + )(?:\"|\')>(.*?)<\/hdn>/gm, "<input type = 'hidden' name = '$1' value = '$2' />");
+		res = res.replace(/<hdn name = (?:\"|\')(\w + )(?:\"|\') id = (?:\"|\')(\w + )(?:\"|\')>(.*?)<\/hdn>/gm, "<input type = 'hidden' name = '$1' value = '$3' id = '$2' />");
+		res = res.replace(/<txt ((?:id|name|class)(\=(?:\"|\')(\w + )(?:\"|\'))(| ))\/>/gm, "<input type = 'text' />");
+		res = res.replace(/<sql query = (?:\"|\')(.*?)(?:\"|\') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\t$r = mysqli_query($$dbc, '$1');\n\t}else printMsg('error', 'No ping');\n\?>");
+		res = res.replace(/<sqlt table = (?:\"|\')(\w + )(?:\"|\') query = (?:\"|\')(.*?)(?:\"|\') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\techo 'Last updated at '._time().\"<br />\";selectTable($dbc, '$1', '$2');\n\t}else printMsg('error', 'No ping');\n\?>");
 		return res
 	}
 }
@@ -6021,7 +6035,7 @@ function IDE (lang, edt, prev, ps, dbg, tb) { //Integrated Development Environme
 			this.parser.to = to;
 			this.preview.language = to;
 		}
-	}
+	};
 	this.toolbar = this.editor.toolbar;
 	this.update = function (l) {
 		this.editor.update(l);
@@ -6118,8 +6132,8 @@ function getHTTPMsg (status) { //Status: xhr.status
 function Template (name, path, txt, params, consoleSpecial) { //JavaScript templating + conversion
 	this.name = name || "Template";
 	this.path = path || this.name + ".jst";
-	this.params = params || ["name", "description", "version", "title", "path"] //{{params}}
-	this.special = ["tab", "date", "time", "timestamp", "br"] // %special%
+	this.params = params || ["name", "description", "version", "title", "path"]; //{{params}}
+	this.special = ["tab", "date", "time", "timestamp", "br"]; // %special%
 	this.specialEq = ["&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", getDate(), getTime(), getTimestamp(), "<br />"];
 	if (consoleSpecial) {
 		this.specialEq[0] = "\t";
@@ -6132,7 +6146,7 @@ function Template (name, path, txt, params, consoleSpecial) { //JavaScript templ
 		if (res.index)
 		for(i = 0; i < this.special.length; i++) res = res.replace(RegExpify("%" + this.special[i] + "%"), this.specialEq[i], " ");
 		return res
-	}
+	};
 	this.save = function (obj, name, ext) { //Save the template into a file or the converted version
 		if (obj) save(this.gen(obj), (name || this.name) + "." + (ext || ".js"), ext || "javascript");
 		else save(this.text, this.path, "javascript")
@@ -6171,11 +6185,11 @@ var Sys = { //System
 		Essence.addToPrinter("\b" + this.in.data);
 		return Essence.txt2print;
 	}
-}
+};
 
 window.onkeypress = function (keyStroke) {
 	Sys.in.record(keyStroke)
-}
+};
 
 function RegExpify (list) { //Turn an string into a regular expression
 	return new RegExp(list.replace(/[|\\{}()[\]^$+*?.:\'<>%]/g, "\\$&"), "gm");
@@ -6213,20 +6227,19 @@ function getClosest (x, opt) { //Get the closest option from itself to x
 
 function Stream (initVal, formula, nbVals) {
 	this.start = initVal || 0;
-	this.formula = formula;
+	this.formula = formula || "x + 1";
 	this.data = [this.start];
 
-	this.next = function () {
+	this.next = function () { //use PEG.js to solve the issue ?
 		this.data.push(eval(this.formula.multiReplace([
-				[/x/g, this.data.last()], [/x0/g, this.start],
-				[/x\(n-2\)/g, this.data[this.data.length - 2]],
-				[/pi/ig, Math.PI], [/e/ig, Math.E], [/sqrt(2)/ig, Math.SQRT2],
-				[/(pow|max|min)\((.*?),(| )(.*?)\)/, Math["$1"]("$2", "$3")],
-				[/(sqrt|cbrt|cos|sin|tan|acos|asin|cosh|sinh|tanh|acosh|asinh|atanh|exp|abs|)\((.*?)\)/, Math["$1"]("$2")],
-				[/(ln|log|nthroot|clampTop|clampBottom)\((.*?),(| )(.*?)\)/, window["$1"]("$2", "$3")],
-				[/(clamp)\((.*?),(| )(.*?),(| )(.*?)\)/, window["$1"]("$2", "$3", "$4")],
-			])));
-	}
+			[/x/g, this.data.last()], [/x0/g, this.start],
+			[/pi/ig, Math.PI], [/e/ig, Math.E], [/sqrt(2)/ig, Math.SQRT2],
+			[/(pow|max|min)\((.*?),(| )(.*?)\)/, "Math.$1($2, $3)"],
+			[/(sqrt|cbrt|cos|sin|tan|acos|asin|cosh|sinh|tanh|acosh|asinh|atanh|exp|abs)\((.*?)\)/, "Math.$1($2)"],
+			[/(ln|log|nthroot|clampTop|clampBottom)\((.*?),(| )(.*?)\)/, "$1($2, $3)"],
+			[/(clamp)\((.*?),(| )(.*?),(| )(.*?)\)/, "$1($2, $3, $)"],
+		])));
+	};
 
 	if (nbVals) {
 		for (var i = 1; i < nbVals; i++) this.next();
@@ -6234,5 +6247,42 @@ function Stream (initVal, formula, nbVals) {
 
 	this.toString = function () {
 		return "Stream(start=" + this.start + ", formula=" + this.formula + ", data=" + this.data.toStr(true) + ")";
+	}
+}
+
+function MultiStream (initVal, formula, nbVals) { //Stream with multiple variables
+	this.start = initVal || 0;
+	this.formula = formula || "x + y";
+	this.data = [this.start];
+	this.results = [];
+
+	this.next = function () { //use PEG.js to solve the issue ?
+		this.data.push(this.data.last().map(function (x) {
+			return x + 1;
+		}));
+		this.results.push(this.compute(this.data.last()));
+	};
+	
+	this.compute = function (data) { //Turn an expression into a number
+		return eval(this.formula.multiReplace([
+			[/x/g, data[0]], [/x0/g, this.start[0]],
+			[/y/g, data[1]], [/y0/g, this.start[1]],
+			[/z/g, data[2]], [/z0/g, this.start[2]],
+			[/pi/ig, Math.PI], [/e/ig, Math.E], [/sqrt(2)/ig, Math.SQRT2],
+			[/(pow|max|min)\((.*?),(| )(.*?)\)/, "Math.$1($2, $3)"],
+			[/(sqrt|cbrt|cos|sin|tan|acos|asin|cosh|sinh|tanh|acosh|asinh|atanh|exp|abs|e\^)\((.*?)\)/, "Math.$1($2)"],
+			[/(ln|log|nthroot|clampTop|clampBottom)\((.*?),(| )(.*?)\)/, "$1($2, $3)"],
+			[/(clamp)\((.*?),(| )(.*?),(| )(.*?)\)/, "$1($2, $3, $)"],
+		]))
+	}
+
+	this.results = [this.compute(this.start)];
+
+	if (nbVals > 1) {
+		for (var i = 1; i < nbVals; i++) this.next();
+	}
+
+	this.toString = function () {
+		return "Stream(start=" + this.start.toStr(true) + ", formula=" + this.formula + ", data=" + this.data.toStr(true) + ", results=" + this.results.toStr(true) + ")";
 	}
 }
