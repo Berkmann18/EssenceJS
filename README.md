@@ -18,13 +18,11 @@ Some ideas to add:
 -	Adding the 'APIs' (Download bar, loading bar, task progress list)
 -	Having the real-time chat feature as well as the console one
 -	code highlighting feature for editors.
--	Floating point binary representation/conversion
 -	Currency conversion
 -	Calendar
 -	Password checker
 -	History (event history, command history, viewed pages, ...)
 -	IP address getter
--	Brute force equation solver
 -	Colour.getColourName() (prototype already placed)
 -	Algebraic formula to truth table
 -	Something like Java's System.in that allows the code to grab the user's input without having to use JS prompt, contentEditable or HTML's input/textarea fields
@@ -41,7 +39,7 @@ Some ideas to add:
 -	Prim's alg
 -	Kruskal's alg
 -	More maths stuff (from the booklet or/and the Discrete Maths book) ?
--	Graph
+-	Graph (using Streams but for 2D arrays ?)
 
 To fix/continue:
 -	Path finding using A*\IDA* with Euclidian/Manhattan
@@ -60,7 +58,6 @@ To fix/continue:
 -	5x5+ support for Array.translate()
 -	Machine.parse() for other bases than base 16 which tries to get string with a code "out of the visible"
 -	msgBox()
--	spreadSort()
 -	QueueList and StackList
 -	Synthax highlighting on Editor
 -	WebAppBuilder
@@ -69,10 +66,9 @@ To fix/continue:
 -	Getting either weekDay or dayOfWeek right and deleting the other one
 -	Work on the Debugger
 -	archive.getResult()
--	Stream.next()'s RegExps
 -	InvalidParamError
 -	A(), reconPath()
--	neighbour() fixed -> Array.neighbour()
+-	floatingPtBin()
 
 ##About the future of Essence.js
 1.	Once this library is heading toward a state where having everything in one single script will no longer be good for readability and maintenance causing it to be splitted into several files (modules) which would make it less portable and slower in some cases but it will be way more organised, more readable and more maintanable.
