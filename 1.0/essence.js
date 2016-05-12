@@ -99,13 +99,23 @@ var Essence = {
 		console.log("[%c" + getTimestamp(true) + "%c] "+msg, "color: #f00;", "color: #000;", style, style0)
 	}, sayClr: function (clrs) { //Display a RGB(A) coloured console log
 		clrs.length === 4? console.log("%cr%cg%cb%ca(%c" + clrs.join(", %c") + "%c)", "color: #f00", "color: #0f0", "color: #00f", "color: #00f", "color: #000", "color: #f00", "color: #0f0", "color: #00f", "color: #00f", "color: #000"): console.log("%cr%cg%cb%c(%c" + clrs.join(", %c") + "%c)", "color: #f00", "color: #0f0", "color: #00f", "color: #00f", "color: #000", "color: #f00", "color: #0f0", "color: #00f", "color: #00f", "color: #000");
+	}, ask: function (label, callback) { //Ask something to the user
+		Sys.in.recording = true;
+		Essence.say((label || "Is there a problem") + " ? (please type in the window and not the console)", "quest");
+		while ($G["lastKeyPair"][1] != 13 && $G["lastKeyPair"][1] != 10) {
+			Essence.say("waiting for an enter");
+		} //wait for enter to be pressed
+		Sys.in.recording = false;
+		if(callback) callback(Sys.in.data.join(""));
+		return Sys.in.data.join("");
 	}
 };
 
 var $G = { //Globals won't be globals !!
 	t1: new Date(),
 	t2: 0,
-	t: null
+	t: null,
+	lastKeyPair: []
 };
 
 var $e = function (selector) { //THE selector !!
@@ -351,7 +361,7 @@ Object.prototype.hasName = function () {
 };
 
 Object.prototype.getName = function () { //Get the object's name assuming it has one
-return this.name !== undefined? this.name: this.title
+	return this.name !== undefined? this.name: this.title
 };
 
 Object.prototype.count = function (c) { //Counts how many times a character/property/number c is present in the object
@@ -389,6 +399,14 @@ Object.prototype.multiReplace = function(rules) { //Like Object.replace(...).[..
 	var res = this.replace(rules[0][0], rules[0][1]);
 	for (var i = 0; i < rules.length; i++) res = res.replace(rules[i][0], rules[i][1]);
 	return res
+};
+
+Object.prototype.toArray = function() { //Transform an object into an array
+	var res = [];
+	for (var i in this) {
+		if(this.hasOwnProperty(i)) res.push(this[i]);
+	}
+	return res;
 };
 
 Array.prototype.first = function (nval) { //Get the first element of an array
@@ -738,36 +756,37 @@ Array.prototype.maxSort = function () { //My own sorting algorithm
 	//Pre-sort some elements
 	res[0] = mn;
 	res[res.length-1] = mx;
-	if (res.length % 2 != 0) {
-		res[res.length/2] = med;
-		res[res.length/4] = q1;
-		res[3 * res.length/4] = q3;
+	if(parseInt(res.length / 2) === (res.length / 2)) res[res.length / 2] = med;
+	if(parseInt(res.length / 4) === (res.length / 4)) res[res.length / 4] = q1;
+	if(parseInt(3 * res.length / 4) === (3 * res.length / 4)) res[3 * res.length / 4] = q3;
+
+	for (var i = 1; i < this.length - 1; i++) { //Add elements in the correct order that belongs to x
+		if (this[i] === Math.floor(res[0] + i * inc)) res[i] = this[i];
+		else if (this[i] === Math.round(res[0] + i * inc)) res[i] = this[i];
+		else if (this[i] == Math.ceil(res[0] + i * inc)) res[i] = this[i];
+		else if (this[i] >= Math.floor(res[0] + i * inc) && this[i] <= Math.ceil(res[0] + i * inc)) res[i] = this[i]
 	}
-	for (var i = 1; i < this.length-1; i++) { //Add elements in the correct order that belongs to x
-		if (this[i] === Math.floor(res[0] + i*inc)) res[i] = this[i];
-		else if (this[i] === Math.round(res[0] + i*inc)) res[i] = this[i];
-		else if (this[i] == Math.ceil(res[0] + i*inc)) res[i] = this[i];
-		else if (this[i] >= Math.floor(res[0] + i*inc) && this[i]<= Math.ceil(res[0] + i*inc)) res[i] = this[i]
+	console.log("current result: " + res.toStr(true));
+	for (i = this.length - 1; i > 1; i--) { //Same thing but from the end to complete the missing ones
+		if (this[i] === Math.floor(res[res.length - 1] - i * inc) && isNon(res[i])) res[i] = this[i];
+		else if (this[i] === Math.round(res[res.length - 1] - i * inc) && isNon(res[i])) res[i] = this[i];
+		else if (this[i] === Math.ceil(res[res.length - 1] + i * inc) && isNon(res[i])) res[i] = this[i];
+		else if (this[i] >= Math.floor(res[res.length - 1] + i * inc) && this[i]<= Math.ceil(res[0] + i * inc) && isNon(res[i])) res[i] = this[i]
 	}
-	for (i = this.length-1; i > 1; i--) { //Same thing but from the end to complete the missing ones
-		if (this[i] === Math.floor(res[res.length-1]-i*inc) && isNon(res[i])) res[i] = this[i];
-		else if (this[i] === Math.round(res[res.length-1]-i*inc) && isNon(res[i])) res[i] = this[i];
-		else if (this[i] === Math.ceil(res[res.length-1] + i*inc) && isNon(res[i])) res[i] = this[i];
-		else if (this[i] >= Math.floor(res[res.length-1] + i*inc) && this[i]<= Math.ceil(res[0] + i*inc) && isNon(res[i])) res[i] = this[i]
-	}
-	for (i = 1; i < this.length-1; i++) {
+	console.log("current result: " + res.toStr(true));
+	for (i = 1; i < this.length - 1; i++) {
 		for (var j = 0; j < this.length; j++) {
-			if (this[j] === Math.floor(res[0] + i*inc)) res[i] = this[j];
-			else if (this[j] === Math.round(res[0] + i*inc)) res[i] = this[j];
-			else if (this[j] === Math.ceil(res[0] + i*inc)) res[i] = this[j];
-			else if (this[j] >= Math.floor(res[0] + i*inc) && this[j]<= Math.ceil(res[0] + i*inc)) res[i] = this[j];
+			if (this[j] === Math.floor(res[0] + i * inc)) res[i] = this[j];
+			else if (this[j] === Math.round(res[0] + i * inc)) res[i] = this[j];
+			else if (this[j] === Math.ceil(res[0] + i * inc)) res[i] = this[j];
+			else if (this[j] >= Math.floor(res[0] + i * inc) && this[j] <= Math.ceil(res[0] + i * inc)) res[i] = this[j];
 		}
 	}
 	return res
 };
 
 Array.prototype.cenSort = function (l, r) { //Centre sort (similar to QuickSort)
-	//Ignores repeated values and loose data
+	//Ignores repeated values and loose database
 	var res = new Array(this.length);
 	if (!l && !r) {
 		l = Math.floor(this.length/2);
@@ -932,7 +951,7 @@ Array.prototype.rot = function (deg) { //Rotate a matrix by n % 90 degrees. Usef
 };
 
 Array.prototype.numElm = function () { //Get the number of elements in the N-dimensional array
-	return this.toString().split(",").length
+	return this.linearise().length
 };
 
 Array.prototype.size = function (str) { //Get the w * h size of the array
@@ -959,9 +978,9 @@ Array.prototype.translate = function () {
 		}
 	}
 	if (this.size(true) === "4x4") {
-		var t = this[3].last();
-		this[3].last(this.last()[3]);
-		this.last()[3] = t
+		var t = this[2].last();
+		this[2].last(this.last()[2]);
+		this.last()[2] = t
 	}
 	return this
 };
@@ -1062,17 +1081,34 @@ Array.prototype.inv = function () { //This^-1
 };
 
 Array.prototype.mix = function () { //Mix up the array
-	var randPos = mixedRange(0, 1, this.length-1), res = [];
-	for(var i = 0; i < this.length; i++) res[i] = this[randPos[i]];
-		return res
+	var randPos = mixedRange(0, 1, this.length - 1), res = [];
+	for (var i = 0; i < this.length; i++) res[i] = this[randPos[i]];
+	return res
+};
+
+Array.prototype.littleMix = function() { //The genNearlySorted for current arrays
+	var res = [], ic;
+	if (is2dArray(this)) {
+		res = copy(this).linearise();
+		res = res.littleMix().toNcol(this.size()[1]).sanitise(getType(this[0][0])); //Assuming all cells are of the same type
+	} else {
+		ic = this.getIncrement(0);
+		for (var i = 0; i < this.length; i++) {
+			var r = randTo(ic);
+			res.push(this[i]);
+			if (i > 0 && r === 0) swap(res, i, i - 1);
+			else if (i > 1 && r === ic) swap(res, i, i - 2);
+		}
+	}
+	return res
 };
 
 Array.prototype.append = function (arr) { //Pushing every elements of the array into the current one
-	for(var i = 0; i < arr.length; i++) this.push(arr[i])
+	for (var i = 0; i < arr.length; i++) this.push(arr[i])
 };
 
 Array.prototype.preppend = function (arr) { //Unshifting every elements of the array into the current one
-	for(var i = 0; i < arr.length; i++) this.unshift(arr[i])
+	for (var i = 0; i < arr.length; i++) this.unshift(arr[i])
 };
 
 Array.prototype.unique = function () { //List all the unique values of the array
@@ -1082,10 +1118,46 @@ Array.prototype.unique = function () { //List all the unique values of the array
 	}
 	return u
 };
+
+/**
+Affects the original array
+*/
 Array.prototype.to1d = function (jointer) { //N-dimensional arrays to 1D arrays
 	var res = this;
 	for(var i = 0; i < res.length; i++) res[i] = res[i].join(jointer || "");
 	return res
+};
+
+Array.prototype.toNd = function (n) { //1D arrays to N-dimensional arrays
+	if(!n) n = 2;
+	var sz = nthroot(this.length, n, 0), res = [], k = 0; //Size of the sz**n
+	for (var i = 0; i < sz; i++) {
+		res[i] = [];
+		for (var j = 0; j < sz; j++) res[i][j] = this[k++];
+	}
+	return res;
+};
+
+Array.prototype.toNcol = function (n) { //1D arrays to N-columns arrays
+	var res = [], k = 0; //Size of the sz**n
+	for (var i = 0; i < this.length / n; i++) {
+		res[i] = [];
+		for (var j = 0; j < n; j++) res[i][j] = this[k++];
+	}
+	return res;
+};
+
+Array.prototype.toNrow = function (n) { //1D arrays to N-rows arrays
+	var res = [], k = 0; //Size of the sz**n
+	for (var i = 0; i < n; i++) {
+		res[i] = [];
+		for (var j = 0; j < this.length / n; j++) res[i][j] = this[k++];
+	}
+	return res;
+};
+
+Array.prototype.linearise = function() { //A linear 1D array
+	return this.toString().split(",");
 };
 
 Array.prototype.uniform = function (cr) { //Ensure that all elements in the array are of the same length
@@ -1175,6 +1247,13 @@ Array.prototype.neighbour = function(y, x) { //Get the neighbours of a cell
 		} catch (e) {}
 	}
 	return n;
+};
+
+Array.prototype.sanitise = function(type) { //Make sure all the cells of the array are of the right type
+	for (var i = 0; i < this.length; i++) {
+		for (var j = 0; j < this[i].length; j++) this[i][j] = name2Type(type, this[i][j]);
+	}
+	return this;
 };
 
 String.prototype.remove = function (c) { //Remove c from the string
@@ -1291,12 +1370,13 @@ String.prototype.replaceAll = function(str, nstr, sep) { //Replace every occurre
 	return sep? res.join(sep): res;
 };
 
-Number.prototype.length = function () { //Count how many digits is in x (including seperatly the decimales when there's some)
-	if ((this + "").indexOf(".") != -1) return [parseInt((this + "").split(".")[0]).length(), parseInt((this + "").split(".")[1]).length()];
+Number.prototype.length = function () { //Count how many digits is in x (including seperatly the decimals when there's some)
+	if (String(this).indexOf(".") > -1) return [parseInt(String(this).split(".")[0].length), parseInt(String(this).split(".")[1].length)];
 	var l = 0, x = this;
 	while (Math.floor(x) != 0) {
 		x /= 10;
 		l++;
+		console.log(x);
 	}
 	return l
 };
@@ -1529,11 +1609,11 @@ function isNon (val) { //Like isEmpty
 function copy (el) { //Returns a copy of an element in order to do mutation-safe operations with it
 	if (isType(el, "String") || isType(el, "Number") || isType(el, "Boolean")) return el; //As they are immutable types
 	else{
-		var clone;
+		var clone = new Object();
 		for (var i in el) {
 			if (el.hasOwnProperty(i)) clone[i] = el[i];
 		}
-		return clone
+		return isType(el, "Array")? clone.toArray(): clone;
 	}
 }
 
@@ -1749,10 +1829,10 @@ function randFloatSpread (range) { //Random float from <-range/2, range/2> inter
 }
 
 function genNearlySortedArr (n, min, max) { //Generate a nearly sorted array
-	var aI = range(n, min, max), res = [], ic;
+	var aI = range(min, 1, max).slice(0, n), res = [], ic;
 	ic = aI.getIncrement(0);
 	for (var i = 0; i < aI.length; i++) {
-		var r = rand(0, ic, true);
+		var r = randTo(ic);
 		res.push(aI[i]);
 		if (i > 0 && r === 0) swap(res, i, i-1);
 		else if (i > 1 && r === ic) swap(res, i, i-2);
@@ -1779,14 +1859,34 @@ function negateBin (bin, toArr) { //It returns the negative form of a binary num
 	return toArr? conv(dec, 10, 2).split(""): conv(dec, 10, 2)
 }
 
-function floatingPtBin (bin) {
-	//%= 5.859375 (sign) + 27.734375 (exponent) + 66.40625 (mantissa)
+function floatingPtBin (bin) { //Floating point binary to decimal number
+	//%= .05859375 (sign) + .27734375 (exponent) + .6640625 (mantissa)
 	/* Lookup table aid
 	var s = new Stream(8, "x*2", 4);
 	table(s.data.map(function (x) {
 		return [(.05859375 * x), (.27734375 * x), (.6640625 * x), (.05859375 * x) + (.27734375 * x) + (.6640625 * x)];
 	}))
 	*/
+	var s = (bin[0] === 1)? -1: 1, e, m; //sign, exponent, mantissa
+	switch(bin.length) {
+		case 8:
+			e = ((bin[1] === 1)? 1: -1) * conv(bin.get(2, 3), 2);
+			m = bin.get(4);
+			m = m[0] * Math.pow(2, -1) + m[1] * Math.pow(2, -2) + m[2] * Math.pow(2, -3) + m[3] * Math.pow(2, -4);
+			break;
+		case 16:
+
+			break;
+		case 32:
+
+			break;
+		case 64:
+
+			break;
+		default:
+			throw new Error("Unvalid binary number");
+	}
+	return s * Math.pow(2, e) * m;
 }
 
 function min2dec (min) { //Minute to decimal
@@ -2605,7 +2705,7 @@ function Item (name, cat, price, amr, nb) { //An item like the ones that can be 
 	this.firstMade = new Date().toLocaleString();
 	
 	this.dublicate = function (n, dest) {
-		for(var i = 0; i < n; i++) dest.push(new Item(this.name, this.category, this.price, this.ageMinRequired, this.quantity));
+		for (var i = 0; i < n; i++) dest.push(new Item(this.name, this.category, this.price, this.ageMinRequired, this.quantity));
 	};
 	this.remove = function (dest) {
 		dest.remove(this)
@@ -2620,7 +2720,7 @@ function Item (name, cat, price, amr, nb) { //An item like the ones that can be 
 	return this
 };
 
-function range (min, inc, max) { //Matlab min:inc:max range
+function range (min, inc, max, nbDec) { //Matlab min:inc:max range
 	var val = [], n = 0;
 	if (min && !inc && !max && max != 0) return range(0, 1, min);
 	else if (min && inc && !max && max != 0) return range(0, inc, min);
@@ -2628,9 +2728,9 @@ function range (min, inc, max) { //Matlab min:inc:max range
 	if (!inc) inc = 1;
 	if (!max) max = 100;
 	if (inc > 0) { //Ascending order
-		for(var i = min; i <= max; i += inc) val[n++] = i;
+		for (var i = min; i <= max; i += inc) val[n++] = Number(i).toNDec(nbDec);
 	} else { //Descending order
-		for(i = min; i >= max; i += inc) val[n++] = i;
+		for (i = min; i >= max; i -= inc) val[n++] = Number(i).toNDec(nbDec);
 	}
 	return val
 }
@@ -2638,9 +2738,9 @@ function range (min, inc, max) { //Matlab min:inc:max range
 function range2Base (min, inc, max, b) { //Same as range(...) but to the base b
 	var val = [], n = 0;
 	if (inc > 0) {
-		for(var i = min; i <= max; i += inc) val[n++] = conv(i, 10, b);
+		for (var i = min; i <= max; i += inc) val[n++] = conv(i, 10, b);
 	} else {
-		for(i = min; i >= max; i += inc) val[n++] = conv(i, 10, b);
+		for (i = min; i >= max; i += inc) val[n++] = conv(i, 10, b);
 	}
 	return val
 }
@@ -4319,12 +4419,12 @@ function colTable (caption, headerCols, cols, id, split, style) {
 		} else tab += "<td>" + cols[i] + "</td>";
 		tab += "</tr>"
 	}
-	tab += "</table><style> table{background: #000;}table, td, th {border: 1px solid #000; color: #000; background: #fff;} tr:nth-child(even) td{background: #ddd;} tr td:hover{background: #bbb;}";
+	tab += "</table><style>table{background: #000;}table, td, th{border: 1px solid #000; color: #000; background: #fff;}tr:nth-child(even) td{background: #ddd;}tr td:hover{background: #bbb;}";
 	return tab
 }
 
 function complexTable (caption, headerRows, rows, headerCols, id, split, style) { //Mix of the column and row tables
-	var tab = (caption)? "<table id = " + id + " style = " + style + " cellspacing = 0 cellpadding = 2><caption>" + caption + "</caption>": "<table><tr><td></td>";
+	var tab = (caption)? "<table id=" + id + " style=" + style + " cellspacing=0 cellpadding=2><caption>" + caption + "</caption>": "<table><tr><td></td>";
 	for(var i = 0; i < headerCols.length; i++) tab += "<th>" + headerCols[i] + "</th>";
 	tab += "</tr>";
 	for (i = 0; i < rows.length; i++) {
@@ -4336,12 +4436,12 @@ function complexTable (caption, headerRows, rows, headerCols, id, split, style) 
 		} else tab += "<td>" + rows[i] + "</td></tr>";
 		tab += "</tr>";
 	}
-	tab += "</table><style > table{background: #000;}table, td, th {border: 1px solid #000; color: #000; background: #fff;} tr:nth-child(even) td{background: #ddd;} tr td:hover{background: #bbb;}</style>";
+	tab += "</table><style>table{background: #000;}table, td, th{border: 1px solid #000; color: #000; background: #fff;}tr:nth-child(even) td{background: #ddd;}tr td:hover{background: #bbb;}</style>";
 	return tab
 }
 
 function colourTable (caption, cols, clrs, id, split, style) { //A table with colored empty cells
-	var tab = (caption)? "<table id = " + id + " style = " + style + " cellspacing = 0 cellpadding = 2><caption>" + caption + "</caption>": "<table>";
+	var tab = (caption)? "<table id=" + id + " style=" + style + " cellspacing=0 cellpadding=2><caption>" + caption + "</caption>": "<table>";
 	if (cols) {
 		tab += "<tr>";
 		for(var i = 0; i < cols.length; i++) tab += "<th>" + cols[i] + "</th>";
@@ -4350,12 +4450,22 @@ function colourTable (caption, cols, clrs, id, split, style) { //A table with co
 	for (i = 0; i < clrs.length; i++) {
 		tab +="<tr>";
 		if (split) {
-			for(var j = 0; j < clrs[i].length; j++) tab += isValid(clrs[i][j], "color")? "<td style = 'background:" + clrs[i][j] + ";'><br /></td>": "<td>" + clrs[i][j] + "</td>";
-		} else tab += "<td style = 'background:" + clrs[i] + ";'><br /></td>";
+			for(var j = 0; j < clrs[i].length; j++) tab += isValid(clrs[i][j], "color")? "<td style='background:" + clrs[i][j] + ";'><br /></td>": "<td>" + clrs[i][j] + "</td>";
+		} else tab += "<td style='background:" + clrs[i] + ";'><br /></td>";
 		tab +="</tr>"
 	}
-	tab += "</table><style > table{background: #000;}table, td, th {border: 1px solid #000; color: #000; background: #fff;} tr:nth-child(even) td{background: #ddd;} tr td:hover{background: #bbb;}</style>";
+	tab += "</table><style>table{background: #000;}table, td, th{border: 1px solid #000; color: #000; background: #fff;}tr:nth-child(even) td{background: #ddd;}tr td:hover{background: #bbb;}</style>";
 	return tab
+}
+
+function tableCompare(a, b, toHTML) { //Compare two matrices and display a table with all the different elements
+	if(a.size(true) != b.size(true)) throw new Error("You can't compare two matrices of different sizes");
+	var res = copy(a);
+	for (var i = 0; i < res.length; i++) {
+		for (var j = 0; j < res[i].length; j++) res[i][j] = (a[i][j] === b[i][j])? "": b[i][j];
+	}
+	toHTML? println(simpleTable("Comparison", res)): console.table(res);
+	return res;
 }
 
 function database (name, headR, cells, headC, admin, ver) { //Local database
@@ -4759,7 +4869,7 @@ function process (name, auth, summup, ctt) {
 		else this.sig = this.name[0] + this.name[this.name.length-1] + this.name.prod() + this.author.slice(0, 2) + "-" + (getType(this.content))[0];;
 		if (this.sig[this.sig.length-1] === "N") this.bitsize = 8 * conv(this.content, 10, 2).sum();
 		else if (this.sig[this.sig.length-1] === "B") this.bitsize = 8;
-		else if (this.sig[this.sig.length-1] === "A") this.bitsize = (is2dArray(this.content))? 8 * numElm(this.content): 8 * this.content.length;
+		else if (this.sig[this.sig.length-1] === "A") this.bitsize = (is2dArray(this.content))? 8 * this.content.numElm(): 8 * this.content.length;
 		else if (this.sig[this.sig.length-1] === "O") this.bitsize = 0;
 		else if (this.sig[this.sig.length-1] === "S") this.bitsize = 8 * this.content.length;
 		else this.bitsize = null;
@@ -5218,7 +5328,6 @@ function parseURL (p, action) { //Doing some PHP without PHP :) !!
 
 function GET (name) { //HTTP GET request, method <=> parseURL(name, function (x) {this = x})
 	if (name === (new RegExp("[?&]" + encodeURIComponent(name) + "=([^&] * )")).exec(location.search)) return decodeURIComponent(name[1]);
-
 }
 
 function POST (path, params) { //HTTP POST request from somewhere on stackoverflow
@@ -5586,7 +5695,6 @@ function evtLog (event) { //Event log
 - SynthaxError: instance representing a syntax error that occurs while parsing code in eval()
 - TypeError: instance representing an error that occurs when a variable or parameter is not of a valid type
 - URIError: instance representing an error that occurs when encodeURI() or decodeURI() are passed invalid parameters
-
 function MyError(message) { //From Mozilla ?
   this.name = 'MyError';
   this.message = message || 'Default Message';
@@ -6156,18 +6264,17 @@ function Template (name, path, txt, params, consoleSpecial) { //JavaScript templ
 var Sys = { //System
 	in: {
 		recording: false,
-	record: function (keyStroke) { //Record the user input
-		if (this.recording) this.data.push(getKey(keyStroke)[0]);
-	},
-	startRecording: function (keyStroke) {
-		this.recording = true;
-		this.record(keyStroke);
-	},
-	stopRecording: function (slot) {
-		this.recording = false;
-		return this.data.last()
-	},
-		data: []//Slot data
+		record: function (keyStroke) { //Record the user input
+			if (this.recording) this.data.push(getKey(keyStroke)[0]);
+		},
+		startRecording: function (keyStroke) {
+			this.recording = true;
+			this.record(keyStroke);
+		},
+		stopRecording: function (slot) {
+			this.recording = false;
+			return this.data.last()
+		}, data: []//Slot data containing the data typed in the window and not the console
 	},
 	log: function (data) {
 		console.log("[System]  " + data);
@@ -6184,11 +6291,14 @@ var Sys = { //System
 	out: function () {
 		Essence.addToPrinter("\b" + this.in.data);
 		return Essence.txt2print;
+	}, toString: function () {
+		return "[object System]";
 	}
 };
 
 window.onkeypress = function (keyStroke) {
 	Sys.in.record(keyStroke)
+	$G["lastKeyPair"] = getKey(keyStroke);
 };
 
 function RegExpify (list) { //Turn an string into a regular expression
@@ -6269,10 +6379,10 @@ function MultiStream (initVal, formula, nbVals) { //Stream with multiple variabl
 			[/y/g, data[1]], [/y0/g, this.start[1]],
 			[/z/g, data[2]], [/z0/g, this.start[2]],
 			[/pi/ig, Math.PI], [/e/ig, Math.E], [/sqrt(2)/ig, Math.SQRT2],
-			[/(pow|max|min)\((.*?),(| )(.*?)\)/, "Math.$1($2, $3)"],
+			[/(pow|max|min)\((.*?),(| )(.*?)\)/, "Math.$1($2, $3)"], //fails on first occurrence
 			[/(sqrt|cbrt|cos|sin|tan|acos|asin|cosh|sinh|tanh|acosh|asinh|atanh|exp|abs|e\^)\((.*?)\)/, "Math.$1($2)"],
 			[/(ln|log|nthroot|clampTop|clampBottom)\((.*?),(| )(.*?)\)/, "$1($2, $3)"],
-			[/(clamp)\((.*?),(| )(.*?),(| )(.*?)\)/, "$1($2, $3, $)"],
+			[/(clamp)\((.*?),(| )(.*?),(| )(.*?)\)/, "$1($2, $3, $4)"]
 		]))
 	}
 
@@ -6285,4 +6395,112 @@ function MultiStream (initVal, formula, nbVals) { //Stream with multiple variabl
 	this.toString = function () {
 		return "Stream(start=" + this.start.toStr(true) + ", formula=" + this.formula + ", data=" + this.data.toStr(true) + ", results=" + this.results.toStr(true) + ")";
 	}
+}
+
+function Graph (formula, dims, lbls, name, precision) { //N-dimensional graph
+	this.labels = lbls || ["x", "y"];
+	this.name = name || "Graph";
+	this.dimension = dims || new Array(this.labels.length).fill(50);
+	this.equation = new Equation(formula); //y=...
+	// this.stream = new Stream(0, this.formula.split("=")[1], this.dimension[0]);
+	this.data = range(0, precision, this.dimension[0], precision.length()[1]);
+	for (var i = 0; i < this.data.length; i++) this.data[i] = [this.data[i], this.equation.compute({x: this.data[i]})];
+
+	this.toString = function () {
+		return "Graph(name=" + this.name + ", labels=" + this.labels.toStr(true) + ", dimension=" + this.dimension + ", this.formula=" + this.formula + ", data=" + this.data + ")";
+	}
+
+	return this;
+}
+
+function Equation (formula) { //Single parametric equations
+	this.formula = formula.normal() || "y=x";
+	this.leftSide = this.formula.split("=")[0];
+	this.rightSide = this.formula.split("=")[1];
+	this.compute = function (data) {
+		return eval(this.rightSide.multiReplace([
+			[/x/g, data.x || 0], [/y/g, data.y || 0], [/z/g, data.z || 0],
+			[/pi/ig, Math.PI], [/e/ig, Math.E], [/sqrt(2)/ig, Math.SQRT2],
+			[/(pow|max|min)\((.*?),(.*?)\)/, "Math.$1($2, $3)"], //fails on first occurrence
+			[/(sqrt|cbrt|cos|sin|tan|acos|asin|cosh|sinh|tanh|acosh|asinh|atanh|exp|abs|e\^)\((.*?)\)/, "Math.$1($2)"],
+			[/(ln|log|nthroot|clampTop|clampBottom)\((.*?),(.*?)\)/, "$1($2, $3)"],
+			[/(clamp)\((.*?),(.*?),(.*?)\)/, "$1($2, $3, $4)"]
+		]))
+	}
+
+	this.toString = function () {
+		return "Equation(" + this.formula + ")";
+	}
+}
+
+function name2Type(name, param) { //Name of a type to the type itself
+	switch(name) {
+		case "Number": return Number(param);
+		case "String": return String(param);
+		case "Boolean": return Boolean(param);
+		case "Function": return Function(param);
+		case "Object": return Object(param);
+		case "Date": return Date(param);
+		case "Array": return Array(param);
+		case "RegExp": return RegExp(param);
+		case "Error": return Error(param);
+		case "File": return File(param);
+		case "URL": return URL(param);
+		case "FileReader": return FileReader(param);
+		case "FileWriter": return FileWriter(param);
+		case "Blob": return Blob(param);
+		case "Element": return Element(param);
+		case "Person": return Person(param);
+		case "Item": return Item(param);
+		case "Colour": return Colour(param);
+		case "LinkedList": return LinkedList(param);
+		case "TreeNode": return TreeNode(param);
+		case "Node": return Node(param);
+		case "PathNode": return PathNode(param);
+		case "NTreeNode": return NTreeNode(param);
+		case "Set": return Set(param);
+		case "SortedSet": return SortedSet(param);
+		case "Stack": return Stack(param);
+		case "StackArray": return Stack(param);
+		case "StackList": return StackList(param);
+		case "Queue": return Queue(param);
+		case "QueueArray": return QueueArray(param);
+		case "QueueList": return QueueList(param);
+		case "Shape": return Shape(param);
+		case "Box": return Box(param);
+		case "AABB": return AABB(param);
+		case "Circ": return Circ(param);
+		case "Pt": return Pt(param);
+		case "Line": return Line(param);
+		case "Vector": return Vector(param);
+		case "Polygon": return Polygon(param);
+		case "database": return database(param);
+		case "process": return process(param);
+		case "server": return server(param);
+		case "Archive": return Archive(param);
+		case "Machine": return Machine(param);
+		case "Memory": return Memory(param);
+		case "WebPage": return WebPage(param);
+		case "WebApp": return WebApp(param);
+		case "virtualHistory": return virtualHistory(param);
+		case "Editor": return Editor(param);
+		case "Preview": return Preview(param);
+		case "Debugger": return Debugger(param);
+		case "Parser": return Parser(param);
+		case "Toolbar": return Toolbar(param);
+		case "IDE": return IDE(param);
+		case "Template": return Template(param);
+		case "Stream": return Stream(param);
+		case "MultiStream": return MultiStream(param);
+		default: return name;
+	}
+}
+
+function Permutation(data) {
+	console.log("data=" + data);
+	console.log("->" + data.get(-1));
+	var perm = [data];
+	perm.append((data.length > 1)? Permutation(data.get(-1)): data);
+	console.log("perm=" + perm);
+	return perm;
 }
