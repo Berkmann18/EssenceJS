@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * This is the main object of the library
+ * @description @description This is the main object of the library
  * @type {{version: string, author: string, description: string, source: string, element: $n, handleError: Essence.handleError, say: Essence.say, css: string, applyCSS: Essence.applyCSS, d2r: number, r2d: number, addCSS: Essence.addCSS, addJS: Essence.addJS, update: Essence.update, eps: number, emptyDoc: Essence.emptyDoc, editor: Essence.editor, processList: *[], global: {t1: Date, t2: number, t: null, lastKeyPair: Array}, addProcess: Essence.addProcess, processSize: number, erverList: *[], addServer: Essence.addServer, serverSize: number, toString: Essence.toString, txt2print: string, addToPrinter: Essence.addToPrinter, print: Essence.print, preInit: Essence.preInit, init: Essence.init, time: Essence.time, sayClr: Essence.sayClr, ask: Essence.ask}}
  * @this Essence
  * @license MIT
@@ -117,7 +117,7 @@ var Essence = {
 };
 
 /**
- * Globals won't be globals !!
+ * @description Globals won't be globals !!
  * @type {{t1: Date, t2: number, t: null, lastKeyPair: Array}}
  */
 var $G = {
@@ -128,19 +128,19 @@ var $G = {
 };
 
 /**
- * Element selector
+ * @description Element selector
  * @param {string} selector A CSS selector
- * @returns {Element}
+ * @returns {Element} Element
  */
 var $e = function (selector) { //THE selector !!
 	return new Element(selector)
 };
 
 /**
- * Element
+ * @description Element
  * @param {string} selector A CSS selector
  * @this Element
- * @returns {Element}
+ * @returns {Element} Element object
  * @constructor
  */
 function Element (selector) { //The element object
@@ -353,16 +353,16 @@ function Element (selector) { //The element object
 };
 
 /**
- * Element's node
+ * @description Element's node
  * @param {string} selector A CSS selector
- * @returns {Element|*}
+ * @returns {HTMLElement|*} Element node
  */
 function $n (selector) { //To get directly the node without having to use $e(selector).node
 	return $e(selector).node
 }
 
 /**
- * Include an external file/resource as a child of the document
+ * @description Include an external file/resource as a child of the document
  * @param {string} file Filename
  * @param {string} [type="link"] Type of the file
  */
@@ -376,7 +376,7 @@ function include (file, type) {
 }
 
 /**
- * Print onto something
+ * @description Print onto something
  * @param {*} st Data to be printed
  * @param {boolean} [isHTML=false] Has to be formatted as an HTML code or not
  * @param {string} [sw="body"] Place to print $st
@@ -387,7 +387,7 @@ function print (st, isHTML, sw) {
 }
 
 /**
- * Print-line onto something
+ * @description Print-line onto something
  * @param {*} st Data to be printed
  * @param {string} [sw="body"] Place to print $st
  */
@@ -398,28 +398,28 @@ function println (st, sw) {
 
 //DOM object modifications
 /**
- * Name checker
+ * @description Name checker
  * @this Object
- * @returns {boolean}
+ * @returns {boolean} Presence of a name/title in the object
  */
 Object.prototype.hasName = function () {
 	return this.name !== undefined || this.title !== undefined
 };
 
 /**
- * Get the object's name assuming it has one
+ * @description Get the object's name assuming it has one
  * @this Object
- * @returns {*|string|string|string}
+ * @returns {string} Name/title of the object
  */
 Object.prototype.getName = function () {
 	return this.name !== undefined? this.name: this.title
 };
 
 /**
- * Counts how many times a character/property/number c is present in the object
+ * @description Counts how many times a character/property/number c is present in the object
  * @param {(string|number|boolean)} c Character data
  * @this Object
- * @returns {number} n Number of occurrences of $c in the object
+ * @returns {number} Number of occurrences of $c in the object
  */
 Object.prototype.count = function (c) {
 	var n = 0;
@@ -430,10 +430,10 @@ Object.prototype.count = function (c) {
 };
 
 /**
- * //Get all the positions of a character/property/number c
+ * @description //Get all the positions of a character/property/number c
  * @param {(string|number)} c Character/property/number
  * @this Object
- * @returns {number[]} pos Array of positions
+ * @returns {number[]} Array of positions
  */
 Object.prototype.positions = function (c) {
 	var pos = [];
@@ -444,16 +444,16 @@ Object.prototype.positions = function (c) {
 };
 
 /**
- * Check if an object is iteral hence if it's a string/array/object
+ * @description Check if an object is iteral hence if it's a string/array/object
  * @this Object
- * @returns {boolean}
+ * @returns {boolean} Iterability check result
  */
 Object.prototype.isIterable = function () {
 	return isType(this, "String") || isType(this, "Array") || isType(this, "Object")
 };
 
 /**
- * Self-destruction of the object
+ * @description Self-destruction of the object
  * @this Object
  * @source https://Google.github.io/styleguide/javascriptguide.xml?showone=delete#delete
  */
@@ -462,20 +462,20 @@ Object.prototype.delete = function () {
 };
 
 /**
- * Equality check
+ * @description Equality check
  * @param {*} obj Object to compared to
  * @this Object
- * @returns {boolean}
+ * @returns {boolean} Equality check result
  */
 Object.prototype.equals = function(obj) { //Check if obj and the current object are the same
 	return this.toString() === obj.toString() || this.toLocaleString() === obj.toLocaleString()
 };
 
 /**
- * Multiple replacement
- * @param {Array[][]} rules Rules containing (RegExp|String)/(RegExp|String) pairs
+ * @description Multiple replacement
+ * @param {Array[]} rules Rules containing (RegExp|String)/(RegExp|String) pairs
  * @this Object
- * @returns {XML|string|void|*} res Resulting object
+ * @returns {*} Resulting object
  */
 Object.prototype.multiReplace = function(rules) {
 	var res = this.replace(rules[0][0], rules[0][1]);
@@ -484,9 +484,9 @@ Object.prototype.multiReplace = function(rules) {
 };
 
 /**
- * Generates an array representation of the object
+ * @description Generates an array representation of the object
  * @this Object
- * @returns {Array} res Resulting array
+ * @returns {Array} Resulting array
  */
 Object.prototype.toArray = function() {
 	var res = [];
@@ -497,10 +497,10 @@ Object.prototype.toArray = function() {
 };
 
 /**
- * Comparison check
+ * @description Comparison check
  * @param {*} obj Object to be compared to
  * @this Object
- * @returns {number|boolean}
+ * @returns {number|boolean} Comparison check result
  */
 Object.prototype.compareTo = function(obj) {
 	if(getType(this) != getType(obj)) return false;
@@ -510,48 +510,48 @@ Object.prototype.compareTo = function(obj) {
 };
 
 /**
- * Get the first element of the array
+ * @description Get the first element of the array
  * @param {*} [nval] New value of the first element
  * @this Array
- * @returns {*}
+ * @returns {*} First element
  */
 Array.prototype.first = function (nval) {
 	return !isNon(nval)? this[0] = nval: this[0]
 };
 
 /**
- * Get the last element of the array
+ * @description Get the last element of the array
  * @param {*} [nval] New value of the last element
  * @this Array
- * @returns {*}
+ * @returns {*} Last element
  */
 Array.prototype.last = function (nval) {
-	return !isNon(nval)? this[this.length-1] = nval: this[this.length-1]
+	return !isNon(nval)? this[this.length-1] = nval: this[this.length - 1]
 };
 
 /**
- * Returns the last index of the array
+ * @description Returns the last index of the array
  * @this Array
- * @returns {number}
+ * @returns {number} Last index
  */
 Array.prototype.lastIndex = function () {
 	return this.length - 1
 };
 
 /**
- * Returns the middle index of the array
+ * @description Returns the middle index of the array
  * @param {boolean} [under=false] Indicates if we want the value under the virtual value
  * @this Arrray
- * @returns {number}
+ * @returns {number} Middle index
  */
 Array.prototype.midIndex = function (under) {
-	return under? Math.floor(this.length/2)-1: Math.floor(this.length/2)
+	return under? Math.floor(this.length / 2) - 1: Math.floor(this.length / 2)
 };
 
 /**
- * Returns the values of the array that are in an even position
+ * @description Returns the values of the array that are in an even position
  * @this Array
- * @returns {Array} e Array of elements
+ * @returns {Array} Array of elements
  */
 Array.prototype.even = function () {
 	var e = [];
@@ -560,9 +560,9 @@ Array.prototype.even = function () {
 };
 
 /**
- * Returns the values of the array that are in an odd position
+ * @description Returns the values of the array that are in an odd position
  * @this Array
- * @returns {Array} o Array of elements
+ * @returns {Array} Array of elements
  */
 Array.prototype.odd = function () {
 	var o = [];
@@ -571,11 +571,11 @@ Array.prototype.odd = function () {
 };
 
 /**
- * Get the maximum value of the array
+ * @description Get the maximum value of the array
  * @param {number} [start=0] Starting position
  * @param {number} [end=this.length-1] Ending position
  * @this Array
- * @returns {*} m Maximum value
+ * @returns {*} Maximum value
  */
 Array.prototype.max = function (start, end) {
 	var m = this[start || 0];
@@ -586,10 +586,10 @@ Array.prototype.max = function (start, end) {
 };
 
 /**
- * Get the median value of the array
+ * @description Get the median value of the array
  * @param {*} [nval] New value of the median cell
  * @this Array
- * @returns {*}
+ * @returns {*} Median
  */
 Array.prototype.median = function (nval) {
 	var arr = this.sort(function (a, b) {
@@ -600,11 +600,11 @@ Array.prototype.median = function (nval) {
 };
 
 /**
- * Get the minimum value of the array
+ * @description Get the minimum value of the array
  * @param {number} [start=0] Starting position
  * @param {number} [end=this.length-1] Ending position
  * @this Array
- * @returns {*} m Minimum value
+ * @returns {*} Minimum value
  */
 Array.prototype.min = function (start, end) {
 	var m = this[start || 0];
@@ -615,7 +615,7 @@ Array.prototype.min = function (start, end) {
 };
 
 /**
- * Shuffles the array
+ * @description Shuffles the array
  * @param {number} [n=this.length] Number of shuffles
  * @this Array
  */
@@ -624,9 +624,9 @@ Array.prototype.shuffle = function (n) {
 };
 
 /**
- * Return the length of the longest row
+ * @description Return the length of the longest row
  * @this Array
- * @returns {number} ml Max length
+ * @returns {number} Max length
  */
 Array.prototype.maxLength = function () {
 	var ml = 0;
@@ -635,9 +635,9 @@ Array.prototype.maxLength = function () {
 };
 
 /**
- * Return the length of the shortest row
+ * @description Return the length of the shortest row
  * @this Array
- * @returns {number} ml Min length
+ * @returns {number} Min length
  */
 Array.prototype.minLength = function () {
 	var ml = this[0].length;
@@ -646,10 +646,10 @@ Array.prototype.minLength = function () {
 };
 
 /**
- * fill() for 2D arrays
+ * @description fill() for 2D arrays
  * @param {*} c Data
  * @this Array
- * @return {Array} this The array post-modification
+ * @return {Array} The array post-modification
  * @constructor
  */
 Array.prototype.Fill2D = function (c) {
@@ -657,11 +657,11 @@ Array.prototype.Fill2D = function (c) {
 };
 
 /**
- * Remove a character/number/string from the array without affecting the initial one (it should !)
+ * @description Remove a character/number/string from the array without affecting the initial one (it should !)
  * @param {*} c Data to remove
  * @todo Make it so that it will affect the initial array
  * @this Array
- * @returns {Array} arr Array after the operation
+ * @returns {Array} Array after the operation
  */
 Array.prototype.remove = function (c) {
 	//Note: it will automatically remove undefined and it goes bunckers when trying to remove objects
@@ -688,7 +688,7 @@ Array.prototype.remove = function (c) {
 };
 
 /**
- * Debug an array by displaying in the console each of its elements
+ * @description Debug an array by displaying in the console each of its elements
  * @this Array
  */
 Array.prototype.debug = function () {
@@ -697,11 +697,11 @@ Array.prototype.debug = function () {
 };
 
 /**
- * Get the number of occurrences of each elements in array as well as the position(s) of each occurrences
- * @param simplified
- * @todo Fix the thingy witht the occurrences' positions not showing up
+ * @description Get the number of occurrences of each elements in array as well as the position(s) of each occurrences
+ * @param {boolean} simplified Simplify the output
+ * @todo Fix the thingy with the occurrences' positions not showing up
  * @this Array
- * @returns {Array} res Result
+ * @returns {Array} Result
  */
 Array.prototype.getOccurrences = function (simplified) {
 	var arr = rmDuplicates(this), res = [];
@@ -713,12 +713,12 @@ Array.prototype.getOccurrences = function (simplified) {
 };
 
 /**
- * Replace a character with an other
- * @param Ci
- * @param Cf
- * @param toStr
+ * @description Replace a character with an other
+ * @param {*} Ci Initial character
+ * @param {*} Cf Final character
+ * @param {boolean} toStr String representation
  * @this Array
- * @returns {Array|string}
+ * @returns {Array|string} Result
  */
 Array.prototype.replace = function (Ci, Cf, toStr) {
 	for (var i = 0; i < this.length; i++) {
@@ -728,11 +728,11 @@ Array.prototype.replace = function (Ci, Cf, toStr) {
 };
 
 /**
- * Sum of every elements of the array
+ * @description Sum of every elements of the array
  * @param {number} [start=0] Starting position
  * @param {number} [end=this.length-1] Ending position
  * @this Array
- * @returns {number} s Sum
+ * @returns {number} Sum
  */
 Array.prototype.sum = function (start, end) {
 	var s = 0;
@@ -743,25 +743,25 @@ Array.prototype.sum = function (start, end) {
 };
 
 /**
- * Product of every elements of the array
+ * @description Product of every elements of the array
  * @param {number} [start=0] Staring position
  * @param {number} [end=this.length-1] Ending position
  * @this Array
- * @returns {number}
+ * @returns {number} Product
  */
 Array.prototype.prod = function (start, end) {
-	var s = 0;
-	if ((!start && !end) || (start === 0 && end >= this.length - 1)) for(var i = 0; i < this.length; i++) s *= this[i];
-	else if (start && !end) for(i = start; i < this.length; i++) s *= this[i];
-	else for(i = start; i <= end; i++) s *= this[i];
-	return s
+	var p = 0;
+	if ((!start && !end) || (start === 0 && end >= this.length - 1)) for(var i = 0; i < this.length; i++) p *= this[i];
+	else if (start && !end) for(i = start; i < this.length; i++) p *= this[i];
+	else for(i = start; i <= end; i++) p *= this[i];
+	return p
 };
 
 /**
- * Sum for 2D arrays
+ * @description Sum for 2D arrays
  * @param {number[]} [start=[0, 0]] Starting position
- * @param {number[]} [end=[this.length-1, this[this.length-1].length-1] Ending positions
- * @returns {number} s Sum
+ * @param {number[]} [end=[this.length-1, this[this.length-1].length-1]] Ending positions
+ * @returns {number} Sum
  */
 Array.prototype.sum2d = function (start, end) {
 	var s = 0;
@@ -782,46 +782,48 @@ Array.prototype.sum2d = function (start, end) {
 };
 
 /**
- * Mean of each elements
+ * @description Mean of each elements
  * @param {number} [nbDec=2] Number of decimals
  * @param {number} [start=0] Starting position
  * @param {number} [end=this.length-1] Ending position
- * @returns {number}
+ * @returns {number} Mean
  */
 Array.prototype.mean = function (nbDec, start, end) {
 	if (!start) start = 0;
 	if (!end) end = this.lastIndex();
 	var sum = this.sum(start, end);
-	return (sum/(this.length - start)).toNDec(nbDec) + 0; //To avoid getting the Number object representation rather than the actual result
+	return (sum / (this.length - start)).toNDec(nbDec) + 0; //To avoid getting the Number object representation rather than the actual result
 };
 
 /**
- * Timewise (Speedcubing) average of each times
+ * @description Timewise (Speedcubing) average of each times
  * @param {number} [nbDec=2] Number of decimals
  * @param {number} [start=0] Starting positions
  * @param {number} [end=this.length-1] Ending positions
- * @returns {number}
+ * @returns {number} Average
  */
 Array.prototype.avg = function (nbDec, start, end) {
 	if (!start) start = 0;
 	if (!end) end = this.lastIndex();
 	var sum = this.sum(start, end) - this.slice(start, end + 1).max() - this.slice(start, end + 1).min();
-	return (sum/(this.length - 2 - start)).toNDec(nbDec) + 0
+	return (sum / (this.length - 2 - start)).toNDec(nbDec) + 0
 };
 
 /**
- * Variance
+ * @description Variance
  * @this Array
  * @param {number} [nbDec=2] Number of decimals
+ * @returns {number} Variance
  */
 Array.prototype.variance = function (nbDec) {
 	return (sumPow2(this, nbDec) / this.length - Math.pow(this.mean(nbDec), 2)).toNDec(nbDec)
 };
 
 /**
- * Standard deviation
+ * @description Standard deviation
  * @this Array
  * @param {number} [nbDec=2] Number of decimals
+ * @returns {number} Standard deviation
  */
 Array.prototype.stddev = function (nbDec) {
 	var stdDev = Math.sqrt(this.variance(nbDec));
@@ -829,10 +831,10 @@ Array.prototype.stddev = function (nbDec) {
 };
 
 /**
- * Get a random cell of the array
+ * @description Get a random cell of the array
  * @param {number} n Number of random elements to be returned
  * @this Array
- * @returns {*}
+ * @returns {*} Random element
  */
 Array.prototype.rand = function (n) {
 	if (n > 0) {
@@ -843,61 +845,61 @@ Array.prototype.rand = function (n) {
 };
 
 /**
- * Quartile
- * @param {number} n N-th quartile
+ * @description Quartile
+ * @param {number} n Nth quartile
  * @param {number} [nbDec=2] Number of decimals
  * @this Array
- * @returns {*}
+ * @returns {*} Nth quartile
  */
 Array.prototype.quartile = function (n, nbDec) { //Q1, Q2, Q3
 	return this.length % 2 === 0? ((this[Math.floor(n * this.length / 4) - 1] + this[Math.floor(n * this.length / 4)]) / 2).toNDec(nbDec): (this[Math.floor(n * this.length / 4)]).toNDec(nbDec)
 };
 
 /**
- * Quintile
- * @param {number} n N-th quintile
+ * @description Quintile
+ * @param {number} n Nth quintile
  * @param {number} [nbDec=2] Number of decimals
  * @this Array
- * @returns {*}
+ * @returns {*} Nth quintile
  */
 Array.prototype.quintile = function (n, nbDec) { //Q1, ..., Q4
 	return this.length % 2 === 0? ((this[Math.floor(n * this.length / 5) - 1] + this[Math.floor(n * this.length / 5)]) / 2).toNDec(nbDec): (this[Math.floor(n * this.length / 5)]).toNDec(nbDec)
 };
 
 /**
- * Decile
- * @param {number} n N-th decile
+ * @description Decile
+ * @param {number} n Nth decile
  * @param {number} nbDec Number of decimals
  * @this Array
- * @returns {*}
+ * @returns {*} Nth decile
  */
 Array.prototype.decile = function (n, nbDec) { //D1, ..., D9
 	return this.length % 2 === 0? ((this[Math.floor(n * this.length / 10) - 1] + this[Math.floor(n * this.length / 10)]) / 2).toNDec(nbDec): (this[Math.floor(n * this.length / 10)]).toNDec(nbDec)
 };
 
 /**
- * Percentile
- * @param {number} n N-th percentile
+ * @description Percentile
+ * @param {number} n Nth percentile
  * @param {number} nbDec Number of decimals
  * @this Array
- * @returns {*}
+ * @returns {*} Nth percentile
  */
 Array.prototype.percentile = function (n, nbDec) { //P1, ..., P99
 	return this.length % 2 === 0? ((this[Math.floor(n * this.length / 100) - 1] + this[Math.floor(n * this.length / 100)]) / 2).toNDec(nbDec): (this[Math.floor(n * this.length / 100)]).toNDec(nbDec)
 };
 
 /**
- * Get the average increment between the values of the array
+ * @description Get the average increment between the values of the array
  * @param {number} [nbDec=2] Number of decimals
  * @this Array
- * @returns {Number}
+ * @returns {Number} Inccrement
  */
 Array.prototype.getIncrement = function (nbDec) {
 	return nbDec == 0? parseInt(((this.max() - this.min()) / (this.length - 1))): ((this.max() - this.min()) / (this.length - 1)).toNDec(nbDec)
 };
 
 /**
- * Increment every elements by n||1
+ * @description Increment every elements by n||1
  * @param {number} [n=1] Increment value
  */
 Array.prototype.increment = function (n) {
@@ -905,25 +907,25 @@ Array.prototype.increment = function (n) {
 };
 
 /**
- * Inter Quartile Range
+ * @description Inter Quartile Range
  * @param {number} [nbDec=2] Number of decimals
  * @this Array
- * @returns {number}
+ * @returns {number} IQR
  */
 Array.prototype.iqr = function (nbDec) { //Inter-Quartile Range
 	return this.quartile(3, nbDec)-this.quartile(1, nbDec).toNDec(nbDec)
 };
 
 /**
- * Get the sub/ful-array
+ * @description Get the sub/ful-array
  * @param {number} [start=0] Starting position
  * @param {number} [end=this.length-1] Ending position
  * @this Array
- * @returns {Array} res Resulting sub-array
+ * @returns {Array} Resulting sub-array
  */
 Array.prototype.get = function (start, end) {
 	var res = [];
-	if (start < 0 && !end){
+	if (start < 0 && !end) {
 		end = start;
 		start = 0;
 	}
@@ -933,11 +935,11 @@ Array.prototype.get = function (start, end) {
 };
 
 /**
- * QuickSort adapted from https://Www.nczonline.net/blog/2012/11/27/computer-science-in-javascript-quicksort/
+ * @description QuickSort adapted from https://Www.nczonline.net/blog/2012/11/27/computer-science-in-javascript-quicksort/
  * @param {number} left Left position
  * @param {number} right Right position
  * @this Array
- * @returns {Array} this Sorted array
+ * @returns {Array} Sorted array
  */
 Array.prototype.quickSort = function (left, right) {
 	if (!left && !right) {
@@ -964,11 +966,11 @@ Array.prototype.quickSort = function (left, right) {
 };
 
 /**
- * Reverse QuickSort
+ * @description Reverse QuickSort
  * @param {number} [left=0] Left position
  * @param {number} [right=this.length-1] Right position
  * @this Array
- * @returns {Array}
+ * @returns {Array} Sorted array
  */
 Array.prototype.revSort = function (left, right) {
 	if (!left && !right) {
@@ -977,7 +979,7 @@ Array.prototype.revSort = function (left, right) {
 	}
 	var i;
 	if (this.length > 1) {
-		var pivot = this[Math.floor((right + left)/2)], j = right;
+		var pivot = this[Math.floor((right + left) / 2)], j = right;
 		i = left;
 		while (i <= j) {
 			while(this[i] > pivot) i++;
@@ -988,17 +990,17 @@ Array.prototype.revSort = function (left, right) {
 				j--;
 			}
 		}
-		if (left > i-1) this.revSort(left, i-1);
+		if (left > i-1) this.revSort(left, i - 1);
 		if (i > right) this.revSort(i, right);
 	}
 	return this
 };
 
 /**
- * BubbleSort (my version)
- * @param order
+ * @description BubbleSort (my version)
+ * @param {string|boolean} order Sorting order
  * @this Array
- * @returns {Array} this Sorted array
+ * @returns {Array} Sorted array
  */
 Array.prototype.bubbleSort = function (order) {
 	var arr = this, j = 1, s = true;
@@ -1027,7 +1029,7 @@ Array.prototype.bubbleSort = function (order) {
 			}
 			j++;
 		}
-	}else if (order == 1 || isType(order, "string") && order[0].toLowerCase() === "d") { //Descending order
+	}else if (order === 1 || isType(order, "string") && order[0].toLowerCase() === "d") { //Descending order
 		while (s) {
 			s = false;
 			for (i = 0; i <= arr.length - j; i++) {
@@ -1057,9 +1059,9 @@ Array.prototype.bubbleSort = function (order) {
 };
 
 /**
- * Brute force sort
+ * @description Brute force sort
  * @this Array
- * @returns {Array} this Sorted array
+ * @returns {Array} Sorted array
  */
 Array.prototype.bruteForceSort = function () {
 	for (var i = 0; i < this.length; i++) {
@@ -1078,9 +1080,9 @@ Array.prototype.bruteForceSort = function () {
 };
 
 /**
- * Max's Sort (mine)
+ * @description Max's Sort (mine)
  * @this Array
- * @returns {Array} this Sorted Array
+ * @returns {Array} Sorted Array
  */
 Array.prototype.maxSort = function () {
 	//Ignores repeated values and loose data
@@ -1118,10 +1120,10 @@ Array.prototype.maxSort = function () {
 };
 
 /**
- * Centre sort
+ * @description Centre sort
  * @param {number} [l=0] Left position
  * @param {number} [r=this.length-1] Right position]
- * @returns {Array}
+ * @returns {Array} Sorted array
  */
 Array.prototype.cenSort = function (l, r) {
 	//Ignores repeated values and loose database
@@ -1148,9 +1150,9 @@ Array.prototype.cenSort = function (l, r) {
 };
 
 /**
- * Set sort
+ * @description Set sort
  * @this Array
- * @returns {Array} res New array
+ * @returns {Array} New array
  */
 Array.prototype.setSort = function () { //A faster algorithm than quickSort only for integers where the extremities are known
 	var t = [], l = this.length, res = [];
@@ -1163,10 +1165,10 @@ Array.prototype.setSort = function () { //A faster algorithm than quickSort only
 };
 
 /**
- * Clean the array
+ * @description Clean the array
  * @param {boolean} [noDuplic=false] No duplicates
  * @this Array
- * @returns {Array} arr Cleaned array
+ * @returns {Array} Cleaned array
  */
 Array.prototype.clean = function (noDuplic) { //Remove undesirable items
 	var arr = [], j = 0;
@@ -1177,21 +1179,21 @@ Array.prototype.clean = function (noDuplic) { //Remove undesirable items
 };
 
 /**
- * eXtreme cleaning of the array
+ * @description eXtreme cleaning of the array
  * @this Array
- * @returns {Array} this Cleaned array
+ * @returns {Array} Cleaned array
  */
 Array.prototype.xclean = function () {
 	return this.clean(true).remove([undefined, "undefined", null, "null"]) 
 };
 
 /**
- * Substitute every elements from $s to $e with from $s to $e of the array $arr
+ * @description Substitute every elements from $s to $e with from $s to $e of the array $arr
  * @param {Array} arr Array
  * @param {number} [s=0] Starting position
  * @param {number} [e=this.length-1] Ending position
  * @this Array
- * @returns {Array}
+ * @returns {Array} Modified array
  */
 Array.prototype.chg = function(arr, s, e) {
 	s = s || 0;
@@ -1203,11 +1205,11 @@ Array.prototype.chg = function(arr, s, e) {
 };
 
 /**
- * Exchange of elements between two arrays
+ * @description Exchange of elements between two arrays
  * @param {Array} arr Array
  * @param {number} s Starting position
  * @param {number} e Ending position
- * @returns {Array} a Current resulting array
+ * @returns {Array} Current resulting array
  */
 Array.prototype.exchange = function(arr, s, e) {
 	s = s || 0;
@@ -1223,10 +1225,11 @@ Array.prototype.exchange = function(arr, s, e) {
 };
 
 /**
- * Rotate an array by $deg%90 deg
+ * @description Rotate an array by $deg%90 deg
  * @param {number} deg Degree of rotation
+ * @todo Finish the section for 4x4+ matrices
  * @this Array
- * @returns {Array} this Rotated array
+ * @returns {Array} Rotated array
  */
 Array.prototype.rot = function (deg) {
 	var tmp;
@@ -1285,8 +1288,8 @@ Array.prototype.rot = function (deg) {
 		}
 	}else if (this.numElm() === 16 && this.length === 4) { //4x4 matrix although I'm trying to make this as responsive as I get for 4x4+ matrices
 		if (deg === 90) {
-			tmp = this[0].get(-1)//Get all but the last element of the first row
-			for (var j = 0; j < 1/*this.length / 2*/; j++) { //weird error
+			tmp = this[0].get(-1); //Get all but the last element of the first row
+			for (var j = 0; j < 1/*this.length / 2*/; j++) { //Weird error
 				tmp = this[j].get(-1)
 				for (var i = 0; i < this.maxLength() - 1; i++) {
 					if(j > 0) Essence.say("#" + i);
@@ -1326,28 +1329,28 @@ Array.prototype.rot = function (deg) {
 };
 
 /**
- * Number of elements
+ * @description Number of elements
  * @this Array
- * @returns {number}
+ * @returns {number} Number of elements
  */
 Array.prototype.numElm = function () {
 	return this.linearise().length
 };
 
 /**
- * Size of the array
+ * @description Size of the array
  * @param {boolean} [str=false] String format or not
  * @this Array
- * @returns {*}
+ * @returns {string|number[]} Size
  */
 Array.prototype.size = function (str) { //Get the w * h size of the array
 	return str? this.length + "x" + this.maxLength(): [this.length, this.maxLength()]
 };
 
 /**
- * Determinant of the matrix
+ * @description Determinant of the matrix
  * @this Array
- * @returns {number} d Determinant
+ * @returns {number} Determinant
  */
 Array.prototype.det = function () {
 	var d = 0;
@@ -1359,9 +1362,9 @@ Array.prototype.det = function () {
 };
 
 /**
- * Translate the array
+ * @description Translate the array
  * @this Array
- * @returns {Array} this Translated array
+ * @returns {Array} Translated array
  */
 Array.prototype.translate = function () {
 	for (var i = 0; i < Math.round(this.length/2); i++) {
@@ -1382,9 +1385,9 @@ Array.prototype.translate = function () {
 };
 
 /**
- * Look for some $x in the array
+ * @description Look for some $x in the array
  * @param {*} x Element looked for
- * @returns {number} i Position of the element
+ * @returns {number} Position of the element
  */
 Array.prototype.lookFor = function (x) {
 	for (var i = 0; i < this.length; i++) {
@@ -1394,10 +1397,10 @@ Array.prototype.lookFor = function (x) {
 };
 
 /**
- * Divide the array into an array with n-sized cells
+ * @description Divide the array into an array with n-sized cells
  * @this Array
- * @param n
- * @returns {Array} res Resulting array
+ * @param {number} n Size of each chunks
+ * @returns {Array} Resulting array
  */
 Array.prototype.divide = function (n) {
 	var res = new Array(Math.round(this.length/n)).fill(""), k = 0;
@@ -1408,9 +1411,9 @@ Array.prototype.divide = function (n) {
 };
 
 /**
- * Adjoint of the matrix
+ * @description Adjoint of the matrix
  * @this Array
- * @returns {Array} res Adjoint matrix
+ * @returns {Array} Adjoint matrix
  */
 Array.prototype.getAdjoint = function () {
 	var m = this.translate(), res = mkArray(this.length, 2, Essence.eps);
@@ -1429,19 +1432,19 @@ Array.prototype.getAdjoint = function () {
 };
 
 /**
- * Invertibility check
+ * @description Inversibility check
  * @this Array
- * @returns {boolean}
+ * @returns {boolean} Is it inversible ?
  */
 Array.prototype.isInversible = function() { 
 	return this.det() != 0
 };
 
 /**
- * Dot product
+ * @description Dot product
  * @param {number} a Scalar
  * @this Array
- * @returns {Array} res Resulting array
+ * @returns {Array} Resulting array
  */
 Array.prototype.dotProd = function (a) { //A.this where a is a scalar and this a matrix
 	var res = [];
@@ -1453,9 +1456,9 @@ Array.prototype.dotProd = function (a) { //A.this where a is a scalar and this a
 };
 
 /**
- * Dot addition
+ * @description Dot addition
  * @param {number} a Scalar
- * @returns {Array} res Resulting array
+ * @returns {Array} Resulting array
  */
 Array.prototype.dotAdd = function (a) {
 	var res = [];
@@ -1467,11 +1470,11 @@ Array.prototype.dotAdd = function (a) {
 };
 
 /**
- * Dot substraction
+ * @description Dot substraction
  * @param {number} a Scalar
  * @param {string} [order=false] Order
  * @this Array
- * @returns {Array} res Resulting array
+ * @returns {Array} Resulting array
  */
 Array.prototype.dotSub = function (a, order) {
 	var res = [];
@@ -1484,10 +1487,10 @@ Array.prototype.dotSub = function (a, order) {
 };
 
 /**
- * Dot Fraction
+ * @description Dot Fraction
  * @param {number} a Scalar
  * @param {string} order Order
- * @returns {Array} res Resulting array
+ * @returns {Array} Resulting array
  */
 Array.prototype.dotFrac = function (a, order) {
 	var res = [];
@@ -1500,10 +1503,10 @@ Array.prototype.dotFrac = function (a, order) {
 };
 
 /**
- * String[]([]) to String
+ * @description String[]([]) to String
  * @param {boolean} [clean=false] Clean output
  * @this Array
- * @returns {string}
+ * @returns {string} String representation
  */
 Array.prototype.toStr = function (clean) {
 	var str = "";
@@ -1516,8 +1519,8 @@ Array.prototype.toStr = function (clean) {
 };
 
 /**
- * Number[] to Number
- * @returns {number}
+ * @description Number[] to Number
+ * @returns {number} Integer representation
  */
 Array.prototype.toInt = function () {
 	var n = 0;
@@ -1528,18 +1531,18 @@ Array.prototype.toInt = function () {
 };
 
 /**
- * Invert the matrix
+ * @description Invert the matrix
  * @this Array
- * @returns {Array}
+ * @returns {Array} Inverse
  */
 Array.prototype.inv = function () {
 	return this.isInvertible()? this.dotProd(1/this.det(), this.getAdjoint()): false;
 };
 
 /**
- * Mix up the array
+ * @description Mix up the array
  * @this Array
- * @returns {Array} res Mixed array
+ * @returns {Array} Mixed array
  */
 Array.prototype.mix = function () { //Mix up the array
 	var randPos = mixedRange(0, 1, this.length - 1), res = [];
@@ -1548,9 +1551,9 @@ Array.prototype.mix = function () { //Mix up the array
 };
 
 /**
- * Few mixes
+ * @description Few mixes
  * @this Array
- * @returns {Array} res Mixed array
+ * @returns {Array} Mixed array
  */
 Array.prototype.littleMix = function() {
 	var res = [], ic;
@@ -1570,27 +1573,27 @@ Array.prototype.littleMix = function() {
 };
 
 /**
- * Push that adds elements of an array instead of the array itself
+ * @description Push that adds elements of an array instead of the array itself
  * @this Array
- * @param arr
+ * @param {Array} arr Array used to append
  */
 Array.prototype.append = function (arr) {
 	for (var i = 0; i < arr.length; i++) this.push(arr[i])
 };
 
 /**
- * Unshift that addes element of an array instead of the array itself
+ * @description Unshift that addes element of an array instead of the array itself
  * @this Array
- * @param arr
+ * @param {Array} arr Array used to preppend
  */
 Array.prototype.preppend = function (arr) {
 	for (var i = 0; i < arr.length; i++) this.unshift(arr[i])
 };
 
 /**
- * List of unique elements of the array
+ * @description List of unique elements of the array
  * @this Array
- * @returns {Array} u Array of unique elements
+ * @returns {Array} Array of unique elements
  */
 Array.prototype.unique = function () {
 	var u = [];
@@ -1601,7 +1604,7 @@ Array.prototype.unique = function () {
 };
 
 /**
- * N-D array to 1D array
+ * @description N-D array to 1D array
  * @param {boolean} [jointer=false] Jointer
  * @returns {Array} res Resulting 1D array
  */
@@ -1612,10 +1615,10 @@ Array.prototype.to1d = function (jointer) {
 };
 
 /**
- * 1D array to N-D array
+ * @description 1D array to N-D array
  * @param {number} n Dimension
  * @this Array
- * @returns {Array} res Resulting N-D array
+ * @returns {Array} Resulting N-D array
  */
 Array.prototype.toNd = function (n) {
 	if(!n) n = 2;
@@ -1628,10 +1631,10 @@ Array.prototype.toNd = function (n) {
 };
 
 /**
- * 1D array to N-column array
+ * @description 1D array to N-column array
  * @param {number} n Number of columns
  * @this Array
- * @returns {Array} res Resulting array
+ * @returns {Array} Resulting array
  */
 Array.prototype.toNcol = function (n) {
 	var res = [], k = 0; //Size of the sz**n
@@ -1643,10 +1646,10 @@ Array.prototype.toNcol = function (n) {
 };
 
 /**
- * 1D array to N-row array
+ * @description 1D array to N-row array
  * @param {number} n Number of rows
  * @this Array
- * @returns {Array} res Resulting array
+ * @returns {Array} Resulting array
  */
 Array.prototype.toNrow = function (n) {
 	var res = [], k = 0; //Size of the sz**n
@@ -1658,18 +1661,18 @@ Array.prototype.toNrow = function (n) {
 };
 
 /**
- * Linear 1D array
+ * @description Linear 1D array
  * @this Array
- * @returns {Array}
+ * @returns {Array} Linearised array
  */
 Array.prototype.linearise = function() {
 	return this.toString().split(",");
 };
 
 /**
- * Ensure that all the elements are of the same length
- * @param {string|number]} cr Filler
- * @returns {Array} res Uniformed array
+ * @description Ensure that all the elements are of the same length
+ * @param {string|number} cr Filler
+ * @returns {Array} Uniformed array
  */
 Array.prototype.uniform = function (cr) {
 	var res = this, ml = res.maxLength();
@@ -1680,9 +1683,9 @@ Array.prototype.uniform = function (cr) {
 };
 
 /**
- * Zip the array
+ * @description Zip the array
  * @this Array
- * @returns {Array}
+ * @returns {Array} Zipped array
  */
 Array.prototype.zip = function () {
 	var res = [], j;
@@ -1698,10 +1701,10 @@ Array.prototype.zip = function () {
 };
 
 /**
- * Unzip the array
- * @param {boolean} [noPairs=false]
+ * @description Unzip the array
+ * @param {boolean} [noPairs=false] Keep pairs or not ?
  * @this Array
- * @returns {Array}
+ * @returns {Array} Unzipped array
  */
 Array.prototype.unzip = function (noPairs) {
 	var res = [];
@@ -1713,7 +1716,7 @@ Array.prototype.unzip = function (noPairs) {
 };
 
 /**
- * Trim the array
+ * @description Trim the array
  * @param {string|boolean} side Side
  * @this Array
  * @returns {Array} res Trimed array
@@ -1726,9 +1729,9 @@ Array.prototype.trimAll = function(side) { //Trimes every elements
 };
 
 /**
- * Sorted state check
+ * @description Sorted state check
  * @this Array
- * @returns {boolean}
+ * @returns {boolean} Sorted or not
  */
 Array.prototype.isSorted = function() { //Check if the array is sorted
 	if (this[0] > this[1]) return false;
@@ -1739,12 +1742,12 @@ Array.prototype.isSorted = function() { //Check if the array is sorted
 };
 
 /**
- * Ensure that the element isn't pushed when it's already there
+ * @description Ensure that the element isn't pushed when it's already there
  * @this Array
  * @param {*} obj Object
  */
 Array.prototype.uniquePush = function(obj) { //Post-init duplicate safe push
-	if (isType(obj, "Array")){
+	if (isType(obj, "Array")) {
 		for (var i = 0; i < obj.length; i++) {
 			if (this.indexOf(obj[i]) === -1) this.push(obj[i]);
 		}
@@ -1752,7 +1755,7 @@ Array.prototype.uniquePush = function(obj) { //Post-init duplicate safe push
 };
 
 /**
- * Replace all occurrences of $str instead of just the first one
+ * @description Replace all occurrences of $str instead of just the first one
  * @param {string|number} str String/number
  * @param {string|number} nstr New string/number
  * @returns {Array|string} Result
@@ -1767,10 +1770,10 @@ Array.prototype.replaceAll = function(str, nstr) {
 };
 
 /**
- * Neighbour check
- * @param {number|number[]} y
- * @param {number|number[]} x
- * @returns {Array} n Neighbours
+ * @description Neighbour check
+ * @param {number|number[]} y Row number
+ * @param {number|number[]} x Column number
+ * @returns {Array} Neighbours
  */
 Array.prototype.neighbour = function(y, x) {
 	var n = [], seq;
@@ -1800,7 +1803,7 @@ Array.prototype.neighbour = function(y, x) {
 };
 
 /**
- * Make sure all the cells are of the right type
+ * @description Make sure all the cells are of the right type
  * @param {string} type Type
  * @this Array
  * @returns {Array} Sanitised array
@@ -1813,10 +1816,10 @@ Array.prototype.sanitise = function(type) {
 };
 
 /**
- * Remove the character $c from the string
+ * @description Remove the character $c from the string
  * @param {string} c Character
  * @this String
- * @returns {string} str Resulting string
+ * @returns {string} Resulting string
  */
 String.prototype.remove = function (c) { //Remove c from the string
 	var str = this;
@@ -1831,10 +1834,10 @@ String.prototype.remove = function (c) { //Remove c from the string
 };
 
 /**
- * to N digits
+ * @description to N digits
  * @param {number} n Number of digits
  * @this String
- * @returns {String} i Resulting string
+ * @returns {String} Resulting string
  */
 String.prototype.toNDigits = function (n) {
 	var i = this;
@@ -1846,11 +1849,11 @@ String.prototype.toNDigits = function (n) {
 };
 
 /**
- * Mix the string
- * @param {string} separator
- * @param {string} jointer
+ * @description Mix the string
+ * @param {string} separator Separation character
+ * @param {string} jointer Joining character
  * @this String
- * @returns {string}
+ * @returns {string} Mixed string
  */
 String.prototype.mix = function (separator, jointer) {
 	separator = isNon(separator)? "": separator;
@@ -1861,9 +1864,10 @@ String.prototype.mix = function (separator, jointer) {
 };
 
 /**
- * Divide the string into n-sized chunks
+ * @description Divide the string into n-sized chunks
  * @this String
  * @param {number} n Number of chunks
+ * @returns 
  */
 String.prototype.divide = function (n) {
 	var res = new Array(Math.round(this.length/n)).fill(""), k = 0;
@@ -1874,10 +1878,10 @@ String.prototype.divide = function (n) {
 };
 
 /**
- * Capitalize the first letter(s)
+ * @description Capitalize the first letter(s)
  * @param {boolean} whole Every words or just the first one
  * @this String
- * @returns {string}
+ * @returns {string} String
  */
 String.prototype.capitalize = function (whole) {
 	var res = this.toString(); //Because it will return the String object rather than the actual string
@@ -1889,9 +1893,9 @@ String.prototype.capitalize = function (whole) {
 };
 
 /**
- * Ascii sum
+ * @description Ascii sum
  * @this String
- * @returns {number} sum Ascii sum
+ * @returns {number} Ascii sum
  */
 String.prototype.sum = function () {
 	var sum = 0;
@@ -1900,9 +1904,9 @@ String.prototype.sum = function () {
 };
 
 /**
- * Ascii product
+ * @description Ascii product
  * @this String
- * @returns {number} prod Ascii product
+ * @returns {number} Ascii product
  */
 String.prototype.prod = function () {
 	var prod = 1;
@@ -1911,9 +1915,9 @@ String.prototype.prod = function () {
 };
 
 /**
- * Ascii mean
+ * @description Ascii mean
  * @this String
- * @returns {number}
+ * @returns {number} Mean
  */
 String.prototype.mean = function () {
 	var strArr = [];
@@ -1922,30 +1926,30 @@ String.prototype.mean = function () {
 };
 
 /**
- * Normalise the string
+ * @description Normalise the string
  * @this String
- * @returns {string}
+ * @returns {string} Normalised string
  */
 String.prototype.normal = function () {
 	return this.toLowerCase().remove(" ")
 };
 
 /**
- * Get the occurrences of each characters as well as their positions
+ * @description Get the occurrences of each characters as well as their positions
  * @type {Array.getOccurrences|*}
  */
 String.prototype.getOccurrences = Array.prototype.getOccurrences;
 
 /**
- * Get a portion of the string
+ * @description Get a portion of the string
  * @param {number} [start=0] Starting position
  * @param {number} [end=this.length-1] Ending position
  * @this String
- * @returns {string} res Resulting string
+ * @returns {string} Resulting string
  */
 String.prototype.get = function (start, end) {
 	var res = "";
-	if (start < 0 && !end){
+	if (start < 0 && !end) {
 		end = start;
 		start = 0;
 	}
@@ -1956,9 +1960,9 @@ String.prototype.get = function (start, end) {
 };
 
 /**
- * Zip the string
+ * @description Zip the string
  * @this String
- * @returns {string}
+ * @returns {string} Zipped string
  */
 String.prototype.zip = function () { //Compress the string
 	var res = "", j;
@@ -1974,10 +1978,10 @@ String.prototype.zip = function () { //Compress the string
 };
 
 /**
- * Unzip the string
+ * @description Unzip the string
  * @param {boolean} [noPairs=false] Pairs or not ?
  * @this String
- * @returns {string}
+ * @returns {string} Unzipped string
  */
 String.prototype.unzip = function (noPairs) { //Decompress the string (when being compressed using String.zip()) with(out) pairs
 	var res = "";
@@ -1989,11 +1993,11 @@ String.prototype.unzip = function (noPairs) { //Decompress the string (when bein
 };
 
 /**
- * Replace all the occurrences of $str instead of just the first one
+ * @description Replace all the occurrences of $str instead of just the first one
  * @param {string} str String
  * @param {string} nstr New string
- * @param {string} sep Seperation
- * @returns {string}
+ * @param {string} sep Separation
+ * @returns {string} Modified string
  */
 String.prototype.replaceAll = function(str, nstr, sep) {
 	var res = sep? this.split(sep).replace(str, nstr) : this.replace(str, nstr), i = 0;
@@ -2006,9 +2010,9 @@ String.prototype.replaceAll = function(str, nstr, sep) {
 };
 
 /**
- * Length of the number
+ * @description Length of the number
  * @this Number
- * @returns {number|number[]}
+ * @returns {number|number[]} Length
  */
 Number.prototype.length = function () {
 	if (String(this).indexOf(".") > -1) return [parseInt(String(this).split(".")[0].length), parseInt(String(this).split(".")[1].length)];
@@ -2022,10 +2026,10 @@ Number.prototype.length = function () {
 };
 
 /**
- * A FP fixing that preserve the number format
+ * @description A FP fixing that preserve the number format
  * @param {number} n Number of decimals
  * @this Number
- * @returns {number}
+ * @returns {number} Floating point number
  */
 Number.prototype.toNDec = function (n) { //A bit like .toFixed(n) and .toPrecision(n) but returning a double instead of a string
 	var pow10s = Math.pow(10, n || 2);
@@ -2033,9 +2037,9 @@ Number.prototype.toNDec = function (n) { //A bit like .toFixed(n) and .toPrecisi
 };
 
 /**
- * Keep a fixed amount of unit digits
+ * @description Keep a fixed amount of unit digits
  * @param {number} n Number of digits
- * @returns {string} i New number
+ * @returns {string} New number
  */
 Number.prototype.toNDigits = function (n) { //Get the number to be a n-digit number
 	var i = this + ""; //Because it won't work with other types than strings
@@ -2047,18 +2051,18 @@ Number.prototype.toNDigits = function (n) { //Get the number to be a n-digit num
 };
 
 /**
- * Sign of the number
+ * @description Sign of the number
  * @param {boolean} str Symbols string representation ?
- * @returns {string|number}
+ * @returns {string|number} Sign
  */
 Number.prototype.sign = function (str) { //Get the sign of the number
 	return str? (this < 0? "-": (this > 0? " + ": "")): (this < 0? -1: (this > 0? 1: 0))
 };
 
 /**
- * Prime check
+ * @description Prime check
  * @param {number} n Number to check in relation
- * @returns {boolean}
+ * @returns {boolean} Prime check result
  */
 Number.prototype.isPrime = function (n) {
 	for (var i = 2; i < n; i++) {
@@ -2068,11 +2072,11 @@ Number.prototype.isPrime = function (n) {
 };
 
 /**
- * Clean the number
+ * @description Clean the number
  * @param {number} [nbDec=2] Number of decimals
- * @returns {*}
+ * @returns {*} Cleaned number
  */
-Number.prototype.clean = function (nbDec) { //Clean the number to make it "normal"
+Number.prototype.clean = function (nbDec) {
 	if (this == 0) return 0;
 	else if (this > 0 && this[0] == "+") return nbDec? this.slice(1, this.length).toNDec(nbDec): this.slice(1, this.length);
 	else if (this == "-") return this + 1;
@@ -2081,10 +2085,10 @@ Number.prototype.clean = function (nbDec) { //Clean the number to make it "norma
 };
 
 /**
- * Number to Number[]
- * @returns {Number[]}
+ * @description Number to Number[]
+ * @returns {Number[]} Number array
  */
-Number.prototype.toArr = function () { //Number->Number[]
+Number.prototype.toArr = function () {
 	var arr = new Array(this.length()), i = 0, n = this;
 	while (n > 0) {
 		arr[i] = n % 10;
@@ -2095,12 +2099,12 @@ Number.prototype.toArr = function () { //Number->Number[]
 };
 
 /**
- * Inheritance
+ * @description Inheritance
  * @param {*} parentClassOrObj Parent
  * @returns {Function} this Current function/constructor
  */
 Function.prototype.inheritsFrom = function (parentClassOrObj) { 
-	if (parentClassOrObj.constructor === Function){ //Normal Inheritance 
+	if (parentClassOrObj.constructor === Function) { //Normal Inheritance
 		this.prototype = new parentClassOrObj;
 		this.prototype.constructor = this;
 		this.prototype.parent = parentClassOrObj.prototype;
@@ -2112,7 +2116,12 @@ Function.prototype.inheritsFrom = function (parentClassOrObj) {
 	return this
 };
 
-function exclude (file, type) { //Remove an external resource
+/**
+ * @description Removes an external ressource
+ * @param {string} file File name
+ * @param {string} [type="link"] Type of the file
+ */
+function exclude (file, type) {
 	if (!type) type = (file.indexOf(".js")>0)? "script": "link";
 	var el = document.createElement(type);
 	if (type === "script") el.src = file;
@@ -2120,28 +2129,51 @@ function exclude (file, type) { //Remove an external resource
 	el.type = (type === "script")? "text/javascript": "text/css";
 	document.head.removeChild(el)
 }
-
-function addMetaData (n, ctt, httpe) { //Temporarily add a meta data (so until the page is closed)
+/**
+ * @description Temporarily add meta-data to the page
+ * @param {string} n Name
+ * @param {string|number} ctt Content
+ * @param {boolean} httpe HTTP Equiv specified ?
+ */
+function addMetaData (n, ctt, httpe) {
 	var el = document.createElement("meta");
-	if (httpe) el.httpEquiv = httpe;
-	else el.name = n;
+	httpe? el.httpEquiv = httpe: el.name = n;
 	el.content = ctt;
 	document.head.appendChild(el)
 }
 
-function xor (a, b) { //Exclusive or which can be used as a^b
+/**
+ * @description Exclusive or
+ * @param {*} a Expression a
+ * @param {*} b Expression b
+ * @returns {boolean} Result
+ */
+function xor (a, b) {
 	return (a && !b) || (!a && b)
 }
 
-function noRightClick () { //Disable right clicks
+/**
+ * @description Disable right clicks
+ */
+function noRightClick () {
 	document.oncontextmenu = new Function("return false")
 }
 
+/**
+ * @description Reloads the page
+ * @param {number} [lvl==0] Level of reloadness
+ */
 function reloadPage (lvl) { //Reload the page with 2 different level of reload
 	if (lvl === 2) location.href = location.href; //Update the hyper reference of the window's location
 	else location.reload(); //Reload the location of the window (implying lvl = 0||1)
 }
 
+/**
+ * @description Redirect to somewhere
+ * @param {string} to Place to be redirected to
+ * @param {number} [dt=3e3] Time delay
+ * @param {string} divId Id of the element to be used to inform the user about what's going on
+ */
 function redirect (to, dt, divId) { //Redirect to #to in #dt ms
 	if (!dt) dt = 3e3; //If dt hasn't an assign value so it will assign a default one
 	var s = Math.floor(dt/1e3); //Convert from ms to s
@@ -2151,6 +2183,12 @@ function redirect (to, dt, divId) { //Redirect to #to in #dt ms
 	setTimeout("location = '" + to + "';", dt); //Set the timeout for the redirection
 };
 
+/**
+ * @description Validity check
+ * @param {string} txt Text
+ * @param {string} type Type
+ * @returns {boolean} Validity check result
+ */
 function isValid (txt, type) { //Check if a text (generally from a field) is valid according to the given type
 	var pattern, lenOK = true;
 	switch (type.toLowerCase()) {
@@ -2211,6 +2249,12 @@ function isValid (txt, type) { //Check if a text (generally from a field) is val
 	return pattern.test(txt) && lenOK
 }
 
+/**
+ * @description Validation check on a form
+ * @param {node} fm Form
+ * @param {boolean} [ignoreRequired=false] Ignored the required attribute
+ * @returns {boolean} Validation check
+ */
 function validate (fm, ignoreRequired) { //Check if a form is valid
 	if (!fm) fm = document.forms[0];
 	var valid = true;
@@ -2228,26 +2272,55 @@ function validate (fm, ignoreRequired) { //Check if a form is valid
 	return valid
 }
 
+/**
+ * @description Type check
+ * @param {*} obj Object
+ * @param {string} type Type
+ * @returns {boolean} Type check result
+ */
 function isType (obj, type) { //Only works for native types (treats custom ones as objects)
 	type = type[0].toUpperCase() + type.slice(1, type.length).toLowerCase();
 	return Object.prototype.toString.call(obj) === "[object " + type + "]"
 }
 
+/**
+ * @description Custom type check
+ * @param {*} obj Object
+ * @param {string} type Type
+ * @returns {boolean} Custom type check result
+ */
 function isCustomType (obj, type) { //Same as isType but for custom types
 	return getCustomType(obj).toLowerCase() === type.toLowerCase()
 }
 
+/**
+ * @description Type getter
+ * @param {*} obj Object
+ * @param {boolean} [preserve=false] Preserve the format
+ * @returns {string} Type
+ */
 function getType (obj, preserve) { //Only works for native types. preserve would leave the [object type]
 	var t = Object.prototype.toString.call(obj);
 	return preserve? t: t.split(" ")[1].slice(0, t.split(" ")[1].length-1)
 }
 
+/**
+ * @description Custom type getter
+ * @param {*} obj Object
+ * @param {boolean} [preserve=false] Preserve the format
+ * @returns {string} Custom type
+ */
 function getCustomType (obj, preserve) { //Same as getType but for custom types which won't work for native types
 	var t = obj.toLocaleString();
 	if (t.indexOf("[") > -1) return preserve? t: t.split(" ")[1].slice(0, t.split(" ")[1].length-1); //[object Type]
 	else return t.split("(")[0].trim()
 }
 
+/**
+ * @description 2D array check
+ * @param {*} obj Object
+ * @returns {boolean} 2D array check result
+ */
 function is2dArray (obj) { //Check if an array has 2 dimensions (nxm matrix)
 	if (isType(obj, "Array")) {
 		for (var i = 0; i < obj.length; i++) {
