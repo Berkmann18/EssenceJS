@@ -36,7 +36,7 @@ var Essence = {
 			else console.log("%c[Essence.js]%c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
 		}
 	},
-	css: "@charset: 'UTF-8'; *{font-family:Calibrie,Verdana,Segoe UI} body{height:100 %;width:auto;padding:0} table{background:#000}table,td,th{border:1px solid #000;color:#000;background:#fff;cellspacing:0;cellpadding:2;border-collapse:true;}tr:nth-child(even) td{background:#ddd}.none,.none td,.none th{border:none}tr:hover td{background:#888																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							}.inf{color:#008}.succ{color:#0f0}.err{color:#f00}.quest{color:#00f}.warn{color:#fc0}.info{border-color:#008;background-color:#00008f}.success{border-color:#080;background-color:#008f00}.error{border-color:#800;background-color:#8f0000}.question{border-color:#00f;background-color:#0000f8}.warning{border-color:#f8c808;background-color:#fc0}.block{color:#fff;background-repeat:repeat;background-position:0 center;border-style:solid;border-width:1px;-webkit-appearance:none;outline:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;width:100 %;height:1.1em;line-height:200 %;white-space:nowrap;min-height:16px;position:relative;margin:2px;padding:.3em 2px;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-touch-callout:none;border-radius:7px;-webkit-border-radius:7px;-moz-border-radius:7px}.icon{width:64px;height:64px;border:none;margin:2px} kbd{border:3px outset #ccc;background:#ccc;border-radius:5px;-webkit-border-radius:7px;-moz-border-radius:7px;-o- border-radius:7px;padding:2px;font-family:Consolas,Tahoma,Segoe UI}h1.title{text-decoration:underline} h2{color:#088} h3{color:#0ff}.code-tag,.code-inst{color:#00f}.code-cmt{color:#0f0}.code-str,.code-id{color:#00c0c0}.code-num,.code-class{color:#f00}.code-attr{color:#c00}.code-val{color:#fc0}.code-type{color:#800080}.code-doc, .code-op{color:#0ff},.code-var{color:#0000c0}.code-keyword{color:#f0f}",
+	css: "@charset:'UTF-8';*{font-family:Calibrie,Verdana,sans-serif}body{height:100%;width:auto;padding:0}table{background:#000}table,td,th{border:1px solid #000;color:#000;background:#fff;border-collapse:collapsed}tr:nth-child(even) td{background:#ddd}.none,.none td,.none th{border:none}tr:hover td{background:#888}.inf{color:#008}.succ{color:#0f0}.err{color:#f00}.quest{color:#00f}.warn{color:#fc0}.info{border-color:#008;background-color:#00008f}.success{border-color:#080;background-color:#008f00}.error{border-color:#800;background-color:#8f0000}.question{border-color:#00f;background-color:#0000f8}.warning{border-color:#f8c808;background-color:#fc0}.block{color:#fff;background:repeat 0 center;border:1px solid;-webkit-appearance:none;outline:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;width:100%;height:1.1em;line-height:200%;white-space:nowrap;min-height:16px;position:relative;margin:2px;padding:.3em 2px;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-touch-callout:none;border-radius:7px;-webkit-border-radius:7px;-moz-border-radius:7px}.icon{width:64px;height:64px;border:none;margin:2px}kbd{border:3px outset #ccc;background:#ccc;border-radius:5px;-webkit-border-radius:7px;-moz-border-radius:7px;padding:2px;font-family:Consolas,Tahoma,Segoe UI}h1.title{text-decoration:underline}h2{color:#088}h3{color:#0ff}.code-tag,.code-inst{color:#00f}.code-cmt{color:#0f0}.code-str,.code-id{color:#00c0c0}.code-num,.code-class{color:#f00}.code-attr{color:#c00}.code-val{color:#fc0}.code-type{color:#800080}.code-doc,.code-op{color:#0ff}.code-var{color:#0000c0}.code-keyword{color:#f0f}.nocss{margin:auto;padding:auto;text-align:left;z-index:auto;background:transparent;border:none;border-radius:0;box-shadow:none;clear:none;color:inherit;float:none;content:normal;width:auto;height:auto;letter-spacing:normal;line-height:normal;max-width:none;max-height:none;min-width:0;min-height:0;opacity:1;overflow:visible;page-break-inside:auto;position:static;text-shadow:none;text-transform:none;transform:none;transition:none;vertical-align:baseline;visibility:visible;white-space:normal;word-spacing:normal}",
 	applyCSS: function () {
 		if (isNon($n("style")) || $e("style").isEmpty()) $e("head").write($n("head").outerHTML + "<style type = 'text/css'>" + Essence.css + "</style>", true);
 		else $n("style").innerHTML += Essence.css;
@@ -302,7 +302,9 @@ function Element (selector) { //The element object
 		}
 	};
 
-	this.toggleCSS = function (prop, params) { //Toggle between two or more values
+	this.toggleCSS = function (prop, params, stackLayer) { //Toggle between two or more values
+		if(!stackLayer) stackLayer = 0;
+		if(this.css(prop) === "" && stackLayer < 1) this.toggleCSS(prop, params, stackLayer + 1);
 		if (prop === "visibility") {
 			(this.css("visibility") === "visible")? this.setCSS("visibility", "hidden"): this.setCSS("visibility", "visible");
 		}else if (prop === "enabled") {
@@ -2009,6 +2011,7 @@ String.prototype.unzip = function (noPairs) { //Decompress the string (when bein
  * @param {string} str String
  * @param {string} nstr New string
  * @param {string} sep Separation
+ * @this String
  * @returns {string} Modified string
  */
 String.prototype.replaceAll = function(str, nstr, sep) {
@@ -2019,6 +2022,17 @@ String.prototype.replaceAll = function(str, nstr, sep) {
 		i++;
 	}
 	return sep? res.join(sep): res;
+};
+
+/**
+ * @description Chunk the string into substrings of words
+ * @param {number} [start=0] Starting position
+ * @param {number} [end=this.length-1] Ending position
+ * @this String
+ * @returns {string} Chunked string
+ */
+String.prototype.chunk = function (start, end) {
+	return this.split(" ").get(start, end).join(" ");
 };
 
 /**
@@ -2778,8 +2792,8 @@ function sumPow2 (arr, nbDec) {
 /**
  * @description Base conversion
  * @param {number} n Number to convert
- * @param {number} from Initial base
- * @param {number} to Final base
+ * @param {number} [from=2] Initial base
+ * @param {number} [to=10] Final base
  * @param {boolean} [float=false] FPR or not
  * @returns {string|number} Conversion
  */
@@ -3741,7 +3755,7 @@ function asciiTable(start, end) {
 	} else if (start === "a-z" && !end) {
 		start = 97;
 		end = 122;
-	} else if (start === "A-z" && !end){
+	} else if (start === "A-z" && !end) {
 		start = 65;
 		end = 122;
 	} else if (start === "printable" && !end) {
@@ -4372,7 +4386,7 @@ function scalarProd (v1, v2) {
  * @description Union
  * @param {Array} a Array a
  * @param {Array} b Array b
- * @param {Array} c Array c
+ * @param {Array} [c] Array c
  * @param {boolean} [toSort=false] Sort the elements
  * @returns {Array} a union b (union c)
  */
@@ -4384,7 +4398,7 @@ function union (a, b, c, toSort) {
  * @description Intersection
  * @param {Array} a Array a
  * @param {Array} b Array b
- * @param {Array} c Array c
+ * @param {Array} [c] Array c
  * @param {boolean} [toSort=false] Sort the elements
  * @returns {Array} a intersection b (intersection c)
  */
@@ -4401,7 +4415,15 @@ function intersection (a, b, c, toSort) {
 	return toSort? rmDuplicates(inter).quickSort(): rmDuplicates(inter)
 }
 
-function complement (a, b, c, toSort) { //A\b(\c) => a xor b (xor c)
+/**
+ * @description Complement
+ * @param {Array} a Array a
+ * @param {Array} b Array b
+ * @param {Array} [c] Array c
+ * @param {boolean} [toSort=false] Sort the elements
+ * @returns {Array} a\b(\c) => a xor b (xor c)
+ */
+function complement (a, b, c, toSort) {
 	var cpt = [];
 	a = a.quickSort();
 	b = b.quickSort();
@@ -4414,7 +4436,15 @@ function complement (a, b, c, toSort) { //A\b(\c) => a xor b (xor c)
 	return toSort? rmDuplicates(cpt).quickSort(): rmDuplicates(cpt)
 }
 
-function symDif (a, b, c, toSort) { //Symmetric difference: a union b-a intersection b => a only & b only
+/**
+ * @description Symmetric difference
+ * @param {Array} a Array a
+ * @param {Array} b Array b
+ * @param {Array} [c] Array c
+ * @param {boolean} [toSort=false] Sort the elements
+ * @returns {Array} a union b - a intersection b => a only & b only
+ */
+function symDif (a, b, c, toSort) {
 	var sd = [];
 	a = a.quickSort();
 	b = b.quickSort();
@@ -4435,14 +4465,28 @@ function symDif (a, b, c, toSort) { //Symmetric difference: a union b-a intersec
 	return toSort? rmDuplicates(sd).quickSort(): rmDuplicates(sd)
 }
 
-function bitStr (a, b) { //Bit string of a mathematical set in relation to an other
-	//Ba in b
-	var ba = [];
-	for(var i in a) ba[i] = (a[i] === b[i])? 1: 0;
+/**
+ * @description Bit string of a set in relation to an other
+ * @param {Array} a Array a
+ * @param {Array} b Array b
+ * @returns {Array} Bit string
+ */
+function bitStr (a, b) {
+	var ba = []; //Ba in b
+	for(var i in a) {
+		if(a.hasOwnProperty(i)) ba[i] = (a[i] === b[i])? 1: 0;
+	}
 	return ba
 }
 
-function toSameLength (a, b, cr) { //Make sure that a and b are of the same lengths and fill the empty spaces with cr
+/**
+ * @description Make sure that $a and $b are of the same lengths and fill the empty spaces with $cr
+ * @param {string|Array} a Element a
+ * @param {string|Array} b Element b
+ * @param {string} [cr=" "] Filling character
+ * @returns {*[]} Resized elements
+ */
+function toSameLength (a, b, cr) {
 	if (!a.isIterable() || !b.isIterable()) throw new Error("invalid length equality operation on non-iterable objects");
 	if (!cr) cr = " ";
 	if (a.length > b.length) {
@@ -4453,59 +4497,124 @@ function toSameLength (a, b, cr) { //Make sure that a and b are of the same leng
 	return [a, b]
 }
 
-function And (a, b, cr, toArr) { //Logical a&b where a and b are sets
+/**
+ * @description Logical and for arrays
+ * @param {Array} a Array a
+ * @param {Array} b Array b
+ * @param {string|null} [cr=null] Filling character
+ * @param {boolean} [toArr=false] To array
+ * @returns {Array|boolean} Result
+ */
+function And (a, b, cr, toArr) {
 	toSameLength(a, b, cr || null);
 	var res = toArr? new Array(a.length): (a[0] && b[0]);
 	for (var i in a) {
-		if (toArr) res[i] = a[i] && b[i];
-		else res = (res && a[i] && b[i]);
+		if (a.hasOwnProperty(i)) {
+			if (toArr) res[i] = a[i] && b[i];
+			else res = (res && a[i] && b[i]);
+		}
 	}
 	return res
 }
 
-function Or (a, b, cr, toArr) { //Logical a|b where a and b are sets
+/**
+ * @description Logical or for arrays
+ * @param {Array} a Array a
+ * @param {Array} b Array b
+ * @param {string|null} [cr=null] Filling character
+ * @param {boolean} [toArr=false] To array
+ * @returns {Array|boolean} Result
+ */
+function Or (a, b, cr, toArr) {
 	toSameLength(a, b, cr || null);
 	var res = toArr? new Array(a.length): (a[0] || b[0]);
 	for (var i in a) {
-		if (toArr) res[i] = a[i] || b[i];
-		else res = (res || a[i] || b[i]);
+		if (a.hasOwnProperty(i)) {
+			if (toArr) res[i] = a[i] || b[i];
+			else res = (res || a[i] || b[i]);
+		}
 	}
 	return res
 }
 
-function Xor (a, b, cr, toArr) { //Logical a^b where a and b are sets
+/**
+ * @description Logical xor for arrays
+ * @param {Array} a Array a
+ * @param {Array} b Array b
+ * @param {string|null} [cr=null] Filling character
+ * @param {boolean} [toArr=false] To array
+ * @returns {Array|boolean} Result
+ */
+function Xor (a, b, cr, toArr) {
 	toSameLength(a, b, cr || null);
 	var res = toArr? new Array(a.length): xor(a[0], b[0]);
 	for (var i in a) {
-		if (toArr) res[i] = xor(a[i], b[i]);
-		else res = xor(res, xor(a[i], b[i]));
+		if (a.hasOwnProperty(i)) {
+			if (toArr) res[i] = xor(a[i], b[i]);
+			else res = xor(res, xor(a[i], b[i]));
+		}
 	}
 	return res
 }
 
-function Imply (a, b, cr, toArr) { //Logical a = >b where a and b are sets
+/**
+ * @description Logical imply for arrays
+ * @param {Array} a Array a
+ * @param {Array} b Array b
+ * @param {string|null} [cr=null] Filling character
+ * @param {boolean} [toArr=false] To array
+ * @returns {Array|boolean} Result
+ */
+function Imply (a, b, cr, toArr) {
 	toSameLength(a, b, cr || null);
 	var res = toArr? new Array(a.length): (!a[0] || b[0]);
 	for (var i in a) {
-		if (toArr) res[i] = (!a[i] || b[i]);
-		else res = (!res || (!a[i] || b[i]));
+		if(a.hasOwnProperty(i)) {
+			if (toArr) res[i] = (!a[i] || b[i]);
+			else res = (!res || (!a[i] || b[i]));
+		}
 	}
 	return res
 }
 
-function manhattanDist (a, b) { //Return the Manhattan distance between two points a(xa, ya) and b(xb, yb) where b is generally the solved position of a
+/**
+ * @description Manhattan distance between two points
+ * @param {number[]} a Initial point
+ * @param {number[]} b Final point
+ * @returns {number} Distance
+ */
+function manhattanDist (a, b) {
 	return Math.abs(Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]))
 }
 
-function euclidianDist (a, b) { //Return the Euclidian distance  ...
+/**
+ * @description Euclidian distance between two points
+ * @param {number[]} a Initial point
+ * @param {number[]} b Final point
+ * @returns {number} Distance
+ */
+function euclidianDist (a, b) {
 	return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2))
 }
 
+/**
+ * @description Diagonal distance between two points
+ * @param {number[]} a Initial point
+ * @param {number[]} b Final point
+ * @returns {number} Distance
+ */
 function diagDist (a, b) { //Return the Diagonal distance  ...
 	return Math.max(Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1]))
 }
 
-function h (mtx, solvedMtx, hrt) { //(heuristic) manhattan distance of each elements of a matrix mtx
+/**
+ * @description Heuristic of a matrix
+ * @param {Array} mtx Matrix
+ * @param {Array} solvedMtx Solved matrix (goal)
+ * @param {Function} [hrt=euclidiantDist] Heuristic method
+ * @returns {number} Result
+ */
+function h (mtx, solvedMtx, hrt) {
 	var res = new Array(mtx.length);
 	for (var i = 0; i < mtx.length; i++) {
 		res[i] = new Array(mtx[i].length);
@@ -4517,16 +4626,29 @@ function h (mtx, solvedMtx, hrt) { //(heuristic) manhattan distance of each elem
 	return res.sum2d()
 }
 
-function lookfor (x, mtx, toCoord) { //Look for an element x in a matrix mtx
+/**
+ * @description Look for an element in a matrix
+ * @param {*} x Element to look for
+ * @param {Array} mtx Matrix
+ * @param {boolean} [toCoord=false] Coordinate representation
+ * @returns {number[]|number} Position
+ */
+function lookfor (x, mtx, toCoord) {
 	for (var i = 0; i < mtx.length; i++) {
 		for (var j = 0; j < mtx[i].length; j++) {
-			if (mtx[i][j] === x) return toCoord? [j, i]: [i, j]//I is the row number and j the column which oppose j being the x-coord and i the y-coord
-		};
+			if (mtx[i][j] === x) return toCoord? [j, i]: [i, j]; //I is the row number and j the column which oppose j being the x-coord and i the y-coord
+		}
 	}
 	return -1
 }
 
-function keyList (map, propOnly) { //Returns a list of keys of a map (like keys in ES6)
+/**
+ * @description List of keys of a map (like keys in ES6)
+ * @param {Array} map Map
+ * @param {boolean} [propOnly=false] Properties only
+ * @returns {Array} Key list
+ */
+function keyList (map, propOnly) {
 	var list = [];
 	//ES6 only: if (propOnly) return keys(map)
 	if (propOnly) {
@@ -4537,7 +4659,13 @@ function keyList (map, propOnly) { //Returns a list of keys of a map (like keys 
 	return list
 }
 
-function valList (map, propOnly) { //Returns a list of values of a map (like values in ES6)
+/**
+ * @description List of values of a map (like values in ES6)
+ * @param {Array} map Map
+ * @param {boolean} [propOnly=false] Properties only
+ * @returns {Array} Value list
+ */
+function valList (map, propOnly) {
 	var list = [];
 	//ES6 only: if (propOnly) return values(map)
 	if (propOnly) {
@@ -4548,14 +4676,29 @@ function valList (map, propOnly) { //Returns a list of values of a map (like val
 	return list
 }
 
+/**
+ * @description Same as keyList() but returns an HTML table
+ * @param {Array} map Map
+ * @param {boolean} [propOnly=false] Properties only
+ * @returns {string} HTML table
+ */
 function keyTable (map, propOnly) { //Same as above but in the form of the HTML table
-	var table = map.hasName()? "<table cellspacing = 0><caption > KeyTable: <i>" + map.getName() + "</i></caption><tr><th > Key</th><th > Value</th></tr>": "<table><caption > KeyTable</caption><tr><th > Key</th><th > Value</th></tr>";
+	var table = map.hasName()? "<table cellspacing=0><caption>KeyTable: <i>" + map.getName() + "</i></caption><tr><th>Key</th><th>Value</th></tr>": "<table><caption> KeyTable</caption><tr><th>Key</th><th>Value</th></tr>";
 	for (var key in map) {
 		table += (propOnly && map.hasOwnProperty(key))? "<tr><td>" + key + "</td><td>" + map[key] + "</td></tr>": "<tr><td>" + key + "</td><td>" + map[key] + "</td></tr>";
 	}
 	return table + "</table>"
 }
 
+/**
+ * @description Linked list
+ * @param {*} [pl=1] Payload
+ * @param {LinkedList} [nx={payload: 1, next: null}] Next
+ * @param {string} name Name of the linked list
+ * @returns {LinkedList} Linked list
+ * @this LinkedList
+ * @constructor
+ */
 function LinkedList (pl, nx, name) {
 	this.payload = pl || 1;
 	this.next = nx || {payload: 1, next: null};
@@ -4573,6 +4716,15 @@ function LinkedList (pl, nx, name) {
 	return this
 }
 
+/**
+ * @description Binary tree node
+ * @param {*} [pl=0] Payload
+ * @param {TreeNode} [l] Left child
+ * @param {TreeNode} [r] Right child
+ * @this TreeNode
+ * @returns {TreeNode} Tree node
+ * @constructor
+ */
 function TreeNode (pl, l, r) { //Binary tree
 	this.left = l;
 	this.right = r;
@@ -4780,15 +4932,26 @@ function TreeNode (pl, l, r) { //Binary tree
 		if (this.right) singly? arr.push(this.right.toArray().toString().split(",")): arr.push(this.right.toArray());
 		return singly? arr.toString().split(","): arr
 	}
+
+	return this;
 }
 
+/**
+ * @description Node
+ * @param {*} [pl=1] Payload
+ * @param {Node} [nx] Next node
+ * @param {Node} [pv] Previous node
+ * @this Node
+ * @return {Node} Node
+ * @constructor
+ */
 function Node (pl, nx, pv) {
 	this.payload = pl || 1;
-	this.next = nx || null; //Or new node()
-	this.prev = pv || null;
-	
+	this.next = nx; //Or new node()
+	this.prev = pv;
+
 	this.traverse = function () {
-		if (this.next != null) this.next.traverse();
+		if (this.next) this.next.traverse();
 		Essence.say("payload: " + this.payload);
 	};
 	
@@ -4847,15 +5010,35 @@ function Node (pl, nx, pv) {
 		if (this.next) return this.next.find(n, d + 1);
 		return [-1, d]
 	}
-};
 
+	return this;
+}
+
+/**
+ * @description Path node
+ * @param {number} g Total current cost
+ * @param {number} h Total current heuristic
+ * @returns {PathNode} Path node
+ * @this PathNode
+ * @constructor
+ */
 function PathNode (g, h) { //Nodes for path finding algs
 	this.f = g + h || 1;
-	this.parent = null	
+	this.parent = null
+	return this;
 }
 
 NTreeNode.inheritsFrom(TreeNode);
-function NTreeNode (pl, ch) { //N-ary tree
+/**
+ * @description N-ary tree node
+ * @see TreeNode
+ * @param {*} pl Payload
+ * @param {TreeNode[]} ch Childs
+ * @returns {NTreeNode} NTreeNode
+ * @this NTreeNode
+ * @constructor
+ */
+function NTreeNode (pl, ch) {
 	this.payload = pl || 0;
 	this.childs = ch || [];
 	this.add = function (c) {
@@ -5011,7 +5194,7 @@ function NTreeNode (pl, ch) { //N-ary tree
 			tab += "-";
 			if (cur.left) queue.unshift(cur.left);
 			if (cur.right) queue.unshift(cur.right);
-		};
+		}
 	};
 	this.toString = function () {
 		/* Essence.txt2print = "";
@@ -5028,10 +5211,19 @@ function NTreeNode (pl, ch) { //N-ary tree
 		arr.push(this.payload);
 		if (this.right) singly? arr.push(this.right.toArray().toString().split(",")): arr.push(this.right.toArray());
 		return singly? arr.toString().split(","): arr
-	}
+	};
+
+	return this;
 }
 
-function Set (arr) { //Mathematical set
+/**
+ * @description Mathematical set
+ * @param {Array|*} [arr=[]] Array or element
+ * @returns {Set} Set
+ * @constructor
+ * @this Set
+ */
+function Set (arr) {
 	this.value = (isType(arr, "arr")? arr: [arr]) || [];
 	this.size = function () {
 		return this.value.length
@@ -5068,7 +5260,7 @@ function Set (arr) { //Mathematical set
 				c = c && this.contains(item[i]);
 			}
 			return c
-		}else return this.value.indexOf(item) ==-1? false: true
+		} else return this.value.indexOf(item) != -1
 	};
 
 	this.equals = function (s) {
@@ -5115,21 +5307,41 @@ function Set (arr) { //Mathematical set
 	
 	this.median = function (s, e) {
 		return this.value.max(s, e)
-	}
+	};
+
+	return this;
 }
 
 SortedSet.inheritsFrom(Set);
+/**
+ * @description Sorted mathematical set
+ * @this SortedSet
+ * @see Set
+ * @param {Array} arr Array
+ * @returns {SortedSet} Sorted set
+ * @constructor
+ */
 function SortedSet (arr) {
 	this.value = arr || [];
 	this.add = function (item) {
-		if (this.value.indexOf(item) ==-1) {
+		if (this.value.indexOf(item) === -1) {
 			if (isType(item, "array")) this.value = this.value.concat(item);
 			else this.value.push(item);
 		}
 		this.value.quickSort();
-	}
+	};
+
+	return this;
 }
 
+/**
+ * @description Stack
+ * @param {Array} [arr] Array
+ * @param {number|null} [lim=null] Limit
+ * @returns {Stack} Stack
+ * @this Stack
+ * @constructor
+ */
 function Stack (arr, lim) {
 	this.value = isType(lim, "Number")? new Array(lim): [];
 	this.limit = lim || null;
@@ -5173,9 +5385,18 @@ function Stack (arr, lim) {
 	
 	this.equals = function (s) {
 		return this.toString() === s.toString()
-	}
+	};
+
+	return this;
 }
 
+/**
+ * @description Stack array
+ * @param {number} sz Array size
+ * @returns {StackArray} Stack array
+ * @this StackArray
+ * @constructor
+ */
 function StackArray (sz) {
 	this.value = new Array(sz);
 	this.top = -1;
@@ -5223,9 +5444,18 @@ function StackArray (sz) {
 	
 	this.equals = function (s) {
 		return this.toString() === s.toString()
-	}
+	};
+
+	return this;
 }
 
+/**
+ * @description Stack list
+ * @param {Array|*} [arr] Array or element
+ * @returns {StackList} Stack list
+ * @this StackList
+ * @constructor
+ */
 function StackList (arr) {
 	this.top = new Node();
 	
@@ -5261,9 +5491,19 @@ function StackList (arr) {
 	
 	this.size = function (n) {
 		return this.top != null? this.size(n + 1): n
-	}
+	};
+
+	return this;
 }
 
+/**
+ * @description Queue
+ * @param {Array|*} [arr] Array or element
+ * @param {number|null} [lim=null] Limit
+ * @returns {Queue} Queue
+ * @this Queue
+ * @constructor
+ */
 function Queue (arr, lim) {
 	this.value = isType(lim, "Number")? new Array(lim): [];
 	this.limit = lim || null;
@@ -5307,9 +5547,18 @@ function Queue (arr, lim) {
 	
 	this.equals = function (queue) {
 		return this.toString() === queue.toString()
-	}
+	};
+
+	return this;
 }
 
+/**
+ * @description Queue array
+ * @param {Array|*} [arr=[]] Array or element
+ * @returns {QueueArray} QueueArray
+ * @this QueueArray
+ * @constructor
+ */
 function QueueArray (arr) {
 	this.value = arr || [];
 	this.front = -1;
@@ -5362,9 +5611,18 @@ function QueueArray (arr) {
 	
 	this.equals = function (queue) {
 		return this.toString() === queue.toString()
-	}
+	};
+
+	return this;
 }
 
+/**
+ * @description Queue list
+ * @this QueueList
+ * @returns {QueueList} QueueList
+ * @todo Probably add the pre-init similar to StackList() ?
+ * @constructor
+ */
 function QueueList () {
 	this.front = null;
 	this.back = null;
@@ -5423,10 +5681,19 @@ function QueueList () {
 		if (i === 0) this.front = new Node(pl);
 		else if (i === this.len) this.back = new Node(pl);
 		else if (i > this.len) this.enqueue(pl);
-	}
+	};
+
+	return this;
 }
 
-function Astar (start, goal) { //A* path finding alg
+/**
+ * @description A* path finding algorithm
+ * @todo Make sure it works properly
+ * @param {PathNode} start Starting node
+ * @param {PathNode} goal Ending node
+ * @returns {undefined}
+ */
+function Astar (start, goal) {
 	//Inspired from http://Heyes-jones.com/pseudocode.php
 	//PathNode.f (score) = g (sum of all cost to get at this point) + h (heuristic: estimate of what it will take to get the goal)
 	var nodeGoal = goal, nodeCurrent, nodeSucessor, _h;
@@ -5469,6 +5736,13 @@ function Astar (start, goal) { //A* path finding alg
 	}
 }
 
+/**
+ * @description A* algorithm v2
+ * @param {number[]} start Starting node
+ * @param {number[]} goal Ending node
+ * @param {Array} grid Grid
+ * @returns {undefined}
+ */
 function A(start, goal, grid) { //JS version of https://en.wikipedia.org/wiki/A*_search_algorithm
 	var closedSet = [], openSet = [start], cameFrom = [], gScore = [0], fScore = [euclidianDist(start, goal)];
 
@@ -5490,9 +5764,15 @@ function A(start, goal, grid) { //JS version of https://en.wikipedia.org/wiki/A*
 		gScore[i] = tentativeGScore;
 		fScore[i] = gScore[i] + euclidianDist(n[i], goal);
 	}
-	return false;
 }
 
+/**
+ * @description Path reconstructor
+ * @param {Array} cameFrom List of visited nodes
+ * @param {Array} current Current node
+ * @param {Array} grid Grid
+ * @returns {*[]} Reconstructed path
+ */
 function reconPath(cameFrom, current, grid) {
 	var totalPath = [current];
 	while (current in keyList(cameFrom)) {
@@ -5502,29 +5782,49 @@ function reconPath(cameFrom, current, grid) {
 	return totalPath;
 }
 
-function IDAstar () { //Iterative Depending A* path finding alg (for 15-puzzle or huge structures)
+/**
+ * @description Iterative Depending A* path finding algorithm
+ * @returns {undefined}
+ */
+function IDAstar () {
 	
 }
 
-function readCoord (str, isInt) { //Read and convert coordinates of the form (a, b) and gives the a and b
-	var c = str.slice(1, str.length-1).split(", ");
+/**
+ * @description Read and convert coordinates to code readable data
+ * @param {string} str Coordinates
+ * @param {boolean} isInt Convert the cells into integers
+ * @returns {(string|number)[]} Coordinates
+ */
+function readCoord (str, isInt) {
+	var c = str.slice(1, str.length - 1).split(", ");
 	return isInt? [parseInt(c[0]), parseInt(c[1])]: c
-} 
+}
 
-function rmConsecDuplicates (arr) { //Remove the consecutive duplicated values in an array
+/**
+ * @description Remove the consecutive duplicated values in an array
+ * @param {Array} arr Array
+ * @returns {Array} Filtered array
+ */
+function rmConsecDuplicates (arr) {
 	var out = [];
 	var j = 0;
 	for (var i = 0; i < arr.length; i++) {
-		if (i === 0 || arr[i] != arr[i-1]) out[j++] = arr[i];
+		if (i === 0 || arr[i] != arr[i - 1]) out[j++] = arr[i];
 	}
 	j = 0;
-	for (i = 0; i < arr.length-1; i++) { //Double enforced check
+	for (i = 0; i < arr.length - 1; i++) { //Double enforced check
 		if (arr[i] != arr[i + 1]) out[j++] = arr[i];
 	}
 	return out
 }
 
-function rmDuplicates (arr) { //Remove the duplicated values in an array
+/**
+ * @description Remove the duplicates of an array
+ * @param {Array} arr Array
+ * @returns {Array} Filtered array
+ */
+function rmDuplicates (arr) {
 	var out = rmConsecDuplicates(arr), j = 0;
 	
 	for (var i = 0; i < arr.length; i++) { //Pre-filtering
@@ -5538,11 +5838,20 @@ function rmDuplicates (arr) { //Remove the duplicated values in an array
 	return out.remove(undefined)
 }
 
-function Shape (x, y, b, v) { //Interface object
+/**
+ * @description Shape
+ * @param {number} [x=0] X-coordinate
+ * @param {number} [y=0] Y-coordinate
+ * @param {number} [b=1] Border
+ * @param {Vector} [v=new Vector()] Velocity
+ * @constructor
+ * @interface
+ */
+function Shape (x, y, b, v) {
 	this.x = x || 0;
 	this.y = y || 0;
 	this.border = b || 1;
-	this.vel = v || new Vector(0, 0);
+	this.vel = v || new Vector();
 	this.norm = this.vel.getNormal();
 	
 	this.update = function () {
@@ -5552,7 +5861,7 @@ function Shape (x, y, b, v) { //Interface object
 	};
 	
 	this.stop = function () {
-		this.vel = this.norm = new Vector(0, 0);
+		this.vel = this.norm = new Vector();
 	};
 	
 	this.toString = function () {
@@ -5601,10 +5910,28 @@ function Shape (x, y, b, v) { //Interface object
 	
 	this.getSpeed = function () {
 		return Math.sqrt(Math.pow(this.vel.x, 2) + Math.pow(this.vel.y, 2))
-	}
+	};
+
+	return this;
 }
 
-function Box (x, y, z, w, h, d, bsz, bclr, bgclr, brd) { //An obvious 2D/3D box
+/**
+ * @description A 2D/3D box
+ * @param {number} [x=0] X-coordinate
+ * @param {number} [y=0] Y-coordinate
+ * @param {number} [z=0] Z-coordinate
+ * @param {number} [w=10] Width
+ * @param {number} [h=10] Height
+ * @param {number} [d=.1] Depth
+ * @param {number} [bsz=1] Border size
+ * @param {string} [bclr="#000"] Border colour
+ * @param {string} [bgclr="#fff"] Background colour
+ * @param {number} [brd=0] Border radius
+ * @returns {Box} Box
+ * @this Box
+ * @constructor
+ */
+function Box (x, y, z, w, h, d, bsz, bclr, bgclr, brd) {
 	this.x = x || 0;
 	this.y = y || 0;
 	this.z = z || 0;
@@ -5632,18 +5959,32 @@ function Box (x, y, z, w, h, d, bsz, bclr, bgclr, brd) { //An obvious 2D/3D box
 	this.toString = function () {
 		return "Box(x = " + this.x + ", y = " + this.y + ", z = " + this.z + ", width = " + this.width + ", height = " + this.height + ", deepth = " + this.deepth + ", borderSize = " + this.borderSize + ", borderColor = " + this.borderColor + ", borderRadius = " + this.borderRadius + ", backgroundColor = " + this.backgroundColor + ")"
 	};
-	return this
+
+	return this;
 }
 
-AABB.inheritsFrom(Shape); //Shorter than AABB.prototype = new Shape();AABB.prototype.constructor = AABB;
-function AABB (px, py, pw, ph, b, v) { //Axe Aligned Bounding Box
-	this.x = px || 0;
-	this.y = py || this.y;
-	this.w = pw || 10;
-	this.h = ph || this.w;
+AABB.inheritsFrom(Shape);
+/**
+ * @description Axe Aligned Bounding Box
+ * @param {number} [x=0] X-coordinate
+ * @param {number} [y=0] Y-coordinate
+ * @param {number} [w=10] Width
+ * @param {number} [h=10] Height
+ * @param {number} [b=1] Border
+ * @param {Vector} [v=new Vector()] Velocity
+ * @returns {AABB} AABB
+ * @this AABB
+ * @constructor
+ * @see Shape
+ */
+function AABB (x, y, w, h, b, v) {
+	this.x = x || 0;
+	this.y = y || this.y;
+	this.w = w || 10;
+	this.h = h || this.w;
 	this.border = b || 1;
-	this.vel = v || new Vector(0, 0);
-	this.ratio = this.h/this.w;
+	this.vel = v || new Vector();
+	this.ratio = this.h / this.w;
 	this.norm = this.vel.getNormal();
 	
 	this.getPoints = function () {
@@ -5690,16 +6031,30 @@ function AABB (px, py, pw, ph, b, v) { //Axe Aligned Bounding Box
 
 	this.getDiag = function () { //Diagnal
 		return Math.sqrt(Math.pow(this.w, 2) + Math.pow(this.h, 2))
-	}
+	};
+
+	return this;
 }
 
 Circ.inheritsFrom(Shape);
-function Circ (px, py, pr, b, v) { //Circle
-	this.x = px || 0;
-	this.y = py || 0;
-	this.r = pr || 10;
+/**
+ * @description Circle
+ * @param {number} [x=0] X-coordinate
+ * @param {number} [y=0] Y-coordinate
+ * @param {number} [r=10] Radius
+ * @param {number} [b=1] Border
+ * @param {Vector} [v=new Vector()] Velocity
+ * @returns {Circ} Circle
+ * @this Circ
+ * @constructor
+ * @see Shape
+ */
+function Circ (x, y, r, b, v) {
+	this.x = x || 0;
+	this.y = y || 0;
+	this.r = r || 10;
 	this.border = b || 1;
-	this.vel = v || new Vector(0, 0);
+	this.vel = v || new Vector();
 	this.norm = this.vel.getNormal();
 	
 	this.offset = function (s) {
@@ -5729,15 +6084,26 @@ function Circ (px, py, pr, b, v) { //Circle
 	
 	this.getCircumference = function () {
 		return 2 * this.r * Math.PI
-	}
+	};
+
+	return this;
 }
 
 Pt.inheritsFrom(Shape);
-function Pt (px, py) { //Point
+/**
+ * @description
+ * @param {number} [x=0] X-coordinate
+ * @param {number} [y=0] Y-coordinate
+ * @returns {Pt} Point
+ * @this Pt
+ * @see Shape
+ * @constructor
+ */
+function Pt (x, y) {
 	this.prototype = Shape.prototype;
-	this.x = px || 0;
-	this.y = py || 0;
-	this.vel = new Vector(0, 0);
+	this.x = x || 0;
+	this.y = y || 0;
+	this.vel = new Vector();
 	
 	this.equals = function (p) {
 		return this.x == p.x && this.y == p.y
@@ -5745,28 +6111,50 @@ function Pt (px, py) { //Point
 	
 	this.toString = function () {
 		return "Pt(x = " + this.x + ", y = " + this.y + ")"
-	}
+	};
+
+	return this;
 }
 
 Line.inheritsFrom(Shape);
+/**
+ * @description Line
+ * @param {number[]} a Starting point
+ * @param {number[]} b Ending point
+ * @returns {Line} Line
+ * @this Line
+ * @see Shape
+ * @constructor
+ */
 function Line (a, b) {
 	this.s = a;
 	this.e = b;
 	
 	this.equals = function (l) {
-		return this.s == l.s && this.e == l.e
+		return this.s.equals(l.s) && this.e.equals(l.e)
 	};
 	
 	this.toString = function () {
 		return "Line(start = " + this.s.toString() + ", end = " + this.e.toString() + ")"
-	}
+	};
+
+	return this;
 }
 
 Vector.inheritsFrom(Shape);
-function Vector (px, py) {
-	this.prototype = Shape.prototype;
-	this.x = px || 0;
-	this.y = py || 0;
+/**
+ * @description
+ * @see Shape
+ * @this Vector
+ * @param {number} [x=0] X-coordinate
+ * @param {number} [y=0] Y-coordinate
+ * @returns {Vector} Vector
+ * @constructor
+ */
+function Vector (x, y) {
+	this.prototype = Shape.prototype; //To avoid bugs
+	this.x = x || 0;
+	this.y = y || 0;
 	
 	this.toString = function () {
 		return "Vector(x = " + this.x + ", y = " + this.y + ")"
@@ -5826,14 +6214,26 @@ function Vector (px, py) {
 	
 	this.angle = function (v) {
 		return Math.acos((this.x * v.x + this.y * v.y)/(this.length() * v.length()))
-	}
+	};
+
+	return this;
 }
 
 Polygon.inheritsFrom(Shape);
+/**
+ * @description Polygon
+ * @this Polygon
+ * @see Shape
+ * @param {Array} pts Points
+ * @param {number} [b=1] Border
+ * @param {Vector} [v=new Vector()] Velocity
+ * @returns {Polygon} Polygon
+ * @constructor
+ */
 function Polygon (pts, b, v) {
 	this.points = pts;
 	this.border = b || 1;
-	this.vel = v || new Vector(0, 0);
+	this.vel = v || new Vector();
 	this.norm = this.vel.getNormal();
 	
 	this.equals = function (a) {
@@ -5863,10 +6263,21 @@ function Polygon (pts, b, v) {
 	
 	this.draw = function () {
 		
-	}
+	};
+
+	return this;
 }
 
-function simpleTable (caption, rows, id, style, split) { //A basic html table
+/**
+ * @description A basic HTML table
+ * @param {string|number} caption Caption
+ * @param {Array} rows Rows of the table
+ * @param {string} id ID of the table
+ * @param {string} [style] Style of table
+ * @param {boolean} [split=false] Split rows into multiple columns
+ * @returns {string} HTML code
+ */
+function simpleTable (caption, rows, id, style, split) {
 	var tab = (caption)? "<table id=" + id + " style=" + style + " cellspacing=0 cellpadding=2><caption>" + caption + "</caption>": "<table>";
 	for (var i = 0; i < rows.length; i++) {
 		tab += "<tr>";
@@ -5875,10 +6286,20 @@ function simpleTable (caption, rows, id, style, split) { //A basic html table
 		} else  tab += "<td>" + rows[i] + "</td>";
 		tab += "</tr>";
 	}
-	tab += "</table><style> table{background: #000;}table, td {border: 1px solid #000; color: #000; background: #fff;} tr:nth-child(even) td{background: #ddd;} tr td:hover{background: #bbb;}</style>";
+	tab += "</table><style>table{background: #000;}table, td {border: 1px solid #000; color: #000; background: #fff;} tr:nth-child(even) td{background: #ddd;} tr td:hover{background: #bbb;}</style>";
 	return tab
 }
 
+/**
+ * @description Row HTML table
+ * @param {string|number} caption Caption
+ * @param {Array} headerRows Row headers
+ * @param {Array} rows Rows of the table
+ * @param {string} id ID of the table
+ * @param {boolean} [split=false] Split rows into multiple columns
+ * @param {string} [style] Style of table
+ * @returns {string} HTML code
+ */
 function rowTable (caption, headerRows, rows, id, split, style) {
 	var tab = (caption)? "<table id=" + id + " style=" + style + " cellspacing=0 cellpadding=2><caption>" + caption + "</caption>": "<table>";
 	//Var rowspan = (headerRows.length <= rows.length)? rows.length/headerRows.length: headerRows.length/rows.length;
@@ -5896,6 +6317,16 @@ function rowTable (caption, headerRows, rows, id, split, style) {
 	return tab
 }
 
+/**
+ * @description Column HTML table
+ * @param {string|number} caption Caption
+ * @param {Array} headerCols Row headers
+ * @param {Array} cols Cols of the table
+ * @param {string} id ID of the table
+ * @param {boolean} [split=false] Split columns into multiple rows
+ * @param {string} [style] Style of table
+ * @returns {string} HTML code
+ */
 function colTable (caption, headerCols, cols, id, split, style) {
 	var tab = (caption)? "<table id=" + id + " style=" + style + " cellspacing=0 cellpadding=2><caption>" + caption + "</caption>": "<table>";
 	//Var colspan = (headerCols.length <= cols.length)? cols.length/headerCols.length: headerCols.length/cols.length;
@@ -5920,7 +6351,18 @@ function colTable (caption, headerCols, cols, id, split, style) {
 	return tab
 }
 
-function complexTable (caption, headerRows, rows, headerCols, id, split, style) { //Mix of the column and row tables
+/**
+ * @description Complex HTML table
+ * @param {string|number} caption Caption
+ * @param {Array} headerRows Row headers
+ * @param {Array} rows Rows of the table
+ * @param {Array} headerCols Columns Headers
+ * @param {string} id ID of the table
+ * @param {boolean} [split=false] Split rows into multiple columns
+ * @param {string} [style] Style of table
+ * @returns {string} HTML code
+ */
+function complexTable (caption, headerRows, rows, headerCols, id, split, style) {
 	var tab = (caption)? "<table id=" + id + " style=" + style + " cellspacing=0 cellpadding=2><caption>" + caption + "</caption>": "<table><tr><td></td>";
 	for(var i = 0; i < headerCols.length; i++) tab += "<th>" + headerCols[i] + "</th>";
 	tab += "</tr>";
@@ -5937,7 +6379,17 @@ function complexTable (caption, headerRows, rows, headerCols, id, split, style) 
 	return tab
 }
 
-function colourTable (caption, cols, clrs, id, split, style) { //A table with colored empty cells
+/**
+ * @description HTML table with coloured empty cells
+ * @param {string|number} caption Caption
+ * @param {Array} cols Columns
+ * @param {string[]} clrs Colours list
+ * @param {string} id ID of the table
+ * @param {boolean} [split=false] Split the cells into multiple ones
+ * @param {string} [style] Style of the table
+ * @returns {string} Colour HTML table
+ */
+function colourTable (caption, cols, clrs, id, split, style) {
 	var tab = (caption)? "<table id=" + id + " style=" + style + " cellspacing=0 cellpadding=2><caption>" + caption + "</caption>": "<table>";
 	if (cols) {
 		tab += "<tr>";
@@ -5955,6 +6407,13 @@ function colourTable (caption, cols, clrs, id, split, style) { //A table with co
 	return tab
 }
 
+/**
+ * @description Compare two matrices and display a table with all the different elements of $b in regards to $a
+ * @param {Array} a Matrice a
+ * @param {Array} b Matrice b
+ * @param {boolean} [toHTML=false] HTML output
+ * @returns {*} Comparison table result
+ */
 function tableCompare(a, b, toHTML) { //Compare two matrices and display a table with all the different elements
 	if(a.size(true) != b.size(true)) throw new Error("You can't compare two matrices of different sizes");
 	var res = copy(a);
@@ -5965,9 +6424,20 @@ function tableCompare(a, b, toHTML) { //Compare two matrices and display a table
 	return res;
 }
 
+/**
+ * @description Local/session database
+ * @param {string} [name="Database"] Database name
+ * @param {Array} [headR=range(100)] Header rows
+ * @param {Array} [cells=[].fill("...")] Cells
+ * @param {Array} [headC=["Index", "Value"]] Header columns
+ * @param {string} [admin="Anonymous"] Admin's name
+ * @param {number} [ver=1.0] Version
+ * @this database
+ * @returns {database} Database
+ */
 function database (name, headR, cells, headC, admin, ver) { //Local database
 	this.name = name || "Database";
-	this.headerRow = (isNon(headR))? range(0, 1, 100): headR;
+	this.headerRow = (isNon(headR))? range(100): headR;
 	this.content = (isNon(cells))? [].fill("..."): cells;
 	this.headerCol = headC || ["Index", "Value"];
 	this.admin = admin || "Anonymous";
@@ -5985,7 +6455,7 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
 		localStorage[this.name] = JSON.stringify(this.val)
 	};
 	this.html = complexTable(this.name, this.headerRow, this.content, this.headerCol, name);
-	this.css = "<style> * {font-family: Consolas, Segoe UI, Tahoma;} table {background: #000;}table, td, th {border: 1px solid #000; color: #000; background: #fff;} tr:nth-child(even) td, tr:nth-child(even) th{background: #eee;}</style>";
+	this.css = "<style>*{font-family:Consolas,Segoe UI,Tahoma;}table{background: #000;}table,td,th{border:1px solid #000;color:#000;background:#fff;}tr:nth-child(even) td,tr:nth-child(even) th{background:#eee;}</style>";
 	this.disp = function (elmId) {
 		var place = (elmId)? "#" + elmId: "body";
 		$e(place).write(this.html + this.css,true);
@@ -6011,42 +6481,75 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
 			}
 		}
 	}
+
+	return this;
 }
 
-function char2hex (c) { //Character to hexadecimal
+/**
+ * @description Character to hexadecimal
+ * @param {string} c Character
+ * @returns {string} Hexadecimal code
+ */
+function char2hex (c) {
 	return conv(c.charCodeAt(0), 10, 16)
 }
 
-function hex2char (h) { //Hexadecimal to character
+/**
+ * @description Hexadecimal to character
+ * @param {string|number} h Hexadecimal code
+ * @returns {string} Character
+ */
+function hex2char (h) {
 	return String.fromCharCode(conv(h, 16))
 }
 
-function char2bin (c) { //Character to binary
+/**
+ * @description Character to binary
+ * @param {string} c Character
+ * @returns {string} Binary code
+ */
+function char2bin (c) {
 	return conv(c.charCodeAt(0), 10, 2)
 }
 
-function bin2char (h) { //Binary to character
-	return String.fromCharCode(conv(h, 2))
+/**
+ * @description Binary to character
+ * @param {number|string} b Binary code
+ * @returns {string} Character
+ */
+function bin2char (b) {
+	return String.fromCharCode(conv(b, 2))
 }
 
-function trans (character, n) { //Caesar crypting
+/**
+ * @description Caesar crypting
+ * @param {string|number} character Character to encrypt
+ * @param {number} n Key
+ * @returns {string} Cryped character
+ */
+function trans (character, n) {
 	var code = character.charCodeAt(0);
 	return String.fromCharCode(code + n)
 }
 
-
+/**
+ * @description Encrypt a text
+ * @param {string} txt Text
+ * @param {number} [key] Key
+ * @returns {string} Encrypted text
+ */
 function encrypt (txt, key) {
 	if (!key) {
 		var len = txt.length, extra = 0;
 		var mid = Math.floor(len/2);
 		
-		mid = (len % 2 === 0)? txt.charCodeAt(mid): (txt.charCodeAt(txt[mid-1]) + txt.charCodeAt(txt[mid]))/2;
+		mid = (len % 2 === 0)? txt.charCodeAt(mid): (txt.charCodeAt(txt[mid - 1]) + txt.charCodeAt(txt[mid])) / 2;
 		if (mid >= 97 && mid <= 122) extra = 2;
 		else if (mid >= 65 && mid <= 90) extra = 1;
 		else if (mid - Math.floor(mid/2) * 2 === 0) extra = -1;
 		else extra = 2;
 		
-		key = Math.round((Math.pow(2, 7) + txt.sum()-48)/txt.prod()) + extra;
+		key = Math.round((Math.pow(2, 7) + txt.sum() - 48) / txt.prod()) + extra;
 	}
 	var res = "";
 	for(var i = 0; i < txt.length; i++) res += trans(txt[i], key);
@@ -6055,13 +6558,19 @@ function encrypt (txt, key) {
 	return res
 }
 
+/**
+ * @description Decrypt a text
+ * @param {string} txt Encrypted text
+ * @param {number} [key] Key
+ * @returns {string} Decrypted text
+ */
 function decrypt (txt, key) {
 	var res = "";
 	if (key) {
-		for(var i = 1; i <= txt.length; i++) res += trans(txt[i-1], key);
+		for(var i = 1; i <= txt.length; i++) res += trans(txt[i - 1], key);
 	} else {
-		res = new Array(131073)//2 * Math.pow(2, 16) + 1
-		for (i =-65536; i < 65537; i++) {
+		res = new Array(131073); //2 * Math.pow(2, 16) + 1
+		for (i = -65536; i < 65537; i++) {
 			res[i + 65536] = "";
 			for (var j = 0; j < txt.length; j++) {
 				res[i + 65536] += trans(txt[j], i % 65537);
@@ -6073,65 +6582,72 @@ function decrypt (txt, key) {
 	//simpleTable("Decryption result for <i>" + txt + "</i>", , res, "decrypt_" + txt, Essence.css)
 }
 
-function abcEncode (txt) { //Encode the alphabet (regardless of the case) to hex that doesn't take into account the numbers
+/**
+ * @description Alphabetically encode (regardless of the case) to hexadecimal
+ * @param {string} txt Text
+ * @returns {string} Encoded text
+ */
+function abcEncode (txt) {
 	var code = new Array(txt.length);
 	if (isType(txt, "string") || isType(txt, "array")) {
 		for (var i in txt) {
-			switch (txt[i].toLowerCase()) {
-				case " ": code[i] = "00";break;
-				case "a": code[i] = "01";break;
-				case "b": code[i] = "02";break;
-				case "c": code[i] = "03";break;
-				case "d": code[i] = "04";break;
-				case "e": code[i] = "05";break;
-				case "f": code[i] = "06";break;
-				case "g": code[i] = "07";break;
-				case "h": code[i] = "08";break;
-				case "i": code[i] = "09";break;
-				case "j": code[i] = 0xA;break;
-				case "k": code[i] = 0xB;break;
-				case "l": code[i] = 0xC;break;
-				case "m": code[i] = 0xD;break;
-				case "n": code[i] = 0xE;break;
-				case "o": code[i] = 0xF;break;
-				case "p": code[i] = 0x10;break;
-				case "q": code[i] = 0x11;break;
-				case "r": code[i] = 0x12;break;
-				case "s": code[i] = 0x13;break;
-				case "t": code[i] = 0x14;break;
-				case "u": code[i] = 0x15;break;
-				case "v": code[i] = 0x16;break;
-				case "w": code[i] = 0x17;break;
-				case "x": code[i] = 0x18;break;
-				case "y": code[i] = 0x19;break;
-				case "z": code[i] = 0x1A;break;
-				case ".": code[i] = 0x1B;break;
-				case ",": code[i] = 0x1C;break;
-				case "!": code[i] = 0x1D;break;
-				case "?": code[i] = 0x1E;break;
-				case "(": code[i] = 0x1F;break;
-				case ")": code[i] = 0x20;break;
-				case ":":code[i] = 0x21;break;
-				case ";": code[i] = 0x22;break;
-				case "@": code[i] = 0x23;break;
-				case "~": code[i] = 0x24;break;
-				case "\'": code[i] = 0x25;break;
-				case "\"": code[i] = 0x26;break;
-				case "#": code[i] = 0x27;break;
-				case "{": code[i] = 0x28;break;
-				case "}": code[i] = 0x29;break;
-				case "-": code[i] = 0x2A;break;
-				case "\\": code[i] = 0x2B;break;
-				case "/": code[i] = 0x2C;break;
-				case "£": code[i] = 0x2D;break;
-				case "$": code[i] = 0x2E;break;
-				case "€": code[i] = 0x2F;break;
-				case "+": code[i] = 0x30;break;
-				case "*": code[i] = 0x31;break;
-				case "%": code[i] = 0x32;break;
-				case "^": code[i] = 0x33;break;
-				case "°": code[i] = 0x34;break;
-				default: code[i] = "x";
+			if(txt.hasOwnProperty(i)) {
+				switch (txt[i].toLowerCase()) {
+					case " ": code[i] = "00";break;
+					case "a": code[i] = "01";break;
+					case "b": code[i] = "02";break;
+					case "c": code[i] = "03";break;
+					case "d": code[i] = "04";break;
+					case "e": code[i] = "05";break;
+					case "f": code[i] = "06";break;
+					case "g": code[i] = "07";break;
+					case "h": code[i] = "08";break;
+					case "i": code[i] = "09";break;
+					case "j": code[i] = 0xA;break;
+					case "k": code[i] = 0xB;break;
+					case "l": code[i] = 0xC;break;
+					case "m": code[i] = 0xD;break;
+					case "n": code[i] = 0xE;break;
+					case "o": code[i] = 0xF;break;
+					case "p": code[i] = 0x10;break;
+					case "q": code[i] = 0x11;break;
+					case "r": code[i] = 0x12;break;
+					case "s": code[i] = 0x13;break;
+					case "t": code[i] = 0x14;break;
+					case "u": code[i] = 0x15;break;
+					case "v": code[i] = 0x16;break;
+					case "w": code[i] = 0x17;break;
+					case "x": code[i] = 0x18;break;
+					case "y": code[i] = 0x19;break;
+					case "z": code[i] = 0x1A;break;
+					case ".": code[i] = 0x1B;break;
+					case ",": code[i] = 0x1C;break;
+					case "!": code[i] = 0x1D;break;
+					case "?": code[i] = 0x1E;break;
+					case "(": code[i] = 0x1F;break;
+					case ")": code[i] = 0x20;break;
+					case ":":code[i] = 0x21;break;
+					case ";": code[i] = 0x22;break;
+					case "@": code[i] = 0x23;break;
+					case "~": code[i] = 0x24;break;
+					case "\'": code[i] = 0x25;break;
+					case "\"": code[i] = 0x26;break;
+					case "#": code[i] = 0x27;break;
+					case "{": code[i] = 0x28;break;
+					case "}": code[i] = 0x29;break;
+					case "-": code[i] = 0x2A;break;
+					case "\\": code[i] = 0x2B;break;
+					case "/": code[i] = 0x2C;break;
+					case "£": code[i] = 0x2D;break;
+					case "$": code[i] = 0x2E;break;
+					case "€": code[i] = 0x2F;break;
+					case "+": code[i] = 0x30;break;
+					case "*": code[i] = 0x31;break;
+					case "%": code[i] = 0x32;break;
+					case "^": code[i] = 0x33;break;
+					case "°": code[i] = 0x34;break;
+					default: code[i] = "x";
+				}
 			}
 		}
 		return isType(txt, "string")? code.join(""): code
@@ -6139,7 +6655,12 @@ function abcEncode (txt) { //Encode the alphabet (regardless of the case) to hex
 	return Essence.say("The parameter of abcEncode must be a string or an array.", "err")
 }
 
-function abcDecode (txt) { //Encode the alphabet (regardless of the case) to hex that doesn't take into account the numbers
+/**
+ * @description Alphabetically decode from hexadecimal to lowercase text.
+ * @param {string} txt Hexadecimal code
+ * @returns {string} Alphabtical text
+ */
+function abcDecode (txt) {
 	var code = new Array(txt.length);
 	if (isType(txt, "string") || isType(txt, "array")) {
 		for (var i = 0; i < txt.length; i += 2) {
@@ -6205,44 +6726,92 @@ function abcDecode (txt) { //Encode the alphabet (regardless of the case) to hex
 	return Essence.say("The parameter of abcDecode must be a string or an array.", "err")
 }
 
+/**
+ * @description Data encryption
+ * @param {string|number} data Data
+ * @returns {string|number} Encrypted data
+ */
 function ilEncrypt(data) {
 	var res = isType(data, "String")? data.split(""): data;
 	for (var i = 0; i < res.length; i++) res[i] = String.fromCharCode(abcModulus(data[i].charCodeAt(0) * data.length));
 	return isType(data, "String")? res.join(""): res;
 }
 
+/**
+ * @description Data decryption
+ * @param {string|number} data Data
+ * @returns {string|number} Decrypted data
+ */
 function ilDecrypt(data) {
 	var res = isType(data, "String")? data.split(""): data;
 	for (var i = 0; i < res.length; i++) res[i] = String.fromCharCode(abcModulus(data[i].charCodeAt(0) / data.length));
 	return isType(data, "String")? res.join(""): res;
 }
 
+/**
+ * @description RSA algorithm keys
+ * @param {number} p Number #1
+ * @param {number} q Number #2
+ * @returns {number[]} Public key
+ * @todo Find out how to get $e and $d
+ * @constructor
+ */
 function RSA(p, q) {
-	var n = p * q, z = (p - 1)(q - 1), e, d; //1 < e < n & gcd(e, z) = 1
+	var n = p * q, z = (p - 1) * (q - 1), e, d; //1 < e < n & gcd(e, z) = 1
 
 	Essence.say([n, d]); //Private key
 	return [n, e]; //Public keys
 }
 
+/**
+ * @description Encrypt/decrypt a message with the public/private key
+ * @param {string} msg Message
+ * @param {number[]} key Key
+ * @returns {number} Crypted/decrypted code
+ */
 function cryptRSA(msg, key) { //Encrypt $msg with the public/private key $key to encrypt/decrypt the message
 	return Math.pow(msg, key[1]) % key[0];
 }
 
-function abcClamp(code) { //Keeps an ascii code in the alphabetical range in the ascii table
+/**
+ * @description Keeps an ascii code in the alphabetical range in the ascii table
+ * @param {numbrt} code Ascii code
+ * @returns {number} Clamped code
+ */
+function abcClamp(code) {
 	return code === 32? 32: revClamp(clamp(code, 65, 122), 90, 97);
 }
 
-function modRange(x, a, b) { //Like x % b but that forbids values x < a
+/**
+ * @description x % b where x < a isn't allowed
+ * @param {number} x Number
+ * @param {number} a Lowest bound
+ * @param {number} b Module
+ * @returns {number} Result
+ */
+function modRange(x, a, b) {
 	var r = x % (b + 1);
 	return r + (r < a)? a + r: 0;
 }
 
+/**
+ * @description Alphabetical modulus
+ * @param {number} code Ascii code
+ * @returns {number} Moded ascii code
+ */
 function abcModulus(code) {
 	var m = code % 123;
 	if (90 < m && m < 97) return m + abcModulus(Math.abs(getClosest(m, [90, 97]) - m));
 	return m + ((m < 65 && m != 32)? 65 + m: 0); 
 }
 
+/**
+ * @description Brute force through R to find an x such that min <= x <= max and the condition is true for x
+ * @param {number} min Minimum
+ * @param {string} cond Condition
+ * @param {number} max Maximum
+ * @returns {number|boolean} X or false
+ */
 function bruteForceNum(min, cond, max) { //Brute force through R to find a x such that min <= x <= max and cond is true for x
 	for (var x = min; x < max; x++) {
 		if(eval(cond.replace(RegExpify("x"), x))) return x;
@@ -6250,12 +6819,23 @@ function bruteForceNum(min, cond, max) { //Brute force through R to find a x suc
 	return false;
 }
 
+/**
+ * @description (Ask to) bookmark a webpage
+ * @param {string} url URL of the webpage
+ * @param {string} title Title
+ * @param {string} [elmId="body"] Element ID
+ * @returns {undefined}
+ */
 function addFav (url, title, elmId) { //Url = http://Www...." title = "My Website"
 	var place = elmId? "#" + elmId: "body";
-	if (navigator.appName.substring(0, 3) === "Mic" && navigator.appVersion.substring(0, 1) >= 4) $e(place).write("<a href=\"#\" onClick=\"window.external.AddFavorite(" + url + ", " + title + ");return(false);\">Bookmark this webpage</a><br />", true);
+	if (navigator.appName.substring(0, 3) === "Mic" && navigator.appVersion.substring(0, 1) >= 4) $e(place).write("<a href=\"#\" onClick=\"window.external.AddFavorite(" + url + ", " + title + ");return false;\">Bookmark this webpage</a><br />", true);
 	else $e(place).write("Press CTRL + D to add this webpage to your bookmarks!", true)
 }
 
+/**
+ * @description Browser check
+ * @returns {checkBrowser} Browser check
+ */
 function checkBrowser () {
 	this.ver = navigator.appVersion;
 	this.dom = document.getElementById? 1: 0;
@@ -6267,6 +6847,10 @@ function checkBrowser () {
 	return this
 }
 
+/**
+ * @description Browser detection system
+ * @type {{init: BrowserDetect.init, searchString: BrowserDetect.searchString, searchVersion: BrowserDetect.searchVersion, dataBrowser: *[], dataOS: *[]}}
+ */
 var BrowserDetect = { //Browser detection system
 	init: function () {
 		this.browser = this.searchString(this.dataBrowser) || "An unknown browser";
@@ -6303,7 +6887,7 @@ var BrowserDetect = { //Browser detection system
 		string: navigator.userAgent, subString: "Firefox", identity: "Firefox"
 	}, {
 		string: navigator.vendor, subString: "Camino", identity: "Camino"
-	}, { //For newer Netscapes (6 + )
+	}, { //For newer Netscapes (6+)
 		string: navigator.userAgent, subString: "Netscape", identity: "Netscape"
 	}, {
 		string: navigator.userAgent, subString: "MSIE", identity: "Explorer", versionSearch: "MSIE"
@@ -6328,15 +6912,27 @@ var BrowserDetect = { //Browser detection system
 };
 //BrowserDetect.init();
 
-function writeMsg (msg, where) { //Type a message
+/**
+ * @description Type a message
+ * @param {string} msg Message
+ * @param {Element|string} where Place to type the message
+ * @param {boolean} [HTML=false] HTML flag
+ * @returns {undefined}
+ */
+function writeMsg (msg, where, HTML) {
 	var txt, pos = 0;
 	while (pos < msg.length + 10) {
 		txt = msg.substring(pos, 0);
-		where.write(txt);
+		isCustomType(where, "element")? where.write(txt, HTML): $e(where).write(txt, HTML);
 		pos++;
 	}
 }
 
+/**
+ * @description Display the date and at time at a particular place
+ * @param {string} id ID of the element to be used
+ * @returns {undefined}
+ */
 function dateTime (id) { //Display the date and time at #id
 	var date = new Date();
 	var year = date.getFullYear(), month = date.getMonth();
@@ -6353,40 +6949,54 @@ function dateTime (id) { //Display the date and time at #id
 	if (m < 10) m = "0" + m;
 	s = date.getSeconds();
 	if (s < 10) s = "0" + s;
-	GMT = (GMT >= 0)? "GMT + "+ GMT: "GMT-"+ GMT;
-	var result = "We're " + days[day] + " " + d+" " + months[month] + " " + year + " and it's " + h+":" + m+":" + s+" " + tt + " " + GMT;
+	GMT = (GMT >= 0)? "GMT + " + GMT: "GMT-" + GMT;
+	var result = "We're " + days[day] + " " + d + " " + months[month] + " " + year + " and it's " + h + ":" + m + ":" + s + " " + tt + " " + GMT;
 	$e("#" + id).write(result, true);
-	setTimeout("dateTime(\"" + id + "\");",1000);
-	return true
+	setTimeout("dateTime(\"" + id + "\");", 1000);
 }
 
-function viewHide (id) { //For 2-ways view/hide of an element with a particular id
-	if ($e("#" + id).css("visibility") == "hidden") {
-		$e("#" + id).setCSS("visibility", "visible");
-		$e("#btn_" + id).write("Hide", true);
-	} else {
+/**
+ * @description View/hide of an element with a particular id
+ * @param {string} id ID
+ * @param {number} [stackLayer=0] Stack layer
+ * @returns {undefined}
+ */
+function viewHide (id, stackLayer) {
+	if(!stackLayer) stackLayer = 0;
+	if($e("#" + id).css("visibility") === "" && stackLayer < 1) viewHide(id, stackLayer + 1);
+	if ($e("#" + id).css("visibility") === "visible") {
 		$e("#" + id).setCSS("visibility", "hidden");
-		$e("#btn_" + id).write("View", true);
+		$e("#btn_" + id).write("Hide");
+	} else {
+		$e("#" + id).setCSS("visibility", "visible");
+		$e("#btn_" + id).write("View");
 	}
-	return true
 }
 
+/**
+ * @description Process
+ * @param {string} name Name of the process
+ * @param {string} [auth="Anonymous"] Author
+ * @param {string} [summup=""] Summary
+ * @param {string} [ctt=""] Content
+ * @returns {process} Process
+ */
 function process (name, auth, summup, ctt) {
 	this.name = name;
 	this.author = auth || "Anonymous";
-	this.bitsize = 0//Size in binary unit
+	this.bitsize = 0; //Size in binary unit
 	this.description = summup || "";
 	this.content = ctt || "";
-	this.sig = this.name[0] + this.name[this.name.length-1] + this.name.prod() + this.author.slice(0, 2) + "-" + (getType(this.content))[0];
+	this.sig = this.name[0] + this.name[this.name.length - 1] + this.name.prod() + this.author.slice(0, 2) + "-" + (getType(this.content))[0];
 	//Rights/privileges ?!
 	this.update = function () {
 		if (this.author != auth || this.author === "Anonymous" || isNon(this.author)) this.sig = this.name[0] + this.name[this.name.length-1] + "-" + this.name.prod() + this.author.slice(0, 2) + "-" + getType(this.content)[0]//H4ck
-		else this.sig = this.name[0] + this.name[this.name.length-1] + this.name.prod() + this.author.slice(0, 2) + "-" + (getType(this.content))[0];;
-		if (this.sig[this.sig.length-1] === "N") this.bitsize = 8 * conv(this.content, 10, 2).sum();
-		else if (this.sig[this.sig.length-1] === "B") this.bitsize = 8;
-		else if (this.sig[this.sig.length-1] === "A") this.bitsize = (is2dArray(this.content))? 8 * this.content.numElm(): 8 * this.content.length;
-		else if (this.sig[this.sig.length-1] === "O") this.bitsize = 0;
-		else if (this.sig[this.sig.length-1] === "S") this.bitsize = 8 * this.content.length;
+		else this.sig = this.name[0] + this.name[this.name.length - 1] + this.name.prod() + this.author.slice(0, 2) + "-" + (getType(this.content))[0];;
+		if (this.sig[this.sig.length - 1] === "N") this.bitsize = 8 * conv(this.content, 10, 2).sum();
+		else if (this.sig[this.sig.length - 1] === "B") this.bitsize = 8;
+		else if (this.sig[this.sig.length - 1] === "A") this.bitsize = (is2dArray(this.content))? 8 * this.content.numElm(): 8 * this.content.length;
+		else if (this.sig[this.sig.length - 1] === "O") this.bitsize = 0;
+		else if (this.sig[this.sig.length - 1] === "S") this.bitsize = 8 * this.content.length;
 		else this.bitsize = null;
 	};
 	this.update();
@@ -6398,10 +7008,22 @@ function process (name, auth, summup, ctt) {
 		Essence.say("The process named " + this.name + " (created by " + this.author + ") has been destroyed !", "info");
 		this.delete();
 	};
-	Essence.addProcess(this)
-};
+	Essence.addProcess(this);
 
-function server (name, admin, type, ver, mxsz) { //Content<->> database issues to fix
+	return this;
+}
+
+/**
+ * @description Server
+ * @todo Content<->> database issues to fix
+ * @param {string} name Name
+ * @param {string} admin Admin
+ * @param {string} [type="data"] Type
+ * @param {number} [ver=1.0] Version
+ * @param {number} [mxsz=2⁶] Maximum size of the server's database
+ * @returns {server} Server
+ */
+function server (name, admin, type, ver, mxsz) {
 	this.name = name;
 	this.admin = admin;
 	this.version = ver || 1.0;
@@ -6419,7 +7041,7 @@ function server (name, admin, type, ver, mxsz) { //Content<->> database issues t
 	else throw new Error(this.type + " is an invalid server type.");
 	this.addProcess = function (pcs) {
 		if (pcs.sig.last() === "-" || pcs.bitsize > this.maxsize/this.nb_slots) console.log("[Server:" + name + "] The process named " + pcs.name + " has been rejected");
-		else{
+		else {
 			var pos;
 			for (var i = 0; i < this.nb_slots; i++) {
 				if (isNon(this.slots[i])) {
@@ -6431,7 +7053,7 @@ function server (name, admin, type, ver, mxsz) { //Content<->> database issues t
 				if (this.slots[pos] != [pcs.name, pcs.author, pcs.description, pcs.content, pcs.bitsize] && this.nb_slots < this.maxsize) { //Check if the process was added to the server
 				this.nb_slots += this.maxsize / this.nb_slots//Extend by one slot
 				this.slots[this.nb_slots] = [pcs.name, pcs.author, pcs.description, pcs.content, pcs.bitsize];
-			};
+			}
 		}
 	};
 	this.add = function (data) {
@@ -6468,18 +7090,31 @@ function server (name, admin, type, ver, mxsz) { //Content<->> database issues t
 	};
 	this.fire = function (pcs) {
 		for (var i in this.slots) {
-			if (this.slots[i][0] == pcs.name && this.slots[i][1] == pcs.author) this.rm(i);
+			if (this.slots.hasOwnProperty(i) && this.slots[i][0] === pcs.name && this.slots[i][1] === pcs.author) this.rm(i);
 		}
 	};
 	this.reset = function () {
-		for(var i in this.slots) this.rm(i)
+		for(var i in this.slots) {
+			if(this.slots.hasOwnProperty(i)) this.rm(i)
+		}
 	};
-	Essence.addServer(this)
+	Essence.addServer(this);
+
+	return this;
 }
 
-function CECheck (id, src, sz, delay, maxDelay) { //Launch the verification of the connexion
+/**
+ * @description Launch the verification of the connection
+ * @param {string} id ID of the element to be used
+ * @param {string} [src="../img/random2000x2000.jpg"] Source of the image to use for the test
+ * @param {number} [sz=61784] Size of the image (in kb)
+ * @param {number} [delay=100] Delay (in ms)
+ * @param {number} [maxDelay=2e4] Maximum delay
+ * @returns {undefined}
+ */
+function CECheck (id, src, sz, delay, maxDelay) {
 	window.defaultStatus = "Evalue the connexion and see the downloading speed";
-	if (!src) src = "img/random2000x2000.jpg";
+	if (!src) src = "../img/random2000x2000.jpg";
 	if (!sz) sz = 61784; //7.723kB -> kb
 	if (!delay) delay = 100; //ms
 	if (!maxDelay) maxDelay = 2e4;
@@ -6492,17 +7127,27 @@ function CECheck (id, src, sz, delay, maxDelay) { //Launch the verification of t
 	setTimeout("CETimer('" + id + "', '" + img + "', 0, " + delay + ", " + maxDelay + ", " + sz + ")", delay); //Uncaught SyntaxError: Unexpected identifier
 }
 
-function CETimer (id, img, nb, delay, maxDelay, size) { //Connexion Evaluation Timer
+/**
+ * @description Connection evaluation timer
+ * @param {string} id ID of the element to be used
+ * @param {string} img Image to use for the test
+ * @param {number} nb Number of attempts done
+ * @param {number} [delay=100] Delay (in ms)
+ * @param {number} [maxDelay=2e4] Maximum delay
+ * @param {number} size Size of the image (in kb)
+ * @returns {undefined}
+ */
+function CETimer (id, img, nb, delay, maxDelay, size) {
 	nb++;
 	$e("#" + id).write("Verification in progress...");
-	if (nb * delay >= maxDelay) $e("#" + id).write(evalDownload(0))//End of the maximimun delay
+	if (nb * delay >= maxDelay) $e("#" + id).write(evalDownload(0)); //End of the maximimun delay
 	else {
 		if (img.complete) {
 			$G["t2"] = new Date().getTime();
 			$e("#" + id).write(evalDownload(size / ($G["t2"] - $G["t1"])));
 			Essence.time("Connexion: " + (size / ($G["t2"] - $G["t1"]).toNDigits(3) + " kbps"));
 		} else setTimeout("CETimer(" + id + ", " + img + ", " + nb + ", " + delay + ", " + maxDelay + ", " + size + ")", delay);
-	};
+	}
 }
 /*
 ping (ms)
@@ -6531,6 +7176,11 @@ upload speed:
 	>1M, 5M>: wire
 	>5M, 100M>: Ethernet
 	*/
+/**
+ * @description Evaluate the download speed
+ * @param {number} kbps Speed (in kb/s)
+ * @returns {string} Result
+ */
 function evalDownload (kbps) {
 	var res = "";
 	if (kbps === 0) res = "No connexion";
@@ -6543,6 +7193,11 @@ function evalDownload (kbps) {
 	return res + " (" + kbps.toNDigits(3) +" kbps)"
 }
 
+/**
+ * @description Evaluate the upload speed
+ * @param {number} kbps Speed (in kb/s)
+ * @returns {string} Result
+ */
 function evalUpload (kbps) {
 	var res = "";
 	if (kbps === 0) res = "No connexion";
@@ -6553,6 +7208,11 @@ function evalUpload (kbps) {
 	return res + " (" + kbps.toNDigits(3) +" kbps)"
 }
 
+/**
+ * @description Evaluate the ping speed
+ * @param {number} ms Number of milliseconds
+ * @returns {string} Result
+ */
 function evalPing (ms) {
 	var res = "";
 	if (ms > 0 && ms <= 30) res = "Excellent";
@@ -6565,7 +7225,11 @@ function evalPing (ms) {
 	return res + " (" + ms +" ms)"
 }
 
-//From somewhere, can't remember where
+/**
+ * @description Base64
+ * @type {{PADCHAR: string, ALPHA: string, getbyte64: base64.getbyte64, decode: base64.decode, getbyte: base64.getbyte, encode: base64.encode}}
+ * @source Somewhere
+ */
 var base64 = {
 	PADCHAR: "=",
 	ALPHA: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 + /",
@@ -6595,17 +7259,17 @@ var base64 = {
 	
 		var x = [];
 		for (i = 0; i < imax; i += 4) {
-			b10 = (gb64(s,i) << 18) | (gb64(s,i + 1) << 12) | (gb64(s,i + 2) << 6) | gb64(s,i + 3);
+			b10 = (gb64(s, i) << 18) | (gb64(s, i + 1) << 12) | (gb64(s, i + 2) << 6) | gb64(s, i + 3);
 			x.push(String.fromCharCode(b10 >> 16, (b10 >> 8) & 0xff, b10 & 0xff));
 		}
 		
 		switch (pads) {
 			case 1: 
-				b10 = (gb64(s,i) << 18) | (gb64(s,i + 1) << 12) | (gb64(s,i + 2) << 6);
+				b10 = (gb64(s, i) << 18) | (gb64(s, i + 1) << 12) | (gb64(s, i + 2) << 6);
 				x.push(String.fromCharCode(b10 >> 16, (b10 >> 8) & 0xff));
 				break;
 			case 2: 
-				b10 = (gb64(s,i) << 18) | (gb64(s,i + 1) << 12);
+				b10 = (gb64(s, i) << 18) | (gb64(s, i + 1) << 12);
 				x.push(String.fromCharCode(b10 >> 16));
 				break;
 		}
@@ -6626,7 +7290,7 @@ var base64 = {
 
 		s += "";
 		
-		var imax = s.length-s.length % 3;
+		var imax = s.length - s.length % 3;
 		
 		if (s.length === 0) return s;
 		for (i = 0; i < imax; i += 3) {
@@ -6636,7 +7300,7 @@ var base64 = {
 			x.push(alpha.charAt((b10 >> 6) & 0x3f));
 			x.push(alpha.charAt(b10 & 0x3f));
 		}
-		switch (s.length-imax) {
+		switch (s.length - imax) {
 			case 1: 
 				b10 = gb(s, i) << 16;
 				x.push(alpha.charAt(b10 >> 18) + alpha.charAt((b10 >> 12) & 0x3F) + pc + pc);
@@ -6651,8 +7315,18 @@ var base64 = {
 };
 
 //BScripts functions (info/error/...)
+/**
+ * @description Message boxes
+ * @param {string} type Type
+ * @param {string} title Title
+ * @param {string} text Text
+ * @param {boolean} [isHTML=false] HTML flag
+ * @param {Object} style Style
+ * @param {string} [customIcon] Custom icon
+ * @returns {undefined}
+ */
 function msgBox (type, title, text, isHTML, style, customIcon) {
-	type = (type.toLowerCase()).remove(" ");
+	type = type.normal();
 	var dS = { //Default style
 		borderColor: "#bababa",
 		borderSize: "1px",
@@ -6761,7 +7435,11 @@ function msgBox (type, title, text, isHTML, style, customIcon) {
 	}
 }
 
-function genPassword () { //Generate a password
+/**
+ * @description Generate a password
+ * @returns {string} Password
+ */
+function genPassword () {
 	var chars = [], sym = ["&", "~", "\"", "#", "\'", "{", "[", "(", "-", "|", "`", "_", "\\", "^", "@", ")", "]", " + ", "=", "}", " % ", " * ", "?", ",", ";", ".", "/", ":", "!", " ", ""], word = "";
 	for (var i = 65; i < 123; i++) {
 		if (i <= 90 || i >= 97) chars[i-65] = String.fromCharCode(i);
@@ -6773,7 +7451,13 @@ function genPassword () { //Generate a password
 	return word
 }
 
-function genHash (password) { //To fix
+/**
+ * @description Generate a hash
+ * @param {string} password Password
+ * @todo To fix
+ * @returns {string} Hash
+ */
+function genHash (password) {
 	var hash = "", k = (821 - password.sum()) / password.prod() * password.charCodeAt(0).toNDigits(1), rest, c;
 	for (var i = 0; i < password.length; i++) {
 		rest = password.charCodeAt(i) + k.toNDigits(1) % 255;
@@ -6787,37 +7471,73 @@ function genHash (password) { //To fix
 	return hash
 }
 
+/**
+ * @description Gives the week day of the given data
+ * @param {string} d Date (in the form dd/mm/yyyy)
+ * @todo Getting it right
+ * @returns {string} Week day
+ */
 function weekDay (d) { //D must be in the form dd/mm/yyyy and it gives the day of the week of that date
 	var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], k = parseInt(d.split("/")[0]), m = parseInt(d.split("/")[1]), y = parseInt(d.split("/").last()), c;
-	c = Math.floor(y / 100); //Centery
+	c = Math.floor(y / 100); //Century
 	y = y % 100;
-	return days[Math.round((1 + 2.6 * m - 0.2 + k + y + y / 4 + c / 4 - 2 * c) % 7)-1]
+	return days[Math.round((1 + 2.6 * m - 0.2 + k + y + y / 4 + c / 4 - 2 * c) % 7) - 1]
 }
 
+/**
+ * @description Kinch's week day finder
+ * @param {string} d Date
+ * @author Daniel "Kinch" Sheppard
+ * @returns {string} Week day
+ */
 function dayOfWeek (d) { //Daniel "Kinch" Sheppard's method
 	var day = parseInt(d.split("/")[0]), m = [0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5], days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]//Months from Jan to Dec
-	var y = parseInt(d.split("/").last()) % 100 + Math.floor(d.split("/").last()/4), c = Math.floor(d.split("/").last()/100 % 4), cCode;
+	var y = parseInt(d.split("/").last()) % 100 + Math.floor(d.split("/").last() / 4), c = Math.floor(d.split("/").last() / 100 % 4), cCode;
 	if (c === 0) cCode = 6;
 	else if (c === 1) cCode = 4;
 	else if (c === 2) cCode = 2;
 	else cCode = 0;
-	//console.log("m = " + m[parseInt(d.split("/")[1])-1] + "\ny = " + y+"\n" + "\ncCode = " + cCode + "\nRes = " + day + m[parseInt(d.split("/")[1])-1] + y+ cCode);
+	//console.log("m=" + m[parseInt(d.split("/")[1]) - 1] + "\ny=" + y + "\n" + "\ncCode = " + cCode + "\nRes = " + day + m[parseInt(d.split("/")[1]) - 1] + y + cCode);
 	return days[(day + m[parseInt(d.split("/")[1]) - 1] + y + cCode) % 7]
-};
+}
 
+/**
+ * @description Linear gradient
+ * @param {string|number} clrI Initial colour
+ * @param {string|number} clrF Final colour
+ * @param {number} [n=10] Number of shades
+ * @returns {Array} Shades
+ */
 function linearGradient (clrI, clrF, n) {
 	var i = parseInt(conv(clrI, 16)), f = parseInt(conv(clrF, 16));
 	n = parseInt(n) || 10;
 	var /*s = (f - i).sign(), */grad = [], inc = (f - i) / (n - 1);
-	//console.log("i = " + i+"\tf = " + f+"\ns = " + s+"\ninc = " + inc);
+	//console.log("i = " + i + "\tf = " + f + "\ns = " + s + "\ninc = " + inc);
 	for(var j = 0; j < n; j++) grad.push(conv(i + j * inc, 10, 16));
 	return grad
 }
 
+/**
+ * @description Radial gradient
+ * @param {string|number} clrI Initial colour
+ * @param {string|number} clrF Final colour
+ * @param {number} [n=10] Number of shades
+ * @todo Add the essential part to make it work
+ * @returns {Array} Shades
+ */
 function radialGradient (clrI, clrF, n) {
-	
+	var i = parseInt(conv(clrI, 16)), f = parseInt(conv(clrF, 16));
+	n = parseInt(n) || 10;
+	//Radial gradient
+	return grad;
 }
 
+/**
+ * @description Getting the URL parameters just like in PHP.
+ * @param {string|string[]} p Parameter(s)
+ * @param {Function} action Action to be done with the value(s) of the parameter(s)
+ * @returns {undefined}
+ */
 function parseURL (p, action) { //Doing some PHP without PHP :) !!
 	var urlQuery = location.href.split("?");
 	if (urlQuery.length > 1) {
@@ -6841,11 +7561,23 @@ function parseURL (p, action) { //Doing some PHP without PHP :) !!
 	}
 }
 
+/**
+ * @description HTTP GET request. Equivalent to parseURL($name, function (x) {this = x})
+ * @param {string} name Name of the key
+ * @returns {string} Value of the key
+ */
 function GET (name) { //HTTP GET request, method <=> parseURL(name, function (x) {this = x})
-	if (name === (new RegExp("[?&]" + encodeURIComponent(name) + "=([^&] * )")).exec(location.search)) return decodeURIComponent(name[1]);
+	if (name === (new RegExp("[?&]" + encodeURIComponent(name) + "=([^&]*)")).exec(location.search)) return decodeURIComponent(name[1]);
 }
 
-function POST (path, params) { //HTTP POST request from somewhere on stackoverflow
+/**
+ * @description HTTP POST request
+ * @param {string} path Path of the file to post to
+ * @param {Object} params Parameters
+ * @source StackOverflow
+ * @returns {undefined}
+ */
+function POST (path, params) {
 	var form = document.createElement("form");
 	form.setAttribute("method", "post");
 	form.setAttribute("action", path);
@@ -6863,13 +7595,24 @@ function POST (path, params) { //HTTP POST request from somewhere on stackoverfl
 	form.submit()
 }
 
-function PUT () { //HTTP PUT request
+/**
+ * @description HTTP PUT request
+ * @returns {undefined}
+ * @todo Fill it
+ */
+function PUT () {
 	
 }
 
-function DELETE () { //HTTP DELETE request
+/**
+ * @description HTTP DELETE request
+ * @returns {undefined}
+ * @todo Fill it
+ */
+function DELETE () {
 	
 }
+
 
 function alphabetSort (x) { //Sort alphabetically the elements in x
 	if (!x.isIterable()) throw new Error("alphabetSort cannot sort non iterable objects");
@@ -7251,8 +7994,8 @@ function chTab (name) { //Change tabs
 	$e("#tab_" + $G["oldTab"]).addClass("tabOff");
 	$e("#tab_" + name).rmClass("tabOff");
 	$e("#tab_" + name).addClass("tabOn");
-	$e("#contentTab_" + $G["oldTab"]).style.display = "none";
-	$e("#contentTab_" + name).style.display = "block";
+	$e("#contentTab_" + $G["oldTab"]).setCSS("display", "none");
+	$e("#contentTab_" + name).setCSS("display", "block");
 	$G["oldTab"] = name
 }
 
@@ -7271,11 +8014,22 @@ function labelFieldSwap (id, lbl) { //HTML/JS animation swapping the field with 
 	//if (!$e("#" + id).isEmpty() && $e("#" + id).val()!= lbl && $e("#" + id).val()!=$e("#lbl_" + id).val()) return false
 	if ($e("#lbl_" + id).isEmpty()) $e("#lbl_" + id).write("&ensp;", true);
 	if ($e("#" + id).isEmpty() || $e("#" + id).val() === "\b" || ($e("#" + id).val()!= lbl && $e("#" + id).size() < 2)) { //The field isn't being filled so label inside the field
-		//Console.log("lbl inside");
 		$e("#" + id).write($e("#lbl_" + id).val());
 		$e("#lbl_" + id).write("&ensp;", true);
 	} else { //The field is being filled up so label shown and no placeholding value in the field
-		//Console.log("lbl outside");
+		$e("#lbl_" + id).write(lbl || $e("#" + id).val());
+		if ($e("#" + id).val() === lbl || $e("#" + id).val() === "") $e("#" + id).write("\b");
+	}
+}
+
+function labelPwSwap (id, lbl) { //HTML/JS animation swapping the password field with the label
+	if ($e("#lbl_" + id).isEmpty()) $e("#lbl_" + id).write("&ensp;", true);
+	if ($e("#" + id).isEmpty() || $e("#" + id).val() === "\b" || ($e("#" + id).val() != lbl && $e("#" + id).size() < 2)) { //The field isn't being filled so label inside the field
+		$e("#" + id).type = "text";
+		$e("#" + id).write($e("#lbl_" + id).val());
+		$e("#lbl_" + id).write("&ensp;", true);
+	} else { //The field is being filled up so label shown and no placeholding value in the field
+		$e("#" + id).type = "password";
 		$e("#lbl_" + id).write(lbl || $e("#" + id).val());
 		if ($e("#" + id).val() === lbl || $e("#" + id).val() === "") $e("#" + id).write("\b");
 	}
@@ -7285,6 +8039,12 @@ function htmlInput (id, type, lbl) { //Dynamic HTML input with an animation
 	if (!id) throw new Error("htmlInput needs to know the id of the element implementing the input");
 	if (!lbl) lbl = type || id;
 	return "<label for='" + id + "' id='lbl_" + id + "'>&ensp;</label><br /><input type='" + (type || "text") + "' id='" + id + "' value='" + lbl + "' onFocus='labelFieldSwap(\"" + id + "\", \"" + lbl + "\")' onBlur='labelFieldSwap(\"" + id + "\", \"" + lbl + "\")' />"
+}
+
+function htmlPassword (id, lbl) { //Dynamic HTML password input with an animation
+	if (!id) throw new Error("htmlPassword needs to know the id of the element implementing the input");
+	if (!lbl) lbl = id;
+	return "<label for='" + id + "' id='lbl_" + id + "'>&ensp;</label><br /><input type='text' id='" + id + "' value='" + lbl + "' onFocus='labelPwSwap(\"" + id + "\", \"" + lbl + "\")' onBlur='labelPwSwap(\"" + id + "\", \"" + lbl + "\")' />"
 }
 
 function WebPage (title, name, path, author, ver, stct, type, subtitle) { //Web page builder
