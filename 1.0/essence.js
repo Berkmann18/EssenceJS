@@ -6929,6 +6929,27 @@ function writeMsg (msg, where, HTML) {
 }
 
 /**
+ * @description Type a message
+ * @param {string} msg Message
+ * @param {string} slc Place to type the message
+ * @param {boolean} [HTML=false] HTML flag
+ * @param {number} [speed=150] Speed
+ * @param {string} [txt=""] Text
+ * @param {number} [pos=0] Position
+ * @returns {undefined}
+ */
+function writeMsg2 (msg, slc, HTML, speed, txt, pos) {
+	if(!txt) txt = "";
+	if(!pos) pos = 0;
+	if (pos < msg.length + 10) {
+		txt = msg.substring(pos, 0);
+		HTML? $n(slc).innerHTML = txt: $n(slc).innerText = txt;
+		pos++;
+		setTimeout("writeMsg2('" + msg + "', '" + slc + "', " + HTML + ", " + speed + ", '" + txt + "', " + pos + ")", speed || 150);
+	}
+}
+
+/**
  * @description Display the date and at time at a particular place
  * @param {string} id ID of the element to be used
  * @returns {undefined}
@@ -7622,21 +7643,19 @@ function alphabetSort (x) { //Sort alphabetically the elements in x
 	while (s) {
 		s = false;
 		for (var k = 0; k < res.maxLength(); k++) {
-			for (var k = 0; k < res.maxLength(); k++) {
-				for (var i = 0; i < res.length - j; i++) {
-					if (k == 0 && res[i].charAt(k) > res[i + 1].charAt(k)) { //Sort the by the first letter
-						swap(res, i, i + 1);
-						s = true;
-					} else if (res[i].charAt(k - 1) === res[i + 1].charAt(k - 1) && res[i].charAt(k) > res[i + 1].charAt(k)) {
-						swap(res, i, i + 1);
-						s = true;
-					}
+			for (var i = 0; i < res.length - j; i++) {
+				if (k == 0 && res[i].charAt(k) > res[i + 1].charAt(k)) { //Sort the by the first letter
+					swap(res, i, i + 1);
+					s = true;
+				} else if (res[i].charAt(k - 1) === res[i + 1].charAt(k - 1) && res[i].charAt(k) > res[i + 1].charAt(k)) {
+					swap(res, i, i + 1);
+					s = true;
 				}
-				j++;
 			}
+			j++;
 		}
-		return res.trimAll("r")
 	}
+	return res.trimAll("r")
 }
 
 // function occurrenceSort(arr) { //Sort the array from the most occurred element to the least the occured one
@@ -8842,4 +8861,50 @@ function getDNF(exp) { //Get the DNF form of an expression
 
 function getCNF(exp) { //Get the CNF form of an expression
 	var tt = truthTable(exp);
+}
+
+function EventTable(name, srcs) {
+	this.name = name ||"Event table";
+	this.sources = srcs || [getFilename(true)];
+	this.table = [["Source", "Event", "Timestamp"]];
+	this.add = function (evt) {
+		this.table.push([evt.source || getFilename(true), evt.event, evt.timestamp || (new Date()).getTime()]);
+		this.sources.uniquePush(evt.source || getFilename(true));
+	};
+
+	this.make = function (nb, space) {
+		var ts = (new Date()).getTime();
+		if(!space) space = 1;
+		for (var i = 0; i < (nb || 1e3); i += space) {
+			this.add({
+				timestamp: ts + i
+			});
+		}
+	};
+
+	this.fill = function (src, desc) {
+		var ts = (new Date()).getTime();
+		var pos = lookfor(ts, this.table);
+		if (pos === -1 && ts > this.table.last()[2]) this.add({source: src, event: desc, timestamp: ts});
+		else {
+			this.table[pos[0]][0] = src;
+			this.table[pos[0]][1] = desc;
+		}
+	};
+
+	this.getCleanTable = function () {
+		var table = [];
+		for (var i = 0; i < this.table.length; i++) {
+			if (!isNon(this.table[i][1])) table.push(this.table[i]);
+		}
+
+		return table;
+	};
+
+	this.lookAt = function (ts) {
+		var pos = lookfor(ts || (new Date()).getTime(), this.table)[0];
+		return "'" + this.table[pos][1] + "' at " + this.table[pos][0];
+	}
+
+	return this;
 }
