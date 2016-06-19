@@ -6,7 +6,7 @@
 - is2dArray
 - isType, getType, isCustomType, getCustomType
 - isNon
-- copy
+- copy, swap
 - getKey
 - getTime, getDate, getTimestamp, dateTime, weekDay || dayOfWeek
 - genString
@@ -41,6 +41,7 @@
 - checkBrowser, BrowserDetect
 - writeMsg
 - Template
+- tableCompare
 
 # Maths
 - xor
@@ -95,7 +96,7 @@
 - LinkedList
 - TreeNode, Node, Path, Node, NTreeNode
 - Set, SortedSet, Stack, StackArray, StackList, Queue, QueueArray, QueueList
-- Astar, IDAstar
+- Astar, IDAstar, A, reconPath
 - alphabetSort, occurrenceSort
 - binarySearch
 - Archive
