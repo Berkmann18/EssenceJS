@@ -39,9 +39,10 @@
 - simpleTable, rowTable, colTable, complexTable, colourTable
 - addFav
 - checkBrowser, BrowserDetect
-- writeMsg
+- writeMsg, writeMsg2
 - Template
 - tableCompare
+- viewHide
 
 # Maths
 - xor
@@ -119,7 +120,7 @@
 - 
 
 # Security
-- encrypt, decrypt, ilEncrypt, ilDecrypt, 
+- trans, encrypt, decrypt, ilEncrypt, ilDecrypt, RSA, cryptRSA
 - abcEncode, abcDecode
 - genPassword, genHash
 
