@@ -2678,7 +2678,7 @@ function filenameList (list) {
  * @param {string} path Path
  * @returns {string} Directory path
  */
-function getDirectoryPath (path) { //Get the directory's path of the file (so it's the opposite of of stripPath)
+function getDirectoryPath (path) {
 	if (!path) path = location.href;
 	return path.get(0, path.indexOf(stripPath(path)) - 1)
 }
@@ -3804,7 +3804,7 @@ function genStr (len, filter) { //Generate a string
 	else if (str.length > len) str = str.slice(0, len + 1);
 	if (str === "") genStr(len, filter); //May cause overflows
 	return str
-};
+}
 
 /**
  * @description Colour (Processing's style)
@@ -4169,7 +4169,7 @@ function range (min, inc, max, nbDec) {
  * @param {number} [b=2] Base
  * @returns {Array} Range
  */
-function range2Base (min, inc, max, b) { //Same as range(...) but to the base b
+function range2base (min, inc, max, b) { //Same as range(...) but to the base b
 	var val = [], n = 0;
 	if (inc > 0) {
 		for (var i = min; i <= max; i += inc) val[n++] = conv(i, 10, b);
@@ -6480,7 +6480,7 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
 				this.val[ys[j]][xs[i]] = null;
 			}
 		}
-	}
+	};
 
 	return this;
 }
@@ -6802,7 +6802,7 @@ function modRange(x, a, b) {
 function abcModulus(code) {
 	var m = code % 123;
 	if (90 < m && m < 97) return m + abcModulus(Math.abs(getClosest(m, [90, 97]) - m));
-	return m + ((m < 65 && m != 32)? 65 + m: 0); 
+	return m + ((m < 65 && m != 32)? 65 + m: 0);
 }
 
 /**
@@ -6954,7 +6954,7 @@ function writeMsg2 (msg, slc, HTML, speed, txt, pos) {
  * @param {string} id ID of the element to be used
  * @returns {undefined}
  */
-function dateTime (id) { //Display the date and time at #id
+function dateTime (id) {
 	var date = new Date();
 	var year = date.getFullYear(), month = date.getMonth();
 	var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -7634,8 +7634,13 @@ function DELETE () {
 	
 }
 
-
-function alphabetSort (x) { //Sort alphabetically the elements in x
+//Stopped here for the implementation into 1.1
+/**
+ * @description Sort alphabetically an string|array
+ * @param {string|Array} x String/array to alphabetically sort
+ * @returns {string|Array} Sorted string|array
+ */
+function alphabetSort (x) {
 	if (!x.isIterable()) throw new Error("alphabetSort cannot sort non iterable objects");
 	if (isType(x, "String")) return x.split("").quickSort().join("");
 
@@ -7686,7 +7691,12 @@ function alphabetSort (x) { //Sort alphabetically the elements in x
 // 	*/
 // }
 
-function occurrenceSort(arr) { //Sort the array/string from the most occurring item to the least occurring one
+/**
+ * @description Sort the array/string from the most occurring item to the least occurring ones
+ * @param {Array|string} arr Array/string to sort
+ * @returns {Array} Sorted occurrence list
+ */
+function occurrenceSort(arr) {
 	var tmp = rmDuplicates(arr), res = [], counts = [];
 	for (var i = 0; i < tmp.length; i++) counts[i] = arr.count(tmp[i]);
 	while(tmp.length > 0) {
@@ -7701,7 +7711,14 @@ function occurrenceSort(arr) { //Sort the array/string from the most occurring i
 	return res;
 }
 
-function timeUp (act, pref, params) { //Time how long act() will take to be fully executed
+/**
+ * @description Time how long an action took
+ * @param {Function} act Action
+ * @param {string} [pref="auto"] Preference (auto/none, ms/millisec, s/sec)
+ * @param {*} params Parameters
+ * @returns {string} Time
+ */
+function timeUp (act, pref, params) {
 	var t1 = new Date(), t2 = 0;
 	t1 = (t1.getMinutes() * 60 + t1.getSeconds()) * 1000 + t1.getMilliseconds();
 	act(params);
@@ -7712,20 +7729,35 @@ function timeUp (act, pref, params) { //Time how long act() will take to be full
 	else return (t2-t1)/1000 + "s"
 }
 
-function binarySearch (list, x) { //Find if x exist in list
+/**
+ * @description Find if x is in the list
+ * @param {Array} list List
+ * @param {*} x Element/term to find
+ * @returns {boolean} Found or not
+ */
+function binarySearch (list, x) {
 	list.quickSort();
-	var i = 2, term = list[Math.floor(list.length/i)];
+	var i = 2, term = list[Math.floor(list.length / i)];
 	while (term != x && i > 0) {
 		if (term === x) return true;
 		else {
 			i *= 2;
-			term = term < x? list[Math.floor(list.length/i)]: list[3 * Math.floor(list.length/i)];
+			term = term < x? list[Math.floor(list.length / i)]: list[3 * Math.floor(list.length / i)];
 		}
 	}
 	return term === x	
 }
 
+/**
+ * @description Day/night mode
+ * @type {boolean}
+ */
 $G["dnM"] = false;
+/**
+ * @description Switch between enabled or not for the day/night page vision
+ * @param {boolean} [exch=false] Switch the mode
+ * @returns {undefined}
+ */
 function daynightMode (exch) { //Switch between enabled or not for Day/Night page vision
 	var h = new Date().getHours();
 	if (exch) $G["dnM"] = !$G["dnM"];
@@ -7735,6 +7767,14 @@ function daynightMode (exch) { //Switch between enabled or not for Day/Night pag
 	} else Essence.say("You cannot use the day/night modder if it\'s disabled.", "warn")
 }
 
+/**
+ * @description Compressed data using Huffman's approach while differentiating uppercase from lowercase letters
+ * @param {string} [name="Archive"] Name of the archive
+ * @param {string} [data=""] Data to compress
+ * @returns {Archive} Archive
+ * @constructor
+ * @this {Archive}
+ */
 function Archive (name, data) { //Compressed data using Huffman's approach while differentiating uppercase and lowercase letters
 	this.name = name || "Archive";
 	this.data = data || ""; //Data to compress
@@ -7777,6 +7817,16 @@ function Archive (name, data) { //Compressed data using Huffman's approach while
 	return this
 }
 
+/**
+ * @description Virtual Web Machine
+ * @param {string} [name="Machine_5"] Name of the VWM
+ * @param {number} [ver=5] Version of the VWM
+ * @param {number} [cpy=1024] Capacity of the VWM (in bits).
+ * @param {string} [type=""] Type of the memory used
+ * @constructor
+ * @this {Machine}
+ * @returns {Machine}
+ */
 function Machine (name, ver, cpy, type) {
 	//ver (basis) := 1: binary, 2: ternary, 3: octal, 4: decimal, 5: hexadecimal, 6: base 36 
 	this.capacity = cpy || 1024; //pow(2, 10) bits = 128B
@@ -7882,12 +7932,23 @@ function Machine (name, ver, cpy, type) {
 	this.conv = function (data, base) {
 		return conv(data, base || 36, this.base);
 	}
+
+	return this;
 }
 
-function Memory (cpy, type, prefix) { //Stack memory
+/**
+ * @description Stack memory
+ * @param {number} [cpy=1024] Capacity (in bits).
+ * @param {string} [type="session"] Memory type
+ * @param {string|number|boolean} [prefix] Prefix
+ * @returns {Memory} Memory
+ * @this {Memory}
+ * @constructor
+ */
+function Memory (cpy, type, prefix) {
 	this.capacity = cpy || 1024;
 	this.slots = new Array(this.capacity);
-	this.type = type =="local"? "local": "session";
+	this.type = type === "local"? "local": "session";
 	this.name = prefix? prefix + "_" + this.type + "M" + log(this.capacity): this.type + "M" + log(this.capacity);
 	this.free = 0;
 	this.save = function () {
@@ -7954,14 +8015,25 @@ function Memory (cpy, type, prefix) { //Stack memory
 	
 	this.toString = function () {
 		return this.type.capitalize() + " memory " + this.name + ": " + this.slots.toStr(true)
-	}
+	};
+
+	return this;
 }
 
-function EvtShow (evt) { //Show some infos about the event
+/**
+ * @description Show some information about the event
+ * @param {Event} evt Event
+ * @returns {undefined}
+ */
+function EvtShow (evt) {
 	alert("\tName: " + evt.name + "\nsource: " + evt.source + "\ndata: " + evt.data + "\ntarget: " + evt.target + "\ntime stamp: " + evt.timeStamp)
 }
 
-function evtLog (event) { //Event log
+/**
+ * @description Event console log
+ * @param {Event} event Event
+ */
+function evtLog (event) {
 	for(var atr in event) {
 		if (event.hasOwnProperty(atr)) Essence.say(atr + ": " + event[atr])
 	}
@@ -7983,14 +8055,30 @@ MyError.prototype = Object.create(Error.prototype);
 MyError.prototype.constructor = MyError; */
 
 InvalidParamError.inheritsFrom(Error);
+/**
+ * @description Invalid parameter error
+ * @param {string} [msg="The parameter used at $lineNum is invalid"]  Message
+ * @param {string} fname Filename
+ * @param {number} lineNum Line number
+ * @constructor
+ * @returns {InvalidParamError}
+ * @this {InvalidParamError}
+ */
 function InvalidParamError(msg, fname, lineNum) { //Invalid parameter
 	this.name = "Invalid parameter error";
 	this.fileName = fname;
 	this.lineNumber = lineNum;
 	this.message = msg || "The parameter used at " + this.lineNumber + " is invalid !";
 	this.stack = (new Error()).stack;
+
+	return this;
 }
 
+/**
+ * @description Test an error
+ * @param {Error} err Error
+ * @returns {undefined}
+ */
 function testErr(err) {
 	try {
 		throw err;
@@ -7999,16 +8087,31 @@ function testErr(err) {
 	}
 }
 
-function noobTest (fx, params) { //Source: https://scontent-lhr3-1.xx.fbcdn.net/hphotos-xfl1/v/t1.0-9/12705609_1071795346206130_3757520485028328706_n.jpg?oh = cb99a4624d9732414b787f7eb8437c73&oe = 57383223
+/**
+ * @description Error testing for beginner's
+ * @param {Function} fx Function
+ * @param {*} [param] Parameter
+ * @returns {undefined}
+ */
+function noobTest (fx, param) { //Source: https://scontent-lhr3-1.xx.fbcdn.net/hphotos-xfl1/v/t1.0-9/12705609_1071795346206130_3757520485028328706_n.jpg?oh = cb99a4624d9732414b787f7eb8437c73&oe = 57383223
 	try {
-		fx(params);
+		fx(param);
 	} catch(e) {
-		location.href = "http://Stackoverflow.com/search?q = [js] + " + e.message;
+		location.href = "http://Stackoverflow.com/search?q=[js]+" + e.message;
 	}
 }
 
+/**
+ * @description Old/initial tab
+ * @type {string}
+ */
 $G["oldTab"] = "home";
-function chTab (name) { //Change tabs
+/**
+ * @description Change tabs
+ * @param {string} name Name of the tab to switch to
+ * @returns {undefined}
+ */
+function chTab (name) {
 	$e("#tab_" + $G["oldTab"]).rmClass("tabOn");
 	$e("#tab_" + $G["oldTab"]).addClass("tabOff");
 	$e("#tab_" + name).rmClass("tabOff");
@@ -8018,8 +8121,14 @@ function chTab (name) { //Change tabs
 	$G["oldTab"] = name
 }
 
+/**
+ * @description Move an HTML range left or right which was made using htmlRange
+ * @param {string} id ID of the element
+ * @param {number} [n=1] Incrementation
+ * @returns {undefined}
+ */
 function moveHTMLRange (id, n) { //Moove an HTML range left or right which was made using htmlRange
-	$e("#" + id).write(parseFloat($e("#" + id).val()) + n);
+	$e("#" + id).write(parseFloat($e("#" + id).val()) + (n || 1));
 	$e("#" + id + "_val").write($e("#" + id).val())
 }
 
