@@ -1804,13 +1804,17 @@ Array.prototype.neighbour = function(y, x) {
 		for (var i = 0; i < seq.length; i++) {
 			try {
 				if(!isNon(this[y + seq[i][0]][x + seq[i][1]])) n.push(this[y + seq[i][0]][x + seq[i][1]]);
-			} catch (e) {}
+			} catch (e) {
+				/* no-empty disabled */
+			}
 		}
 	} else {
 		try {
 			if(!isNon(this[y - 1])) n.push(this[y - 1]);
 			if(!isNon(this[y + 1])) n.push(this[y + 1]);
-		} catch (e) {}
+		} catch (e) {
+			/* no-empty disabled */
+		}
 	}
 	return n;
 };
@@ -2046,7 +2050,7 @@ Number.prototype.length = function () {
 	while (Math.floor(x) != 0) {
 		x /= 10;
 		l++;
-		console.log(x);
+		//console.log(x);
 	}
 	return l
 };
@@ -7825,7 +7829,7 @@ function Archive (name, data) { //Compressed data using Huffman's approach while
  * @param {string} [type=""] Type of the memory used
  * @constructor
  * @this {Machine}
- * @returns {Machine}
+ * @returns {Machine} VWM
  */
 function Machine (name, ver, cpy, type) {
 	//ver (basis) := 1: binary, 2: ternary, 3: octal, 4: decimal, 5: hexadecimal, 6: base 36 
@@ -8032,6 +8036,7 @@ function EvtShow (evt) {
 /**
  * @description Event console log
  * @param {Event} event Event
+ * @returns {undefined}
  */
 function evtLog (event) {
 	for(var atr in event) {
@@ -8061,7 +8066,7 @@ InvalidParamError.inheritsFrom(Error);
  * @param {string} fname Filename
  * @param {number} lineNum Line number
  * @constructor
- * @returns {InvalidParamError}
+ * @returns {InvalidParamError} Error
  * @this {InvalidParamError}
  */
 function InvalidParamError(msg, fname, lineNum) { //Invalid parameter
@@ -8132,13 +8137,27 @@ function moveHTMLRange (id, n) { //Moove an HTML range left or right which was m
 	$e("#" + id + "_val").write($e("#" + id).val())
 }
 
-function htmlRange (id, min, val, max) { //Dynamic HTML range
+/**
+ * @description Dynamic HTML range
+ * @param {string} id ID of the element
+ * @param {number} [min=0] Minimum
+ * @param {number} [val=0] Default value
+ * @param {number} [max=100] Maximimum
+ * @returns {string} HTML code
+ */
+function htmlRange (id, min, val, max) {
 	if (!id) throw new Error("htmlRange needs to know the id of the element implementing the range");
 	Essence.addCSS(".arrow{cursor: pointer;font-size: 20px;vertical-align: middle}");
 	return "<b class=\"arrow\" onClick=\"moveHTMLRange('" + id + "', -1)\">&triangleleft;</b><input type=\"range\" value=" + (val || 0) + " max=" + (max || 100) + " min=" + (min || 0) + " id=\"" + id + "\" onChange=\"$e('#" + id + "_val').write(this.value);\" /><b class=\"arrow\" onClick=\"moveHTMLRange('" + id + "', 1)\">&triangleright;</b><span id=\"" + id + "_val\">" + (val || "") + "</span>"
 }
 
-function labelFieldSwap (id, lbl) { //HTML/JS animation swapping the field with the label
+/**
+ * @description HTML/JS animation swapping the field with the label
+ * @param {string} id ID of the element
+ * @param {string} lbl Label
+ * @returns {undefined}
+ */
+function labelFieldSwap (id, lbl) {
 	//if (!$e("#" + id).isEmpty() && $e("#" + id).val()!= lbl && $e("#" + id).val()!=$e("#lbl_" + id).val()) return false
 	if ($e("#lbl_" + id).isEmpty()) $e("#lbl_" + id).write("&ensp;", true);
 	if ($e("#" + id).isEmpty() || $e("#" + id).val() === "\b" || ($e("#" + id).val()!= lbl && $e("#" + id).size() < 2)) { //The field isn't being filled so label inside the field
@@ -8150,7 +8169,13 @@ function labelFieldSwap (id, lbl) { //HTML/JS animation swapping the field with 
 	}
 }
 
-function labelPwSwap (id, lbl) { //HTML/JS animation swapping the password field with the label
+/**
+ * @description HTML/JS animation swapping the password field with the label
+ * @param {string} id ID of the element
+ * @param {string} lbl Label
+ * @returns {undefined}
+ */
+function labelPwSwap (id, lbl) {
 	if ($e("#lbl_" + id).isEmpty()) $e("#lbl_" + id).write("&ensp;", true);
 	if ($e("#" + id).isEmpty() || $e("#" + id).val() === "\b" || ($e("#" + id).val() != lbl && $e("#" + id).size() < 2)) { //The field isn't being filled so label inside the field
 		$e("#" + id).type = "text";
@@ -8163,19 +8188,58 @@ function labelPwSwap (id, lbl) { //HTML/JS animation swapping the password field
 	}
 }
 
-function htmlInput (id, type, lbl) { //Dynamic HTML input with an animation
+/**
+ * @description Dynamic HTML input with an animation
+ * @param {string} id ID of the element
+ * @param {string} [type="text"] Input type
+ * @param {string} lbl Label
+ * @returns {string} HTML code
+ */
+function htmlInput (id, type, lbl) {
 	if (!id) throw new Error("htmlInput needs to know the id of the element implementing the input");
 	if (!lbl) lbl = type || id;
 	return "<label for='" + id + "' id='lbl_" + id + "'>&ensp;</label><br /><input type='" + (type || "text") + "' id='" + id + "' value='" + lbl + "' onFocus='labelFieldSwap(\"" + id + "\", \"" + lbl + "\")' onBlur='labelFieldSwap(\"" + id + "\", \"" + lbl + "\")' />"
 }
 
-function htmlPassword (id, lbl) { //Dynamic HTML password input with an animation
+/**
+ * @description Dynamic HTML password input with an animation
+ * @param {string} id ID of the element
+ * @param {string} lbl Label
+ * @returns {string} HTML code
+ */
+function htmlPassword (id, lbl) {
 	if (!id) throw new Error("htmlPassword needs to know the id of the element implementing the input");
 	if (!lbl) lbl = id;
 	return "<label for='" + id + "' id='lbl_" + id + "'>&ensp;</label><br /><input type='text' id='" + id + "' value='" + lbl + "' onFocus='labelPwSwap(\"" + id + "\", \"" + lbl + "\")' onBlur='labelPwSwap(\"" + id + "\", \"" + lbl + "\")' />"
 }
 
-function WebPage (title, name, path, author, ver, stct, type, subtitle) { //Web page builder
+/**
+ * @description Web page builder.
+ * Structure components:
+ - header: header with a title and a logo
+ - h-menu: horizontal menu with icons
+ - v-menu: vertical menu
+ - content: "welcome to " + this.title
+ - aside: side section for news feed or anything you want to use it for
+ - footer: footer with the sponsors (if there's at least one), name of the author(s)
+ - article: new paper article like section
+ - search: search bar
+   Structuration:
+ ! : new line (header!h-menu means that the h-menu is under the header)
+ | : at the right (content|aside means that the aside section is placed on the right of the content section)
+ * @param {string} [title="My web page"] Title
+ * @param {string} [name="index.html"] Name
+ * @param {string} [path="index.html"] Path
+ * @param {string} [author="Maximilian Berkmann"] Author
+ * @param {number} [ver=1.0] Version
+ * @param {string} [stct="header!h-menu!content|aside!footer"] Structure
+ * @param {string} [type="html"] Type
+ * @param {string} [subtitle="A simple web page"] Subtitle
+ * @constructor
+ * @this {WebPage}
+ * @returns {WebPage} Web page
+ */
+function WebPage (title, name, path, author, ver, stct, type, subtitle) {
 	this.title = title || "My web page";
 	this.subtitle = subtitle || "A simple web page";
 	this.type = type.normal() || "html";
@@ -8196,7 +8260,7 @@ function WebPage (title, name, path, author, ver, stct, type, subtitle) { //Web 
 		- aside: side section for news feed or anything you want to use it for
 		- footer: footer with the sponsors (if there's at least one), name of the author(s)
 		- article: new paper article like section
-		- search: search bar	
+		- search: search bar
 	Structuration:
 		! : new line (header!h-menu means that the h-menu is under the header)
 		| : at the right (content|aside means that the aside section is placed on the right of the content section)
@@ -8246,23 +8310,45 @@ function WebPage (title, name, path, author, ver, stct, type, subtitle) { //Web 
 			1: "About us",
 			2: "Contact us"
 		});
-	}
+	};
+	
+	return this;
 }
 
+/**
+ * @description Web application
+ * @param {string} [name="Web App"] Name
+ * @param {string} [path=""] Path
+ * @param {string} [author="Maximilian Berkmann"] Author
+ * @param {number} [ver=1.0] Version
+ * @param {string} [stct] Structure
+ * @returns {WebApp} Web app
+ * @this {WebApp}
+ * @constructor
+ */
 function WebApp (name, path, author, ver, stct) {
 	this.name = name || "Web App";
 	this.path = path || "";
-	this.version = ver || 1.0;
 	this.author = author || "Maximilian Berkmann";
+	this.version = ver || 1.0;
 	this.dirs = ["img", "script", "style"]; //All dirs which are subdirectories of the path
 	this.pages = [new WebPage(this.name, "index", this.path, this.author, this.ver, stct), new WebPage("Contact us", "contact", this.path, this.author, this.ver, stct), new WebPage("About us", "about", this.path, this.author, this.ver, stct)];
 
 	this.build = function () { //Generate
 		for(var i = 0; i < this.pages.length; i++) this.pages[i].genPage();
-	}
+	};
+
+	return this;
 }
 
-function virtualHistory (elm) { //State history allowing undos and redos on the element while keeping track of the previous and following states
+/**
+ * @description State history allowing undos and redos on the element while keeping track of the previous and following states
+ * @param {*} elm Element
+ * @this {virtualHistory}
+ * @constructor
+ * @returns {virtualHistory} Virtual history
+ */
+function virtualHistory (elm) {
 	this.src = elm;
 	this.DEFAULT_STATE = elm;
 	this.states = new Set(this.src);
@@ -8278,7 +8364,7 @@ function virtualHistory (elm) { //State history allowing undos and redos on the 
 	
 	this.add = function (val) { //Add a state
 		if (isType(val, "array")) {
-			for(var i = 0; i < val.length; i++) this.add(val[i]);
+			for (var i = 0; i < val.length; i++) this.add(val[i]);
 		} else {
 			this.src = val;
 			this.states.add(this.src);
@@ -8291,7 +8377,7 @@ function virtualHistory (elm) { //State history allowing undos and redos on the 
 	};
 
 	this.undo = function () {
-		if (this.state == 0) throw new Error("Set underflow, it's not possible to undo to a non-existent state.");
+		if (this.state === 0) throw new Error("Set underflow, it's not possible to undo to a non-existent state.");
 		this.state--;
 		this.src = this.get(this.state);
 	};
@@ -8308,16 +8394,29 @@ function virtualHistory (elm) { //State history allowing undos and redos on the 
 	
 	this.isStateDefault = function () { //Check if the current state is the default
 		return this.src == this.DEFAULT_STATE
-	}
+	};
+	
+	return this;
 }
 
-function Editor (id, language, prev, parser, tb) {
+/**
+ * @description Editor
+ * @param {string} [id="#editor"] ID of the container
+ * @param {string} [lang="none"] Language
+ * @param {Preview} prev Preview
+ * @param {Parser} [parser] Parser
+ * @param {Toolbar} [tb=new Toolbar()] Toolbar
+ * @this {Editor}
+ * @returns {Editor} Editor
+ * @constructor
+ */
+function Editor (id, lang, prev, parser, tb) {
 	this.id = id || "#editor";
 	this.node = $n(this.id);
 	this.linesId = "#lines";
 	this.linesNode = $n(this.linesId);
 	this.nbLines = 0;
-	this.language = language || "none";
+	this.language = lang || "none";
 	this.previewer = prev;
 	//this.parser = parser || (prev? this.previewer.associatedParser: null);
 	this.code = $e(this.id).val();
@@ -8435,16 +8534,29 @@ function Editor (id, language, prev, parser, tb) {
 			default: //Normal text
 		}
 		return code
-	}
-}	
-function Preview (id, language, parser, editor) {
+	};
+
+	return this;
+}
+
+/**
+ * @descrition Previewer for IDEs.
+ * @param {string} [id="#preview"] ID of the container
+ * @param {string} [lang="none"] Language
+ * @param {Parser} [parser=new Parser()"] Parser
+ * @param {Editor} [editor=new Editor()"] Editor
+ * @this {Preview}
+ * @returns {Preview} Previewer
+ * @constructor
+ */
+function Preview (id, lang, parser, editor) {
 	this.id = id || "#preview";
 	this.node = $n(this.id);
-	this.language = language || "none";
+	this.language = lang || "none";
 	this.associatedParser = parser || new Parser();
 	this.associatedEditor = editor || new Editor();
 	this.update = function () {
-		if (this.node!=$n(this.id)) this.node = $n(this.id);
+		if (this.node != $n(this.id)) this.node = $n(this.id);
 	};
 	this.run = function (txt, parseFirst) {
 		$e(this.id).write(parseFirst? this.associatedParser.run(txt): txt, true)
@@ -8456,22 +8568,48 @@ function Preview (id, language, parser, editor) {
 		win.document.write(this.associatedEditor.highlightSynthax(code, this.language));
 		win.document.write("<style>" + Essence.css + "</style>")
 	}
+
+	return this;
 }
 
-function Debugger (id, language) {
+/**
+ * @description Debugger
+ * @todo Work on it
+ * @param {string} [id="#debugger"] ID of the container
+ * @param {string} [lang="none"] Language
+ * @returns {Debugger} Debugger
+ * @this {Debugger}
+ * @constructor
+ */
+function Debugger (id, lang) {
 	this.id = id || "#debugger";
 	this.node = $n(this.id);
-	this.language = language || "none";
+	this.language = lang || "none";
 	this.update = function () {
 		if (this.node != $n(this.id)) this.node = $n(this.id);
 	};
 	this.run = function () {
 		//Useful node stuff: reportValidity(), validity{}, setCustomValidity()
-	}
+	};
+
+	return this;
 }
 
+/**
+ * @description Dummy text
+ * @type {string}
+ * @returns {undefined}
+ */
 $G["lorem"] = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,";
 
+/**
+ * @description Language parser
+ * @param {string} [from="WebScript"] Parsed language
+ * @param {string} [to="DHTML"] Resulting language
+ * @param {Function} [customParse= function(code){...] Custom parsing
+ * @this {Parser}
+ * @constructor
+ */
 function Parser (from, to, customParse) {
 	this.from = from || "WebScript";
 	this.to = to || "DHTML";
@@ -8479,42 +8617,51 @@ function Parser (from, to, customParse) {
 		var res = code;
 		res = res.replace(/<tab \/>/gm, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		res = res.replace(/\{\{tab}}/gm, "\t");
-		res = res.replace(/<info>(.*?)<\/info>/gm, "<span class = 'block info'>$1</span>");
-		res = res.replace(/<question>(.*?)<\/question>/gm, "<span class = 'block question'>$1</span>");
-		res = res.replace(/<error>(.*?)<\/error>/gm, "<span class = 'block error'>$1</span>");
-		res = res.replace(/<warning>(.*?)<\/warning>/gm, "<span class = 'block warning'>$1</span>");
-		res = res.replace(/<success>(.*?)<\/success>/gm, "<span class = 'block success'>$1</span>");
+		res = res.replace(/<info>(.*?)<\/info>/gm, "<span class='block info'>$1</span>");
+		res = res.replace(/<question>(.*?)<\/question>/gm, "<span class='block question'>$1</span>");
+		res = res.replace(/<error>(.*?)<\/error>/gm, "<span class='block error'>$1</span>");
+		res = res.replace(/<warning>(.*?)<\/warning>/gm, "<span class='block warning'>$1</span>");
+		res = res.replace(/<success>(.*?)<\/success>/gm, "<span class='block success'>$1</span>");
 		res = res.replace(/(\{\{)LOREM(}})/ig, $G["lorem"]);
-		res = res.replace(/(?:\{\{)LOREM\x7c(\d + )-(\d + )(?:}})/ig, $G["lorem"].chunk("$1", "$2"));
+		res = res.replace(/(?:\{\{)LOREM\x7c(\d+)-(\d+)(?:}})/ig, $G["lorem"].chunk("$1", "$2"));
 		res = res.replace(/(?:\{\{)HW(?:}})/ig, "Hello World !");
-		res = res.replace(/<icon \/>/gm, "<img src = 'img/icon.png' class = 'icon'/>");
-		res = res.replace(/<icon size = (?:"|')(\w + )(?:"|') \/>/gm, "<img src = 'img/icon.png' class = 'icon' style = 'width: $1; height: $1;' />");
-		res = res.replace(/<icon name = (?:"|')(\w + )(?:"|') \/>/gm, "<img src = 'img/$1.png' class = 'icon' />");
-		res = res.replace(/<(s|m|l|xs|xl):icon name = (?:\"|\')(\w + )(?:\"|\') \/>/gm, "<img src = 'img/$2.png' class = '$1-icon' />");
-		res = res.replace(/<js>([\s\S] * ?)<\/js>/gm,"<script type = 'text/javascript'>$1<\/script>");
-		res = res.replace(/<js src = (?:\"|\')(\w + )(?:\"|\') \/>/gm,"<script type = 'text/javascript'\ src = '$1'><\/script>");
-		res = res.replace(/<vb>([\s\S] * ?)<\/vb>/gm, "<script type = 'text/vbscript'>$1<\/script>");
-		res = res.replace(/<vb src = (?:\"|\')(\w + )(?:\"|\') \/>/gm,"<script type = 'text/vbscript'\ src = '$1'><\/script>");
-		res = res.replace(/<css>([\s\S] * ?)<\/css>/gm, "<style type = 'text/css'>$1</style>");
-		res = res.replace(/<css href = (?:\"|\')([A-Za-z_ -\.] + )(?:\"|\') \/>/gm, "<link rel = 'stylesheet' type = 'text/css' href = '$1' />");
-		res = res.replace(/<charset = (?:\"|\')(\w + )(?:\"|\') \/>/gm, "<meta charset = '$1' />");
-		res = res.replace(/<author name = (?:\"|\')(\w + )(?:\"|\') href = (?:\"|\')(\w + )(?:\"|\') \/>/gm, "<meta name = 'author' content = '$1' /><link rel = 'author' href = '$2' />");
-		res = res.replace(/<desc>(.*?)<\/desc>/gm, "<meta name = 'description' content = '$1' />");
-		res = res.replace(/<copy>(.*?)<\/copy>/gm, "<meta name = 'copyrights' content = '$1' />");
+		res = res.replace(/<icon \/>/gm, "<img src='img/icon.png' class='icon'/>");
+		res = res.replace(/<icon size=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/icon.png' class='icon' style='width: $1; height: $1;' />");
+		res = res.replace(/<icon name=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/$1.png' class='icon' />");
+		res = res.replace(/<(s|m|l|xs|xl):icon name=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<img src='img/$2.png' class='$1-icon' />");
+		res = res.replace(/<js>([\s\S]*?)<\/js>/gm,"<script type='text/javascript'>$1<\/script>");
+		res = res.replace(/<js src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"<script type='text/javascript' src='$1'><\/script>");
+		res = res.replace(/<vb>([\s\S]*?)<\/vb>/gm, "<script type='text/vbscript'>$1<\/script>");
+		res = res.replace(/<vb src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"<script type = 'text/vbscript' src='$1'><\/script>");
+		res = res.replace(/<css>([\s\S]*?)<\/css>/gm, "<style type='text/css'>$1</style>");
+		res = res.replace(/<css href=(?:\"|\')([A-Za-z_ -\.]+)(?:\"|\') \/>/gm, "<link rel='stylesheet' type='text/css' href='$1' />");
+		res = res.replace(/<charset=(?:\"|\')(\w + )(?:\"|\') \/>/gm, "<meta charset='$1' />");
+		res = res.replace(/<author name=(?:\"|\')(\w + )(?:\"|\') href=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<meta name='author' content='$1' /><link rel='author' href='$2' />");
+		res = res.replace(/<desc>(.*?)<\/desc>/gm, "<meta name='description' content='$1' />");
+		res = res.replace(/<copy>(.*?)<\/copy>/gm, "<meta name='copyrights' content='$1' />");
 		res = res.replace(/<lbl>(.*?)<\/lbl>/gm, "<label>$1</label>");
-		res = res.replace(/<submit \/>/gm, "<input type = 'submit' />");
-		res = res.replace(/<submit val = (?:\"|\')(\w + )(?:\"|\') \/>/gm, "<input type = 'submit' value = '$1' />");
-		res = res.replace(/<reset \/>/gm, "<input type = 'reset' />");
-		res = res.replace(/<reset val = (?:\"|\')(\w + )(?:\"|\') \/>/gm, "<input type = 'reset' value = '$1' />");
-		res = res.replace(/<hdn name = (?:\"|\')(\w + )(?:\"|\')>(.*?)<\/hdn>/gm, "<input type = 'hidden' name = '$1' value = '$2' />");
-		res = res.replace(/<hdn name = (?:\"|\')(\w + )(?:\"|\') id = (?:\"|\')(\w + )(?:\"|\')>(.*?)<\/hdn>/gm, "<input type = 'hidden' name = '$1' value = '$3' id = '$2' />");
-		res = res.replace(/<txt ((?:id|name|class)(\=(?:\"|\')(\w + )(?:\"|\'))(| ))\/>/gm, "<input type = 'text' />");
-		res = res.replace(/<sql query = (?:\"|\')(.*?)(?:\"|\') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\t$r = mysqli_query($$dbc, '$1');\n\t}else printMsg('error', 'No ping');\n\?>");
-		res = res.replace(/<sqlt table = (?:\"|\')(\w + )(?:\"|\') query = (?:\"|\')(.*?)(?:\"|\') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\techo 'Last updated at '._time().\"<br />\";selectTable($dbc, '$1', '$2');\n\t}else printMsg('error', 'No ping');\n\?>");
+		res = res.replace(/<submit \/>/gm, "<input type='submit' />");
+		res = res.replace(/<submit val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<input type='submit' value='$1' />");
+		res = res.replace(/<reset \/>/gm, "<input type='reset' />");
+		res = res.replace(/<reset val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<input type='reset' value = '$1' />");
+		res = res.replace(/<hdn name=(?:\"|\')(\w+)(?:\"|\')>(.*?)<\/hdn>/gm, "<input type='hidden' name='$1' value='$2' />");
+		res = res.replace(/<hdn name=(?:\"|\')(\w+)(?:\"|\') id=(?:\"|\')(\w+)(?:\"|\')>(.*?)<\/hdn>/gm, "<input type='hidden' name='$1' value='$3' id='$2' />");
+		res = res.replace(/<txt ((?:id|name|class)(\=(?:\"|\')(\w+)(?:\"|\'))(| ))\/>/gm, "<input type='text' />");
+		res = res.replace(/<sql query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\t$r = mysqli_query($$dbc, '$1');\n\t}else printMsg('error', 'No ping');\n\?>");
+		res = res.replace(/<sqlt table=(?:\"|\')(\w+)(?:\"|\') query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\techo 'Last updated at '._time().\"<br />\";selectTable($dbc, '$1', '$2');\n\t}else printMsg('error', 'No ping');\n\?>");
 		return res
 	}
 }
 
+/**
+ * @description Toolbar
+ * @param {string} [id="#toolbar"] ID of the container
+ * @param {string[]} [tools=["undo", "redo", "clear", "save", "select", "copy", "paste", "load", "generate", "view"]] Tools
+ * @param {*} mdl Module that is going to use it
+ * @this {Toolbar}
+ * @returns {Toolbar} Toolbar
+ * @constructor
+ */
 function Toolbar (id, tools, mdl) {
 	this.id = id || "#toolbar";
 	this.node = $n(this.id);
@@ -8528,10 +8675,24 @@ function Toolbar (id, tools, mdl) {
 		for (var i = 0; i < this.tools.length; i++) {
 			$e(this.id).after("<img src = 'img/" + this.tools[i] + ".png' title = '" + this.tools[i].capitalize() + "' alt = '" + this.tools[i] + "' onClick = '" + this[this.tools[i]] + "' class = 'tbicon' id = 'tool" + i+"' />", true);
 		} */
-	}
+	};
+	
+	return this;
 }
 
-function IDE (lang, edt, prev, ps, dbg, tb) { //Integrated Development Environment
+/**
+ * @description Integrated Development Environment
+ * @param {string} [lang="none"] Language
+ * @param {Editor} [edt=new Editor()] Editor
+ * @param {Preview} [prev=new Preview()] Previewer
+ * @param {Parser} [ps=new Parser()] Parser
+ * @param {Debugger} [dbg=new Debugger()] Debugger
+ * @param {Toolbar} [tb=new Toolbar()] Toolbar
+ * @this {IDE}
+ * @returns {IDE} IDE
+ * @constructor
+ */
+function IDE (lang, edt, prev, ps, dbg, tb) {
 	this.editor = edt || new Editor();
 	this.parser = ps || new Parser();
 	this.preview = prev || new Preview();
@@ -8552,10 +8713,18 @@ function IDE (lang, edt, prev, ps, dbg, tb) { //Integrated Development Environme
 		this.editor.update(l);
 		this.preview.update();
 		this.debugger.update();
-	}
+	};
+
+	return this;
 }
 
 //AJAX
+/**
+ * @description Load a document/file using AJAX
+ * @param {string} url URL
+ * @param {Function} callback What to do when the document/file is loaded
+ * @returns {undefined}
+ */
 function loadDoc (url, callback) {
 	var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
 	xhr.onreadystatechange = function () {
@@ -8565,6 +8734,13 @@ function loadDoc (url, callback) {
 	xhr.send()
 }
 
+/**
+ * @description AJAX post
+ * @param {*} data Data to send
+ * @param {string} to Receiving URL
+ * @param {boolean} xml XML/Text flag
+ * @returns {undefined}
+ */
 function AJAXpost (data, to, xml) {
 	var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP"), res;
 	xhr.onreadystatechange = function () {
@@ -8588,7 +8764,12 @@ function AJAXpost (data, to, xml) {
 	}
 }
 
-function getHTTPMsg (status) { //Status: xhr.status
+/**
+ * @description HTPP status message
+ * @param {number} status HTTP status (e.g: xhr.status)
+ * @returns {string} Status message
+ */
+function getHTTPMsg (status) {
 	switch (status) {
 		//Information
 		case 100: return "Continue";
@@ -8640,7 +8821,18 @@ function getHTTPMsg (status) { //Status: xhr.status
 	}
 }
 
-function Template (name, path, txt, params, consoleSpecial) { //JavaScript templating + conversion
+/**
+ * @description Templating + conversion
+ * @param {string} [name="Template"] Name
+ * @param {string} [path="Template.jst"] Path
+ * @param {string} [txt=""] Text/code containing the {{params}}
+ * @param {string[]} [params=["tab", "date", "time", "timestamp", "br"]] Parameters
+ * @param {boolean} [consoleSpecial=false] Resulting text formated to the console
+ * @constructor
+ * @this {Template}
+ * @returns {Template} Template
+ */
+function Template (name, path, txt, params, consoleSpecial) {
 	this.name = name || "Template";
 	this.path = path || this.name + ".jst";
 	this.params = params || ["name", "description", "version", "title", "path"]; //{{params}}
@@ -8662,8 +8854,14 @@ function Template (name, path, txt, params, consoleSpecial) { //JavaScript templ
 		if (obj) save(this.gen(obj), (name || this.name) + "." + (ext || ".js"), ext || "javascript");
 		else save(this.text, this.path, "javascript")
 	}
+
+	return this;
 }
 
+/**
+ * @description System (a bit like in Java)
+ * @type {{in: {recording: boolean, record: Sys.in.record, startRecording: Sys.in.startRecording, stopRecording: Sys.in.stopRecording, data: Array}, log: Sys.log, debug: Sys.debug, out: Sys.out, toString: Sys.toString}}
+ */
 var Sys = { //System
 	in: {
 		recording: false,
@@ -8699,20 +8897,40 @@ var Sys = { //System
 	}
 };
 
+/**
+ * @description Start the keystroke recording
+ * @param {keyStroke} keyStroke Keystroke
+ * @returns {undefined}
+ */
 window.onkeypress = function (keyStroke) {
-	Sys.in.record(keyStroke)
+	Sys.in.record(keyStroke);
 	$G["lastKeyPair"] = getKey(keyStroke);
 };
 
-function RegExpify (list) { //Turn an string into a regular expression
-	return new RegExp(list.replace(/[|\\{}()[\]^$+*?.:\'<>%]/g, "\\$&"), "gm");
+/**
+ * @description Turn a string into a RegExp
+ * @param {string} str String
+ * @returns {RegExp} Resulting regular expression
+ */
+function RegExpify (str) {
+	return new RegExp(str.replace(/[|\\{}()[\]^$+*?.:\'<>%]/g, "\\$&"), "gm");
 }
 
+/**
+ * @description Turn a RegExp into a string
+ * @param {RegExp} re RegExp
+ * @returns {string|Array} Resulting string
+ */
 function unRegExpify (re) { //Turn a regular expression into a string
 	return re.toString().get(1, re.toString().lastIndexOf("/") - 1).remove("\\");
 }
 
-function occurrenceList (list) { //Get the occurrence list
+/**
+ * @description Get the occurence list
+ * @param {string} list String
+ * @returns {{}} Occurent object list
+ */
+function occurrenceList (list) {
 	if (!list.isIterable()) throw new Error("It must be an iterable object !");
 	var nums = list.getOccurrences(true), chars = [], oc = list.getOccurrences(), res = {};
 	for (var i = 0; i < oc.length; i++) chars[i] = oc[i].split(":")[0];
@@ -8720,7 +8938,13 @@ function occurrenceList (list) { //Get the occurrence list
 	return res;
 }
 
-function Objectify (keyArr, valArr) { //Join two arrays into an object
+/**
+ * @description Join two arrays into an object
+ * @param {Array} keyArr Key array
+ * @param {Array} valArr Value array
+ * @returns {{}} Resulting object
+ */
+function Objectify (keyArr, valArr) {
 	var res = {};
 	for (var i = 0; i < keyArr.length; i++) {
 		res[keyArr[i]] = valArr[i];
@@ -8728,16 +8952,38 @@ function Objectify (keyArr, valArr) { //Join two arrays into an object
 	return res;
 }
 
-function isCloser (x, a, b) { //Is a closer to x than b
+/**
+ * @description Is $a closer to $x than $b
+ * @param {number} x Number x
+ * @param {number} a Number a
+ * @param {number} b Number b
+ * @returns {boolean} Truth
+ */
+function isCloser (x, a, b) {
 	return Math.abs(x - a) < Math.abs(x - b);
 }
 
-function getClosest (x, opt) { //Get the closest option from itself to x
+/**
+ * @description Get the closest option from the options to $x
+ * @param {number} x Number
+ * @param {number[]} opt Options
+ * @returns {number} Closest number
+ */
+function getClosest (x, opt) {
 	var closest = opt[0];
-	for (var i = 1; i < opt.length; i++) closest = isCloser(x, opt[i - 1], opt[i])? opt[i - 1]: opt[i];
+	for (var i = 1; i < opt.length; i++) closest = isCloser(x, closest, opt[i])? closest: opt[i];
 	return closest;
 }
 
+/**
+ * @description Stream
+ * @param {number} [initVal=0] Initial value
+ * @param {string} [formula="x + 1"] Formula
+ * @param {number} [nbVals] Number of values
+ * @this {Stream}
+ * @returns {Stream} Stream
+ * @constructor
+ */
 function Stream (initVal, formula, nbVals) {
 	this.start = initVal || 0;
 	this.formula = formula || "x + 1";
@@ -8761,8 +9007,19 @@ function Stream (initVal, formula, nbVals) {
 	this.toString = function () {
 		return "Stream(start=" + this.start + ", formula=" + this.formula + ", data=" + this.data.toStr(true) + ")";
 	}
+
+	return this;
 }
 
+/**
+ * @description Stream with multiple variables
+ * @param {number} [initVal=0] Initial value
+ * @param {string} [formula="x + y"] Formula
+ * @param {number} [nbVals] Number of values
+ * @returns {MultiStream} Multi-variable stream
+ * @this {MultiStream}
+ * @constructor
+ */
 function MultiStream (initVal, formula, nbVals) { //Stream with multiple variables
 	this.start = initVal || 0;
 	this.formula = formula || "x + y";
@@ -8775,7 +9032,7 @@ function MultiStream (initVal, formula, nbVals) { //Stream with multiple variabl
 		}));
 		this.results.push(this.compute(this.data.last()));
 	};
-	
+
 	this.compute = function (data) { //Turn an expression into a number
 		return eval(this.formula.multiReplace([
 			[/x/g, data[0]], [/x0/g, this.start[0]],
@@ -8787,7 +9044,7 @@ function MultiStream (initVal, formula, nbVals) { //Stream with multiple variabl
 			[/(ln|log|nthroot|clampTop|clampBottom)\((.*?),(| )(.*?)\)/, "$1($2, $3)"],
 			[/(clamp)\((.*?),(| )(.*?),(| )(.*?)\)/, "$1($2, $3, $4)"]
 		]))
-	}
+	};
 
 	this.results = [this.compute(this.start)];
 
@@ -8797,26 +9054,46 @@ function MultiStream (initVal, formula, nbVals) { //Stream with multiple variabl
 
 	this.toString = function () {
 		return "Stream(start=" + this.start.toStr(true) + ", formula=" + this.formula + ", data=" + this.data.toStr(true) + ", results=" + this.results.toStr(true) + ")";
-	}
+	};
+
+	return this;
 }
 
+/**
+ * @description Numerical graph
+ * @param {string} formula Formula
+ * @param {number[]} [dims=[50, 50]] Dimensions
+ * @param {string[]} [lbls=["x", "y"]] Axis labels
+ * @param {string} [name="Graph"] Name
+ * @param {number} precision Precision
+ * @returns {Graph} Numerical graph
+ * @this {Graph}
+ * @constructor
+ */
 function Graph (formula, dims, lbls, name, precision) { //N-dimensional graph
 	this.labels = lbls || ["x", "y"];
 	this.name = name || "Graph";
 	this.dimension = dims || new Array(this.labels.length).fill(50);
 	this.equation = new Equation(formula); //y=...
 	// this.stream = new Stream(0, this.formula.split("=")[1], this.dimension[0]);
-	this.data = range(0, precision, this.dimension[0], precision.length()[1]);
+	this.data = precision? range(0, precision, this.dimension[0], (Number(precision)).length()[1]): range(this.dimension[0]);
 	for (var i = 0; i < this.data.length; i++) this.data[i] = [this.data[i], this.equation.compute({x: this.data[i]})];
 
 	this.toString = function () {
 		return "Graph(name=" + this.name + ", labels=" + this.labels.toStr(true) + ", dimension=" + this.dimension + ", this.formula=" + this.formula + ", data=" + this.data + ")";
-	}
+	};
 
 	return this;
 }
 
-function Equation (formula) { //Single parametric equations
+/**
+ * @description Single parametric equation
+ * @param {string} [formula="y=x"] Formula
+ * @returns {Equation} Equation
+ * @this {Equation}
+ * @constructor
+ */
+function Equation (formula) {
 	this.formula = formula.normal() || "y=x";
 	this.leftSide = this.formula.split("=")[0];
 	this.rightSide = this.formula.split("=")[1];
@@ -8829,14 +9106,22 @@ function Equation (formula) { //Single parametric equations
 			[/(ln|log|nthroot|clampTop|clampBottom)\((.*?),(.*?)\)/, "$1($2, $3)"],
 			[/(clamp)\((.*?),(.*?),(.*?)\)/, "$1($2, $3, $4)"]
 		]))
-	}
+	};
 
 	this.toString = function () {
 		return "Equation(" + this.formula + ")";
-	}
+	};
+
+	return this;
 }
 
-function name2Type(name, param) { //Name of a type to the type itself
+/**
+ * @description Name of a type to the type itself
+ * @param {string} name Name
+ * @param {*} [param] Parameters/value
+ * @returns {*} Type
+ */
+function name2Type(name, param) {
 	switch(name) {
 		case "Number": return Number(param);
 		case "String": return String(param);
@@ -8899,6 +9184,12 @@ function name2Type(name, param) { //Name of a type to the type itself
 	}
 }
 
+/**
+ * @description Permutation
+ * @param {string|Array} data Data
+ * @todo Make it work well
+ * @returns {string|Array} Permuation list
+ */
 function Permutation(data) {
 	console.log("data=" + data);
 	console.log("->" + data.get(-1));
@@ -8908,18 +9199,40 @@ function Permutation(data) {
 	return perm;
 }
 
+/**
+ * @description Typing recorder
+ * @deprecated
+ * @param {Function} [cb] Callback
+ * @returns {string} Recorded keystrokes
+ */
 function stup(cb) {
 	alert("You have 10s to type something !");
 	Sys.in.recording = true;
 	Sys.in.data = [];
-	setTimeout(function () {Sys.in.recording = false;alert("Stop !!");if(cb) cb(Sys.in.data.join(""));return Sys.in.data.join("");}, 1e4);
+	setTimeout(function () {
+		Sys.in.recording = false;
+		alert("Stop !!");
+		if(cb) cb(Sys.in.data.join(""));
+		return Sys.in.data.join("");
+	}, 1e4);
 	while(Sys.in.data.length === 0 || $G["las"]) {
 		if(!Sys.in.recording) break;
 	}
 	return Sys.in.data.join("");
 }
 
+/**
+ * @description Loading percentage
+ * @type {number}
+ */
 $G["i"] = 0;
+/**
+ * @description Loading bar
+ * @param {string} [dlb="#dlb"] ID of the container
+ * @param {Function} cb Callback
+ * @param {number} [delay=30] Delay (in ms)
+ * @returns {undefined}
+ */
 function loadBar (dlb, cb, delay) {
 	if(!dlb) dlb = "#dlb";
 	Essence.addCSS(dlb + " {border: none;background: #0F0;max-width: 200px;text-align: center;font-size: 28px;padding: 2px;}#bar {border: 1px ridge #CCC;text-align: center;width: 201px;});");
@@ -8932,13 +9245,18 @@ function loadBar (dlb, cb, delay) {
 	$G["timer"] = setTimeout("loadBar(" + dlb + ", " + cb + ", " + delay + ")", delay);
 	if($G["i"] >= 100) {
 		clearTimeout($G["timer"]);
-		i = 0;
+		$G["i"] = 0;
 		$e(dlb).write("Download finished");
 		cb();
 	}
 }
 
-function binaryCases(x) { //Generate an array of all possible binary numbers with x digits<
+/**
+ * @description Generate an array of all possible binary numbers with x digits or less
+ * @param {number} x Number of digits
+ * @returns {Array} Array of possible binary numbers
+ */
+function binaryCases(x) {
 	var end = parseInt("1".repeat(x)), res = [], i = 0;
 	do {
 		res.push(conv(i++, 10, 2));
@@ -8946,6 +9264,11 @@ function binaryCases(x) { //Generate an array of all possible binary numbers wit
 	return res;
 }
 
+/**
+ * @description Get the truth table of an expression
+ * @param {string} exp Expression
+ * @returns {*[]} Truth table
+ */
 function truthTable(exp) { //Get the truth table of an expression
 	// /(([a-z])(\+|\x2a))+/g
 	var ascii = asciiTable("a-z"), vars = [], rows, res = [];
@@ -8954,7 +9277,7 @@ function truthTable(exp) { //Get the truth table of an expression
 	}
 	Essence.say("variables: " + vars.toStr(true), "info");
 	rows = binaryCases(vars.length);
-	for (var i = 0; i < rows.length; i++) {
+	for (i = 0; i < rows.length; i++) {
 		var cexp = exp;
 		for (var j = 0; j < vars.length; j++) cexp = cexp.multiReplace([[vars[j], rows[i][j]]]);
 		Essence.say("current exp: " + cexp, "info");
@@ -8963,15 +9286,36 @@ function truthTable(exp) { //Get the truth table of an expression
 	return [vars, rows, res];
 }
 
-function getDNF(exp) { //Get the DNF form of an expression
-	var tt = truthTable(exp);
-
+/**
+ * @description Get the DNF form of an expression
+ * @param {string} exp Expression
+ * @returns {string} DNF
+ */
+function getDNF(exp) {
+	var tt = truthTable(exp), dnf = "";
+	//code here
+	return dnf;
 }
 
-function getCNF(exp) { //Get the CNF form of an expression
-	var tt = truthTable(exp);
+/**
+ * @description Get the CNF form of an expression
+ * @param {string} exp Expression
+ * @returns {string} CNF
+ */
+function getCNF(exp) {
+	var tt = truthTable(exp), cnf = "";
+	//code here
+	return cnf;
 }
 
+/**
+ * @description Event-trace table
+ * @param {string} [name="Event table"] Name
+ * @param {string[]} [srcs=[getFilename(true)]] Sources
+ * @returns {EventTable} Event table
+ * @constructor
+ * @this {EventTable}
+ */
 function EventTable(name, srcs) {
 	this.name = name ||"Event table";
 	this.sources = srcs || [getFilename(true)];
@@ -9013,7 +9357,7 @@ function EventTable(name, srcs) {
 	this.lookAt = function (ts) {
 		var pos = lookfor(ts || (new Date()).getTime(), this.table)[0];
 		return "'" + this.table[pos][1] + "' at " + this.table[pos][0];
-	}
+	};
 
 	return this;
 }
