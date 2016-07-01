@@ -14,7 +14,7 @@
 - toSameLength
 - lookfor
 - keyList, valList, keyTable
-- char2hex, hex2char, char2bin, bin2char
+- char2hex, hex2char, char2bin, bin2char, txt2num, num2txt
 - timeUp
 
 # Web
@@ -25,6 +25,7 @@
 - parseURL
 - WebPage, WebApp
 - Editor, Preview, Debugger, Parser, Toolbar, IDE
+- loadBar
 
 # DOM
 - print, println
@@ -76,6 +77,8 @@
 - readCoord
 - isCloser, getClosest
 - abcModulus, modRange
+- Equation
+- binaryCases, truthTable, getDNF, getCNF
 
 # File
 - stripPath
@@ -103,7 +106,9 @@
 - Archive
 - virtualHistory
 - occurenceList
-- Stream
+- Stream, MultiStream, Graph
+- Permutation
+- EventTable
 
 # UI
 - toMaxSize
@@ -114,7 +119,7 @@
 - linearGradient, radialGradient
 - daynightMode
 - chTab
-- moveHTMLRange, htmlRange, labelFieldSwap, htmlInput
+- moveHTMLRange, htmlRange, labelFieldSwap, labelPwSwap, htmlInput, htmlPassword
 
 # Mobile
 - 
@@ -133,8 +138,10 @@
 - Machine
 - Memory
 - EvtShow, evtLog
-- noobTest
-- Sys
+- InvalidParamError
+- testErr, noobTest
+- Sys, stup (to remove once Sys's recorder works well)
 - asciiTable
 - RegExpify, unRegExpify
 - Objectify
+- name2type
