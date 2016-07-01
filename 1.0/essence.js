@@ -6,7 +6,7 @@
 
 /**
  * @description This is the main object of the library
- * @type {{version: string, author: string, description: string, source: string, element: $n, handleError: Essence.handleError, say: Essence.say, css: string, applyCSS: Essence.applyCSS, addCSS: Essence.addCSS, addJS: Essence.addJS, update: Essence.update, eps: number, emptyDoc: Essence.emptyDoc, editor: Essence.editor, processList: Array, global: {t1: Date, t2: number, t: null, lastKeyPair: Array}, addProcess: Essence.addProcess, processSize: number, erverList: Array, addServer: Essence.addServer, serverSize: number, toString: Essence.toString, txt2print: string, addToPrinter: Essence.addToPrinter, print: Essence.print, preInit: Essence.preInit, init: Essence.init, time: Essence.time, sayClr: Essence.sayClr, ask: Essence.ask}}
+ * @type {{version: string, author: string, description: string, source: string, element: $n, handleError: Essence.handleError, say: Essence.say, css: string, applyCSS: Essence.applyCSS, addCSS: Essence.addCSS, addJS: Essence.addJS, update: Essence.update, eps: number, emptyDoc: Essence.emptyDoc, editor: Essence.editor, processList: Array, global: null, addProcess: Essence.addProcess, processSize: number, erverList: Array, addServer: Essence.addServer, serverSize: number, toString: Essence.toString, txt2print: string, addToPrinter: Essence.addToPrinter, print: Essence.print, preInit: Essence.preInit, init: Essence.init, time: Essence.time, sayClr: Essence.sayClr, ask: Essence.ask}}
  * @this Essence
  * @license MIT
  */
@@ -71,7 +71,7 @@ var Essence = {
 	}, editor: function (ctt) {
 		location.href = "data:text/html, <html contenteditable>" + (ctt? ctt + "</html>": "</html>");
 	}, processList: [["Name (signature)", "Author", "Size"]],
-	global: $G,
+	global: null,
 	addProcess: function (pcs) {
 		pcs.update();
 		Essence.processList.push([pcs.name + " (" + pcs.sig + ")", pcs.author, pcs.bitsize]);
@@ -130,6 +130,8 @@ var $G = {
 	lastKeyPair: []
 };
 
+Essence.global = $G;
+
 /**
  * @description Element selector
  * @param {string} selector A valid CSS selector
@@ -147,10 +149,10 @@ var $e = function (selector) { //THE selector !!
  * @constructor
  */
 function Element (selector) { //The element object
-	if (/^([#\.\* _-`~&]\W * |\S|undefined|null|())$/.test(selector)) throw new InvalidParamError("Element cannot accept the selector '" + selector + "' as it's invalid.")//Reject invalid selectors
-	if (selector[0] === "#") this.node = document.querySelector(selector) || document.getElementById(selector.slice(1, selector.length))//Id
-	else if (selector[0] === ".") this.node = document.querySelector(selector) || document.getElementByClassName(selector.slice(1, selector.length))//Class
-	else if (selector[0] === "*") this.node = document.querySelectorAll(selector.slice(1, selector.length)) || document.getElementsByTagName(selector.slice(1, selector.length))//Node array
+	if (/^([#\.\* _-`~&]\W*|\S|undefined|null|)$/.test(selector)) throw new InvalidParamError("Element cannot accept the selector '" + selector + "' as it's invalid."); //Reject invalid selectors
+	if (selector[0] === "#") this.node = document.querySelector(selector) || document.getElementById(selector.slice(1, selector.length)); //Id
+	else if (selector[0] === ".") this.node = document.querySelector(selector) || document.getElementByClassName(selector.slice(1, selector.length)); //Class
+	else if (selector[0] === "*") this.node = document.querySelectorAll(selector.slice(1, selector.length)) || document.getElementsByTagName(selector.slice(1, selector.length)); //Node array
 	else this.node = document.querySelector(selector);
 
 	this.val = function (getHTML, withTags) { //Get the value of the element's node
@@ -355,7 +357,7 @@ function Element (selector) { //The element object
 	};
 
 	return this
-};
+}
 
 /**
  * @description Element's node
@@ -550,7 +552,7 @@ Array.prototype.lastIndex = function () {
 /**
  * @description Returns the middle index of the array
  * @param {boolean} [under=false] Indicates if we want the value under the virtual value
- * @this Arrray
+ * @this Array
  * @returns {number} Middle index
  */
 Array.prototype.midIndex = function (under) {
@@ -803,7 +805,7 @@ Array.prototype.mean = function (nbDec, start, end) {
 	if (!start) start = 0;
 	if (!end) end = this.lastIndex();
 	var sum = this.sum(start, end);
-	return (sum / (this.length - start)).toNDec(nbDec) + 0; //To avoid getting the Number object representation rather than the actual result
+	return Number((sum / (this.length - start)).toNDec(nbDec)); //To avoid getting the Number object representation rather than the actual result
 };
 
 /**
@@ -817,7 +819,7 @@ Array.prototype.avg = function (nbDec, start, end) {
 	if (!start) start = 0;
 	if (!end) end = this.lastIndex();
 	var sum = this.sum(start, end) - this.slice(start, end + 1).max() - this.slice(start, end + 1).min();
-	return (sum / (this.length - 2 - start)).toNDec(nbDec) + 0
+	return Number((sum / (this.length - 2 - start)).toNDec(nbDec))
 };
 
 /**
@@ -1187,7 +1189,7 @@ Array.prototype.clean = function (noDuplic) { //Remove undesirable items
 	for (var i = 0; i < this.length; i++) {
 		if (!isNon(this[i])) arr[j++] = this[i];
 	}
-	return noDuplic? rmDuplicates(arr).remove(undefined): arr//Take off (or not) duplicates of actual values and double clean it
+	return noDuplic? rmDuplicates(arr).remove(undefined): arr; //Take off (or not) duplicates of actual values and double clean it
 };
 
 /**
@@ -1302,7 +1304,7 @@ Array.prototype.rot = function (deg) {
 		if (deg === 90) {
 			tmp = this[0].get(-1); //Get all but the last element of the first row
 			for (var j = 0; j < 1/*this.length / 2*/; j++) { //Weird error
-				tmp = this[j].get(-1)
+				tmp = this[j].get(-1);
 				for (var i = 0; i < this.maxLength() - 1; i++) {
 					if(j > 0) Essence.say("#" + i);
 					if(j > 0) Essence.say(this[j][i] + "<-" +  this[this.length - 1 - i][j]);
@@ -1546,6 +1548,7 @@ Array.prototype.toInt = function () {
  * @description Invert the matrix
  * @this Array
  * @returns {Array} Inverse
+ * @see Array.prototype.isInvertible
  */
 Array.prototype.inv = function () {
 	return this.isInvertible()? this.dotProd(1/this.det(), this.getAdjoint()): false;
@@ -1700,6 +1703,7 @@ Array.prototype.uniform = function (cr) {
  * @description Zip the array
  * @this Array
  * @returns {Array} Zipped array
+ * @see Array.prototype.unzip
  */
 Array.prototype.zip = function () {
 	var res = [], j;
@@ -1719,6 +1723,7 @@ Array.prototype.zip = function () {
  * @param {boolean} [noPairs=false] Keep pairs or not ?
  * @this Array
  * @returns {Array} Unzipped array
+ * @see Array.prototype.zip
  */
 Array.prototype.unzip = function (noPairs) {
 	var res = [];
@@ -1843,7 +1848,9 @@ Array.prototype.sanitise = function(type) {
 String.prototype.remove = function (c) { //Remove c from the string
 	var str = this;
 	if (isType(c, "Array")) {
-		for(var i in c) str = str.remove(i);
+		for(var i in c) {
+			if(c.hasOwnProperty(i)) str = str.remove(i);
+		}
 	} else {
 		var v = str.split(c).map(function (x) {
 			return x === c? undefined: x
@@ -1956,6 +1963,7 @@ String.prototype.normal = function () {
 /**
  * @description Get the occurrences of each characters as well as their positions
  * @type {Array.getOccurrences|*}
+ * @see Array.prototype.getOccurrences
  * @returns {undefined}
  */
 String.prototype.getOccurrences = Array.prototype.getOccurrences;
@@ -1983,6 +1991,7 @@ String.prototype.get = function (start, end) {
  * @description Zip the string
  * @this String
  * @returns {string} Zipped string
+ * @see String.prototype.unzip
  */
 String.prototype.zip = function () { //Compress the string
 	var res = "", j;
@@ -2002,6 +2011,7 @@ String.prototype.zip = function () { //Compress the string
  * @param {boolean} [noPairs=false] Pairs or not ?
  * @this String
  * @returns {string} Unzipped string
+ * @see String.prototype.zip
  */
 String.prototype.unzip = function (noPairs) { //Decompress the string (when being compressed using String.zip()) with(out) pairs
 	var res = "";
@@ -2201,7 +2211,7 @@ function noRightClick () {
  * @returns {undefined}
  */
 function reloadPage (lvl) { //Reload the page with 2 different level of reload
-	if (lvl === 2) location.href = location.href; //Update the hyper reference of the window's location
+	if (lvl === 2) location.href = window.location.href; //Update the hyper reference of the window's location
 	else location.reload(); //Reload the location of the window (implying lvl = 0||1)
 }
 
@@ -2215,11 +2225,11 @@ function reloadPage (lvl) { //Reload the page with 2 different level of reload
 function redirect (to, dt, divId) { //Redirect to #to in #dt ms
 	if (!dt) dt = 3e3; //If dt hasn't an assign value so it will assign a default one
 	var s = Math.floor(dt/1e3); //Convert from ms to s
-	$e("#" + divId).write("<h2 > Redirecting to <ins>" + to + "</ins> ...<br />in <span id = 'timeleft'>" + s+"</span > s</h2>", true)//Write the Redirecting message to the screen
+	$e("#" + divId).write("<h2>Redirecting to <ins>" + to + "</ins> ...<br />in <span id=\'timeleft\'>" + s + "</span>s</h2>", true); //Write the Redirecting message to the screen
 	s--; //Countdown
 	$e("#timeleft").write(s);
 	setTimeout("location = '" + to + "';", dt); //Set the timeout for the redirection
-};
+}
 
 /**
  * @description Validity check
@@ -2231,21 +2241,21 @@ function isValid (txt, type) { //Check if a text (generally from a field) is val
 	var pattern, lenOK = true;
 	switch (type.toLowerCase()) {
 		case "email":
-			pattern = /[a-z0-9!#$ % &' *+/=?^_`{|}~-]+(?:\.[a-z0-9!#$ % &' *+/=?^_`{|}~-]+) * @(?:[a-z0-9](?:[a-z0-9-] * [a-z0-9])?\.) + [a-z0-9](?:[a-z0-9-] * [a-z0-9])?///From SO
+			pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/; //From SO
 			lenOK = txt.length >= 9 && txt.length < 64;
 			break;
 		case "tel":
-			pattern = /^\ + (?:[0-9] ?){6,14}[0-9]$/; //From somewhere
+			pattern = /^\+(?:[0-9]?){6,14}[0-9]$/; //From somewhere
 			break;
 		case "username":
-			pattern = /^[A-Za-z_0-9-] + $/;
+			pattern = /^[A-Za-z_0-9-]+$/;
 			lenOK = txt.length > 3 && txt.length <= 16;
 			break;
 		case "name":
 			pattern = /^[:alpha:]{2,35}$/;
 			break;
 		case "price":
-			pattern = /^[0-9] * \x2e[0-9]{2}$/;
+			pattern = /^[0-9]*\x2e[0-9]{2}$/;
 			lenOK = txt.length > 3;
 			break;
 		case "number":
@@ -2259,19 +2269,19 @@ function isValid (txt, type) { //Check if a text (generally from a field) is val
 			pattern = /(#|0x)?([A-Fa-f0-9]){3}(([A-Fa-f0-9]){3})?/; //From CheatSheets (iOS)
 			break;
 		case "tag": //From CheatSheets (iOS)
-			pattern = /(<(\/?[^>] + )>)/;
+			pattern = /(<(\/?[^>]+)>)/;
 			break;
 		case "password":
 			pattern = /|^\c]\w{8,}/;
 			break;
 		case "file":
-			pattern = /^[\S] + ([A-Za-z0-9_] * \.(jpg|png|gif|ico|bmp))$/;
+			pattern = /^[\S]+([A-Za-z0-9_]*\.(jpg|png|gif|ico|bmp))$/;
 			break;
 		case "variable":
-			pattern = /^[A-Za-z_$] + [0-9] * [A-Za-z_$] + $/;
+			pattern = /^[A-Za-z_$]+[0-9]*[A-Za-z_$]+$/;
 			break;
 		case "color":
-			pattern = /^(#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6}))|(rgb\(([0-9] + ,\s){2}([0-9] + )\))|(rgba\(([0-9] + ,\s){3}((0|1|)\.[0-9] * )\))|(hsl\(([0-9] + ,\s){2}([0-9] + )\))|(hsla\(([0-9] + ,\s){3}((0|1|)\.[0-9] * )\))$/;
+			pattern = /^(#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6}))|(rgb\(([0-9]+,\s){2}([0-9]+)\))|(rgba\(([0-9]+,\s){3}((0|1|)\.[0-9]*)\))|(hsl\(([0-9]+,\s){2}([0-9]+)\))|(hsla\(([0-9]+,\s){3}((0|1|)\.[0-9]*)\))$/;
 			break;
 		case "url":
 			pattern = /^((http(|s):\/\/)|((file|ftp):\/\/\/))(\/[A-Za-z0-9_-]*)|[A-Za-z0-9_-]$/;
@@ -2283,7 +2293,7 @@ function isValid (txt, type) { //Check if a text (generally from a field) is val
 			pattern = /^[0-5][0-9](\x3a|\.)[0-5][0-9]|([0-5][0-9]\x3a[0-5][0-9]){0,2}(\x3a|\.)[0-5][0-9]$/;
 			break;
 		default: pattern = /\w/;
-	};
+	}
 	return pattern.test(txt) && lenOK
 }
 
@@ -2292,6 +2302,7 @@ function isValid (txt, type) { //Check if a text (generally from a field) is val
  * @param {node} fm Form
  * @param {boolean} [ignoreRequired=false] Ignored the required attribute
  * @returns {boolean} Validation check
+ * @see isValid
  */
 function validate (fm, ignoreRequired) { //Check if a form is valid
 	if (!fm) fm = document.forms[0];
@@ -2305,7 +2316,7 @@ function validate (fm, ignoreRequired) { //Check if a form is valid
 			else if (fm[i].name.indexOf("name") >= 0) valid = valid && isValid(fm[i].value, "name");
 			else if (fm[i].type === "checkbox" && fm[i].checked) valid = valid && true;
 			else valid = valid && !isNon(fm[i].value) //Radio,
-		};
+		}
 	}
 	return valid
 }
@@ -2315,6 +2326,7 @@ function validate (fm, ignoreRequired) { //Check if a form is valid
  * @param {*} obj Object
  * @param {string} type Type
  * @returns {boolean} Type check result
+ * @see getType
  */
 function isType (obj, type) { //Only works for native types (treats custom ones as objects)
 	type = type[0].toUpperCase() + type.slice(1, type.length).toLowerCase();
@@ -2326,6 +2338,7 @@ function isType (obj, type) { //Only works for native types (treats custom ones 
  * @param {*} obj Object
  * @param {string} type Type
  * @returns {boolean} Custom type check result
+ * @see getCustomType
  */
 function isCustomType (obj, type) { //Same as isType but for custom types
 	return getCustomType(obj).toLowerCase() === type.toLowerCase()
@@ -2357,7 +2370,8 @@ function getCustomType (obj, preserve) { //Same as getType but for custom types 
 /**
  * @description 2D array check
  * @param {*} obj Object
- * @returns {boolean} 2D array check result
+ * @returns {boolean} 2D array check resul
+ * @see isType
  */
 function is2dArray (obj) { //Check if an array has 2 dimensions (nxm matrix)
 	if (isType(obj, "Array")) {
@@ -2383,7 +2397,8 @@ function timesLiteral (n) {
 /**
  * @description Get the HTML equivalent of the string
  * @param {string} str String
- * @returns {XML|string|HTML} HTML equivalent
+ * @returns {XML|string} HTML equivalent
+ * @see escapeHTML
  */
 function escapeHTML (str) {
 	var span = document.createElement("span");
@@ -2395,6 +2410,7 @@ function escapeHTML (str) {
  * @description Get the string equivalent of the HTML code
  * @param {string} code HTML code
  * @returns {string} String equivalent
+ * @see unescapeHTML
  */
 function unescapeHTML (code) {
 	var span = document.createElement("span");
@@ -2485,7 +2501,7 @@ function toMaxSize () {
  * @description Dimension of the screen
  * @returns {number[]} Screen dimensions
  */
-function getScrenDim () {
+function getScreenDim () {
 	return [screen.width, screen.height]
 }
 
@@ -2501,6 +2517,7 @@ function getWinDim () {
  * @description Gather the cookie named $c_name
  * @param {string} c_name Cookie name
  * @returns {undefined}
+ * @see setCookie
  */
 function getCookie (c_name) {
 	var x, y, cookies = document.cookie.split(";");
@@ -2520,7 +2537,7 @@ function getCookie (c_name) {
  * @returns {undefined}
  */
 function setCookie (c_name, value, exdays) {
-	exdays? exdays %= 99983489: exdays = 99983488; //As 99983488 is the maximum value
+	exdays = exdays ? exdays % 0x5f5a081 : 0x5f5a080; //As 99983488 is the maximum value
 	var exdate = new Date();
 	exdate.setDate(exdate.getDate() + exdays);
 	var c_value = encodeURIComponent(value) + ((exdays === null) ? "" : "; expires = " + exdate.toUTCString());
@@ -2556,6 +2573,10 @@ function getResources (rmEmpty) {
 	for (i = 0; i < scripts.length; i++) {
 		if (!isNon(scripts[i])) rsc.push(scripts[i].src);
 		Essence.say(scripts[i].src.split("/")[scripts[i].src.split("/").length - 1] + " has been added to the resources getter.", "info")
+	}
+	for (i = 0; i < stylesheets.length; i++) {
+		if (!isNon(stylesheets[i])) rsc.push(stylesheets[i].src);
+		Essence.say(stylesheets[i].src.split("/")[stylesheets[i].src.split("/").length - 1] + " has been added to the resources getter.", "info")
 	}
 	for (i = 0; i < hypertxt.length; i++) {
 		if (!isNon(hypertxt[i])) rsc.push(hypertxt[i].href);
@@ -2607,13 +2628,14 @@ function gatherStylesheets (asList) {
  * @param {string} file Filename
  * @param {string} [type="link"] Type of the file
  * @param {string} [parentPath=""] Parent path
- * @returns {undefined}
+ * @returns {undefined|boolean} State
+ * @see include
  */
 function include_once (file, type, parentPath) {
 	if (!type) type = (file.indexOf(".js") > 0)? "script": "style";
 	var r = type === "script"? gatherScripts(true): gatherStylesheets(true);
-	if (parentPath && (keyList(r, true).indexOf(parentPath + file) > -1 || valList(r, true).indexOf(parentPath + file) > -1)) return;
-	else if (keyList(r, true).indexOf(file) > -1 || valList(r, true).indexOf(file) > -1) return;
+	if (parentPath && (keyList(r, true).indexOf(parentPath + file) > -1 || valList(r, true).indexOf(parentPath + file) > -1)) return false;
+	else if (keyList(r, true).indexOf(file) > -1 || valList(r, true).indexOf(file) > -1) return false;
 	else include(file, type)
 }
 
@@ -2632,13 +2654,14 @@ function stripTags (str) {
  * @returns {*} File name
  */
 function stripPath (path) { //Keeps the file name even if it's not in the same directory as this library or the files using it
-	return path.split("/")[path.split("/").length-1]
+	return path.split("/")[path.split("/").length - 1]
 }
 
 /**
  * @description Get the name of the current file
  * @param {boolean} [withExt=false] With the extension
  * @returns {string} File name
+ * @see stripPath
  */
 function getFilename(withExt) {
 	return withExt? stripPath(location.pathname): stripPath(location.pathname).get(-stripPath(location.pathname).lastIndexOf(".") - 1);
@@ -2652,9 +2675,9 @@ function getFilename(withExt) {
  */
 function getCurrentPath (path, localPath) { //A bit like stripPath but which would preserve the directories that aren't listed in the local path
 	if (!localPath) localPath = "file:///";
-	var parts = path.split("/"), res = "", pParts = localPath.split("/"), i = 0, j = 0;
+	var parts = path.split("/"), pParts = localPath.split("/"), i = 0, j = 0;
 	while(localPath.indexOf(parts[i]) > -1) i++;
-	res = parts.get(i).join("/");
+	var res = parts.get(i).join("/");
 
 	while (res.indexOf(pParts[j]) > -1) {
 		console.log("Gone through " + pParts[j]);
@@ -2670,6 +2693,7 @@ function getCurrentPath (path, localPath) { //A bit like stripPath but which wou
  * @description Get the filename list of the path list
  * @param {string[]} list Path list
  * @returns {Array} File name list
+ * @see stripPath
  */
 function filenameList (list) {
 	var res = [];
@@ -2681,6 +2705,7 @@ function filenameList (list) {
  * @description Get the directory's path of the file (opposite of stripPath())
  * @param {string} path Path
  * @returns {string} Directory path
+ * @see stripPath
  */
 function getDirectoryPath (path) {
 	if (!path) path = location.href;
@@ -2703,9 +2728,10 @@ function rand (min, max, integer) {
  * @description Random number generator with 0 as the minimum
  * @param {number} max Maximum (inclusive)
  * @returns {number} Random number
+ * @see rand
  */
 function randTo (max) {
-	return rand(0, max, true) //To only have to use the max value and already knowing the rest
+	return rand(0, max, true); //To only have to use the max value and already knowing the rest
 }
 
 /**
@@ -2714,6 +2740,7 @@ function randTo (max) {
  * @param {number} max Maximum (inclusive)
  * @param {number} [base=10] Base
  * @returns {number|string} Random number
+ * @see rand
  */
 function baseRand (min, max, base) { //Randomise a number in the selected base
 	return parseInt(rand(min, max)).toString(base || 10)
@@ -2725,6 +2752,7 @@ function baseRand (min, max, base) { //Randomise a number in the selected base
  * @param {number} var2 Variable #2
  * @param {boolean} [integer=false] Integer or float/double
  * @returns {number} Random number
+ * @see rand
  */
 function randVar (var1, var2, integer) {
 	var mx = Math.max(var1, var2), mn = Math.min(var1, var2); //Setting the max and min for the rand() call
@@ -2767,6 +2795,7 @@ function randFloatSpread (range) {
  * @param {number} min Minimum
  * @param {number} max Maximum
  * @returns {Array} Nearly sorted array
+ * @see swap
  */
 function genNearlySortedArr (n, min, max) {
 	var aI = range(min, 1, max).slice(0, n), res = [], ic;
@@ -2810,11 +2839,12 @@ function conv (n, from, to, float) {
  * @param {number|string} bin Binary number
  * @param {boolean} [toArr=false] To array
  * @returns {number[]|string[]|number|string} Negated binary number
+ * @see conv
  */
 function negateBin (bin, toArr) {
-	var n = [], dec = 0;
+	var n = [];
 	for(var i = 0; i < bin.length; i++) n[i] = 1 - parseInt(bin[i]);
-	dec = conv(n.join(""));
+	var dec = conv(n.join(""));
 	dec++;
 	return toArr? conv(dec, 10, 2).split(""): conv(dec, 10, 2)
 }
@@ -2822,6 +2852,7 @@ function negateBin (bin, toArr) {
 /**
  * @description Floating point binary number to decimal number
  * @param {number} bin Binary number
+ * @todo Finish it
  * @returns {number} Decimal number
  */
 function floatingPtBin (bin) {
@@ -2858,6 +2889,7 @@ function floatingPtBin (bin) {
  * @description Minute to decimal
  * @param {number} min Minutes
  * @returns {number} Decimals
+ * @see dec2min
  */
 function min2dec (min) { //Minute to decimal
 	return (50 * min) / 30
@@ -2867,6 +2899,7 @@ function min2dec (min) { //Minute to decimal
  * @description Decimal to minute
  * @param {number} dec Decimals
  * @returns {number} Minutes
+ * @see min2dec
  */
 function dec2min (dec) {
 	return (30 * dec) / 50
@@ -2876,6 +2909,7 @@ function dec2min (dec) {
  * @description Time to second
  * @param {string} i Time ([hh:]mm:ss.xx[x])
  * @returns {number} Seconds
+ * @see sec2time
  */
 function toS (i) {
 	var withH = i.count(":") === 2;
@@ -2886,7 +2920,7 @@ function toS (i) {
 	var t = i.split(":");
 
 	if (withH) {
-		var h, m, s, ms; //Any parts that need to be extracted
+		var h, m, s; //Any parts that need to be extracted
 		h = parseInt(t[0]); //The first section: hour
 		m = parseInt(t[1]); //The second section: min
 		s = parseFloat(t[2]); //The third section: sec
@@ -2903,6 +2937,7 @@ function toS (i) {
  * @param {string} i Seconds
  * @param {boolean} [withH=false] Include hours
  * @returns {string} Time
+ * @see toS
  */
 function sec2time (i, withH) {
 	var h = 0, m = 0, s = i;
@@ -2922,6 +2957,7 @@ function sec2time (i, withH) {
 
 /**
  * @description Alias/Shortcuts
+ * @see sec2time toS
  */
 var s2t = sec2time, toSec = toS;
 
@@ -2964,6 +3000,7 @@ function log (x, y) {
  * @description Neperian Logarithm
  * @param {number} x Number
  * @returns {number} Neperian logarithm
+ * @see log
  */
 function ln (x) {
 	return log(x, Math.E);
@@ -2985,6 +3022,7 @@ function gcd (a, b) {
  * @param {number} p Success probability
  * @param {number} r Number of attempts
  * @returns {number} Binomial distribution
+ * @see C
  */
 function Bin (n, p, r) { //Binomial distrib. where X~Bin(n, p) and it returns P(X = r)
 	return C(n, r) * Math.pow(p, r) * Math.pow(1 - p, n - r)
@@ -2996,6 +3034,7 @@ function Bin (n, p, r) { //Binomial distrib. where X~Bin(n, p) and it returns P(
  * @param {number} p Success probability
  * @param {number} r Number of attempts
  * @returns {number} Cumultative binomial distribution
+ * @see Bin
  */
 function BinCumul (n, p, r) { //P(X < r) ?
 	var res = [];
@@ -3009,6 +3048,7 @@ function BinCumul (n, p, r) { //P(X < r) ?
  * @param {number} p Success probability
  * @param {number} r Number of attempts
  * @returns {number} Cumultative binomial distribution
+ * @see factorial
  */
 function BinCumulLT (n, p, r) { //P(X <= r) (adapted from http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function)
 	var x = 1 - p, a = n - r, b = r + 1, c = a + b - 1, res = 0;
@@ -3023,7 +3063,7 @@ function BinCumulLT (n, p, r) { //P(X <= r) (adapted from http://stackoverflow.c
  */
 function Norm (x) { //P(z < x) where Z~N(0, 1) (or P(z>-x) if x is positive) === normalcdf(x)
 	var t = 1 / (1 + .2316419 * Math.abs(x));
-	var d = .3989423 * Math.exp(-x * x/2);
+	var d = .3989423 * Math.exp(-x * x / 2);
 	var p = d * t * (.3193815 + t * (-.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
 	return p.toNDec(4)
 }
@@ -3034,6 +3074,7 @@ function Norm (x) { //P(z < x) where Z~N(0, 1) (or P(z>-x) if x is positive) ===
  * @param {number} sd Standard deviation
  * @param {number} x Number
  * @returns {number} Standard normal distribution
+ * @see Norm
  */
 function StdNorm (m, sd, x) {
 	return Norm((x - m) / sd); //P(Z<(x-m)/sd)
@@ -3044,6 +3085,7 @@ function StdNorm (m, sd, x) {
  * @param {number} l Lambda
  * @param {number} x Number
  * @returns {number} Poisson distribution
+ * @see factorial
  */
 function Po (l, x) {
 	return (Math.exp(-l) * Math.pow(l, x)) / factorial(x).toNDec(4)
@@ -3054,6 +3096,7 @@ function Po (l, x) {
  * @param {number} l Lambda
  * @param {number} x Number
  * @returns {number} Cumultative poisson distribution
+ * @see Po
  */
 function PoCumul (l, x) {
 	var res = [];
@@ -3077,6 +3120,7 @@ function factorial (x) {
  * @param {number} n Total
  * @param {number} r Number
  * @returns {number} nCr
+ * @see factorial
  */
 function C (n, r) {
 	return factorial(n) / (factorial(r) * factorial(n - r))
@@ -3089,6 +3133,7 @@ function C (n, r) {
  * @param {number} r Number of attempts
  * @param {string} sign Sign used in the expression
  * @returns {number} Normal distribution
+ * @see StdNorm
  */
 function Bin2Norm (n, p, r, sign) { //Binomial to Normal
 	if (n * p > 5 && n * (1 - p) > 5) {
@@ -3103,6 +3148,7 @@ function Bin2Norm (n, p, r, sign) { //Binomial to Normal
  * @param {number} p Success probability
  * @param {number} r Number of attempts
  * @returns {number|boolean} Poisson distribution
+ * @see Po
  */
 function Bin2Po (n, p, r) { //Binomial to Poisson
 	return (n > 50 && p < .1)? Po(n * p, r): false;
@@ -3113,6 +3159,7 @@ function Bin2Po (n, p, r) { //Binomial to Poisson
  * @param {number} l Lambda
  * @param {number} x Number
  * @returns {number|boolean} Normal distribution
+ * @see StdNorm
  */
 function Po2Norm (l, x) { //Poisson to Normal
 	return (l > 10)? StdNorm(x, Math.sqrt(x)): false;
@@ -3203,6 +3250,7 @@ function mapLinear (x, a1, a2, b1, b2) {
  * @description Degree to radiant
  * @param {number} deg Degrees
  * @returns {number} Radiant
+ * @see rad2deg
  */
 function deg2rad (deg) {
 	return deg * Math.PI / 180
@@ -3212,6 +3260,7 @@ function deg2rad (deg) {
  * @description Radiant to degree
  * @param {number} rad Radiant
  * @returns {number} Degree
+ * @see deg2rad
  */
 function rad2deg (rad) {
 	return rad * 180 / Math.PI
@@ -3221,6 +3270,7 @@ function rad2deg (rad) {
  * @description Celsius to fahrenheit
  * @param {number} cel Celsius
  * @returns {number} Fahrenheit
+ * @see fahr2cels
  */
 function cels2fahr (cel) {
 	return cel * 33.8
@@ -3230,6 +3280,7 @@ function cels2fahr (cel) {
  * @description Fahrenheit to celsius
  * @param {number} fahr Fahrenheit
  * @returns {number} Celsius
+ * @see cels2fahr
  */
 function fahr2cels (fahr) {
 	return fahr / 33.8
@@ -3239,6 +3290,7 @@ function fahr2cels (fahr) {
  * @description Return the prime numbers of arr where non prime numbers that doesn't have divisors in the array are considered prime
  * @param {number[]} arr Array
  * @returns {Array} Prime numbers
+ * @see primeCheck
  */
 function primeN (arr) {
 	var res = arr.quickSort();
@@ -3366,6 +3418,7 @@ function clearNum (n, nDec, usFormat) {
  * @param {number} b Maximum
  * @param {number} [nbDec] Number of decimals
  * @returns {Number} Step
+ * @see Array.prototype.getIncrement
  */
 function getStep (a, b, nbDec) {
 	return [a, b].getIncrement(nbDec)
@@ -3390,7 +3443,7 @@ function quadraticSolver (a, b, c, nDec) {
  * @param {Array} res Result(s)
  * @param {number} a Lowest bound
  * @param {number} b Highest bound
- * @returns {Array.<T>|*} Results
+ * @returns {Array|*} Results
  */
 function eqSolver (formula, res, a, b) {
 	a = a || -100;
@@ -3414,11 +3467,11 @@ function eqSolver (formula, res, a, b) {
 		[a-z]+ (variable)
 		*/
 		var expr = "([(]. * ?[)]|\\d + \\.\\d + |\\d + |[a-z] + )";
-		var reg = RegExp(expr + "\\^" + expr);
+		var reg = new RegExp(expr + "\\^" + expr);
 		formula = formula.replace(reg, "Math.pow($1, $2)");
 	}else if (formula.search(/e\^/g)>0) { //Look for a e^
 		expr = "([(]. * ?[)]|\\d + \\.\\d + |\\d + |[a-z] + )";
-		reg = RegExp("e\\^" + expr);
+		reg = new RegExp("e\\^" + expr);
 		formula = formula.replace(reg, "Math.exp($1)");
 	}
 	Essence.say("Formula now converted to %c" + formula, "info", "color: #00f;");
@@ -3430,7 +3483,7 @@ function eqSolver (formula, res, a, b) {
 	}
 	return r.filter(function (n) {
 		if (n.split(") ")[1] == res) return n.split(") ")[0] + ")"
-	})//Filter out the values which doesn't match the result and returns only (x, y)
+	}); //Filter out the values which doesn't match the result and returns only (x, y)
 }
 
 /**
@@ -3479,6 +3532,7 @@ function getNumFromStr (x) { //Remove the text from the string to keep the numbe
  * @param {string} x Number with a unit
  * @source http://www.endmemo.com/sconvert/centimeterpixel.php
  * @returns {number} Pixels
+ * @see fromPixel
  */
 function toPixel (x) {
 	var m = 1;
@@ -3544,6 +3598,7 @@ function toPixel (x) {
  * @param {number} x Pixels
  * @param {string} unit Unit
  * @returns {string} Conversion
+ * @see toPixel
  */
 function fromPixel (x, unit) {
 	var m = 1;
@@ -3609,6 +3664,7 @@ function fromPixel (x, unit) {
  * @param {string} x Number with unit
  * @param {string} unit Final unit
  * @returns {string} Result
+ * @see fromPixel toPixel
  */
 function convUnit (x, unit) { //x => y unit
 	return fromPixel(toPixel(x), unit); //demux(. * , px)->mux(px, . * )
@@ -3673,14 +3729,14 @@ function save (txt, name, type) { //Save into a file of the corresponding type
 	dlLink.download = name;
 	dlLink.innerHTML = "Download File";
 	if (window.webkitURL != null) dlLink.href = window.webkitURL.createObjectURL(txtfile); //Chrome allows the link to be clicked without actually adding it to the DOM.
-	else{ //Firefox requires the link to be added to the DOM before it can be clicked.
+	else { //Firefox requires the link to be added to the DOM before it can be clicked.
 		dlLink.href = window.URL.createObjectURL(txtfile);
 		dlLink.onclick = function (evt) {
 			document.body.removeChild(evt.target);
 		};
 		dlLink.style.display = "none";
 		document.body.appendChild(dlLink);
-	};
+	}
 	dlLink.click()
 }
 
@@ -3740,9 +3796,33 @@ function getDate (short) {
  * @description Get the timestamp
  * @param {boolean} [readable=false] Readable (dd/MM/yyyy hh:mm:ss.xxx) or not (ddMMM-hh-mm-ss)
  * @returns {string} Timestamp
+ * @see getDate getTime
  */
 function getTimestamp (readable) {
 	return readable? getDate() + " " + getTime(true): getDate(true) + "-" + getTime().replace(/\:/g, "-")
+}
+
+/**
+ * @description Date to number
+ * @param {string} [d=getDate()] Date
+ * @returns {number} Number
+ * @see num2date
+ */
+function date2num (d) {
+	if(!d) d = getDate();
+	var p = d.split("/");
+	return parseFloat(parseFloat(p[2] + "." + p[1]).toNDec() + "0" + p[0]);
+}
+
+/**
+ * @description Number to date
+ * @param {number} n Number
+ * @returns {string} Date
+ * @see date2num
+ */
+function num2date (n) {
+	var p = n.toString().split(".");
+	return p[1].get(3) + "/" + p[1].get(-3) + "/" + p[0];
 }
 
 /**
@@ -3778,6 +3858,7 @@ function asciiTable(start, end) {
  * @param {number} len Length
  * @param {string} filter Filter (specific character, no uppercase/lowercase, cumultative/no (sensitive) repeat)
  * @returns {string} Generated string
+ * @see asciiTable
  */
 function genStr (len, filter) { //Generate a string
 	var str = "", az = asciiTable("a-z"), AZ = asciiTable("A-Z"), zero9 = range(9), commonChar = ["&", "~", "\"", "#", "\'", "{", "[", "(", "-", "|", "`", "_", "\\", "^", "@", ")", "]", " + ", "=", "}", " % ", " * ", "?", ",", ";", ".", "/", ":", "!", " "],
@@ -3929,6 +4010,7 @@ function Colour (r, g, b, a) {
  * @param {string} hex Hexadecimal
  * @param {boolean} [toArray=false] Result as an array
  * @returns {number[]|string} RGB equivalent
+ * @see rgb2hex
  */
 function hex2rgb (hex, toArray) { //Hexadecimal to RGB
 	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -3945,6 +4027,7 @@ function hex2rgb (hex, toArray) { //Hexadecimal to RGB
  * @param {string} rgb RGB colour
  * @param {boolean} [toArray=false] Result as an array
  * @returns {string[]|number[]|string} Hexadecimal colour
+ * @see hex2rgb
  */
 function rgb2hex (rgb, toArray) { //RGB to hexademical
 	rgb = rgb.slice(4, rgb.length - 1).split(", ");
@@ -4071,7 +4154,7 @@ function rgbList (inc, intOnly, debug) {
  * @param {string} country Country
  * @param {string} city City
  * @param {string} [sex="other"] Sex
- * @param {string} bday Birth date
+ * @param {string} bday="01/01/2000" Birth date
  * @param {string|string[]} [jobs="unemployed"] Job(s)
  * @param {string|string[]} [activities="none"] Activitie(s)
  * @param {string|string[]} [websites="none"] Website(s)
@@ -4086,23 +4169,42 @@ function Person (fname, sname, lname, title, nickname, num, country, city, sex, 
 	this.secondName = sname || "";
 	this.lastName = lname || "";
 	this.title = title || "";
-	this.nickname = nickname|"";
+	this.nickname = nickname || "";
 	this.phoneNum = num || "none";
 	this.country = country || "";
 	this.city = city || "";
 	this.sex = (sex.toLowerCase() === "male" || sex.toLowerCase() === "female")? sex: "other";
-	this.birthday = bday;
+	this.birthday = bday || "01/01/2000";
+	this.deathday = null;
 	this.jobs = jobs || "unemployed";
 	this.activities = activities || "none";
 	this.websites = websites || "none";
 	this.quote = quote || "";
-	this.toString = function () { //Weirdly showing "getName" which isn't the case of toLocaleString() 
+	this.toString = function () { //Weirdly showing "getName" which isn't the case of toLocaleString()
 		var str = "Person(";
 		for (var p in this) {
 			if (this.hasOwnProperty(p) && p != "toString") str += p + "=" + this[p] + ", ";
 		}
 		return str.substring(0, str.length-2) + ")"
 	};
+
+	this.genID = function () {
+		return (this.lastName.get(0, 3) + this.birthday.split("/")[1] + this.firstName.get(0, 1) + this.secondName.get(0, 1) + this.birthday.split("/")[2] + this.sex[0]).toUpperCase();
+	};
+
+	this.getAge = function () {
+		return (date2num(getDate()) - date2num(this.birthday)).toNDec(2);
+	};
+
+	this.isMajor = function () {
+		return ((this.country.get(0, 1) === "UN" || this.country.toLowerCase() === "united states") && this.getAge() > 20) || ((this.country.get(0, 1) != "UN" || this.country.toLowerCase() != "united states") && this.getAge() > 18);
+	};
+
+	this.getFullName = function () {
+		return this.firstName + " " + this.secondName + (this.nickname != ""? " \"" + this.nickname + "\" ": " ") + this.lastName;
+	};
+
+
 	return this
 }
 
@@ -4171,6 +4273,7 @@ function range (min, inc, max, nbDec) {
  * @param {number} [max=100] Maximum
  * @param {number} [b=2] Base
  * @returns {Array} Range
+ * @see conv
  */
 function range2base (min, inc, max, b) { //Same as range(...) but to the base b
 	var val = [], n = 0;
@@ -4208,6 +4311,7 @@ function letterArray (first, last) { //A letter pair array
  * @param {number} [max=100] Maximum
  * @param {boolean} [noRepeat=false] No repeated numbers
  * @returns {Array} Mixed range
+ * @see range
  */
 function mixedRange (min, inc, max, noRepeat) {
 	var val = [], available = range(min, inc, max);
@@ -4331,6 +4435,7 @@ function swap (obj, e1, e2) { //Swap two proprietary elements or two elements
  * @description Fisher-Yates shuffle
  * @param {Array|object|string} obj Object to shuffle
  * @returns {Array|object|string} Shuffled array
+ * @see swap
  */
 function fisherYatesShuffle (obj) { //Inspired by https://Github.com/duereg/js-algorithms/blob/master/lib/algorithms/1-strings/shuffle.js
 	var l = obj.length;
@@ -4361,6 +4466,7 @@ function vectorProd (v1, v2) { //V1 x v2
  * @description Convert  a vector to a point
  * @param {object} v Vector
  * @returns {Pt} Point
+ * @see Pt
  */
 function vector2Point (v) { //Get the conversion of the vector to a point
 	return new Pt(v.x, v.y, v.z)
@@ -4412,8 +4518,10 @@ function intersection (a, b, c, toSort) {
 	c = c? c.quickSort(): false;
 
 	for (var i in a) {
-		if (b.indexOf(a[i]) > -1 && isNon(c)) inter.push(a[i]);
-		else if (b.indexOf(a[i]) > -1 && c.indexOf(a[i]) > -1) inter.push(a[i]);
+		if(a.hasOwnProperty(a)) {
+			if (b.indexOf(a[i]) > -1 && isNon(c)) inter.push(a[i]);
+			else if (b.indexOf(a[i]) > -1 && c.indexOf(a[i]) > -1) inter.push(a[i]);
+		}
 	}
 	return toSort? rmDuplicates(inter).quickSort(): rmDuplicates(inter)
 }
@@ -4433,8 +4541,10 @@ function complement (a, b, c, toSort) {
 	c = c? c.quickSort(): false;
 
 	for (var i in a) {
-		if (b.indexOf(a[i]) === -1 && isNon(c)) cpt.push(a[i]);
-		else if (b.indexOf(a[i]) === -1 && c.indexOf(a[i]) === -1) cpt.push(a[i]);
+		if(a.hasOwnProperty(i)) {
+			if (b.indexOf(a[i]) === -1 && isNon(c)) cpt.push(a[i]);
+			else if (b.indexOf(a[i]) === -1 && c.indexOf(a[i]) === -1) cpt.push(a[i]);
+		}
 	}
 	return toSort? rmDuplicates(cpt).quickSort(): rmDuplicates(cpt)
 }
@@ -4453,16 +4563,20 @@ function symDif (a, b, c, toSort) {
 	b = b.quickSort();
 	c = c? c.quickSortort(): false;
 	for (var i in a) {
-		if (b.indexOf(a[i]) === -1 && isNon(c)) sd.push(a[i]);
-		else if (b.indexOf(a[i]) === -1 && c.indexOf(a[i]) === -1) sd.push(a[i]);
+		if(a.hasOwnProperty(i)) {
+			if (b.indexOf(a[i]) === -1 && isNon(c)) sd.push(a[i]);
+			else if (b.indexOf(a[i]) === -1 && c.indexOf(a[i]) === -1) sd.push(a[i]);
+		}
 	}
 	for (i in b) {
-		if (a.indexOf(b[i]) === -1 && isNon(c)) sd.push(b[i]);
-		else if (a.indexOf(b[i]) === -1 && c.indexOf(b[i]) === -1) sd.push(b[i])
+		if(b.hasOwnProperty(i)) {
+			if (a.indexOf(b[i]) === -1 && isNon(c)) sd.push(b[i]);
+			else if (a.indexOf(b[i]) === -1 && c.indexOf(b[i]) === -1) sd.push(b[i])
+		}
 	}
 	if (c) {
 		for (i in c) {
-			if (a.indexOf(c[i]) === -1 && b.indexOf(c[i]) === -1) sd.push(c[i]);
+			if (c.hasOwnProperty(i) && a.indexOf(c[i]) === -1 && b.indexOf(c[i]) === -1) sd.push(c[i]);
 		}
 	}
 	return toSort? rmDuplicates(sd).quickSort(): rmDuplicates(sd)
@@ -4616,6 +4730,7 @@ function diagDist (a, b) { //Return the Diagonal distance  ...
  * @param {Array} solvedMtx Solved matrix (goal)
  * @param {Function} [hrt=euclidiantDist] Heuristic method
  * @returns {number} Result
+ * @see euclidianDist
  */
 function h (mtx, solvedMtx, hrt) {
 	var res = new Array(mtx.length);
@@ -4650,6 +4765,7 @@ function lookfor (x, mtx, toCoord) {
  * @param {Array} map Map
  * @param {boolean} [propOnly=false] Properties only
  * @returns {Array} Key list
+ * @see valList
  */
 function keyList (map, propOnly) {
 	var list = [];
@@ -4667,6 +4783,7 @@ function keyList (map, propOnly) {
  * @param {Array} map Map
  * @param {boolean} [propOnly=false] Properties only
  * @returns {Array} Value list
+ * @see keyList
  */
 function valList (map, propOnly) {
 	var list = [];
@@ -4874,7 +4991,7 @@ function TreeNode (pl, l, r) { //Binary tree
 			if (cur.right) queue.unshift(cur.right);
 			b++;
 			tb++;
-		};
+		}
 	};
 	this.sum = function () {
 		var s = this.payload;
@@ -4916,7 +5033,7 @@ function TreeNode (pl, l, r) { //Binary tree
 			} catch(e) {
 				Essence.say(e + " caused " + this + ".printBFS(" + sym + ") to go wrong", "err");
 			}
-		};
+		}
 		return sym
 	};
 	this.toString = function () {
@@ -4934,7 +5051,7 @@ function TreeNode (pl, l, r) { //Binary tree
 		arr.push(this.payload);
 		if (this.right) singly? arr.push(this.right.toArray().toString().split(",")): arr.push(this.right.toArray());
 		return singly? arr.toString().split(","): arr
-	}
+	};
 
 	return this;
 }
@@ -5027,7 +5144,7 @@ function Node (pl, nx, pv) {
  */
 function PathNode (g, h) { //Nodes for path finding algs
 	this.f = g + h || 1;
-	this.parent = null
+	this.parent = null;
 	return this;
 }
 
@@ -5398,6 +5515,7 @@ function Stack (arr, lim) {
  * @param {number} sz Array size
  * @returns {StackArray} Stack array
  * @this StackArray
+ * @see Stack
  * @constructor
  */
 function StackArray (sz) {
@@ -5457,6 +5575,7 @@ function StackArray (sz) {
  * @param {Array|*} [arr] Array or element
  * @returns {StackList} Stack list
  * @this StackList
+ * @see Stack
  * @constructor
  */
 function StackList (arr) {
@@ -5560,6 +5679,7 @@ function Queue (arr, lim) {
  * @param {Array|*} [arr=[]] Array or element
  * @returns {QueueArray} QueueArray
  * @this QueueArray
+ * @see Queue
  * @constructor
  */
 function QueueArray (arr) {
@@ -5625,6 +5745,7 @@ function QueueArray (arr) {
  * @returns {QueueList} QueueList
  * @todo Probably add the pre-init similar to StackList() ?
  * @constructor
+ * @see Queue
  */
 function QueueList () {
 	this.front = null;
@@ -5695,6 +5816,7 @@ function QueueList () {
  * @param {PathNode} start Starting node
  * @param {PathNode} goal Ending node
  * @returns {undefined}
+ * @see PathNode
  */
 function Astar (start, goal) {
 	//Inspired from http://Heyes-jones.com/pseudocode.php
@@ -5745,6 +5867,7 @@ function Astar (start, goal) {
  * @param {number[]} goal Ending node
  * @param {Array} grid Grid
  * @returns {undefined}
+ * @see reconPath, euclidianDist
  */
 function A(start, goal, grid) { //JS version of https://en.wikipedia.org/wiki/A*_search_algorithm
 	var closedSet = [], openSet = [start], cameFrom = [], gScore = [0], fScore = [euclidianDist(start, goal)];
@@ -5788,6 +5911,7 @@ function reconPath(cameFrom, current, grid) {
 /**
  * @description Iterative Depending A* path finding algorithm
  * @returns {undefined}
+ * @see Astar
  */
 function IDAstar () {
 	
@@ -5826,6 +5950,7 @@ function rmConsecDuplicates (arr) {
  * @description Remove the duplicates of an array
  * @param {Array} arr Array
  * @returns {Array} Filtered array
+ * @see rmConsecDuplicates
  */
 function rmDuplicates (arr) {
 	var out = rmConsecDuplicates(arr), j = 0;
@@ -6316,7 +6441,7 @@ function rowTable (caption, headerRows, rows, id, split, style) {
 		} else tab += "<td>" + rows[i] + "</td>";
 		tab += "</tr>";
 	}
-	tab += "</table><style> table{background: #000;}table, td, th {border: 1px solid #000; color: #000; background: #fff;} tr:nth-child(even) td, tr:nth-child(even) th {background: #ddd;} tr td:hover, tr th:hover{background: #bbb;}</style>";
+	tab += "</table><style>table{background: #000;}table, td, th{border: 1px solid #000; color: #000; background: #fff;}tr:nth-child(even) td, tr:nth-child(even) th{background: #ddd;}tr td:hover, tr th:hover{background: #bbb;}</style>";
 	return tab
 }
 
@@ -6492,6 +6617,7 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
  * @description Character to hexadecimal
  * @param {string} c Character
  * @returns {string} Hexadecimal code
+ * @see hex2char
  */
 function char2hex (c) {
 	return conv(c.charCodeAt(0), 10, 16)
@@ -6501,6 +6627,7 @@ function char2hex (c) {
  * @description Hexadecimal to character
  * @param {string|number} h Hexadecimal code
  * @returns {string} Character
+ * @see char2hex
  */
 function hex2char (h) {
 	return String.fromCharCode(conv(h, 16))
@@ -6510,6 +6637,7 @@ function hex2char (h) {
  * @description Character to binary
  * @param {string} c Character
  * @returns {string} Binary code
+ * @see bin2char
  */
 function char2bin (c) {
 	return conv(c.charCodeAt(0), 10, 2)
@@ -6519,6 +6647,7 @@ function char2bin (c) {
  * @description Binary to character
  * @param {number|string} b Binary code
  * @returns {string} Character
+ * @see char2bin
  */
 function bin2char (b) {
 	return String.fromCharCode(conv(b, 2))
@@ -6540,6 +6669,7 @@ function trans (character, n) {
  * @param {string} txt Text
  * @param {number} [base=10] Base
  * @returns {string} Converted text
+ * @see num2txt
  */
 function txt2num (txt, base) {
 	var res = "";
@@ -6552,6 +6682,7 @@ function txt2num (txt, base) {
  * @param {number|string} num Number
  * @param {number} [base=10] Base
  * @returns {string} Converted number
+ * @see txt2num
  */
 function num2txt (num, base) {
 	var res = "";
@@ -6564,6 +6695,7 @@ function num2txt (num, base) {
  * @param {string} txt Text
  * @param {number} [key] Key
  * @returns {string} Encrypted text
+ * @see decrypt
  */
 function encrypt (txt, key) {
 	if (!key) {
@@ -6590,6 +6722,7 @@ function encrypt (txt, key) {
  * @param {string} txt Encrypted text
  * @param {number} [key] Key
  * @returns {string} Decrypted text
+ * @see encrypt
  */
 function decrypt (txt, key) {
 	var res = "";
@@ -6603,7 +6736,7 @@ function decrypt (txt, key) {
 				res[i + 65536] += trans(txt[j], i % 65537);
 			}
 		}
-	};
+	}
 	console.log(console.table(res));
 	return (!key)? complexTable("Decryption result for <i>" + txt + "</i>", range(-65536, 1, 65536), res, ["Key", "Result"], "decrypted_" + txt, false, Essence.css): txt + " => " + res;
 	//simpleTable("Decryption result for <i>" + txt + "</i>", , res, "decrypt_" + txt, Essence.css)
@@ -6613,6 +6746,7 @@ function decrypt (txt, key) {
  * @description Alphabetically encode (regardless of the case) to hexadecimal
  * @param {string} txt Text
  * @returns {string} Encoded text
+ * @see abcDecode
  */
 function abcEncode (txt) {
 	var code = new Array(txt.length);
@@ -6686,6 +6820,7 @@ function abcEncode (txt) {
  * @description Alphabetically decode from hexadecimal to lowercase text.
  * @param {string} txt Hexadecimal code
  * @returns {string} Alphabtical text
+ * @see abcEncode
  */
 function abcDecode (txt) {
 	var code = new Array(txt.length);
@@ -6757,6 +6892,7 @@ function abcDecode (txt) {
  * @description Data encryption
  * @param {string|number} data Data
  * @returns {string|number} Encrypted data
+ * @see ilDecrypt
  */
 function ilEncrypt(data) {
 	var res = isType(data, "String")? data.split(""): data;
@@ -6768,6 +6904,7 @@ function ilEncrypt(data) {
  * @description Data decryption
  * @param {string|number} data Data
  * @returns {string|number} Decrypted data
+ * @see ilEncrypt
  */
 function ilDecrypt(data) {
 	var res = isType(data, "String")? data.split(""): data;
@@ -6795,6 +6932,7 @@ function RSA(p, q) {
  * @param {string} msg Message
  * @param {number[]} key Key
  * @returns {number} Crypted/decrypted code
+ * @see RSA
  */
 function cryptRSA(msg, key) { //Encrypt $msg with the public/private key $key to encrypt/decrypt the message
 	return Math.pow(msg, key[1]) % key[0];
@@ -6802,8 +6940,9 @@ function cryptRSA(msg, key) { //Encrypt $msg with the public/private key $key to
 
 /**
  * @description Keeps an ascii code in the alphabetical range in the ascii table
- * @param {numbrt} code Ascii code
+ * @param {number} code Ascii code
  * @returns {number} Clamped code
+ * @see revClamp clamp
  */
 function abcClamp(code) {
 	return code === 32? 32: revClamp(clamp(code, 65, 122), 90, 97);
@@ -6945,6 +7084,7 @@ var BrowserDetect = { //Browser detection system
  * @param {Element|string} where Place to type the message
  * @param {boolean} [HTML=false] HTML flag
  * @returns {undefined}
+ * @see $e writeMsg2
  */
 function writeMsg (msg, where, HTML) {
 	var txt, pos = 0;
@@ -6964,6 +7104,7 @@ function writeMsg (msg, where, HTML) {
  * @param {string} [txt=""] Text
  * @param {number} [pos=0] Position
  * @returns {undefined}
+ * @see $n writeMsg
  */
 function writeMsg2 (msg, slc, HTML, speed, txt, pos) {
 	if(!txt) txt = "";
@@ -7070,6 +7211,7 @@ function process (name, auth, summup, ctt) {
  * @param {number} [ver=1.0] Version
  * @param {number} [mxsz=2⁶] Maximum size of the server's database
  * @returns {server} Server
+ * @see database process
  */
 function server (name, admin, type, ver, mxsz) {
 	this.name = name;
@@ -7159,6 +7301,7 @@ function server (name, admin, type, ver, mxsz) {
  * @param {number} [delay=100] Delay (in ms)
  * @param {number} [maxDelay=2e4] Maximum delay
  * @returns {undefined}
+ * @see CETimer
  */
 function CECheck (id, src, sz, delay, maxDelay) {
 	window.defaultStatus = "Evalue the connexion and see the downloading speed";
@@ -7184,6 +7327,7 @@ function CECheck (id, src, sz, delay, maxDelay) {
  * @param {number} [maxDelay=2e4] Maximum delay
  * @param {number} size Size of the image (in kb)
  * @returns {undefined}
+ * @see CECheck
  */
 function CETimer (id, img, nb, delay, maxDelay, size) {
 	nb++;
@@ -7372,6 +7516,7 @@ var base64 = {
  * @param {Object} style Style
  * @param {string} [customIcon] Custom icon
  * @returns {undefined}
+ * @todo Work on it
  */
 function msgBox (type, title, text, isHTML, style, customIcon) {
 	type = type.normal();
@@ -7486,6 +7631,7 @@ function msgBox (type, title, text, isHTML, style, customIcon) {
 /**
  * @description Generate a password
  * @returns {string} Password
+ * @see genHash
  */
 function genPassword () {
 	var chars = [], sym = ["&", "~", "\"", "#", "\'", "{", "[", "(", "-", "|", "`", "_", "\\", "^", "@", ")", "]", " + ", "=", "}", " % ", " * ", "?", ",", ";", ".", "/", ":", "!", " ", ""], word = "";
@@ -7504,6 +7650,7 @@ function genPassword () {
  * @param {string} password Password
  * @todo To fix
  * @returns {string} Hash
+ * @see genPassword
  */
 function genHash (password) {
 	var hash = "", k = (821 - password.sum()) / password.prod() * password.charCodeAt(0).toNDigits(1), rest, c;
@@ -7852,6 +7999,7 @@ function Archive (name, data) { //Compressed data using Huffman's approach while
  * @constructor
  * @this {Machine}
  * @returns {Machine} VWM
+ * @see Memory
  */
 function Machine (name, ver, cpy, type) {
 	//ver (basis) := 1: binary, 2: ternary, 3: octal, 4: decimal, 5: hexadecimal, 6: base 36
@@ -8085,15 +8233,15 @@ InvalidParamError.inheritsFrom(Error);
 /**
  * @description Invalid parameter error
  * @param {string} [msg="The parameter used at $lineNum is invalid"]  Message
- * @param {string} fname Filename
- * @param {number} lineNum Line number
+ * @param {string} [fname=getFilename(true)] Filename
+ * @param {number} [lineNum] Line number
  * @constructor
  * @returns {InvalidParamError} Error
  * @this {InvalidParamError}
  */
 function InvalidParamError(msg, fname, lineNum) { //Invalid parameter
 	this.name = "Invalid parameter error";
-	this.fileName = fname;
+	this.fileName = fname || getFilename(true);
 	this.lineNumber = lineNum;
 	this.message = msg || "The parameter used at " + this.lineNumber + " is invalid !";
 	this.stack = (new Error()).stack;
@@ -8153,6 +8301,7 @@ function chTab (name) {
  * @param {string} id ID of the element
  * @param {number} [n=1] Incrementation
  * @returns {undefined}
+ * @see htmlRange
  */
 function moveHTMLRange (id, n) { //Moove an HTML range left or right which was made using htmlRange
 	$e("#" + id).write(parseFloat($e("#" + id).val()) + (n || 1));
@@ -8166,6 +8315,7 @@ function moveHTMLRange (id, n) { //Moove an HTML range left or right which was m
  * @param {number} [val=0] Default value
  * @param {number} [max=100] Maximimum
  * @returns {string} HTML code
+ * @see moveHTMLRange
  */
 function htmlRange (id, min, val, max) {
 	if (!id) throw new Error("htmlRange needs to know the id of the element implementing the range");
@@ -8178,6 +8328,7 @@ function htmlRange (id, min, val, max) {
  * @param {string} id ID of the element
  * @param {string} lbl Label
  * @returns {undefined}
+ * @see htmlInput
  */
 function labelFieldSwap (id, lbl) {
 	//if (!$e("#" + id).isEmpty() && $e("#" + id).val()!= lbl && $e("#" + id).val()!=$e("#lbl_" + id).val()) return false
@@ -8196,6 +8347,7 @@ function labelFieldSwap (id, lbl) {
  * @param {string} id ID of the element
  * @param {string} lbl Label
  * @returns {undefined}
+ * @see htmlPassword
  */
 function labelPwSwap (id, lbl) {
 	if ($e("#lbl_" + id).isEmpty()) $e("#lbl_" + id).write("&ensp;", true);
@@ -8216,6 +8368,7 @@ function labelPwSwap (id, lbl) {
  * @param {string} [type="text"] Input type
  * @param {string} lbl Label
  * @returns {string} HTML code
+ * @see labelFieldSwap
  */
 function htmlInput (id, type, lbl) {
 	if (!id) throw new Error("htmlInput needs to know the id of the element implementing the input");
@@ -8228,6 +8381,7 @@ function htmlInput (id, type, lbl) {
  * @param {string} id ID of the element
  * @param {string} lbl Label
  * @returns {string} HTML code
+ * @see labelPwSwap
  */
 function htmlPassword (id, lbl) {
 	if (!id) throw new Error("htmlPassword needs to know the id of the element implementing the input");
@@ -8347,6 +8501,7 @@ function WebPage (title, name, path, author, ver, stct, type, subtitle) {
  * @returns {WebApp} Web app
  * @this {WebApp}
  * @constructor
+ * @see WebPage
  */
 function WebApp (name, path, author, ver, stct) {
 	this.name = name || "Web App";
@@ -8589,7 +8744,7 @@ function Preview (id, lang, parser, editor) {
 		code = code.replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		win.document.write(this.associatedEditor.highlightSynthax(code, this.language));
 		win.document.write("<style>" + Essence.css + "</style>")
-	}
+	};
 
 	return this;
 }
@@ -8713,6 +8868,7 @@ function Toolbar (id, tools, mdl) {
  * @this {IDE}
  * @returns {IDE} IDE
  * @constructor
+ * @see Editor Parser Preview Debugger
  */
 function IDE (lang, edt, prev, ps, dbg, tb) {
 	this.editor = edt || new Editor();
@@ -8933,6 +9089,7 @@ window.onkeypress = function (keyStroke) {
  * @description Turn a string into a RegExp
  * @param {string} str String
  * @returns {RegExp} Resulting regular expression
+ * @see unRegExpify
  */
 function RegExpify (str) {
 	return new RegExp(str.replace(/[|\\{}()[\]^$+*?.:\'<>%]/g, "\\$&"), "gm");
@@ -8942,6 +9099,7 @@ function RegExpify (str) {
  * @description Turn a RegExp into a string
  * @param {RegExp} re RegExp
  * @returns {string|Array} Resulting string
+ * @see RegExpify
  */
 function unRegExpify (re) { //Turn a regular expression into a string
 	return re.toString().get(1, re.toString().lastIndexOf("/") - 1).remove("\\");
@@ -8990,6 +9148,7 @@ function isCloser (x, a, b) {
  * @param {number} x Number
  * @param {number[]} opt Options
  * @returns {number} Closest number
+ * @see isCloser
  */
 function getClosest (x, opt) {
 	var closest = opt[0];
@@ -9041,6 +9200,7 @@ function Stream (initVal, formula, nbVals) {
  * @returns {MultiStream} Multi-variable stream
  * @this {MultiStream}
  * @constructor
+ * @see Stream
  */
 function MultiStream (initVal, formula, nbVals) { //Stream with multiple variables
 	this.start = initVal || 0;
@@ -9313,6 +9473,7 @@ function truthTable(exp) { //Get the truth table of an expression
  * @description Get the DNF form of an expression
  * @param {string} exp Expression
  * @returns {string} DNF
+ * @see getCNF
  */
 function getDNF(exp) {
 	var tt = truthTable(exp), dnf = "";
@@ -9324,6 +9485,7 @@ function getDNF(exp) {
  * @description Get the CNF form of an expression
  * @param {string} exp Expression
  * @returns {string} CNF
+ * @see getDNF
  */
 function getCNF(exp) {
 	var tt = truthTable(exp), cnf = "";
@@ -9383,4 +9545,31 @@ function EventTable(name, srcs) {
 	};
 
 	return this;
+}
+
+/**
+ * @description Get the caller's trace's location
+ * @returns {string} Trace location
+ */
+function getTrace () {
+	var err = function () {
+		try {
+			throw Error("")
+		} catch(e) {
+			return e;
+		}
+		//return new Error("");
+	};
+	var fn = stripPath(err().stack.split("\n").last());
+	return fn.split(" ").last();
+}
+
+/**
+ * @description Get the caller's trace's line number and column number
+ * @param {boolean} [noCols=false] Remove the column number
+ * @returns {string} Line number (with the column number)
+ * @see getTrace
+ */
+function getLineNum (noCols) {
+	return noCols ? getTrace().split(":")[1] : getTrace().get(getTrace().indexOf(":") + 1).remove(")");
 }
