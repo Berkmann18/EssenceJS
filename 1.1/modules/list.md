@@ -138,7 +138,7 @@
 - Machine
 - Memory
 - EvtShow, evtLog
-- InvalidParamError
+- InvalidParamError, getTrace, getLineNum
 - testErr, noobTest
 - Sys, stup (to remove once Sys's recorder works well)
 - asciiTable
