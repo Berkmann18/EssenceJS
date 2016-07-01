@@ -5,7 +5,8 @@ module.exports = {
     },
     "extends": "eslint:recommended",
     "parserOptions": {
-        "sourceType": "module"
+        "ecmaVersion": 5,
+        "sourceType": "script" //modules for 1.1+
     },
     "rules": {
         "accessor-pairs": 2,
@@ -103,7 +104,7 @@ module.exports = {
         "no-extra-parens": 0,
         "no-extra-semi": 0,
         "no-floating-decimal": 0,
-        "no-implicit-globals": 2,
+        "no-implicit-globals": 0,
         "no-implied-eval": 0,
         "no-inline-comments": 0,
         "no-inner-declarations": [
@@ -158,6 +159,14 @@ module.exports = {
         "no-unmodified-loop-condition": 0,
         "no-unneeded-ternary": 0,
         /*"no-unsafe-finally": 2,*/
+        "no-unused-vars": [
+            2,
+            {
+                "vars": "all",
+                "args": "all",
+                "caughtErrors": "none"
+            }
+        ],
         "no-use-before-define": 0,
         "no-useless-call": 2,
         /*"no-useless-computed-key": 2,*/

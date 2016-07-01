@@ -4,11 +4,12 @@
   "description": "ES5 All-In-One library",
   "main": "essence.js",
   "scripts": {
+    "install": "minify essence.js --no-comments",
     "test": "eslint essence.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Berkmann18/EssenceJS"
+    "url": "https://github.com/Berkmann18/EssenceJS/1.0"
   },
   "keywords": [
     "Essence",
@@ -16,7 +17,16 @@
     "library",
     "DHTML2",
     "PHP",
-    "NoSQL"
+    "NoSQL",
+    "Maths",
+    "DOM",
+    "Web",
+    "Data",
+    "structure",
+    "UI",
+    "AJAX",
+    "miscellaneous",
+    "Security"
   ],
   "author": "Maximilian Berkmann",
   "license": "MIT",
@@ -32,8 +42,7 @@
   },
   "eslintConfig": {
         "env": {
-            "browser": true,
-            "node": true
+            "browser": true
         }
     }
 }

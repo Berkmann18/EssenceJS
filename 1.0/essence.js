@@ -1,8 +1,12 @@
 "use strict";
 
+/* global Essence:false, $G, Sys, base64 */
+/* eslint no-unused-vars: 0 */
+/* eslint no-undef: 0 */
+
 /**
- * @description @description This is the main object of the library
- * @type {{version: string, author: string, description: string, source: string, element: $n, handleError: Essence.handleError, say: Essence.say, css: string, applyCSS: Essence.applyCSS, addCSS: Essence.addCSS, addJS: Essence.addJS, update: Essence.update, eps: number, emptyDoc: Essence.emptyDoc, editor: Essence.editor, processList: *[], global: {t1: Date, t2: number, t: null, lastKeyPair: Array}, addProcess: Essence.addProcess, processSize: number, erverList: *[], addServer: Essence.addServer, serverSize: number, toString: Essence.toString, txt2print: string, addToPrinter: Essence.addToPrinter, print: Essence.print, preInit: Essence.preInit, init: Essence.init, time: Essence.time, sayClr: Essence.sayClr, ask: Essence.ask}}
+ * @description This is the main object of the library
+ * @type {{version: string, author: string, description: string, source: string, element: $n, handleError: Essence.handleError, say: Essence.say, css: string, applyCSS: Essence.applyCSS, addCSS: Essence.addCSS, addJS: Essence.addJS, update: Essence.update, eps: number, emptyDoc: Essence.emptyDoc, editor: Essence.editor, processList: Array, global: {t1: Date, t2: number, t: null, lastKeyPair: Array}, addProcess: Essence.addProcess, processSize: number, erverList: Array, addServer: Essence.addServer, serverSize: number, toString: Essence.toString, txt2print: string, addToPrinter: Essence.addToPrinter, print: Essence.print, preInit: Essence.preInit, init: Essence.init, time: Essence.time, sayClr: Essence.sayClr, ask: Essence.ask}}
  * @this Essence
  * @license MIT
  */
@@ -128,7 +132,7 @@ var $G = {
 
 /**
  * @description Element selector
- * @param {string} selector A CSS selector
+ * @param {string} selector A valid CSS selector
  * @returns {Element} Element
  */
 var $e = function (selector) { //THE selector !!
@@ -137,7 +141,7 @@ var $e = function (selector) { //THE selector !!
 
 /**
  * @description Element
- * @param {string} selector A CSS selector
+ * @param {string} selector A valid CSS selector
  * @this Element
  * @returns {Element} Element object
  * @constructor
@@ -355,8 +359,8 @@ function Element (selector) { //The element object
 
 /**
  * @description Element's node
- * @param {string} selector A CSS selector
- * @returns {HTMLElement|*} Element node
+ * @param {string} selector A valid CSS selector
+ * @returns {HTMLElement} Element node
  */
 function $n (selector) { //To get directly the node without having to use $e(selector).node
 	return $e(selector).node
@@ -377,10 +381,8 @@ function include (file, type) {
 	document.head.appendChild(el)
 }
 
-/* exported print */
 /**
  * @description Print onto something
- * @exports st
  * @param {*} st Data to be printed
  * @param {boolean} [isHTML=false] Has to be formatted as an HTML code or not
  * @param {string} [sw="body"] Place to print $st
@@ -1827,7 +1829,7 @@ Array.prototype.neighbour = function(y, x) {
  */
 Array.prototype.sanitise = function(type) {
 	for (var i = 0; i < this.length; i++) {
-		for (var j = 0; j < this[i].length; j++) this[i][j] = name2Type(type, this[i][j]);
+		for (var j = 0; j < this[i].length; j++) this[i][j] = name2type(type, this[i][j]);
 	}
 	return this;
 };
@@ -2146,7 +2148,6 @@ Function.prototype.inheritsFrom = function (parentClassOrObj) {
 	return this
 };
 
-/* exported exclude */
 /**
  * @description Removes an external ressource
  * @param {string} file File name
@@ -2170,7 +2171,6 @@ function exclude (file, type) {
  * @returns {undefined}
  */
 function addMetaData (n, ctt, httpe) {
-	/* exported addMetaData */
 	var el = document.createElement("meta");
 	httpe? el.httpEquiv = httpe: el.name = n;
 	el.content = ctt;
@@ -2809,7 +2809,7 @@ function conv (n, from, to, float) {
  * @description Negate a binary number using 2's complement
  * @param {number|string} bin Binary number
  * @param {boolean} [toArr=false] To array
- * @returns {(number|string)[]|number|string} Negated binary number
+ * @returns {number[]|string[]|number|string} Negated binary number
  */
 function negateBin (bin, toArr) {
 	var n = [], dec = 0;
@@ -2921,8 +2921,7 @@ function sec2time (i, withH) {
 }
 
 /**
- * Alias/Shortcuts
- * {!globals} s2t, toSec
+ * @description Alias/Shortcuts
  */
 var s2t = sec2time, toSec = toS;
 
@@ -3378,7 +3377,7 @@ function getStep (a, b, nbDec) {
  * @param {number} b Constant b
  * @param {number} c Constant c
  * @param {number} [nDec] Number of decimals
- * @returns {number|(string|number)[]} Solutions
+ * @returns {number|string[]|number[]} Solutions
  */
 function quadraticSolver (a, b, c, nDec) {
 	var d = Math.sqrt(b, 2) - 4 * a * c;
@@ -3945,7 +3944,7 @@ function hex2rgb (hex, toArray) { //Hexadecimal to RGB
  * @description RGB to hexadecimal
  * @param {string} rgb RGB colour
  * @param {boolean} [toArray=false] Result as an array
- * @returns {(string|number)[]|string} Hexadecimal colour
+ * @returns {string[]|number[]|string} Hexadecimal colour
  */
 function rgb2hex (rgb, toArray) { //RGB to hexademical
 	rgb = rgb.slice(4, rgb.length - 1).split(", ");
@@ -4488,7 +4487,7 @@ function bitStr (a, b) {
  * @param {string|Array} a Element a
  * @param {string|Array} b Element b
  * @param {string} [cr=" "] Filling character
- * @returns {*[]} Resized elements
+ * @returns {Array} Resized elements
  */
 function toSameLength (a, b, cr) {
 	if (!a.isIterable() || !b.isIterable()) throw new Error("invalid length equality operation on non-iterable objects");
@@ -5775,7 +5774,7 @@ function A(start, goal, grid) { //JS version of https://en.wikipedia.org/wiki/A*
  * @param {Array} cameFrom List of visited nodes
  * @param {Array} current Current node
  * @param {Array} grid Grid
- * @returns {*[]} Reconstructed path
+ * @returns {Array} Reconstructed path
  */
 function reconPath(cameFrom, current, grid) {
 	var totalPath = [current];
@@ -5798,7 +5797,7 @@ function IDAstar () {
  * @description Read and convert coordinates to code readable data
  * @param {string} str Coordinates
  * @param {boolean} isInt Convert the cells into integers
- * @returns {(string|number)[]} Coordinates
+ * @returns {string[]|number[]} Coordinates
  */
 function readCoord (str, isInt) {
 	var c = str.slice(1, str.length - 1).split(", ");
@@ -6095,7 +6094,7 @@ function Circ (x, y, r, b, v) {
 
 Pt.inheritsFrom(Shape);
 /**
- * @description
+ * @description A point
  * @param {number} [x=0] X-coordinate
  * @param {number} [y=0] Y-coordinate
  * @returns {Pt} Point
@@ -6147,7 +6146,7 @@ function Line (a, b) {
 
 Vector.inheritsFrom(Shape);
 /**
- * @description
+ * @description Vector
  * @see Shape
  * @this Vector
  * @param {number} [x=0] X-coordinate
@@ -6537,6 +6536,30 @@ function trans (character, n) {
 }
 
 /**
+ * @description Text to number converter
+ * @param {string} txt Text
+ * @param {number} [base=10] Base
+ * @returns {string} Converted text
+ */
+function txt2num (txt, base) {
+	var res = "";
+	for (var i = 0; i < txt.length; i++) res += conv(txt.charCodeAt(i), 10, base || 10) + " ";
+	return res.trimRight();
+}
+
+/**
+ * @description Number to text
+ * @param {number|string} num Number
+ * @param {number} [base=10] Base
+ * @returns {string} Converted number
+ */
+function num2txt (num, base) {
+	var res = "";
+	for (var i = 0; i < num.split(" ").length; i++) res += String.fromCharCode(conv(num.split(" ")[i], base || 10));
+	return res;
+}
+
+/**
  * @description Encrypt a text
  * @param {string} txt Text
  * @param {number} [key] Key
@@ -6853,7 +6876,7 @@ function checkBrowser () {
 
 /**
  * @description Browser detection system
- * @type {{init: BrowserDetect.init, searchString: BrowserDetect.searchString, searchVersion: BrowserDetect.searchVersion, dataBrowser: *[], dataOS: *[]}}
+ * @type {{init: BrowserDetect.init, searchString: BrowserDetect.searchString, searchVersion: BrowserDetect.searchVersion, dataBrowser: Array, dataOS: Array}}
  */
 var BrowserDetect = { //Browser detection system
 	init: function () {
@@ -7638,7 +7661,6 @@ function DELETE () {
 	
 }
 
-//Stopped here for the implementation into 1.1
 /**
  * @description Sort alphabetically an string|array
  * @param {string|Array} x String/array to alphabetically sort
@@ -7803,7 +7825,7 @@ function Archive (name, data) { //Compressed data using Huffman's approach while
 
 		this.dictionnary = occurrenceSort(this.data);
 
-		for (var i = 0; i < this.dictionnary.length; i++) {
+		for (i = 0; i < this.dictionnary.length; i++) {
 			this.result[i] = conv(i, 10, 2);
 		}
 	};
@@ -7832,11 +7854,11 @@ function Archive (name, data) { //Compressed data using Huffman's approach while
  * @returns {Machine} VWM
  */
 function Machine (name, ver, cpy, type) {
-	//ver (basis) := 1: binary, 2: ternary, 3: octal, 4: decimal, 5: hexadecimal, 6: base 36 
+	//ver (basis) := 1: binary, 2: ternary, 3: octal, 4: decimal, 5: hexadecimal, 6: base 36
 	this.capacity = cpy || 1024; //pow(2, 10) bits = 128B
 	this.version = ver || 5;
 	this.name = name || "Machine_" + this.version;
-	
+
 	switch (this.version) {
 		case 1: this.base = 2; break;
 		case 2: this.base = 3; break;
@@ -7846,7 +7868,7 @@ function Machine (name, ver, cpy, type) {
 		case 6: this.base = 36; break;
 		default: this.base = 16; break;
 	}
-	
+
 	this.operation = function (a, b, op) {
 		switch (op.normal()) {
 			case "+": return a + b;
@@ -7883,18 +7905,18 @@ function Machine (name, ver, cpy, type) {
 			default: return a + "" + b;
 		}
 	};
-	
+
 	this.inv = function (data) {
 		if (!isType(data, "String")) data += "";
 		for(var i = 0; i < data.length; i++) data[i] = parseInt(this.base) - 1 - parseFloat(data[i]);
 		return data
 	};
-	
+
 	this.memory = new Memory(this.capacity, type || "", this.name);
 	this.send = function (msg, to) {
 		POST(to, "msg=" + this.parse(msg));
 	};
-	
+
 	this.parse = function (data) { //Turn the machine string into a human readable one
 		if (!isType(data, "Array")) data = this.base === 2? data.divide(8): data.divide(2);
 		var res = "", deconvs = [];
@@ -7905,7 +7927,7 @@ function Machine (name, ver, cpy, type) {
 		Essence.say(deconvs);
 		return JSON.parse(res); //prone to errors when this.base != 16
 	};
-	
+
 	this.unparse = function (data, noArr) { //Turn the data into a machine readable string
 		var nd = JSON.stringify(data), res = "", codes = [];
 		for (var i = 0; i < nd.length; i++) {
@@ -7915,12 +7937,12 @@ function Machine (name, ver, cpy, type) {
 		//Essence.say("\'" + data + "\'= " + codes, "info");
 		return noArr? res: (this.base === 2? res.divide(8): res.divide(2));
 	};
-	
+
 	this.store = function (data) {
 		this.memory.add(this.unparse(data));
 		this.memory.save();
 	};
-	
+
 	this.show = function () {
 		for(var i = 0; i < this.memory.slots.length; i++) Essence.say(this.memory.slots[i]);
 	};
@@ -7961,13 +7983,13 @@ function Memory (cpy, type, prefix) {
 			else sessionStorage.setItem(this.name + "#" + i, this.slots[i]);
 		}
 	};
-	
+
 	this.remove = function (data) {
 		this.slots.remove(JSON.stringify(data));
 		if (this.type === "local") localStorage.setItem(this.getLocation(data), undefined);
 		else sessionStorage.setItem(this.getLocation(data), undefined);
 	};
-	
+
 	this.getLocation = function (data) { //Get the memory location of a data
 		if (this.type === "local") {
 			for (var i in localStorage) {
@@ -7998,7 +8020,7 @@ function Memory (cpy, type, prefix) {
 	this.add = function (data) { //Added but not saved
 		this.slots[this.free++] = JSON.stringify(data);
 	};
-	
+
 	this.print = function () {
 		Essence.say(this.name + "\'s slots: ", "info");
 		for (var i = 0; i < this.slots.length; i++) {
@@ -8009,14 +8031,14 @@ function Memory (cpy, type, prefix) {
 			}
 		}
 	};
-	
+
 	this.pop = function () {
 		if (this.type === "local") localStorage.removeItem(this.getLocation(this.slots.last()));
 		else sessionStorage.removeItem(this.getLocation(this.slots.last()));
 		this.free--;
 		this.slots.pop();
 	};
-	
+
 	this.toString = function () {
 		return this.type.capitalize() + " memory " + this.name + ": " + this.slots.toStr(true)
 	};
@@ -8853,7 +8875,7 @@ function Template (name, path, txt, params, consoleSpecial) {
 	this.save = function (obj, name, ext) { //Save the template into a file or the converted version
 		if (obj) save(this.gen(obj), (name || this.name) + "." + (ext || ".js"), ext || "javascript");
 		else save(this.text, this.path, "javascript")
-	}
+	};
 
 	return this;
 }
@@ -9121,7 +9143,7 @@ function Equation (formula) {
  * @param {*} [param] Parameters/value
  * @returns {*} Type
  */
-function name2Type(name, param) {
+function name2type(name, param) {
 	switch(name) {
 		case "Number": return Number(param);
 		case "String": return String(param);
@@ -9204,6 +9226,7 @@ function Permutation(data) {
  * @deprecated
  * @param {Function} [cb] Callback
  * @returns {string} Recorded keystrokes
+ * @see Sys
  */
 function stup(cb) {
 	alert("You have 10s to type something !");
@@ -9267,7 +9290,7 @@ function binaryCases(x) {
 /**
  * @description Get the truth table of an expression
  * @param {string} exp Expression
- * @returns {*[]} Truth table
+ * @returns {Array} Truth table
  */
 function truthTable(exp) { //Get the truth table of an expression
 	// /(([a-z])(\+|\x2a))+/g
