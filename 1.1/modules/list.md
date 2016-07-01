@@ -8,7 +8,7 @@
 - isNon
 - copy, swap
 - getKey
-- getTime, getDate, getTimestamp, dateTime, weekDay || dayOfWeek
+- getTime, getDate, getTimestamp, dateTime, weekDay || dayOfWeek, date2num, num2date
 - genString
 - mkArray, numArr
 - toSameLength
