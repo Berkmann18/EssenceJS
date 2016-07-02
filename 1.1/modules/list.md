@@ -82,7 +82,7 @@
 
 # File
 - stripPath
-- getLocalPath
+- getLocalPath, getCurrentPath, getDirectoryPath
 - filenameList
 - AX
 - execFile
