@@ -142,6 +142,6 @@
 - testErr, noobTest
 - Sys, stup (to remove once Sys's recorder works well)
 - asciiTable
-- RegExpify, unRegExpify
+- RegExpify, unRegExpify, FA, exp2dict
 - Objectify
 - name2type
