@@ -1446,11 +1446,11 @@ Array.prototype.getAdjoint = function () {
 };
 
 /**
- * @description Inversibility check
+ * @description Invertibility check
  * @this Array
- * @returns {boolean} Is it inversible ?
+ * @returns {boolean} Is it invertible ?
  */
-Array.prototype.isInversible = function() { 
+Array.prototype.isInvertible = function() {
 	return this.det() != 0
 };
 
@@ -1539,7 +1539,7 @@ Array.prototype.toStr = function (clean) {
 Array.prototype.toInt = function () {
 	var n = 0;
 	for (var i in this) {
-		if (this.hasOwnProperty(i)) n += this[i] * Math.pow(10, this.length- i - 1);
+		if (this.hasOwnProperty(i)) n += this[i] * Math.pow(10, this.length - i - 1);
 	}
 	return n
 };
@@ -2237,7 +2237,7 @@ function redirect (to, dt, divId) { //Redirect to #to in #dt ms
  * @param {string} type Type
  * @returns {boolean} Validity check result
  */
-function isValid (txt, type) { //Check if a text (generally from a field) is valid according to the given type
+function isValid (txt, type) {
 	var pattern, lenOK = true;
 	switch (type.toLowerCase()) {
 		case "email":
@@ -2252,7 +2252,7 @@ function isValid (txt, type) { //Check if a text (generally from a field) is val
 			lenOK = txt.length > 3 && txt.length <= 16;
 			break;
 		case "name":
-			pattern = /^[:alpha:]{2,35}$/;
+			pattern = /^[A-Za-z-]{2,35}$/;
 			break;
 		case "price":
 			pattern = /^[0-9]*\x2e[0-9]{2}$/;
@@ -2278,7 +2278,7 @@ function isValid (txt, type) { //Check if a text (generally from a field) is val
 			pattern = /^[\S]+([A-Za-z0-9_]*\.(jpg|png|gif|ico|bmp))$/;
 			break;
 		case "variable":
-			pattern = /^[A-Za-z_$]+[0-9]*[A-Za-z_$]+$/;
+			pattern = /^[A-Za-z_$]+[0-9]*[A-Za-z_$]*$/;
 			break;
 		case "color":
 			pattern = /^(#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6}))|(rgb\(([0-9]+,\s){2}([0-9]+)\))|(rgba\(([0-9]+,\s){3}((0|1|)\.[0-9]*)\))|(hsl\(([0-9]+,\s){2}([0-9]+)\))|(hsla\(([0-9]+,\s){3}((0|1|)\.[0-9]*)\))$/;
@@ -2315,7 +2315,7 @@ function validate (fm, ignoreRequired) { //Check if a form is valid
 			else if (fm[i].name === "price") valid = valid && isValid(fm[i].value, fm[i].name);
 			else if (fm[i].name.indexOf("name") >= 0) valid = valid && isValid(fm[i].value, "name");
 			else if (fm[i].type === "checkbox" && fm[i].checked) valid = valid && true;
-			else valid = valid && !isNon(fm[i].value) //Radio,
+			else valid = valid && !isNon(fm[i].value); //Radio,
 		}
 	}
 	return valid
@@ -2395,6 +2395,16 @@ function timesLiteral (n) {
 }
 
 /**
+ * @description Convert an array into a human string
+ * @param {Array} arr Array
+ * @param {string} [cjt="and"] Conjunctions
+ * @returns {string} Literal
+ */
+function arrayLiteral (arr, cjt) {
+	return arr.length > 1? arr.get(-1).toStr(true) + " " + (cjt || "and") + " " + arr.last(): arr[0];
+}
+
+/**
  * @description Get the HTML equivalent of the string
  * @param {string} str String
  * @returns {XML|string} HTML equivalent
@@ -2433,14 +2443,12 @@ function isNon (val) {
  * @returns {*} Copy of $el
  */
 function copy (el) {
-	if (isType(el, "String") || isType(el, "Number") || isType(el, "Boolean")) return el; //As they are immutable types
-	else{
-		var clone = new Object();
-		for (var i in el) {
-			if (el.hasOwnProperty(i)) clone[i] = el[i];
-		}
-		return isType(el, "Array")? clone.toArray(): clone;
-	}
+	if (isType(el, "String") || isType(el, "Number") || isType(el, "Boolean"))return el;
+	var clone = {};
+	for (var i in el) {
+		if (el.hasOwnProperty(i)) clone[i] = el[i];
+    }
+	return isType(el, "Array") ? clone.toArray() : clone;
 }
 
 /**
@@ -2516,7 +2524,7 @@ function getWinDim () {
 /**
  * @description Gather the cookie named $c_name
  * @param {string} c_name Cookie name
- * @returns {undefined}
+ * @returns {string|undefined} Cookie
  * @see setCookie
  */
 function getCookie (c_name) {
@@ -2824,7 +2832,7 @@ function sumPow2 (arr, nbDec) {
 
 /**
  * @description Base conversion
- * @param {number} n Number to convert
+ * @param {number|string} n Number to convert
  * @param {number} [from=2] Initial base
  * @param {number} [to=10] Final base
  * @param {boolean} [float=false] FPR or not
@@ -2959,8 +2967,7 @@ function sec2time (i, withH) {
  * @description Alias/Shortcuts
  * @see sec2time toS
  */
-var s2t = sec2time, toSec = toS;
-
+var s2t = sec2time;
 /**
  * @description Convert a mark (out of $initTotal) to an other (out of $endTotal)
  * @param {number} mark Mark
@@ -4204,6 +4211,9 @@ function Person (fname, sname, lname, title, nickname, num, country, city, sex, 
 		return this.firstName + " " + this.secondName + (this.nickname != ""? " \"" + this.nickname + "\" ": " ") + this.lastName;
 	};
 
+	this.summary = function () {
+		return "Hello, I'm " + this.title + " " + this.getFullName() + " a " + this.getAge() + " years old " + this.country + "citizen from " + this.city + ". I'm " + arrayLiteral(this.jobs) + ". I enjoy " + arrayLiteral(this.activities) + ". To contact me either go on: " + arrayLiteral(this.websites) + " or call me at " + this.phoneNum + ".";
+	};
 
 	return this
 }
@@ -4231,7 +4241,7 @@ function Item (name, cat, price, amr, nb) { //An item like the ones that can be 
 		for (var i = 0; i < n; i++) dest.push(new Item(this.name, this.category, this.price, this.ageMinRequired, this.quantity));
 	};
 	this.remove = function (dest) {
-		dest.remove(this)
+		dest = dest.remove(this)
 	};
 	this.toString = function () {
 		var str = "";
@@ -4518,7 +4528,7 @@ function intersection (a, b, c, toSort) {
 	c = c? c.quickSort(): false;
 
 	for (var i in a) {
-		if(a.hasOwnProperty(a)) {
+		if(a.hasOwnProperty(i)) {
 			if (b.indexOf(a[i]) > -1 && isNon(c)) inter.push(a[i]);
 			else if (b.indexOf(a[i]) > -1 && c.indexOf(a[i]) > -1) inter.push(a[i]);
 		}
@@ -4822,10 +4832,10 @@ function keyTable (map, propOnly) { //Same as above but in the form of the HTML 
 function LinkedList (pl, nx, name) {
 	this.payload = pl || 1;
 	this.next = nx || {payload: 1, next: null};
-	this.next.show = function () {
-		return this.name + ":" + this.next.payload + "->"
-	};
 	this.name = name;
+	this.next.show = function () {
+		return name + ":" + next.payload + "->"
+	};
 	this.show = function () {
 		return this.name + ":" + this.payload + "->" + this.next.show()
 	};
@@ -4856,14 +4866,18 @@ function TreeNode (pl, l, r) { //Binary tree
 	};
 	this.addLeft = function (childs) {
 		for (var i = 0; i < childs.length; i++) {
-			if (i === 0) this.left = childs[0];
-			else childs[i-1].left = childs[i];
+			if (childs.hasOwnProperty(i)) {
+				if (i === 0) this.left = childs[0];
+				else childs[i-1].left = childs[i];
+			}
 		}
 	};
 	this.addRight = function (childs) {
 		for (var i in childs) {
-			if (i === 0) this.righttChild = childs[0];
-			else childs[i-1].right = childs[i];
+			if (childs.hasOwnProperty(i)) {
+				if (i === 0) this.right = childs[0];
+				else childs[i-1].right = childs[i];
+			}
 		}
 	};
 	this.traverse = function () {
@@ -4981,7 +4995,7 @@ function TreeNode (pl, l, r) { //Binary tree
 		queue.unshift(this); //Add as the end
 		while (queue != []) {
 			b = 0;
-			var cur = queue.pop()//Get the first element of the queue
+			var cur = queue.pop(); //Get the first element of the queue
 			try {
 				if (cur.payload === n) return [b, tb]
 			} catch(e) {
@@ -5129,7 +5143,7 @@ function Node (pl, nx, pv) {
 		if (this.payload === n) return d;
 		if (this.next) return this.next.find(n, d + 1);
 		return [-1, d]
-	}
+	};
 
 	return this;
 }
@@ -5172,22 +5186,28 @@ function NTreeNode (pl, ch) {
 	};
 	//Console printing
 	this.printInOrder = function () {
-		if (this.left) this.left.printInOrder();
-		Essence.addToPrinter(this.payload + "->");
-		if (this.right) this.right.printInOrder();
-		Essence.addToPrinter("\r\n");
+		for (var i = 0; i < this.childs - 1; i++) {
+			this.childs[i].printInOrder();
+			Essence.addToPrinter(this.payload + "->");
+			this.childs[i + 1].printInOrder();
+			Essence.addToPrinter("\r\n");
+		}
 	};
 	this.printPreOrder = function () {
-		Essence.addToPrinter(this.payload + "->");
-		if (this.left) this.left.printPreOrder();
-		if (this.right) this.right.printPreOrder();
-		Essence.addToPrinter("\r\n")
+		for (var i = 0; i < this.childs - 1; i++) {
+			Essence.addToPrinter(this.payload + "->");
+			this.childs[i].printInOrder();
+			this.childs[i + 1].printInOrder();
+			Essence.addToPrinter("\r\n");
+		}
 	};
 	this.printPostOrder = function () {
-		if (this.left) this.left.printPreOrder();
-		if (this.right) this.right.printPreOrder();
-		Essence.addToPrinter(this.payload + "->");
-		Essence.addToPrinter("\r\n")
+		for (var i = 0; i < this.childs - 1; i++) {
+			this.childs[i].printInOrder();
+			this.childs[i + 1].printInOrder();
+			Essence.addToPrinter(this.payload + "->");
+			Essence.addToPrinter("\r\n");
+		}
 	};
 	//Window printing
 	this.inOrder = function (t, s, d, sym) {
@@ -5195,58 +5215,45 @@ function NTreeNode (pl, ch) {
 		if (!s) s = "&nbsp;&nbsp;";
 		if (!d) d = 0;
 		if (!sym) sym = "|-";
-		
-		if (this.left) this.left.inOrder(t + s, s, d + 1, sym);
-		println(t + sym + this.payload + s+" (deepth = " + d+")");
-		if (this.right) this.right.inOrder(t + s, s, d + 1, sym);
+
+		for (var i = 0; i < this.childs - 1; i++) {
+			this.childs[i].inOrder(t + s, s, d + 1, sym);
+			println(t + sym + this.payload + s+" (deepth= " + d+")");
+			this.childs[i].inOrder(t + s, s, d + 1, sym);
+			Essence.addToPrinter("\r\n");
+		}
 	};
 	this.preOrder = function (t, s, d, sym) {
 		if (!t) t = "";
 		if (!s) s = "&nbsp;&nbsp;";
 		if (!d) d = 0;
 		if (!sym) sym = "|-";
-		
-		println(t + sym + this.payload + s+" (deepth = " + d+")");
-		if (this.left) this.left.preOrder(t + s, s, d + 1, sym);
-		if (this.right) this.right.preOrder(t + s, s, d + 1, sym)
+
+		for (var i = 0; i < this.childs - 1; i++) {
+			println(t + sym + this.payload + s+" (deepth= " + d+")");
+			this.childs[i].inOrder(t + s, s, d + 1, sym);
+			this.childs[i].inOrder(t + s, s, d + 1, sym);
+			Essence.addToPrinter("\r\n");
+		}
 	};
 	this.postOrder = function (t, s, d, sym) {
 		if (!t) t = "";
 		if (!s) s = "&nbsp;&nbsp;";
 		if (!d) d = 0;
 		if (!sym) sym = "|-";
-		
-		if (this.left) this.left.postOrder(t + s, s, d + 1, sym);
-		if (this.right) this.right.postOrder(t + s, s, d + 1, sym);
-		println(t + sym + this.payload + s+" (deepth = " + d+")")
+
+		for (var i = 0; i < this.childs - 1; i++) {
+			this.childs[i].inOrder(t + s, s, d + 1, sym);
+			this.childs[i].inOrder(t + s, s, d + 1, sym);
+			println(t + sym + this.payload + s+" (deepth = " + d+")");
+			Essence.addToPrinter("\r\n");
+		}
 	};
 	//Getter
-	this.getInOrder = function (sym) {
-		if (!sym) sym = "->";
-		var order = "";
-		
-		if (this.left) order += this.left.getInOrder(sym);
-		order += sym + this.payload;
-		if (this.right) order += this.right.getInOrder(sym);
-		return order
+	this.getOrder = function (sym) {
+		return this.childs.join(sym || "->");
 	};
-	this.getPreOrder = function (sym) {
-		if (!sym) sym = "->";
-		var order = "";
-		
-		order += sym + this.payload;
-		if (this.left) order += this.left.getPreOrder(sym);
-		if (this.right) order += this.right.getPreOrder(sym);
-		return order
-	};
-	this.getPostOrder = function (sym) {
-		if (!sym) sym = "->";
-		var order = "";
-		
-		if (this.left) order += this.left.getPostOrder(sym);
-		if (this.right) order += this.right.getPostOrder(sym);
-		return order + sym + this.payload
-	};
+
 	this.isLeaf = function () { //Is it an end of branch ?
 		return !isNon(this.childs)
 	};
@@ -5255,81 +5262,88 @@ function NTreeNode (pl, ch) {
 		return (method.normal() === "bfs")? this.bfs(n): this.dfs(n)
 	};
 	this.dfs = function (n, d, td) { //Deepth First Search
-		if (!d) d = 0//Deepth
-		if (!td) td = 0//Total deepth
+		if (!d) d = 0; //Deepth
+		if (!td) td = 0; //Total deepth
 		for (var c in this.childs) {
 			if (this.childs.hasOwnProperty(c)) c.dfs(n, d + 1, td++);
 		}
 		return [-1, td]
 	};
 	this.bfs = function (n, b, tb) { //Breadth First Search
-		if (!b) b = 0//Breadth
-		if (!tb) tb = 0//Total breadth
+		if (!b) b = 0; //Breadth
+		if (!tb) tb = 0; //Total breadth
 		var queue = [];
-		queue.unshift(this)//Add as the end
+		queue.unshift(this); //Add as the end
 		while (queue != []) {
 			b = 0;
-			var cur = new TreeNode(queue.pop())//Get the first element of the queue
+			var cur = new TreeNode(queue.pop()); //Get the first element of the queue
 			if (cur.payload === n) return [b, tb];
 			if (cur.left) queue.unshift(cur.left);
 			if (cur.right) queue.unshift(cur.right);
 			b++;
 			tb++;
-		};
+		}
 		return [-1, tb]
 	};
 	this.sum = function () {
 		var s = this.payload;
-		if (this.left) s += this.left.sum();
-		if (this.right) s += this.right.sum();
+		for (var c in this.childs) {
+			if (this.childs.hasOwnProperty(c)) s += c.payload;
+		}
 		return s
 	};
 	this.min = function () {
 		var m = this.payload;
-		if (this.left) m = Math.min(m, this.left.min());
-		if (this.right) m = Math.min(m, this.right.min());
+		for (var c in this.childs) {
+			if (this.childs.hasOwnProperty(c)) m = Math.min(m, c.payload);
+		}
 		return m
 	};
 	this.max = function () {
 		var m = this.payload;
-		if (this.left) m = Math.max(m, this.left.max());
-		if (this.right) m = Math.max(m, this.right.max());
+		for (var c in this.childs) {
+			if (this.childs.hasOwnProperty(c)) m = Math.max(m, c.payload);
+		}
 		return m
 	};
 	this.nbOfBranches = function (n) {
 		if (!n) n = 0;
-		if (this.left) n = this.left.nbOfBranches(n + 1);
-		if (this.right) n = this.right.nbOfBranches(n + 1);
+		for (var c in this.childs) {
+			if (this.childs.hasOwnProperty(c)) n = c.nbOfBranches(n + 1);
+		}
 		return n
 	};
 	this.avg = function () {
-		return this.sum()/this.nbOfBranches()
+		return this.sum() / this.nbOfBranches()
 	};
 	this.printBFS = function (t) {
-		var queue = [], tab = t || "-"//Better and easier than a Queue/QueueList
-		queue.unshift(this)//Add as the end
+		var queue = [], tab = t || "-"; //Better and easier than a Queue/QueueList
+		queue.unshift(this); //Add as the end
 		while (queue != []) {
-			var cur = new TreeNode(queue.pop())//Get the first element of the queue
+			var cur = new TreeNode(queue.pop()); //Get the first element of the queue
 			println(tab + ">" + cur.payload);
 			tab += "-";
-			if (cur.left) queue.unshift(cur.left);
-			if (cur.right) queue.unshift(cur.right);
+			for (var c in this.childs) {
+				if (this.childs.hasOwnProperty(c)) queue.unshift(c);
+			}
 		}
 	};
 	this.toString = function () {
 		/* Essence.txt2print = "";
 		this.printInOrder();
 		return "Tree(" + Essence.txt2print + ")" */
-		var str = "TreeNode(payload = " + this.payload + ", ";
-		if (this.left) str += "left = " + this.left.toString();
-		if (this.right) str += "right = " + this.right.toString();
+		var str = "TreeNode(payload= " + this.payload + ", ";
+		for (var c in this.childs) {
+			if (this.childs.hasOwnProperty(c)) str += c.toString();
+		}
 		return str.substring(0, str.length) + ")"
 	};
 	this.toArray = function (singly) {
 		var arr = [];
-		if (this.left) singly? arr.push(this.left.toArray().toString().split(",")): arr.push(this.left.toArray());
 		arr.push(this.payload);
-		if (this.right) singly? arr.push(this.right.toArray().toString().split(",")): arr.push(this.right.toArray());
+		for (var c in this.childs) {
+			if (this.childs.hasOwnProperty(c)) singly? arr.push(c.toArray().toString().split(",")): arr.push(c.toArray());
+		}
 		return singly? arr.toString().split(","): arr
 	};
 
@@ -6005,7 +6019,7 @@ function Shape (x, y, b, v) {
 	};
 	
 	this.copy = function () {
-		return new Shape(this.x, this.y, this.b, this.vel)
+		//return new Shape(this.x, this.y, this.b, this.vel)
 	};
 	
 	this.mult = function (k) {
@@ -6334,8 +6348,8 @@ function Vector (x, y) {
 	};
 	
 	this.reflect = function (normal) { //.. on a normal
-		var n = this.normal.copy();
-		n.mult(2 * this.dot(this.normal));
+		var n = normal.copy() || this.normal.copy();
+		n.mult(2 * this.dot(normal || this.normal));
 		this.sub(n);
 		return this
 	};
@@ -6929,9 +6943,9 @@ function RSA(p, q) {
 
 /**
  * @description Encrypt/decrypt a message with the public/private key
- * @param {string} msg Message
+ * @param {number} msg Message
  * @param {number[]} key Key
- * @returns {number} Crypted/decrypted code
+ * @returns {number} Encrypted/decrypted code
  * @see RSA
  */
 function cryptRSA(msg, key) { //Encrypt $msg with the public/private key $key to encrypt/decrypt the message
@@ -7179,7 +7193,7 @@ function process (name, auth, summup, ctt) {
 	this.sig = this.name[0] + this.name[this.name.length - 1] + this.name.prod() + this.author.slice(0, 2) + "-" + (getType(this.content))[0];
 	//Rights/privileges ?!
 	this.update = function () {
-		if (this.author != auth || this.author === "Anonymous" || isNon(this.author)) this.sig = this.name[0] + this.name[this.name.length-1] + "-" + this.name.prod() + this.author.slice(0, 2) + "-" + getType(this.content)[0]//H4ck
+		if (this.author != auth || this.author === "Anonymous" || isNon(this.author)) this.sig = this.name[0] + this.name[this.name.length-1] + "-" + this.name.prod() + this.author.slice(0, 2) + "-" + getType(this.content)[0]; //H4ck
 		else this.sig = this.name[0] + this.name[this.name.length - 1] + this.name.prod() + this.author.slice(0, 2) + "-" + (getType(this.content))[0];;
 		if (this.sig[this.sig.length - 1] === "N") this.bitsize = 8 * conv(this.content, 10, 2).sum();
 		else if (this.sig[this.sig.length - 1] === "B") this.bitsize = 8;
@@ -7240,7 +7254,7 @@ function server (name, admin, type, ver, mxsz) {
 					i = this.nb_slots;break;
 				}
 			}
-				if (this.slots[pos] != [pcs.name, pcs.author, pcs.description, pcs.content, pcs.bitsize] && this.nb_slots < this.maxsize) { //Check if the process was added to the server
+			if (this.slots[pos] != [pcs.name, pcs.author, pcs.description, pcs.content, pcs.bitsize] && this.nb_slots < this.maxsize) { //Check if the process was added to the server
 				this.nb_slots += this.maxsize / this.nb_slots//Extend by one slot
 				this.slots[this.nb_slots] = [pcs.name, pcs.author, pcs.description, pcs.content, pcs.bitsize];
 			}
@@ -7686,7 +7700,7 @@ function weekDay (d) { //D must be in the form dd/mm/yyyy and it gives the day o
  * @returns {string} Week day
  */
 function dayOfWeek (d) { //Daniel "Kinch" Sheppard's method
-	var day = parseInt(d.split("/")[0]), m = [0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5], days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]//Months from Jan to Dec
+	var day = parseInt(d.split("/")[0]), m = [0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5], days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]; //Months from Jan to Dec
 	var y = parseInt(d.split("/").last()) % 100 + Math.floor(d.split("/").last() / 4), c = Math.floor(d.split("/").last() / 100 % 4), cCode;
 	if (c === 0) cCode = 6;
 	else if (c === 1) cCode = 4;
@@ -7721,7 +7735,7 @@ function linearGradient (clrI, clrF, n) {
  * @returns {Array} Shades
  */
 function radialGradient (clrI, clrF, n) {
-	var i = parseInt(conv(clrI, 16)), f = parseInt(conv(clrF, 16));
+	var i = parseInt(conv(clrI, 16)), f = parseInt(conv(clrF, 16)), grad;
 	n = parseInt(n) || 10;
 	//Radial gradient
 	return grad;
@@ -7762,6 +7776,7 @@ function parseURL (p, action) { //Doing some PHP without PHP :) !!
  * @returns {string} Value of the key
  */
 function GET (name) { //HTTP GET request, method <=> parseURL(name, function (x) {this = x})
+	//noinspection JSValidateTypes
 	if (name === (new RegExp("[?&]" + encodeURIComponent(name) + "=([^&]*)")).exec(location.search)) return decodeURIComponent(name[1]);
 }
 
@@ -7954,7 +7969,7 @@ function Archive (name, data) { //Compressed data using Huffman's approach while
 	this.dictionnary = []; //Values should be in the format: letter = bitcode
 	this.result = [];
 	this.updateDict = function () {
-		var lexiq = [], count, str = "", tmp = alphabetSort(data);
+		var lexiq = [], count, tmp = alphabetSort(data);
 		for (var i = 0; i < this.data.length - 1; i++) { //Fill lexiq
 			if (tmp[i] != tmp[i+ 1]) lexiq.push(tmp[i]);
 		}
@@ -8105,7 +8120,7 @@ function Machine (name, ver, cpy, type) {
 
 	this.conv = function (data, base) {
 		return conv(data, base || 36, this.base);
-	}
+	};
 
 	return this;
 }
@@ -8141,11 +8156,11 @@ function Memory (cpy, type, prefix) {
 	this.getLocation = function (data) { //Get the memory location of a data
 		if (this.type === "local") {
 			for (var i in localStorage) {
-				if (localStorage[i] === JSON.stringify(data)) return i
+				if (localStorage.hasOwnProperty(i) && localStorage[i] === JSON.stringify(data)) return i
 			}
 		} else {
 			for (i in sessionStorage) {
-				if (sessionStorage[i] === JSON.stringify(data)) return i
+				if (sessionStorage.hasOwnProperty(i) && sessionStorage[i] === JSON.stringify(data)) return i
 			}
 		}
 		return -1
@@ -8156,11 +8171,11 @@ function Memory (cpy, type, prefix) {
 		this.free = 0;
 		if (this.type === "local") {
 			for (var i in localStorage) {
-				if (i.indexOf(this.name) > -1) localStorage.removeItem(i);
+				if (localStorage.hasOwnProperty(i) && i.indexOf(this.name) > -1) localStorage.removeItem(i);
 			}
 		} else {
 			for (i in sessionStorage) {
-				if (i.indexOf(this.name) > -1) sessionStorage.removeItem(i);
+				if (sessionStorage.hasOwnProperty(i) && i.indexOf(this.name) > -1) sessionStorage.removeItem(i);
 			}
 		}
 	};
@@ -8660,7 +8675,6 @@ function Editor (id, lang, prev, parser, tb) {
 		this.previewer.run($e(this.id).val(), true)
 	};
 	this.highlightSynthax = function (code, lang) { //Highlight in the corresponding language and return an HTML result
-		var res = code;
 		switch (lang.normal()) {
 			case "html": 
 				//HTML synthax highlighting rules
@@ -8803,29 +8817,29 @@ function Parser (from, to, customParse) {
 		res = res.replace(/(?:\{\{)LOREM\x7c(\d+)-(\d+)(?:}})/ig, $G["lorem"].chunk("$1", "$2"));
 		res = res.replace(/(?:\{\{)HW(?:}})/ig, "Hello World !");
 		res = res.replace(/<icon \/>/gm, "<img src='img/icon.png' class='icon'/>");
-		res = res.replace(/<icon size=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/icon.png' class='icon' style='width: $1; height: $1;' />");
+		res = res.replace(/<icon size=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/icon.png' class='icon' style='width: $1px; height: $1px;' />");
 		res = res.replace(/<icon name=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/$1.png' class='icon' />");
-		res = res.replace(/<(s|m|l|xs|xl):icon name=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<img src='img/$2.png' class='$1-icon' />");
+		res = res.replace(/<(s|m|l|xs|xl):icon name=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/$2.png' class='$1-icon' />");
 		res = res.replace(/<js>([\s\S]*?)<\/js>/gm,"<script type='text/javascript'>$1<\/script>");
-		res = res.replace(/<js src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"<script type='text/javascript' src='$1'><\/script>");
+		res = res.replace(/<js src=(?:"|')(\w+)(?:\"|\') \/>/gm,"<script type='text/javascript' src='$1'><\/script>");
 		res = res.replace(/<vb>([\s\S]*?)<\/vb>/gm, "<script type='text/vbscript'>$1<\/script>");
-		res = res.replace(/<vb src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"<script type = 'text/vbscript' src='$1'><\/script>");
+		res = res.replace(/<vb src=(?:"|')(\w+)(?:\"|\') \/>/gm,"<script type = 'text/vbscript' src='$1'><\/script>");
 		res = res.replace(/<css>([\s\S]*?)<\/css>/gm, "<style type='text/css'>$1</style>");
-		res = res.replace(/<css href=(?:\"|\')([A-Za-z_ -\.]+)(?:\"|\') \/>/gm, "<link rel='stylesheet' type='text/css' href='$1' />");
-		res = res.replace(/<charset=(?:\"|\')(\w + )(?:\"|\') \/>/gm, "<meta charset='$1' />");
-		res = res.replace(/<author name=(?:\"|\')(\w + )(?:\"|\') href=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<meta name='author' content='$1' /><link rel='author' href='$2' />");
+		res = res.replace(/<css href=(?:"|')([A-Za-z_ -\.]+)(?:"|') \/>/gm, "<link rel='stylesheet' type='text/css' href='$1' />");
+		res = res.replace(/<charset=(?:"|')(\w + )(?:"|') \/>/gm, "<meta charset='$1' />");
+		res = res.replace(/<author name=(?:"|')(\w + )(?:"|') href=(?:"|')(\w+)(?:"|') \/>/gm, "<meta name='author' content='$1' /><link rel='author' href='$2' />");
 		res = res.replace(/<desc>(.*?)<\/desc>/gm, "<meta name='description' content='$1' />");
 		res = res.replace(/<copy>(.*?)<\/copy>/gm, "<meta name='copyrights' content='$1' />");
 		res = res.replace(/<lbl>(.*?)<\/lbl>/gm, "<label>$1</label>");
 		res = res.replace(/<submit \/>/gm, "<input type='submit' />");
-		res = res.replace(/<submit val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<input type='submit' value='$1' />");
+		res = res.replace(/<submit val=(?:"|')(\w+)(?:"|') \/>/gm, "<input type='submit' value='$1' />");
 		res = res.replace(/<reset \/>/gm, "<input type='reset' />");
-		res = res.replace(/<reset val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<input type='reset' value = '$1' />");
-		res = res.replace(/<hdn name=(?:\"|\')(\w+)(?:\"|\')>(.*?)<\/hdn>/gm, "<input type='hidden' name='$1' value='$2' />");
-		res = res.replace(/<hdn name=(?:\"|\')(\w+)(?:\"|\') id=(?:\"|\')(\w+)(?:\"|\')>(.*?)<\/hdn>/gm, "<input type='hidden' name='$1' value='$3' id='$2' />");
-		res = res.replace(/<txt ((?:id|name|class)(\=(?:\"|\')(\w+)(?:\"|\'))(| ))\/>/gm, "<input type='text' />");
-		res = res.replace(/<sql query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\t$r = mysqli_query($$dbc, '$1');\n\t}else printMsg('error', 'No ping');\n\?>");
-		res = res.replace(/<sqlt table=(?:\"|\')(\w+)(?:\"|\') query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\techo 'Last updated at '._time().\"<br />\";selectTable($dbc, '$1', '$2');\n\t}else printMsg('error', 'No ping');\n\?>");
+		res = res.replace(/<reset val=(?:"|')(\w+)(?:"|') \/>/gm, "<input type='reset' value = '$1' />");
+		res = res.replace(/<hdn name=(?:"|')(\w+)(?:"|')>(.*?)<\/hdn>/gm, "<input type='hidden' name='$1' value='$2' />");
+		res = res.replace(/<hdn name=(?:"|')(\w+)(?:"|') id=(?:"|')(\w+)(?:"|')>(.*?)<\/hdn>/gm, "<input type='hidden' name='$1' value='$3' id='$2' />");
+		res = res.replace(/<txt ((?:id|name|class)(=(?:"|')(\w+)(?:"|'))(| ))\/>/gm, "<input type='text' />");
+		res = res.replace(/<sql query=(?:"|')(.*?)(?:"|') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\t$r = mysqli_query($$dbc, '$1');\n\t}else printMsg('error', 'No ping');\n\?>");
+		res = res.replace(/<sqlt table=(?:"|')(\w+)(?:"|') query=(?:"|')(.*?)(?:"|') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\techo 'Last updated at '._time().\"<br />\";selectTable($dbc, '$1', '$2');\n\t}else printMsg('error', 'No ping');\n\?>");
 		return res
 	}
 }
@@ -8864,7 +8878,7 @@ function Toolbar (id, tools, mdl) {
  * @param {Preview} [prev=new Preview()] Previewer
  * @param {Parser} [ps=new Parser()] Parser
  * @param {Debugger} [dbg=new Debugger()] Debugger
- * @param {Toolbar} [tb=new Toolbar()] Toolbar
+ * @param {Toolbar} [tb=this.editor.toolbar] Toolbar
  * @this {IDE}
  * @returns {IDE} IDE
  * @constructor
@@ -8881,12 +8895,13 @@ function IDE (lang, edt, prev, ps, dbg, tb) {
 	this.language = lang || "none";
 	this.init = function (to, l) {
 		if (this.language != "none") this.editor.language = this.debugger.language = this.parser.from = this.language;
+		else this.editor.language = this.debugger.language = this.parser.from = l;
 		if (to) {
 			this.parser.to = to;
 			this.preview.language = to;
 		}
 	};
-	this.toolbar = this.editor.toolbar;
+	this.toolbar = tb || this.editor.toolbar;
 	this.update = function (l) {
 		this.editor.update(l);
 		this.preview.update();
@@ -9050,7 +9065,7 @@ var Sys = { //System
 			this.recording = true;
 			this.record(keyStroke);
 		},
-		stopRecording: function (slot) {
+		stopRecording: function () {
 			this.recording = false;
 			return this.data.last()
 		}, data: []//Slot data containing the data typed in the window and not the console
@@ -9187,7 +9202,7 @@ function Stream (initVal, formula, nbVals) {
 
 	this.toString = function () {
 		return "Stream(start=" + this.start + ", formula=" + this.formula + ", data=" + this.data.toStr(true) + ")";
-	}
+	};
 
 	return this;
 }
@@ -9262,7 +9277,7 @@ function Graph (formula, dims, lbls, name, precision) { //N-dimensional graph
 	for (var i = 0; i < this.data.length; i++) this.data[i] = [this.data[i], this.equation.compute({x: this.data[i]})];
 
 	this.toString = function () {
-		return "Graph(name=" + this.name + ", labels=" + this.labels.toStr(true) + ", dimension=" + this.dimension + ", this.formula=" + this.formula + ", data=" + this.data + ")";
+		return "Graph(name=" + this.name + ", labels=" + this.labels.toStr(true) + ", dimension=" + this.dimension + ", equation=" + this.equation + ", data=" + this.data + ")";
 	};
 
 	return this;
@@ -9571,5 +9586,40 @@ function getTrace () {
  * @see getTrace
  */
 function getLineNum (noCols) {
-	return noCols ? getTrace().split(":")[1] : getTrace().get(getTrace().indexOf(":") + 1).remove(")");
+	return noCols? getTrace().split(":")[1]: getTrace().get(getTrace().indexOf(":") + 1).remove(")");
+}
+
+/**
+ * @description Finite-state Automaton
+ * @param {RegExp} re Regular expression
+ * @constructor
+ * @returns {FA} FA
+ * @todo
+ * 1. Read more about it
+ * 2. Decide whether using NFA or DFA
+ * 3. Work on it
+ * @this {FA}
+ */
+function FA (re) {
+	this.regexp = re;
+	this.states = [];
+
+	return this;
+}
+
+/**
+ * @description Human RegExp to dictionnary (language)
+ * @param {string} exp Human RegExp (simplified RegExp)
+ * @todo Work on it
+ * @returns {Array} Dictionnary
+ */
+function exp2dict (exp) {
+	var re = RegExpify(exp), res = [], grp = [
+		/([a-z]+\|[a-z]+)+/gm, //...|...
+		/([a-z]+)\*/gm, //...*
+		/([a-z]+)\+/gm, //...+
+		/([a-z]+)\?/gm //...?
+	];
+	//matches: re.exec(str).last()
+	return res;
 }
