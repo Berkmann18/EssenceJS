@@ -145,3 +145,4 @@
 - RegExpify, unRegExpify, FA, exp2dict
 - Objectify
 - name2type
+- arrayLiteral
