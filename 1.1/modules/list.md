@@ -83,7 +83,7 @@
 # File
 - stripPath
 - getLocalPath, getCurrentPath, getDirectoryPath
-- filenameList
+- filenameList, getFilename
 - AX
 - execFile
 - copyToClipoard
