@@ -38,6 +38,8 @@ Some ideas to add:
 -	Prim's alg (already there as A* ?!)
 -	Kruskal's alg
 -	More maths stuff (from the booklet or/and the Discrete Maths book) ?
+-   Combinations using a list of characters to make up all the possible combinations with n characters
+-   AI system that stores it's rules in a database and update it after learning
 
 To fix/continue:
 -	Path finding using A*\IDA* with Euclidian/Manhattan
@@ -57,7 +59,7 @@ To fix/continue:
 -	msgBox()
 -	QueueList and StackList
 -	Synthax highlighting on Editor
--	WebAppBuilder
+-	WebApp
 -	getLocalPath's support for when the path is a few folders away from the local path
 -	fully functionnal NoSQL/NoPHP server
 -	Getting either weekDay or dayOfWeek right and deleting the other one
@@ -67,6 +69,7 @@ To fix/continue:
 -	A(), reconPath()
 -	floatingPtBin()
 -	Permutations
+-   FA, exp2dict
 
 ##About the future of Essence.js
 1.	Once this library is heading toward a state where having everything in one single script will no longer be good for readability and maintenance causing it to be splitted into several files (modules) which would make it less portable and slower in some cases but it will be way more organised, more readable and more maintanable.

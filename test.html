@@ -3,9 +3,15 @@
 	<meta charset="UTF-8" />
 	<meta name="author" content="Maximilian Berkmann" />
 	<meta http-equiv="pragma" content="no-cache" />
-	<script type="text/javascript" src="1.0/essence.js"></script>
+	<script type="text/javascript" src="1.1/essence.js"></script>
 	<script defer>
-	var bodyBg = new Colour(255), ba = new Colour(0), r = new Colour(255, 0, 0), g = new Colour(0, 255, 0), b = new Colour(0, 0, 255);
+	/*init(["Misc"], false, function (x) {
+		Essence.say(x + " got initiated !\nModules: " + modules.toStr(true) + "   (" + getTime(true) + ")", "info");
+	}, 1.1);*/
+	var bodyBg, ba, r, g, b;
+	setTimeout(function () {
+		bodyBg = new Colour(255), ba = new Colour(0), r = new Colour(255, 0, 0), g = new Colour(0, 255, 0), b = new Colour(0, 0, 255);
+	}, 70);
 	function effect(){
 		$e("body").setCSS("background", bodyBg.hex);
 		$e("#ba").setCSS("color", ba.hex);
@@ -93,6 +99,7 @@
 	
 	function postHTMLinit(){
 		Essence.init();
+		UI.run();
 		if(isNon($n("#btn"))){
 			Essence.say("I couldn't find the node #btn !\The element is the following:\n"+$e("#btn"));
 			Essence.say("$e('#btn').node= "+$e("#btn").node, "info");
@@ -101,34 +108,25 @@
 	}
 	
 	function testDL(){
-		setupConnexionEval();
 		Essence.say($n("span#ceval"));
 		CECheck("span#ceval");
 	}
-	
-	include_once("https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js");
-	function check(){
-		var mf = document.myForm;
-		$("#mf").submit();
-		//$("#mf").post("http://academic.cs.rhul.ac.uk/CS1840/lab8/get_winners.php", mf.num.value);
+
+	function lineTest (b, c) {
+		b();
+		Essence.say("line: " + getLineNum());
+		c();
 	}
-	
+
+
 	</script>
 </head>
-<body onpageshow='postHTMLinit()' onload='Essence.preInit()'>
+<body onpageshow='postHTMLinit();lineTest(function () { Essence.say("Inb4 !! " + getLineNum()) }, function () { Essence.say("Callback ! " + getLineNum()) });' onload='Essence.preInit();'>
 	<span id="test">lorent</span>
 	<div id="ColourTest" onMouseover='effect()' onClick="effect2()" onMouseout="effect3()">
 		<span id='ba'>Black</span> <span id='r'>Red</span> <span id='g'>Green</span> <span id='b'>Blue</span>
 	</div><br />
 	<input type="button" value="event" id="btn" />
 	<br /><span id="ceval" onclick="testDL()">Click on me to test your download speed.</span>
-	
-	<form name="myForm" action="http://academic.cs.rhul.ac.uk/CS1840/lab8/get_winners.php" method="post" id="mf">
-		<fieldset>
-			<legend>My Form</legend>
-			<label for="num">Number: </label><input type="number" name="num" />
-			<input type="button" value="send" onClick="check()" />
-		</fieldset>
-	</form>
 </body>
 </html>
