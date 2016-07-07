@@ -1,7 +1,7 @@
 {
   "name": "EssenceJS",
   "version": "1.0.0",
-  "description": "ES5 All-In-One library",
+  "description": "ES4 All-In-One library",
   "main": "essence.js",
   "scripts": {
     "install": "minify essence.js --no-comments",
