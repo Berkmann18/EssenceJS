@@ -6,15 +6,15 @@
 - is2dArray
 - isType, getType, isCustomType, getCustomType
 - isNon
-- copy, swap
+- copy
 - getKey
-- getTime, getDate, getTimestamp, dateTime, weekDay || dayOfWeek, date2num, num2date
+- getTime, getDate, getTimestamp, dateTime, weekDay || dayOfWeek
 - genString
 - mkArray, numArr
 - toSameLength
 - lookfor
 - keyList, valList, keyTable
-- char2hex, hex2char, char2bin, bin2char, txt2num, num2txt
+- char2hex, hex2char, char2bin, bin2char
 - timeUp
 
 # Web
@@ -25,7 +25,6 @@
 - parseURL
 - WebPage, WebApp
 - Editor, Preview, Debugger, Parser, Toolbar, IDE
-- loadBar
 
 # DOM
 - print, println
@@ -40,10 +39,8 @@
 - simpleTable, rowTable, colTable, complexTable, colourTable
 - addFav
 - checkBrowser, BrowserDetect
-- writeMsg, writeMsg2
+- writeMsg
 - Template
-- tableCompare
-- viewHide
 
 # Maths
 - xor
@@ -77,13 +74,11 @@
 - readCoord
 - isCloser, getClosest
 - abcModulus, modRange
-- Equation
-- binaryCases, truthTable, getDNF, getCNF
 
 # File
 - stripPath
-- getLocalPath, getCurrentPath, getDirectoryPath
-- filenameList, getFilename
+- getLocalPath
+- filenameList
 - AX
 - execFile
 - copyToClipoard
@@ -100,15 +95,13 @@
 - LinkedList
 - TreeNode, Node, Path, Node, NTreeNode
 - Set, SortedSet, Stack, StackArray, StackList, Queue, QueueArray, QueueList
-- Astar, IDAstar, A, reconPath
+- Astar, IDAstar
 - alphabetSort, occurrenceSort
 - binarySearch
 - Archive
 - virtualHistory
 - occurenceList
-- Stream, MultiStream, Graph
-- Permutation
-- EventTable
+- Stream
 
 # UI
 - toMaxSize
@@ -119,10 +112,13 @@
 - linearGradient, radialGradient
 - daynightMode
 - chTab
-- moveHTMLRange, htmlRange, labelFieldSwap, labelPwSwap, htmlInput, htmlPassword
+- moveHTMLRange, htmlRange, labelFieldSwap, htmlInput
+
+# Mobile
+- 
 
 # Security
-- trans, encrypt, decrypt, ilEncrypt, ilDecrypt, RSA, cryptRSA
+- encrypt, decrypt, ilEncrypt, ilDecrypt, 
 - abcEncode, abcDecode
 - genPassword, genHash
 
@@ -135,11 +131,8 @@
 - Machine
 - Memory
 - EvtShow, evtLog
-- InvalidParamError, getTrace, getLineNum
-- testErr, noobTest
-- Sys, stup (to remove once Sys's recorder works well)
+- noobTest
+- Sys
 - asciiTable
-- RegExpify, unRegExpify, FA, exp2dict
+- RegExpify, unRegExpify
 - Objectify
-- name2type
-- arrayLiteral
