@@ -121,9 +121,6 @@
 - chTab
 - moveHTMLRange, htmlRange, labelFieldSwap, labelPwSwap, htmlInput, htmlPassword
 
-# Mobile
-- 
-
 # Security
 - trans, encrypt, decrypt, ilEncrypt, ilDecrypt, RSA, cryptRSA
 - abcEncode, abcDecode
