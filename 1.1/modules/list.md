@@ -116,7 +116,9 @@
 
 # QTest
 - EvtShow, evtLog
-- noobTest
+- noobTest, testErr
+- InvalidParamError
+- getTrace, getLineNum
 
 # Security
 - encrypt, decrypt, ilEncrypt, ilDecrypt, 
@@ -135,3 +137,7 @@
 - asciiTable
 - RegExpify, unRegExpify
 - Objectify
+- name2type
+- FA
+- exp2dict
+- arrayLiteral
