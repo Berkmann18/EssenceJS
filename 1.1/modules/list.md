@@ -114,8 +114,9 @@
 - chTab
 - moveHTMLRange, htmlRange, labelFieldSwap, htmlInput
 
-# Mobile
-- 
+# QTest
+- EvtShow, evtLog
+- noobTest
 
 # Security
 - encrypt, decrypt, ilEncrypt, ilDecrypt, 
@@ -130,8 +131,6 @@
 - base64
 - Machine
 - Memory
-- EvtShow, evtLog
-- noobTest
 - Sys
 - asciiTable
 - RegExpify, unRegExpify
