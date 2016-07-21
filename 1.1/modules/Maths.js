@@ -350,7 +350,7 @@ var s2t = sec2time;
  * @func
  */
 function markConv (mark, initTotal, endTotal, nbDec) {
-    return (mark/initTotal * (endTotal || 100)).toNDec(nbDec || 2)
+    return (mark / initTotal * (endTotal || 100)).toNDec(nbDec || 2)
 }
 
 /**
@@ -1566,6 +1566,7 @@ function truthTable(exp) { //Get the truth table of an expression
  * @param {string} exp Expression
  * @returns {string} DNF
  * @since 1.0
+ * @todo Work on it
  * @func
  */
 function getDNF(exp) {
@@ -1579,6 +1580,7 @@ function getDNF(exp) {
  * @param {string} exp Expression
  * @returns {string} CNF
  * @since 1.0
+ * @todo Work on it
  * @func
  */
 function getCNF(exp) {

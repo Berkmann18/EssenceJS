@@ -464,6 +464,7 @@ function Shape (x, y, b, v) {
  * @param {string} [bgclr="#fff"] Background colour
  * @param {number} [brd=0] Border radius
  * @returns {Box} Box
+ * @todo Work on draw(), erase(), rot() and translate()
  * @this Box
  * @constructor
  * @since 1.0
@@ -969,7 +970,7 @@ function linearGradient (clrI, clrF, n) {
  * @func
  */
 function radialGradient (clrI, clrF, n) {
-    var i = parseInt(conv(clrI, 16)), f = parseInt(conv(clrF, 16));
+    var i = parseInt(conv(clrI, 16)), f = parseInt(conv(clrF, 16)), grad;
     n = parseInt(n) || 10;
     //Radial gradient
     return grad;

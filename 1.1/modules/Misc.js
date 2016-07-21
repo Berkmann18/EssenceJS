@@ -665,7 +665,7 @@ var Sys = { //System
             this.recording = true;
             this.record(keyStroke);
         },
-        stopRecording: function (slot) {
+        stopRecording: function () {
             this.recording = false;
             return this.data.last()
         }, data: []//Slot data containing the data typed in the window and not the console
@@ -784,6 +784,7 @@ function name2type(name, param) {
         case "Function": return Function(param, arguments.toArray().get(2));
         case "Object": return Object(param, arguments.toArray().get(2));
         case "Date": return Date(param, arguments.toArray().get(2));
+        /* eslint no-array-constructor: 0 */
         case "Array": return Array(param, arguments.toArray().get(2));
         case "RegExp": return RegExp(param, arguments.toArray().get(2));
         case "Error": return Error(param, arguments.toArray().get(2));
@@ -839,6 +840,7 @@ function name2type(name, param) {
     }
 }
 
+/* eslint no-array-constructor: 2 */
 /**
  * @description Finite-state Automaton
  * @param {RegExp} re Regular expression

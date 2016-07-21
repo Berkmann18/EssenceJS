@@ -17,7 +17,7 @@ var DOM = {
     name: "DOM",
     version: 1,
     run: function () {
-
+        BrowserDetect.init();
     },
     description: "DOM stuff",
     dependency: ["Misc"],
@@ -267,7 +267,7 @@ function unescapeHTML (code) {
  * @func
  */
 function getResources (rmEmpty) {
-    var links = $n("*link"), scripts = $n("*script"), stylesheets = $n("*style"), rsc = [], hypertxt = $n("*a"), img = $n("*img"), btnImg = $n("*input image"),
+    var links = $n("*link"), scripts = $n("*script"), rsc = [], hypertxt = $n("*a"), img = $n("*img"), btnImg = $n("*input image"),
         inCSS = [$n("*div"), $n("*section"), $n("*td"), $n("*th"), $n("*li")];
     for (var i = 0; i < links.length; i++) {
         if (!isNon(links[i])) rsc[i] = links[i].href;
@@ -542,15 +542,16 @@ function checkBrowser () {
 
 /**
  * @description Browser detection system
- * @type {{init: BrowserDetect.init, searchString: BrowserDetect.searchString, searchVersion: BrowserDetect.searchVersion, dataBrowser: Array, dataOS: Array}}
+ * @type {{init: BrowserDetect.init, searchString: BrowserDetect.searchString, searchVersion: BrowserDetect.searchVersion, dataBrowser: Array, dataOS: Array, info: BrowserDetect.info}}
  * @since 1.0
+ * @source Somewhere on the net
  * @global
  */
 var BrowserDetect = { //Browser detection system
     init: function () {
-        this.browser = this.searchString(this.dataBrowser) || "An unknown browser";
-        this.version = this.searchVersion(navigator.userAgent) || this.searchVersion(navigator.appVersion) || "an unknown version";
-        this.OS = this.searchString(this.dataOS) || "an unknown OS";
+        this.browser = this.searchString(this.dataBrowser) || "Unknown browser";
+        this.version = this.searchVersion(navigator.userAgent) || this.searchVersion(navigator.appVersion) || "xx.yy";
+        this.OS = this.searchString(this.dataOS) || "Unknown OS";
     },
     searchString: function (data) {
         for (var i = 0; i < data.length; i++) {
@@ -598,14 +599,16 @@ var BrowserDetect = { //Browser detection system
     }, {
         string: navigator.userAgent, subString: "iPhone", identity: "iPhone/iPod"
     }, {
-        string: navigator.userAgent, subString: "Android", identity: "HTC/Samsung/LG"
+        string: navigator.userAgent, subString: "Android", identity: "HTC/Samsung/LG/Nexus"
     }, {
         string: navigator.userAgent, subString: "BlackBerry", identity: "BlackBerry"
     }, {
         string: navigator.platform, subString: "Linux", identity: "Linux"
-    }]
+    }],
+    info: function () {
+        return this.browser + "/" + this.version + " (" + this.OS + ")";
+    }
 };
-//BrowserDetect.init();
 
 /**
  * @description Type a message

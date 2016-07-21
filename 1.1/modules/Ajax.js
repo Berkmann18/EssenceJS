@@ -118,7 +118,7 @@ function loadDoc (url, callback) {
  * @func
  */
 function AJAXpost (data, to, xml) {
-    var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP"), res;
+    var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
     xhr.onreadystatechange = function () {
         //Request complete and HTTP OK response
         /* readyStates

@@ -339,7 +339,7 @@ function genHash (password) {
     for (var i = 0; i < password.length; i++) {
         rest = password.charCodeAt(i) + k.toNDigits(1) % 255;
         //c = clamp(password.charCodeAt(i) + k, 32, 126);
-        c = Math.abs(password.charCodeAt(i) + k).toNDigits(1);
+        c = Math.abs(password.charCodeAt(i) + k).toNDigits(1) + rest;
         if (c < 32) c += 48;
         //console.log("k= " + k + "\trest (" + password.charCodeAt(i) + " + " + k + ")=" + rest + "\tc=" + c);
         //console.log("Adjust: " + parseInt(48 + Math.round(password.charCodeAt(password.length - 1) / 10 + rest)));

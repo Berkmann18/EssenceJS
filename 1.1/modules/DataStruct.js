@@ -1059,7 +1059,7 @@ function QueueList () {
 function Astar (start, goal) {
     //Inspired from http://Heyes-jones.com/pseudocode.php
     //PathNode.f (score) = g (sum of all cost to get at this point) + h (heuristic: estimate of what it will take to get the goal)
-    var nodeGoal = goal, nodeCurrent, nodeSucessor, _h;
+    var nodeGoal = goal, nodeCurrent, nodeSuccessor, _h;
     var openList = [start], closedList = [];
     while (openList.length > 0) {
         var scores = [], minScore = openList[0].f;
@@ -1094,7 +1094,7 @@ function Astar (start, goal) {
                     closedList.push(nodeCurrent);
                 }
             }
-            throw "Solution found !"
+            throw "Solution found ! With h=" + _h;
         }
     }
 }
@@ -1248,7 +1248,7 @@ function Archive (name, data) { //Compressed data using Huffman's approach while
     this.dictionnary = []; //Values should be in the format: letter = bitcode
     this.result = [];
     this.updateDict = function () {
-        var lexiq = [], count, str = "", tmp = alphabetSort(data);
+        var lexiq = [], count, tmp = alphabetSort(data);
         for (var i = 0; i < this.data.length - 1; i++) { //Fill lexiq
             if (tmp[i] != tmp[i+ 1]) lexiq.push(tmp[i]);
         }
@@ -1266,9 +1266,7 @@ function Archive (name, data) { //Compressed data using Huffman's approach while
 
         this.dictionnary = occurrenceSort(this.data);
 
-        for (var i = 0; i < this.dictionnary.length; i++) {
-            this.result[i] = conv(i, 10, 2);
-        }
+        for (i = 0; i < this.dictionnary.length; i++) this.result[i] = conv(i, 10, 2);
     };
 
     this.getResult = function () {

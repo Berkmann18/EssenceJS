@@ -578,7 +578,7 @@ function Editor (id, lang, prev, parser, tb) {
     this.nbLines = 0;
     this.language = lang || "none";
     this.previewer = prev;
-    //this.parser = parser || (prev? this.previewer.associatedParser: null);
+    this.parser = parser || (prev? this.previewer.associatedParser: null); //Sort of temporarily uncommented for linting sake
     this.code = $e(this.id).val();
     this.codeHistory = new virtualHistory(this.code);
     this.toolbar = tb || new Toolbar();
@@ -643,7 +643,6 @@ function Editor (id, lang, prev, parser, tb) {
         this.previewer.run($e(this.id).val(), true)
     };
     this.highlightSynthax = function (code, lang) { //Highlight in the corresponding language and return an HTML result
-        var res = code;
         switch (lang.normal()) {
             case "html":
                 //HTML synthax highlighting rules
@@ -870,13 +869,13 @@ function IDE (lang, edt, prev, ps, dbg, tb) {
     this.debugger = dbg || new Debugger();
     this.language = lang || "none";
     this.init = function (to, l) {
-        if (this.language != "none") this.editor.language = this.debugger.language = this.parser.from = this.language;
+        if (this.language != "none") l? this.editor.language = this.debugger.language = this.parser.from = this.language = l: this.editor.language = this.debugger.language = this.parser.from = this.language;
         if (to) {
             this.parser.to = to;
             this.preview.language = to;
         }
     };
-    this.toolbar = this.editor.toolbar;
+    this.toolbar = tb || this.editor.toolbar;
     this.update = function (l) {
         this.editor.update(l);
         this.preview.update();
