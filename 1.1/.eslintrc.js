@@ -172,7 +172,7 @@ module.exports = {
         /*"no-useless-computed-key": 2,*/
         "no-useless-concat": 2,
         "no-useless-constructor": 2,
-        "no-useless-escape": 1,
+        /*"no-useless-escape": 1,*/
         "no-var": 0,
         "no-void": 2,
         "no-warning-comments": 2,

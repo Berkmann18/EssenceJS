@@ -1,5 +1,5 @@
 "use strict";
-/* global Essence:false, $G, Sys, base64 */
+/* global Essence:false, $G, Sys, base64, UnitTest */
 /* eslint no-unused-vars: 0 */
 
 /**
@@ -23,6 +23,7 @@
  * @requires modules/DataStruct
  * @requires modules/Maths
  * @requires modules/Security
+ * @requires modules/QTest
  */
 
 /**
@@ -39,8 +40,8 @@ var Essence = {
     source: (document.URL.indexOf("essence.min.js") > -1)? "https://Www.dropbox.com/s/1prjdvv9ku0ga92/essence.min.js?dl=0": "https://Www.dropbox.com/s/n2sz2mxz5zwc05t/essence.js?dl=0",
     element: $n,
     handleError: function (msg, url, line) {
-        getType(msg, "Error")? alert("[Essence.js] An error has occurred (line/column " + msg.lineNumber + "/" + msg.columnNumber + " of " + msg.fileName + ").\n\nMessage: " + msg.stack): alert("[Essence.js] An error has occurred (line " + line + " of " + url + ").\n\nMessage: " + msg)
-    }, say: function (msg, type, style, style0) { //Say something in the console
+        isType(msg, "Error")? alert("[Essence.js] An error has occurred (line/column " + msg.lineNumber + "/" + msg.columnNumber + " of " + msg.fileName + ").\n\nMessage: " + msg.stack): alert("[Essence.js] An error has occurred (line " + line + " of " + url + ").\n\nMessage: " + msg)
+    }, say: function (msg, type, style, style0, style1, style2) { //Say something in the console
         type = (isNon(type))? "": type.slice(0, 4).toLowerCase();
         if (style && !style0) {
             if (type === "info") console.info("%c[Essence.js]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
@@ -48,12 +49,24 @@ var Essence = {
             else if (type === "warn") console.warn("%c[Essence.js]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
             else if (type === "succ") console.log("%c[Essence.js]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
             else console.log("%c[Essence.js]%c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
-        } else if (style0 && style0) {
+        } else if (style && style0) {
             if (type === "info") console.info("%c[Essence.js]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
             else if (type === "erro") console.error("%c[Essence.js]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
             else if (type === "warn") console.warn("%c[Essence.js]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
             else if (type === "succ") console.log("%c[Essence.js]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
             else console.log("%c[Essence.js]%c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
+        } else if (style && style0 && style1) {
+            if (type === "info") console.info("%c[Essence.js]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1);
+            else if (type === "erro") console.error("%c[Essence.js]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1);
+            else if (type === "warn") console.warn("%c[Essence.js]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1);
+            else if (type === "succ") console.log("%c[Essence.js]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1);
+            else console.log("%c[Essence.js]%c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1);
+        } else if (style && style0 && style1 && style2) {
+            if (type === "info") console.info("%c[Essence.js]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1, style2);
+            else if (type === "erro") console.error("%c[Essence.js]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1, style2);
+            else if (type === "warn") console.warn("%c[Essence.js]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1, style2);
+            else if (type === "succ") console.log("%c[Essence.js]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1, style2);
+            else console.log("%c[Essence.js]%c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1, style2);
         } else {
             if (type === "info") console.info("%c[Essence.js]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
             else if (type === "erro") console.error("%c[Essence.js]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
@@ -190,7 +203,7 @@ function run (module, ver) {
             try {
                 if (debugging) Essence.say("Running " + module + "    " + getTimestamp(true), "info");
                 init(window[module].dependency, false, function (x) {
-                    Essence.say("%c" + x + "%c from %c" + module + "'s dependency has been initiated !!    " + getTimestamp(true), "info", "color: #c0f", "color: #000");
+                    Essence.say("%c" + x + "%c from %c" + module + "%c's dependency has been initiated !!    " + getTimestamp(true), "info", "color: #c0f", "color: #000", "color: #f0c", "color: #000");
                 }, ver);
                 window[module].run();
             } catch (e) {
@@ -247,14 +260,25 @@ function init (mdls, mid, cb, ver, argsMid, argsCB) {
 }
 
 /**
+ * @see module:module/File
  * @ignore
  * @inheritsdoc
+ * @param {string} path Path
+ * @returns {string} Directory path
  * @since 1.1
  */
 var getDirectoryPath = function (path) {
     if(!path) path = location.href;
     return path.substring(0, path.indexOf(path.split("/")[path.split("/").length - 1]))
-}, gatherScripts = function (asList) {
+}, /**
+ * @see module:module/DOM
+ * @ignore
+ * @inheritsdoc
+ * @param {boolean} [asList=false] Result should be a list or an object
+ * @returns {*} List/dictionary of scripts
+ * @since 1.1
+ */
+gatherScripts = function (asList) {
     var $s = $n("*script"), res = asList? []: {};
     for(var i = 0; i<$s.length; i++) asList? res.push($s[i].src): res[$s[i].src.split("/")[$s[i].src.split("/").length - 1]] = $s[i].src;
     return res
@@ -276,6 +300,7 @@ var getDirectoryPath = function (path) {
     }, 1.1); */
     setTimeout(function () {
         Essence.isComplete()? Essence.say("Essence is complete !", "succ"): Essence.time("List of loaded modules: " + Essence.loadModules.toStr(true));
+        run(["File", "DOM", "UI", "Web", "Maths", "Ajax", "DataStruct", "Security", "Misc"], 1.1);
     }, 1e3);
 })();
 
@@ -1025,7 +1050,7 @@ Array.prototype.prod = function (start, end) {
  */
 Array.prototype.sum2d = function (start, end) {
     var s = 0;
-    if ((!start && !end) || (start === 0 && end >= this.length-1)) {
+    if ((!start && !end) || (start.equals([0, 0]) && end >= this.length - 1)) {
         for (var i = 0; i < this.length; i++) {
             for(var j = 0; j < this[i].length; j++) s += this[i][j];
         }
@@ -1478,7 +1503,7 @@ Array.prototype.clean = function (noDuplic) { //Remove undesirable items
     for (var i = 0; i < this.length; i++) {
         if (!isNon(this[i])) arr[j++] = this[i];
     }
-    return noDuplic? rmDuplicates(arr).remove(undefined): arr//Take off (or not) duplicates of actual values and double clean it
+    return noDuplic? rmDuplicates(arr).remove(undefined): arr; //Take off (or not) duplicates of actual values and double clean it
 };
 
 /**
@@ -2434,6 +2459,44 @@ String.prototype.replaceAll = function(str, nstr, sep) {
  */
 String.prototype.chunk = function (start, end) {
     return this.split(" ").get(start, end).join(" ");
+};
+
+/**
+ * @description Return the chunk that is the same at the beginning of both string
+ * @param {string} str String
+ * @this String
+ * @returns {string} Same string
+ * @method
+ * @since 1.1
+ */
+String.prototype.sameFirst = function (str) {
+    var sf = "", pos = -1;
+    while (pos <= Math.min(this.length, str.length)) {
+        pos++;
+        //(this[pos] === str[pos])? sf += this[pos]: break;
+        if (this[pos] === str[pos]) sf += this[pos];
+        else break;
+    }
+    return sf;
+};
+
+/**
+ * @description Return the chunk that is the same at the end of both string
+ * @param {string} str String
+ * @this String
+ * @returns {string} Same string
+ * @method
+ * @since 1.1
+ */
+String.prototype.sameLast = function (str) {
+    var sf = "", pos = Math.min(this.length, str.length);
+    while (pos > 0) {
+        pos--;
+        //(this[pos] === str[pos])? sf += this[pos]: break;
+        if (this[pos] === str[pos]) sf += this[pos];
+        else break;
+    }
+    return sf;
 };
 
 /**
