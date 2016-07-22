@@ -1,6 +1,7 @@
 "use strict";
-/* global Essence:false, $G, Sys, base64, UnitTest */
+/* global Essence:false, $G, Sys, base64, UnitTest, modules, debugging */
 /* eslint no-unused-vars: 0 */
+/* eslint no-undef: 0 */
 
 /**
  * @module essence
@@ -14,7 +15,7 @@
  * @typedef {(number|boolean)} Bool
  * @typedef {(Array|Object|string)} Iterable
  * @typedef {(Array|Object)} Dict
- * @requires modules/File
+ * @requires modules/Files
  * @requires modules/DOM
  * @requires modules/UI
  * @requires modules/Web
@@ -28,7 +29,7 @@
 
 /**
  * @description @description This is the main object of the library
- * @type {{version: string, author: string, description: string, source: string, element: $n, handleError: Essence.handleError, say: Essence.say, css: string, applyCSS: Essence.applyCSS, addCSS: Essence.addCSS, addJS: Essence.addJS, update: Essence.update, eps: number, emptyDoc: Essence.emptyDoc, editor: Essence.editor, processList: Array, global: null, addProcess: Essence.addProcess, processSize: number, serverList: Array, addServer: Essence.addServer, serverSize: number, toString: Essence.toString, txt2print: string, addToPrinter: Essence.addToPrinter, print: Essence.print, preInit: Essence.preInit, init: Essence.init, time: Essence.time, sayClr: Essence.sayClr, ask: Essence.ask, isComplete: Essence.isComplete, loadModules: Object[]}}
+ * @type {{version: string, author: string, description: string, source: string, element: $n, handleError: Essence.handleError, say: Essence.say, applyCSS: Essence.applyCSS, addCSS: Essence.addCSS, addJS: Essence.addJS, update: Essence.update, eps: number, emptyDoc: Essence.emptyDoc, editor: Essence.editor, processList: Array, global: null, addProcess: Essence.addProcess, processSize: number, serverList: Array, addServer: Essence.addServer, serverSize: number, toString: Essence.toString, txt2print: string, addToPrinter: Essence.addToPrinter, print: Essence.print, preInit: Essence.preInit, init: Essence.init, time: Essence.time, sayClr: Essence.sayClr, ask: Essence.ask, isComplete: Essence.isComplete, loadModules: Object[]}}
  * @this Essence
  * @namespace
  * @since 1.0
@@ -44,42 +45,40 @@ var Essence = {
     }, say: function (msg, type, style, style0, style1, style2) { //Say something in the console
         type = (isNon(type))? "": type.slice(0, 4).toLowerCase();
         if (style && !style0) {
-            if (type === "info") console.info("%c[Essence.js]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
-            else if (type === "erro") console.error("%c[Essence.js]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
-            else if (type === "warn") console.warn("%c[Essence.js]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
-            else if (type === "succ") console.log("%c[Essence.js]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
-            else console.log("%c[Essence.js]%c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
-        } else if (style && style0) {
-            if (type === "info") console.info("%c[Essence.js]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
-            else if (type === "erro") console.error("%c[Essence.js]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
-            else if (type === "warn") console.warn("%c[Essence.js]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
-            else if (type === "succ") console.log("%c[Essence.js]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
-            else console.log("%c[Essence.js]%c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
-        } else if (style && style0 && style1) {
-            if (type === "info") console.info("%c[Essence.js]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1);
-            else if (type === "erro") console.error("%c[Essence.js]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1);
-            else if (type === "warn") console.warn("%c[Essence.js]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1);
-            else if (type === "succ") console.log("%c[Essence.js]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1);
-            else console.log("%c[Essence.js]%c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1);
+            if (type === "info") console.info("%c[EssenceJS]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
+            else if (type === "erro") console.error("%c[EssenceJS]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
+            else if (type === "warn") console.warn("%c[EssenceJS]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
+            else if (type === "succ") console.log("%c[EssenceJS]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
+            else console.log("%c[EssenceJS]%c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
+        } else if (style && style0 && !style1) {
+            if (type === "info") console.info("%c[EssenceJS]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
+            else if (type === "erro") console.error("%c[EssenceJS]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
+            else if (type === "warn") console.warn("%c[EssenceJS]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
+            else if (type === "succ") console.log("%c[EssenceJS]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
+            else console.log("%c[EssenceJS]%c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0);
+        } else if (style && style0 && style1 && !style2) {
+            if (type === "info") console.info("%c[EssenceJS]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1);
+            else if (type === "erro") console.error("%c[EssenceJS]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1);
+            else if (type === "warn") console.warn("%c[EssenceJS]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1);
+            else if (type === "succ") console.log("%c[EssenceJS]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1);
+            else console.log("%c[EssenceJS]%c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1);
         } else if (style && style0 && style1 && style2) {
-            if (type === "info") console.info("%c[Essence.js]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1, style2);
-            else if (type === "erro") console.error("%c[Essence.js]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1, style2);
-            else if (type === "warn") console.warn("%c[Essence.js]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1, style2);
-            else if (type === "succ") console.log("%c[Essence.js]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1, style2);
-            else console.log("%c[Essence.js]%c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1, style2);
+            if (type === "info") console.info("%c[EssenceJS]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1, style2);
+            else if (type === "erro") console.error("%c[EssenceJS]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1, style2);
+            else if (type === "warn") console.warn("%c[EssenceJS]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1, style2);
+            else if (type === "succ") console.log("%c[EssenceJS]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1, style2);
+            else console.log("%c[EssenceJS]%c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style, style0, style1, style2);
         } else {
-            if (type === "info") console.info("%c[Essence.js]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
-            else if (type === "erro") console.error("%c[Essence.js]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
-            else if (type === "warn") console.warn("%c[Essence.js]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
-            else if (type === "succ") console.log("%c[Essence.js]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
-            else console.log("%c[Essence.js]%c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
+            if (type === "info") console.info("%c[EssenceJS]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
+            else if (type === "erro") console.error("%c[EssenceJS]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
+            else if (type === "warn") console.warn("%c[EssenceJS]%c " + msg, "color: #fc0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
+            else if (type === "succ") console.log("%c[EssenceJS]%c " + msg, "color: #0f0; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
+            else console.log("%c[EssenceJS]%c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
         }
     },
-    css: "@charset:'UTF-8';*{font-family:Calibrie,Verdana,sans-serif}body{height:100%;width:auto;padding:0}table{background:#000}table,td,th{border:1px solid #000;color:#000;background:#fff;border-collapse:collapsed}tr:nth-child(even) td{background:#ddd}.none,.none td,.none th{border:none}tr:hover td{background:#888}.inf{color:#008}.succ{color:#0f0}.err{color:#f00}.quest{color:#00f}.warn{color:#fc0}.info{border-color:#008;background-color:#00008f}.success{border-color:#080;background-color:#008f00}.error{border-color:#800;background-color:#8f0000}.question{border-color:#00f;background-color:#0000f8}.warning{border-color:#f8c808;background-color:#fc0}.block{color:#fff;background:repeat 0 center;border:1px solid;-webkit-appearance:none;outline:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;width:100%;height:1.1em;line-height:200%;white-space:nowrap;min-height:16px;position:relative;margin:2px;padding:.3em 2px;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-touch-callout:none;border-radius:7px;-webkit-border-radius:7px;-moz-border-radius:7px}.icon{width:64px;height:64px;border:none;margin:2px}kbd{border:3px outset #ccc;background:#ccc;border-radius:5px;-webkit-border-radius:7px;-moz-border-radius:7px;padding:2px;font-family:Consolas,Tahoma,Segoe UI}h1.title{text-decoration:underline}h2{color:#088}h3{color:#0ff}.code-tag,.code-inst{color:#00f}.code-cmt{color:#0f0}.code-str,.code-id{color:#00c0c0}.code-num,.code-class{color:#f00}.code-attr{color:#c00}.code-val{color:#fc0}.code-type{color:#800080}.code-doc,.code-op{color:#0ff}.code-var{color:#0000c0}.code-keyword{color:#f0f}.nocss{margin:auto;padding:auto;text-align:left;z-index:auto;background:transparent;border:none;border-radius:0;box-shadow:none;clear:none;color:inherit;float:none;content:normal;width:auto;height:auto;letter-spacing:normal;line-height:normal;max-width:none;max-height:none;min-width:0;min-height:0;opacity:1;overflow:visible;page-break-inside:auto;position:static;text-shadow:none;text-transform:none;transform:none;transition:none;vertical-align:baseline;visibility:visible;white-space:normal;word-spacing:normal}",
     applyCSS: function () {
-        if (isNon($n("style")) || $e("style").isEmpty()) $e("head").write($n("head").outerHTML + "<style type = 'text/css'>" + Essence.css + "</style>", true);
-        else $n("style").innerHTML += Essence.css;
-        if ($e("html").val(true).indexOf("<body></body>") > -1) {
+        include_once("essence.min.css", "link");
+        if ($e("html").val(true).indexOf("<body></body>") > -1) { //A bit of cleaning
             var ix = $e("html").val(true).indexOf("<body></body>");
             var bfr = $e("html").val(true).slice(0, ix), aft = $e("html").val(true).slice(ix + 13, $e("html").val(true).length);
             $e("html").write(bfr + aft, true);
@@ -144,7 +143,7 @@ var Essence = {
     }, ask: function (label, callback) { //Ask something to the user
         Sys.in.recording = true;
         Essence.say((label || "Is there a problem") + " ? (please type in the window and not the console)", "quest");
-        while ($G["lastKeyPair"][1] != 96 /*$G["lastKeyPair"][1] != 13*/ && $G["lastKeyPair"][1] != 10) {//Quits on enter and `
+        while ($G["lastKeyPair"][1] != 96 /*$G["lastKeyPair"][1] != 13*/ && $G["lastKeyPair"][1] != 10) { //Quits on enter and `
             //Essence.say("waiting for an enter");
         }
         alert("OUT !!");
@@ -153,19 +152,35 @@ var Essence = {
         return Sys.in.data.join("");
     }, isComplete: function () {
         var complete = true;
+        this.loadedModules = [];
         for (var i = 0; i < modules.length; i++) {
             complete &= window[modules[i]].complete;
-            if(window[modules[i]].complete) this.loadedModules.push(window[modules[i]].toString());
+            if (window[modules[i]].complete) this.loadedModules.push(window[modules[i]].toString());
         }
         return Boolean(complete);
     }, loadedModules: []
-}, modules = [], debugging = false;
+},
+    /**
+     * @description List of modules
+     * @global
+     * @type {string[]}
+     * @since 1.1
+    */
+    modules = [],
+    /**
+     * @description Debugging flag
+     * @global
+     * @type {boolean}
+     * @since 1.1
+     */
+    debugging = false;
 
 /**
  * @description ES6-like module loader
  * @func
  * @param {Str} mdl Module
  * @param {NumberLike} [ver] Version of the directory containing it
+ * @param {string} [extpath] External path
  * @returns {undefined}
  * @since 1.1
  * @example <caption>Example 1:</caption>
@@ -174,14 +189,14 @@ var Essence = {
  * <caption>Example 2:</caption>
  * require("myModule", 1.1); //It will import the script located at "1.1/modules/myModule.js"
  */
-function require (mdl, ver) {
+function require (mdl, ver, extpath) {
     if (isType(mdl, "Array")) {
         for (var i = 0; i < mdl.length; i++) require(mdl[i], ver);
     } else if (modules.indexOf(mdl) === -1) {
         include_once((ver? ver + "/": "") + "modules/" + mdl + ".js", "script", getDirectoryPath());
         modules.push(mdl);
         if (debugging) console.log("The module %c%s%c is now included into %c%s    " + getTimestamp(true), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFilename());
-    }
+    } else if (debugging) console.log("The module %c%s%c is already included into %c%s    " + getTimestamp(true), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFilename());
 }
 
 /**
@@ -203,7 +218,8 @@ function run (module, ver) {
             try {
                 if (debugging) Essence.say("Running " + module + "    " + getTimestamp(true), "info");
                 init(window[module].dependency, false, function (x) {
-                    Essence.say("%c" + x + "%c from %c" + module + "%c's dependency has been initiated !!    " + getTimestamp(true), "info", "color: #c0f", "color: #000", "color: #f0c", "color: #000");
+                    if (debugging) Essence.say("%c" + x + "%c from %c" + module + "%c's dependency has been initiated !!    " + getTimestamp(true), "info", "color: #c0f", "color: #000", "color: #f0c", "color: #000");
+                    //console.info("")
                 }, ver);
                 window[module].run();
             } catch (e) {
@@ -249,8 +265,9 @@ function init (mdls, mid, cb, ver, argsMid, argsCB) {
     if (isType(mdls, "Array")) {
         for (var i = 0; i < mdls.length; i++) init(mdls[i], mid, cb, ver, mdls[i], mdls[i]);
     } else {
-        if(debugging) Essence.say("Initiating " + mdls);
-        require(mdls, ver);
+        if (debugging) Essence.say("Initiating " + mdls);
+        if (modules.indexOf(mdls) === -1) require(mdls, ver);
+        else if (debugging) Essence.say("The module %c" + mdls + "%c was already initiated !!", "info", "color: #c0f", "color: #000");
         if (mid) mid(argsMid || mdls); //Used when initiating a module that has dependencies
         setTimeout(function () { //Delayed running to leave some time for the module to be fully available to this page
             run(mdls);
@@ -282,8 +299,15 @@ gatherScripts = function (asList) {
     var $s = $n("*script"), res = asList? []: {};
     for(var i = 0; i<$s.length; i++) asList? res.push($s[i].src): res[$s[i].src.split("/")[$s[i].src.split("/").length - 1]] = $s[i].src;
     return res
+}, getExtPath = function (path) {
+    var cp = location.href;
+    var parentPath = cp.sameFirst(path);
+    var portion = getCurrentPath(path, parentPath);
+    var derive = "../".repeat(portion.count("/"));
+    //Essence.say("cp=" + cp + "\nparentPath= " + parentPath + "\nportion= " + portion + "\nderive= " + derive);
+    return derive + getCurrentPath(path, parentPath);
 };
-
+    
 /**
  * @summary Module Loading section
  * @since 1.1
@@ -292,15 +316,15 @@ gatherScripts = function (asList) {
  */
 (function () {
     Essence.say("Initiating the ML");
-    require(["File", "DOM", "UI", "Web", "Maths", "Ajax", "DataStruct", "Security", "Misc"], 1.1);
-    /* init(["Web", "Maths", "Ajax", "DataStruct", "Security", "Misc"], function (mdl) {
+    require(["Files", "DOM", "UI", "Web", "Maths", "Ajax", "DataStruct", "Security", "Misc", "QTest"], 1.1);
+    /* init(["Web", "Maths", "Ajax", "DataStruct", "Security", "Misc", "QTest"], function (mdl) {
         Essence.say(mdl + " on the way!", "info");
     }, function (mdl) {
         Essence.say(mdl + " is ready!", "succ");
     }, 1.1); */
     setTimeout(function () {
         Essence.isComplete()? Essence.say("Essence is complete !", "succ"): Essence.time("List of loaded modules: " + Essence.loadModules.toStr(true));
-        run(["File", "DOM", "UI", "Web", "Maths", "Ajax", "DataStruct", "Security", "Misc"], 1.1);
+        run(modules, 1.1);
     }, 1e3);
 })();
 
