@@ -75,7 +75,7 @@
 - isCloser, getClosest
 - abcModulus, modRange
 
-# File
+# Files
 - stripPath
 - getLocalPath
 - filenameList
