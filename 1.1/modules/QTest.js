@@ -33,6 +33,8 @@ var QTest = {
     QTest.complete = true;
 })();
 
+/* eslint no-undef: 0 */
+
 /**
  * @description Show some information about the event
  * @param {Event} evt Event

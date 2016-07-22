@@ -91,6 +91,7 @@ function DELETE () {
 
 }
 
+/* eslint no-undef: 0 */
 /**
  * @description Load a document/file using AJAX
  * @param {string} url URL
@@ -113,12 +114,12 @@ function loadDoc (url, callback) {
  * @param {*} data Data to send
  * @param {string} to Receiving URL
  * @param {boolean} xml XML/Text flag
- * @returns {undefined}
+ * @returns {string|XML} Response
  * @since 1.0
  * @func
  */
 function AJAXpost (data, to, xml) {
-    var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
+    var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP"), res = "";
     xhr.onreadystatechange = function () {
         //Request complete and HTTP OK response
         /* readyStates
@@ -138,7 +139,9 @@ function AJAXpost (data, to, xml) {
         xhr.setRequestHeader("Content-Type", "text/plain");
         xhr.send(data);
     }
+    return res
 }
+/* eslint no-undef: 2 */
 
 /**
  * @description HTPP status message

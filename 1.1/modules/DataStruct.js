@@ -9,7 +9,7 @@
  * @requires ../essence
  * @requires DOM
  * @requires Maths
- * @requires File
+ * @requires Files
  * @namespace
  * @type {{name: string, version: number, run: DataStruct.run, description: string, dependency: Array, author: string, complete: boolean}}
  * @since 1.1
@@ -22,7 +22,7 @@ var DataStruct = {
 
     },
     description: "Data structures",
-    dependency: ["DOM", "Maths", "File"],
+    dependency: ["DOM", "Maths", "Files"],
     author: "Maximilian Berkmann",
     complete: false,
     toString: function () {
@@ -33,6 +33,8 @@ var DataStruct = {
 (function () {
     DataStruct.complete = true;
 })();
+
+/* eslint no-undef: 0 */
 
 /**
  * @description Linked list

@@ -7,6 +7,7 @@
  * @author Maximilian Berkmann <maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
  * @requires ../essence
+ * @requires Misc
  * @namespace
  * @type {{name: string, version: number, run: DOM.run, description: string, dependency: Array, author: string, complete: boolean}}
  * @requires Misc
@@ -31,6 +32,8 @@ var DOM = {
 (function () {
     DOM.complete = true;
 })();
+
+/* eslint no-undef: 0 */
 
 /**
  * @description Print onto something

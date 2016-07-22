@@ -31,6 +31,8 @@ var Web = {
     Web.complete = true;
 })();
 
+/* eslint no-undef: 0 */
+
 /**
  * @description Gather the cookie named $c_name
  * @param {string} c_name Cookie name

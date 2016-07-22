@@ -32,6 +32,7 @@ var UI = {
     UI.complete = true;
 })();
 
+/* eslint no-undef: 0 */
 /**
  * @description Resize the window to maximum size of the client/screen/device with the support of ActiveX, Java (mainly Processing) and VBS
  * @returns {undefined}
@@ -451,6 +452,7 @@ function Shape (x, y, b, v) {
     return this;
 }
 
+/* eslint no-unused-vars: 0 */
 /**
  * @description A 2D/3D box
  * @param {number} [x=0] X-coordinate
@@ -488,6 +490,7 @@ function Box (x, y, z, w, h, d, bsz, bclr, bgclr, brd) {
     this.erase = function () {
 
     };
+    /* eslint no-undef: 0 */
     this.rot = function (alpha, beta, theta) { //Rotation
 
     };
@@ -500,6 +503,7 @@ function Box (x, y, z, w, h, d, bsz, bclr, bgclr, brd) {
 
     return this;
 }
+/* eslint no-unused-vars: 2 */
 
 AABB.inheritsFrom(Shape);
 /**
@@ -612,7 +616,7 @@ function Circ (x, y, r, b, v) {
     };
 
     this.hit = function (obj, s) { //More like a getHit(obj) but for also circle/circle situations
-        if (obj.hit(this, "")) {
+        if (obj.hit(this, s || "")) {
             this.bounce(obj.norm);
             this.update();
             return true
@@ -754,8 +758,8 @@ function Vector (x, y) {
     };
 
     this.reflect = function (normal) { //.. on a normal
-        var n = this.normal.copy();
-        n.mult(2 * this.dot(this.normal));
+        var n = normal || this.normal.copy();
+        n.mult(2 * this.dot(normal || this.normal));
         this.sub(n);
         return this
     };
@@ -959,6 +963,7 @@ function linearGradient (clrI, clrF, n) {
     return grad
 }
 
+/* eslint no-unused-vars: 0 */
 /**
  * @description Radial gradient
  * @param {NumberLike} clrI Initial colour
@@ -975,6 +980,7 @@ function radialGradient (clrI, clrF, n) {
     //Radial gradient
     return grad;
 }
+/* eslint no-unused-vars: 2 */
 
 /**
  * @description Day/night mode

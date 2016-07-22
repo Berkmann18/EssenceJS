@@ -32,6 +32,8 @@ var Maths = {
     Maths.complete = true;
 })();
 
+/* eslint no-undef: 0 */
+
 /**
  * @description Exclusive or
  * @param {*} a Expression a
@@ -1561,6 +1563,7 @@ function truthTable(exp) { //Get the truth table of an expression
     return [vars, rows, res];
 }
 
+/* eslint no-unused-vars: 0 */
 /**
  * @description Get the DNF form of an expression
  * @param {string} exp Expression
@@ -1588,3 +1591,4 @@ function getCNF(exp) {
     //code here
     return cnf;
 }
+/* eslint no-unused-vars: 2 */

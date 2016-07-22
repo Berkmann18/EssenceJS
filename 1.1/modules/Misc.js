@@ -7,6 +7,7 @@
  * @author Maximilian Berkmann <maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
  * @requires ../essence
+ * @requires Files
  * @namespace
  * @type {{name: string, version: number, run: Misc.run, description: string, dependency: Array, author: string, complete: boolean}}
  * @since 1.1
@@ -19,7 +20,7 @@ var Misc = {
 
     },
     description: "Miscellaneous",
-    dependency: ["File"],
+    dependency: ["Files"],
     author: "Maximilian Berkmann",
     complete: false,
     toString: function () {
@@ -31,6 +32,7 @@ var Misc = {
     Misc.complete = true;
 })();
 
+/* eslint no-undef: 0 */
 /**
  * @description ASCII table
  * @param {NumberLike} [start=0] Starting decimal code
@@ -768,6 +770,7 @@ function Objectify (keyArr, valArr) {
     return res;
 }
 
+/* eslint no-array-constructor: 0 */
 /**
  * @description Name of a type to the type itself
  * @param {string} name Name
@@ -784,7 +787,6 @@ function name2type(name, param) {
         case "Function": return Function(param, arguments.toArray().get(2));
         case "Object": return Object(param, arguments.toArray().get(2));
         case "Date": return Date(param, arguments.toArray().get(2));
-        /* eslint no-array-constructor: 0 */
         case "Array": return Array(param, arguments.toArray().get(2));
         case "RegExp": return RegExp(param, arguments.toArray().get(2));
         case "Error": return Error(param, arguments.toArray().get(2));
@@ -841,6 +843,7 @@ function name2type(name, param) {
 }
 
 /* eslint no-array-constructor: 2 */
+/* eslint no-unused-vars: 0 */
 /**
  * @description Finite-state Automaton
  * @param {RegExp} re Regular expression
@@ -879,6 +882,7 @@ function exp2dict (exp) {
     //matches: re.exec(str).last()
     return res;
 }
+/* eslint no-unused-vars: 2 */
 
 /**
  * @description Convert an array into a human string

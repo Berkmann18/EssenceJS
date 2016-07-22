@@ -8,12 +8,12 @@
  * @copyright Maximilian Berkmann 2016
  * @requires ../essence
  * @namespace
- * @type {{name: string, version: number, run: File.run, description: string, dependency: Array, author: string, complete: boolean}}
+ * @type {{name: string, version: number, run: Files.run, description: string, dependency: Array, author: string, complete: boolean}}
  * @since 1.1
  * @exports File
  */
-var File = {
-    name: "File",
+var Files = {
+    name: "Files",
     version: 1,
     run: function () {
 
@@ -31,6 +31,7 @@ var File = {
     File.complete = true;
 })();
 
+/* eslint no-undef: 0 */
 /**
  * @description Keeps the file name even if it's not in the same directory as the file that uses this
  * @param {string} path Path
@@ -49,14 +50,14 @@ function stripPath (path) { //Keeps the file name even if it's not in the same d
  * @since 1.0
  * @func
  */
-function getFilename(withExt) {
+function getFilename (withExt) {
     return withExt? stripPath(location.pathname): stripPath(location.pathname).get(-stripPath(location.pathname).lastIndexOf(".") - 1);
 }
 
 /**
  * @description A bit like stripPath but which would preserve the directories that aren't listed in the local path
  * @param {string} path Path
- * @param {string} localPath Local path
+ * @param {string} [localPath="file:///"] Local path
  * @returns {string} Current path
  * @since 1.0
  * @func
@@ -77,6 +78,23 @@ function getCurrentPath (path, localPath) {
     return res
 }
 
+
+/**
+ * @description Get the path for an external file
+ * @param {string} path Full path
+ * @returns {string} External path
+ * @func
+ * @since 1.1
+ */
+function getExtPath (path) {
+    var cp = location.href;
+    var parentPath = cp.sameFirst(path);
+    var portion = getCurrentPath(path, parentPath);
+    var derive = "../".repeat(portion.count("/"));
+    //Essence.say("cp=" + cp + "\nparentPath= " + parentPath + "\nportion= " + portion + "\nderive= " + derive);
+    return derive + getCurrentPath(path, parentPath);
+}
+
 /**
  * @description Get the filename list of the path list
  * @param {string[]} list Path list
@@ -92,7 +110,7 @@ function filenameList (list) {
 
 /**
  * @description Get the directory's path of the file (opposite of stripPath())
- * @param {string} path Path
+ * @param {string} [path=location.href] Path
  * @returns {string} Directory path
  * @since 1.0
  * @func

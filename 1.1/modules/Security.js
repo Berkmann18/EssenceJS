@@ -31,6 +31,8 @@ var Security = {
     Security.complete = true;
 })();
 
+/* eslint no-undef: 0 */
+
 /**
  * @description Caesar crypting
  * @param {NumberLike} character Character to encrypt
@@ -276,6 +278,7 @@ function ilDecrypt(data) {
     return isType(data, "String")? res.join(""): res;
 }
 
+/* eslint no-unused-vars: 0 */
 /**
  * @description RSA algorithm keys
  * @param {number} p Number #1
@@ -292,6 +295,7 @@ function RSA (p, q) {
     Essence.say([n, d]); //Private key
     return [n, e]; //Public keys
 }
+/* eslint no-unused-vars: 2 */
 
 /**
  * @description Encrypt/decrypt a message with the public/private key
