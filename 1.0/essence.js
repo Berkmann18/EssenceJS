@@ -560,6 +560,36 @@ Array.prototype.midIndex = function (under) {
 };
 
 /**
+ * @description Line of a 2D array
+ * @param {number} [n=0] Index
+ * @returns {Array} Line
+ * @since 1.0
+ * @this Array
+ * @method
+ */
+Array.prototype.line = function (n) {
+	return this.map(function (i) {
+		if (n < 0) n = this[i].length - n;
+		return i[n || 0];
+	})
+};
+
+/**
+ * @description Block of a 2D array
+ * @param {number} [start=0] Starting index
+ * @param {number} [end=this.length-1] Ending index
+ * @returns {Array} Block
+ * @this Array
+ * @since 1.0
+ * @method
+ */
+Array.prototype.block = function (start, end) {
+	return this.map(function (i) {
+		return i.get(start, end);
+	})
+};
+
+/**
  * @description Returns the values of the array that are in an even position
  * @this Array
  * @returns {Array} Array of elements
@@ -1381,19 +1411,25 @@ Array.prototype.det = function () {
  * @returns {Array} Translated array
  */
 Array.prototype.translate = function () {
-	for (var i = 0; i < Math.round(this.length/2); i++) {
-		for (var j = 0; j < this[0].length; j++) {
-			if (!(1 === i && 0 === j && this[0].length > 2)) {
-				var r = this[i][j];
-				this[i][j] = this[j][i];
-				this[j][i] = r;
+	if (this.size()[0] === this.size()[1]) { //NxN
+		for (var i = 0; i < Math.round(this.length/2); i++) {
+			for (var j = 0; j < this[0].length; j++) {
+				if (!(1 === i && 0 === j && this[0].length > 2)) {
+					var r = this[i][j];
+					this[i][j] = this[j][i] || "";
+					this[j][i] = r;
+				}
 			}
 		}
-	}
-	if (this.size(true) === "4x4") {
-		var t = this[2].last();
-		this[2].last(this.last()[2]);
-		this.last()[2] = t
+		if (this.size(true) === "4x4") {
+			var t = this[2].last();
+			this[2].last(this.last()[2]);
+			this.last()[2] = t
+		}
+	} else { //NxM
+		var arr = new Array(this.maxLength()).fill([]);
+		for (i = 0; i < this.maxLength(); i++) arr[i] = this.line(i)
+		return arr;
 	}
 	return this
 };
@@ -1591,20 +1627,22 @@ Array.prototype.littleMix = function() {
  * @description Push that adds elements of an array instead of the array itself
  * @this Array
  * @param {Array} arr Array used to append
- * @returns {undefined}
+ * @returns {Array} New array
  */
 Array.prototype.append = function (arr) {
 	for (var i = 0; i < arr.length; i++) this.push(arr[i])
+	return this;
 };
 
 /**
- * @description Unshift that addes element of an array instead of the array itself
+ * @description Unshift that adds element of an array instead of the array itself
  * @this Array
- * @param {Array} arr Array used to preppend
- * @returns {undefined}
+ * @param {Array} arr Array used to prepend
+ * @returns {Array} New array
  */
-Array.prototype.preppend = function (arr) {
+Array.prototype.prepend = function (arr) {
 	for (var i = 0; i < arr.length; i++) this.unshift(arr[i])
+	return this;
 };
 
 /**
@@ -6412,20 +6450,23 @@ function Polygon (pts, b, v) {
 
 /**
  * @description A basic HTML table
- * @param {string|number} caption Caption
+ * @param {NumberLike} caption Caption
  * @param {Array} rows Rows of the table
  * @param {string} id ID of the table
  * @param {string} [style] Style of table
  * @param {boolean} [split=false] Split rows into multiple columns
+ * @param {string[]} [cellIds] Ids of each cells
  * @returns {string} HTML code
+ * @since 1.0
+ * @func
  */
-function simpleTable (caption, rows, id, style, split) {
+function simpleTable (caption, rows, id, style, split, cellIds) {
 	var tab = (caption)? "<table id=" + id + " style=" + style + " cellspacing=0 cellpadding=2><caption>" + caption + "</caption>": "<table>";
 	for (var i = 0; i < rows.length; i++) {
 		tab += "<tr>";
 		if (split) {
-			for(var j = 0; j < rows[i].length; j++) tab += "<td>" + rows[i][j] + "</td>";
-		} else  tab += "<td>" + rows[i] + "</td>";
+			for(var j = 0; j < rows[i].length; j++) tab += "<td id='" + (isNon(cellIds)? i+"_"+j: cellIds[i][j]) + "'>" + rows[i][j] + "</td>";
+		} else  tab += "<td id='" + (isNon(cellIds)? i: cellIds[i]) + "'>" + rows[i] + "</td>";
 		tab += "</tr>";
 	}
 	tab += "</table><style>table{background: #000;}table, td {border: 1px solid #000; color: #000; background: #fff;} tr:nth-child(even) td{background: #ddd;} tr td:hover{background: #bbb;}</style>";
@@ -6440,9 +6481,10 @@ function simpleTable (caption, rows, id, style, split) {
  * @param {string} id ID of the table
  * @param {boolean} [split=false] Split rows into multiple columns
  * @param {string} [style] Style of table
+ * @param {string[]} [cellIds] Ids of each cells
  * @returns {string} HTML code
  */
-function rowTable (caption, headerRows, rows, id, split, style) {
+function rowTable (caption, headerRows, rows, id, split, style, cellIds) {
 	var tab = (caption)? "<table id=" + id + " style=" + style + " cellspacing=0 cellpadding=2><caption>" + caption + "</caption>": "<table>";
 	//Var rowspan = (headerRows.length <= rows.length)? rows.length/headerRows.length: headerRows.length/rows.length;
 	//Console.log(rowspan);
@@ -6450,9 +6492,9 @@ function rowTable (caption, headerRows, rows, id, split, style) {
 		tab += headerRows? "<tr><th>" + headerRows[i] + "</th>": "<tr>";
 		if (split) {
 			for (var j = 0; j < rows[i].length; j++) {
-				tab += "<td>" + rows[i][j] + "</td>";
+				tab += "<td id='" + (isNon(cellIds)? i+"_"+j: cellIds[i][j]) + "'>" + rows[i][j] + "</td>";
 			}
-		} else tab += "<td>" + rows[i] + "</td>";
+		} else tab += "<td id='" + (isNon(cellIds)? i: cellIds[i]) + "'>" + rows[i] + "</td>";
 		tab += "</tr>";
 	}
 	tab += "</table><style>table{background: #000;}table, td, th{border: 1px solid #000; color: #000; background: #fff;}tr:nth-child(even) td, tr:nth-child(even) th{background: #ddd;}tr td:hover, tr th:hover{background: #bbb;}</style>";
@@ -6467,9 +6509,10 @@ function rowTable (caption, headerRows, rows, id, split, style) {
  * @param {string} id ID of the table
  * @param {boolean} [split=false] Split columns into multiple rows
  * @param {string} [style] Style of table
+ * @param {string[]} [cellIds] Ids of each cells
  * @returns {string} HTML code
  */
-function colTable (caption, headerCols, cols, id, split, style) {
+function colTable (caption, headerCols, cols, id, split, style, cellIds) {
 	var tab = (caption)? "<table id=" + id + " style=" + style + " cellspacing=0 cellpadding=2><caption>" + caption + "</caption>": "<table>";
 	//Var colspan = (headerCols.length <= cols.length)? cols.length/headerCols.length: headerCols.length/cols.length;
 	//Console.log(colspan);
@@ -6484,9 +6527,9 @@ function colTable (caption, headerCols, cols, id, split, style) {
 		tab +="<tr>";
 		if (split) {
 			for (var j = 0; j < cols[i].length; j++) {
-				tab += "<td>" + cols[j][i] + "</td>";
+				tab += "<td id='" + (isNon(cellIds)? i+"_"+j: cellIds[i][j]) + "'>" + cols[j][i] + "</td>";
 			}
-		} else tab += "<td>" + cols[i] + "</td>";
+		} else tab += "<td id='" + (isNon(cellIds)? i: cellIds[i]) + "'>" + cols[i] + "</td>";
 		tab += "</tr>"
 	}
 	tab += "</table><style>table{background: #000;}table, td, th{border: 1px solid #000; color: #000; background: #fff;}tr:nth-child(even) td{background: #ddd;}tr td:hover{background: #bbb;}";
@@ -6502,19 +6545,21 @@ function colTable (caption, headerCols, cols, id, split, style) {
  * @param {string} id ID of the table
  * @param {boolean} [split=false] Split rows into multiple columns
  * @param {string} [style] Style of table
+ * @param {string[]} [cellIds] Ids of each cells
  * @returns {string} HTML code
  */
-function complexTable (caption, headerRows, rows, headerCols, id, split, style) {
-	var tab = (caption)? "<table id=" + id + " style=" + style + " cellspacing=0 cellpadding=2><caption>" + caption + "</caption>": "<table><tr><td></td>";
+function complexTable (caption, headerRows, rows, headerCols, id, split, style, cellIds) {
+	if (isNon(style)) style = "";
+	var tab = "<table id='" + id + "' style='" + style + "' cellspacing=0 cellpadding=2>" + ((caption)? "<caption>" + caption + "</caption><tr><td></td>": "<tr><td></td>");
 	for(var i = 0; i < headerCols.length; i++) tab += "<th>" + headerCols[i] + "</th>";
 	tab += "</tr>";
 	for (i = 0; i < rows.length; i++) {
 		tab += (headerRows)? "<tr><th>" + headerRows[i] + "</th>": "<tr>";
 		if (split) {
 			for (var j = 0; j < rows[i].length; j++) {
-				tab += "<td>" + rows[i][j] + "</td>";
+				tab += "<td id='" + (isNon(cellIds)? i+"_"+j: cellIds[i][j]) + "'>" + rows[i][j] + "</td>";
 			}
-		} else tab += "<td>" + rows[i] + "</td></tr>";
+		} else tab += "<td id='" + (isNon(cellIds)? i: cellIds[i]) + "'>" + rows[i] + "</td></tr>";
 		tab += "</tr>";
 	}
 	tab += "</table><style>table{background: #000;}table, td, th{border: 1px solid #000; color: #000; background: #fff;}tr:nth-child(even) td{background: #ddd;}tr td:hover{background: #bbb;}</style>";
@@ -6569,9 +6614,9 @@ function tableCompare(a, b, toHTML) { //Compare two matrices and display a table
 /**
  * @description Local/session database
  * @param {string} [name="Database"] Database name
- * @param {Array} [headR=range(100)] Header rows
+ * @param {Array|boolean} [headR=range(100)] Header rows
  * @param {Array} [cells=[].fill("...")] Cells
- * @param {Array} [headC=["Index", "Value"]] Header columns
+ * @param {Array|boolean} [headC=["Index", "Value"]] Header columns
  * @param {string} [admin="Anonymous"] Admin's name
  * @param {number} [ver=1.0] Version
  * @this database
@@ -6580,17 +6625,18 @@ function tableCompare(a, b, toHTML) { //Compare two matrices and display a table
 function database (name, headR, cells, headC, admin, ver) { //Local database
 	this.name = name || "Database";
 	this.headerRow = (isNon(headR))? range(100): headR;
-	this.content = (isNon(cells))? [].fill("..."): cells;
 	this.headerCol = headC || ["Index", "Value"];
+	this.content = (isNon(cells))? new Array(this.headerCol.length).fill("..."): cells;
 	this.admin = admin || "Anonymous";
 	this.version = ver || 1.0;
-	this.val = new Array(this.headRow.length);
-	for(var i = 0; i < this.val.length; i++) this.val[i] = new Array(headC.length);
-	for(i = 0; i < this.headerCol.length; i++) this.val[0][i] = this.headerCol[i];
+	this.val = new Array(this.headerRow.length);
+	for (var i = 0; i < this.val.length; i++) this.val[i] = new Array(this.headerCol.length).fill(" ");
+	for (i = 0; i < this.headerCol.length; i++) this.val[0][i] = this.headerCol[i];
 	for (i = 0; i < this.content.length; i++) {
 		this.val[i][0] = (this.headerRow)? this.headerRow[i]: i;
 		for (var j = 0; j < this.content[i].length; j++) {
 			this.val[i][j + 1] = this.content[i][j];
+			console.log("Processing " + this.content[i][j] + " at ", i, j);
 		}
 	}
 	this.setStorage = function () {
@@ -6600,12 +6646,13 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
 	this.css = "<style>*{font-family:Consolas,Segoe UI,Tahoma;}table{background: #000;}table,td,th{border:1px solid #000;color:#000;background:#fff;}tr:nth-child(even) td,tr:nth-child(even) th{background:#eee;}</style>";
 	this.disp = function (elmId) {
 		var place = (elmId)? "#" + elmId: "body";
-		$e(place).write(this.html + this.css,true);
+		$e(place).write(this.html + this.css, true);
 		this.setStorage();
 	};
 	this.update = function () {
 		if (localStorage[this.name]) this.val = JSON.parse(localStorage[this.name]);
-		else this.setStorage()
+		else this.setStorage();
+		this.html = complexTable(this.name, this.headerRow, this.content, this.headerCol, name);
 	};
 	this.searchAndRemove = function (vals) { //Vals = range|..
 		for (var n = 0; n < vals.length; n++) {
@@ -6624,6 +6671,67 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
 		}
 	};
 
+	return this;
+}
+
+/**
+ * @description Database
+ * @param {string} [name="DB"] Name
+ * @param {Array} [headers=["Index", "Value"]] Column headers
+ * @param {Array} [rows=[range(1), new Array(range(1).length).fill("...")].translate()] Rows
+ * @param {Array} [headerRows] Rows headers
+ * @return {DB} DB
+ * @this DB
+ * @constructor
+ */
+function DB (name, headers, rows, headerRows) {
+	this.name = name || "DB";
+	this.head = headers || ["Index", "Value"];
+	this.val = rows || [range(1), new Array(range(1).length).fill("...")].translate();
+	this.css = "<style>*{font-family:Consolas,Segoe UI,Tahoma;}table{background: #000;}table,td,th{border:1px solid #000;color:#000;background:#fff;}tr:nth-child(even) td,tr:nth-child(even) th{background:#eee;}</style>";
+	this.html = "";
+	this.build = function () {
+		this.html = isNon(headerRows)? complexTable("", this.val.line(), this.val.block(1), this.head, this.name, true, this.css): complexTable("", headerRows, this.val, this.head, this.name, true, this.css);
+	};
+	this.fill = function (len) {
+		this.val = [];
+		for (var i = 0; i < len; i++) {
+			this.val[i] = [i].append(new Array(range(len - 1 || 1).length).fill("..."));
+		}
+		return this.val;
+	};
+	this.save = function () {
+		localStorage[this.name] = JSON.stringify(this.val);
+	};
+	this.update = function () {
+		if (localStorage[this.name]) this.val = JSON.parse(localStorage[this.name]);
+		else this.save();
+		this.build();
+	};
+	this.set = function (nval, i, j) {
+		this.val[i || 0][j || 0] = nval || null;
+	};
+	this.get = function (i, j) {
+		return !isNon(j)? this.val[i || 0][j]: this.val[i || 0];
+	};
+	this.find = function (val) {
+		return lookfor(val, this.val);
+	};
+	this.see = function () {
+		return copy(this.val).prepend(copy(this.head).reverse());
+	};
+	this.view = function (id) {
+		var place = id? "#" + id: "body";
+		$e(place).write(this.html + this.css, true);
+	};
+	this.add = function (vals) {
+		this.val.append(vals.unshift(parseInt(this.val.last()[0]) + 1));
+	};
+	this.init = function () {
+		this.build();
+		this.update();
+		console.table(this.see());
+	};
 	return this;
 }
 
