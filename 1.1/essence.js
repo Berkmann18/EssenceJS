@@ -281,6 +281,7 @@ function init (mdls, mid, cb, ver, argsMid, argsCB) {
  * @ignore
  * @inheritsdoc
  * @param {string} path Path
+ * @param {string} [localPath="file:///"] Local path
  * @returns {string} Directory path
  * @since 1.1
  */
@@ -299,12 +300,43 @@ gatherScripts = function (asList) {
     var $s = $n("*script"), res = asList? []: {};
     for(var i = 0; i<$s.length; i++) asList? res.push($s[i].src): res[$s[i].src.split("/")[$s[i].src.split("/").length - 1]] = $s[i].src;
     return res
-}, getExtPath = function (path) {
-    var cp = location.href;
-    var parentPath = cp.sameFirst(path);
+}, getCurrentPath = function (path, localPath) {
+    if (!localPath) localPath = "file:///";
+    var parts = path.split("/"), res = "", pParts = localPath.split("/"), i = 0, j = 0, _get = function (o, start, end) {
+        var res = [];
+        if (start < 0 && !end) {
+            end = start;
+            start = 0;
+        }
+        if (end < 0) end = o.length + end - 1;
+        for(var i = (start || 0); i <= (end || o.length - 1); i++) res.push(o[i]);
+        return res.remove()
+    };
+    while(localPath.indexOf(parts[i]) > -1) i++;
+    res = _get(parts, i).join("/");
+
+    while (res.indexOf(pParts[j]) > -1) {
+        console.log("Gone through " + pParts[j]);
+        j++;
+    }
+    if (j > 0) {
+        for(i = 0; i < j; i++) res = "../" + res;
+    }
+    return res
+},
+getExtPath = function (path) {
+    var cp = location.href, safi = function (str0, str) {
+        var sf = "", pos = -1;
+        while (pos <= Math.min(str0.length, str.length)) {
+            pos++;
+            if (str0[pos] === str[pos]) sf += str0[pos];
+            else break;
+        }
+        return sf;
+    };
+    var parentPath = safi(cp, path);
     var portion = getCurrentPath(path, parentPath);
     var derive = "../".repeat(portion.count("/"));
-    //Essence.say("cp=" + cp + "\nparentPath= " + parentPath + "\nportion= " + portion + "\nderive= " + derive);
     return derive + getCurrentPath(path, parentPath);
 };
     
@@ -323,7 +355,7 @@ gatherScripts = function (asList) {
         Essence.say(mdl + " is ready!", "succ");
     }, 1.1); */
     setTimeout(function () {
-        Essence.isComplete()? Essence.say("Essence is complete !", "succ"): Essence.time("List of loaded modules: " + Essence.loadModules.toStr(true));
+        Essence.isComplete()? Essence.say("Essence is complete !", "succ"): Essence.time("List of loaded modules: " + Essence.loadModules);
         run(modules, 1.1);
     }, 1e3);
 })();
@@ -799,6 +831,36 @@ Array.prototype.first = function (nval) {
  */
 Array.prototype.last = function (nval) {
     return !isNon(nval)? this[this.length-1] = nval: this[this.length - 1]
+};
+
+/**
+ * @description Line of a 2D array
+ * @param {number} [n=0] Index
+ * @returns {Array} Line
+ * @since 1.0
+ * @this Array
+ * @method
+ */
+Array.prototype.line = function (n) {
+    return this.map(function (i) {
+        if (n < 0) n = this[i].length - n;
+        return i[n || 0];
+    })
+};
+
+/**
+ * @description Block of a 2D array
+ * @param {number} [start=0] Starting index
+ * @param {number} [end=this.length-1] Ending index
+ * @returns {Array} Block
+ * @this Array
+ * @since 1.0
+ * @method
+ */
+Array.prototype.block = function (start, end) {
+    return this.map(function (i) {
+        return i.get(start, end);
+    })
 };
 
 /**
@@ -1735,19 +1797,25 @@ Array.prototype.det = function () {
  * @method
  */
 Array.prototype.translate = function () {
-    for (var i = 0; i < Math.round(this.length/2); i++) {
-        for (var j = 0; j < this[0].length; j++) {
-            if (!(1 === i && 0 === j && this[0].length > 2)) {
-                var r = this[i][j];
-                this[i][j] = this[j][i];
-                this[j][i] = r;
+    if (this.size()[0] === this.size()[1]) { //NxN
+        for (var i = 0; i < Math.round(this.length / 2); i++) {
+            for (var j = 0; j < this[0].length; j++) {
+                if (!(1 === i && 0 === j && this[0].length > 2)) {
+                    var r = this[i][j];
+                    this[i][j] = this[j][i] || "";
+                    this[j][i] = r;
+                }
             }
         }
-    }
-    if (this.size(true) === "4x4") {
-        var t = this[2].last();
-        this[2].last(this.last()[2]);
-        this.last()[2] = t
+        if (this.size(true) === "4x4") {
+            var t = this[2].last();
+            this[2].last(this.last()[2]);
+            this.last()[2] = t
+        }
+    } else { //NxM
+        var arr = new Array(this.maxLength()).fill([]);
+        for (i = 0; i < this.maxLength(); i++) arr[i] = this.line(i)
+        return arr;
     }
     return this
 };
@@ -1970,24 +2038,26 @@ Array.prototype.littleMix = function() {
  * @description Push that adds elements of an array instead of the array itself
  * @this Array
  * @param {Array} arr Array used to append
- * @returns {undefined}
+ * @returns {Array} New array
  * @since 1.0
  * @method
  */
 Array.prototype.append = function (arr) {
-    for (var i = 0; i < arr.length; i++) this.push(arr[i])
+    for (var i = 0; i < arr.length; i++) this.push(arr[i]);
+    return this;
 };
 
 /**
- * @description Unshift that addes element of an array instead of the array itself
+ * @description Unshift that adds element of an array instead of the array itself
  * @this Array
- * @param {Array} arr Array used to preppend
- * @returns {undefined}
+ * @param {Array} arr Array used to prepend
+ * @returns {Array} New array
  * @since 1.0
  * @method
  */
-Array.prototype.preppend = function (arr) {
-    for (var i = 0; i < arr.length; i++) this.unshift(arr[i])
+Array.prototype.prepend = function (arr) {
+    for (var i = 0; i < arr.length; i++) this.unshift(arr[i]);
+    return this;
 };
 
 /**

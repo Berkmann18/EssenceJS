@@ -7,11 +7,11 @@
 body {
     height: 100%;
     width: auto;
-    padding: 0
+    padding: 0;
 }
 
 table {
-    background: #000
+    background: #000;
 }
 
 table, td, th {
@@ -24,60 +24,60 @@ table, td, th {
 }
 
 tr:nth-child(even) td {
-    background: #ddd
+    background: #ddd;
 }
 
 .none, .none td, .none th {
-    border: none
+    border: none;
 }
 
 tr:hover td {
-    background: #888
+    background: #888;
 }
 
 .inf {
-    color: #008
+    color: #008;
 }
 
 .succ {
-    color: #0f0
+    color: #0f0;
 }
 
 .err {
-    color: #f00
+    color: #f00;
 }
 
 .quest {
-    color: #00f
+    color: #00f;
 }
 
 .warn {
-    color: #fc0
+    color: #fc0;
 }
 
 .info {
     border-color: #008;
-    background-color: #00008f
+    background-color: #00008f;
 }
 
 .success {
     border-color: #080;
-    background-color: #008f00
+    background-color: #008f00;
 }
 
 .error {
     border-color: #800;
-    background-color: #8f0000
+    background-color: #8f0000;
 }
 
 .question {
     border-color: #00f;
-    background-color: #0000f8
+    background-color: #0000f8;
 }
 
 .warning {
     border-color: #f8c808;
-    background-color: #fc0
+    background-color: #fc0;
 }
 
 .block {
@@ -101,14 +101,14 @@ tr:hover td {
     -webkit-touch-callout: none;
     border-radius: 7px;
     -webkit-border-radius: 7px;
-    -moz-border-radius: 7px
+    -moz-border-radius: 7px;
 }
 
 .icon {
     width: 64px;
     height: 64px;
     border: none;
-    margin: 2px
+    margin: 2px;
 }
 
 kbd {
@@ -126,51 +126,51 @@ h1.title {
 }
 
 h2 {
-    color: #088
+    color: #088;
 }
 
 h3 {
-    color: #0ff
+    color: #0ff;
 }
 
 .code-tag, .code-inst {
-    color: #00f
+    color: #00f;
 }
 
 .code-cmt {
-    color: #0f0
+    color: #0f0;
 }
 
 .code-str, .code-id {
-    color: #00c0c0
+    color: #00c0c0;
 }
 
 .code-num, .code-class {
-    color: #f00
+    color: #f00;
 }
 
 .code-attr {
-    color: #c00
+    color: #c00;
 }
 
 .code-val {
-    color: #fc0
+    color: #fc0;
 }
 
 .code-type {
-    color: #800080
+    color: #800080;
 }
 
 .code-doc, .code-op {
-    color: #0ff
+    color: #0ff;
 }
 
 .code-var {
-    color: #0000c0
+    color: #0000c0;
 }
 
 .code-keyword {
-    color: #f0f
+    color: #f0f;
 }
 
 .nocss {
