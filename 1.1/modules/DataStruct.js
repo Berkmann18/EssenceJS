@@ -572,7 +572,9 @@ function NTreeNode (pl, ch) {
 }
 
 /**
- * @description Mathematical set
+ * @description Mathematical set.
+ * It's depreciated in the next version (in favour of ES6) and will have the following methods instead:
+ * - add(*), has(*), delete(*), size()->size, values(), clear()
  * @param {Array} [arr=[]] Array or element
  * @returns {Set} Set
  * @constructor

@@ -332,33 +332,23 @@ function gatherStylesheets (asList) {
 }
 
 /**
- * @description Keeps the file name even if it's not in the same directory as the file that uses this
- * @param {string} path Path
- * @returns {*} File name
- * @since 1.0
- * @func
- */
-function stripPath (path) { //Keeps the file name even if it's not in the same directory as this library or the files using it
-    return path.split("/")[path.split("/").length - 1]
-}
-
-/**
  * @description A basic HTML table
  * @param {NumberLike} caption Caption
  * @param {Array} rows Rows of the table
  * @param {string} id ID of the table
  * @param {string} [style] Style of table
  * @param {boolean} [split=false] Split rows into multiple columns
+ * @param {string[]} [cellIds] Ids of each cells
  * @returns {string} HTML code
  * @since 1.0
  * @func
  */
-function simpleTable (caption, rows, id, style, split) {
+function simpleTable (caption, rows, id, style, split, cellIds) {
     var tab = (caption)? "<table id=" + id + " style=" + style + " cellspacing=0 cellpadding=2><caption>" + caption + "</caption>": "<table>";
     for (var i = 0; i < rows.length; i++) {
         tab += "<tr>";
         if (split) {
-            for(var j = 0; j < rows[i].length; j++) tab += "<td>" + rows[i][j] + "</td>";
+            for(var j = 0; j < rows[i].length; j++) tab += "<td id='" + (cellIds[i][j] || i+"_"+j) + "'>" + rows[i][j] + "</td>";
         } else  tab += "<td>" + rows[i] + "</td>";
         tab += "</tr>";
     }
@@ -374,40 +364,38 @@ function simpleTable (caption, rows, id, style, split) {
  * @param {string} id ID of the table
  * @param {boolean} [split=false] Split rows into multiple columns
  * @param {string} [style] Style of table
+ * @param {string[]} [cellIds] Ids of each cells
  * @returns {string} HTML code
- * @since 1.0
- * @func
  */
-function rowTable (caption, headerRows, rows, id, split, style) {
+function rowTable (caption, headerRows, rows, id, split, style, cellIds) {
     var tab = (caption)? "<table id=" + id + " style=" + style + " cellspacing=0 cellpadding=2><caption>" + caption + "</caption>": "<table>";
-    //var rowspan = (headerRows.length <= rows.length)? rows.length/headerRows.length: headerRows.length/rows.length;
+    //Var rowspan = (headerRows.length <= rows.length)? rows.length/headerRows.length: headerRows.length/rows.length;
     //Console.log(rowspan);
     for (var i = 0; i < rows.length; i++) {
         tab += headerRows? "<tr><th>" + headerRows[i] + "</th>": "<tr>";
         if (split) {
             for (var j = 0; j < rows[i].length; j++) {
-                tab += "<td>" + rows[i][j] + "</td>";
+                tab += "<td id='" + (cellIds[i][j] || i+"_"+j) + "'>" + rows[i][j] + "</td>";
             }
-        } else tab += "<td>" + rows[i] + "</td>";
+        } else tab += "<td id='" + (cellIds[i] || i) + "'>" + rows[i] + "</td>";
         tab += "</tr>";
     }
-    tab += "</table><style>table{background: #000;}table, td, th {border: 1px solid #000; color: #000; background: #fff;} tr:nth-child(even) td, tr:nth-child(even) th {background: #ddd;} tr td:hover, tr th:hover{background: #bbb;}</style>";
+    tab += "</table><style>table{background: #000;}table, td, th{border: 1px solid #000; color: #000; background: #fff;}tr:nth-child(even) td, tr:nth-child(even) th{background: #ddd;}tr td:hover, tr th:hover{background: #bbb;}</style>";
     return tab
 }
 
 /**
  * @description Column HTML table
- * @param {NumberLike} caption Caption
+ * @param {string|number} caption Caption
  * @param {Array} headerCols Row headers
  * @param {Array} cols Cols of the table
  * @param {string} id ID of the table
  * @param {boolean} [split=false] Split columns into multiple rows
  * @param {string} [style] Style of table
+ * @param {string[]} [cellIds] Ids of each cells
  * @returns {string} HTML code
- * @since 1.0
- * @func
  */
-function colTable (caption, headerCols, cols, id, split, style) {
+function colTable (caption, headerCols, cols, id, split, style, cellIds) {
     var tab = (caption)? "<table id=" + id + " style=" + style + " cellspacing=0 cellpadding=2><caption>" + caption + "</caption>": "<table>";
     //Var colspan = (headerCols.length <= cols.length)? cols.length/headerCols.length: headerCols.length/cols.length;
     //Console.log(colspan);
@@ -422,9 +410,9 @@ function colTable (caption, headerCols, cols, id, split, style) {
         tab +="<tr>";
         if (split) {
             for (var j = 0; j < cols[i].length; j++) {
-                tab += "<td>" + cols[j][i] + "</td>";
+                tab += "<td id='" + (cellIds[i][j] || i+"_"+j) + "'>" + cols[j][i] + "</td>";
             }
-        } else tab += "<td>" + cols[i] + "</td>";
+        } else tab += "<td id='" + (cellIds[i] || i) + "'>" + cols[i] + "</td>";
         tab += "</tr>"
     }
     tab += "</table><style>table{background: #000;}table, td, th{border: 1px solid #000; color: #000; background: #fff;}tr:nth-child(even) td{background: #ddd;}tr td:hover{background: #bbb;}";
@@ -440,21 +428,21 @@ function colTable (caption, headerCols, cols, id, split, style) {
  * @param {string} id ID of the table
  * @param {boolean} [split=false] Split rows into multiple columns
  * @param {string} [style] Style of table
+ * @param {string[]} [cellIds] Ids of each cells
  * @returns {string} HTML code
- * @since 1.0
- * @func
  */
-function complexTable (caption, headerRows, rows, headerCols, id, split, style) {
-    var tab = (caption)? "<table id=" + id + " style=" + style + " cellspacing=0 cellpadding=2><caption>" + caption + "</caption>": "<table><tr><td></td>";
+function complexTable (caption, headerRows, rows, headerCols, id, split, style, cellIds) {
+    if (isNon(style)) style = "";
+    var tab = "<table id='" + id + "' style='" + style + "' cellspacing=0 cellpadding=2>" + ((caption)? "<caption>" + caption + "</caption><tr><td></td>": "<tr><td></td>");
     for(var i = 0; i < headerCols.length; i++) tab += "<th>" + headerCols[i] + "</th>";
     tab += "</tr>";
     for (i = 0; i < rows.length; i++) {
         tab += (headerRows)? "<tr><th>" + headerRows[i] + "</th>": "<tr>";
         if (split) {
             for (var j = 0; j < rows[i].length; j++) {
-                tab += "<td>" + rows[i][j] + "</td>";
+                tab += "<td id='" + (cellIds[i][j] || i+"_"+j) + "'>" + rows[i][j] + "</td>";
             }
-        } else tab += "<td>" + rows[i] + "</td></tr>";
+        } else tab += "<td id='" + (cellIds[i] || i) + "'>" + rows[i] + "</td></tr>";
         tab += "</tr>";
     }
     tab += "</table><style>table{background: #000;}table, td, th{border: 1px solid #000; color: #000; background: #fff;}tr:nth-child(even) td{background: #ddd;}tr td:hover{background: #bbb;}</style>";

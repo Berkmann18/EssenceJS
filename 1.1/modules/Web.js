@@ -72,29 +72,29 @@ function setCookie (c_name, value, exdays) {
 /**
  * @description Local/session database
  * @param {string} [name="Database"] Database name
- * @param {Array} [headR=range(100)] Header rows
+ * @param {Array|boolean} [headR=range(100)] Header rows
  * @param {Array} [cells=[].fill("...")] Cells
- * @param {Array} [headC=["Index", "Value"]] Header columns
+ * @param {Array|boolean} [headC=["Index", "Value"]] Header columns
  * @param {string} [admin="Anonymous"] Admin's name
  * @param {number} [ver=1.0] Version
  * @this database
  * @returns {database} Database
- * @since 1.0
  */
 function database (name, headR, cells, headC, admin, ver) { //Local database
     this.name = name || "Database";
     this.headerRow = (isNon(headR))? range(100): headR;
-    this.content = (isNon(cells))? [].fill("..."): cells;
     this.headerCol = headC || ["Index", "Value"];
+    this.content = (isNon(cells))? new Array(this.headerCol.length).fill("..."): cells;
     this.admin = admin || "Anonymous";
     this.version = ver || 1.0;
-    this.val = new Array(this.headRow.length);
-    for(var i = 0; i < this.val.length; i++) this.val[i] = new Array(headC.length);
-    for(i = 0; i < this.headerCol.length; i++) this.val[0][i] = this.headerCol[i];
+    this.val = new Array(this.headerRow.length);
+    for (var i = 0; i < this.val.length; i++) this.val[i] = new Array(this.headerCol.length).fill(" ");
+    for (i = 0; i < this.headerCol.length; i++) this.val[0][i] = this.headerCol[i];
     for (i = 0; i < this.content.length; i++) {
         this.val[i][0] = (this.headerRow)? this.headerRow[i]: i;
         for (var j = 0; j < this.content[i].length; j++) {
             this.val[i][j + 1] = this.content[i][j];
+            console.log("Processing " + this.content[i][j] + " at ", i, j);
         }
     }
     this.setStorage = function () {
@@ -104,12 +104,13 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
     this.css = "<style>*{font-family:Consolas,Segoe UI,Tahoma;}table{background: #000;}table,td,th{border:1px solid #000;color:#000;background:#fff;}tr:nth-child(even) td,tr:nth-child(even) th{background:#eee;}</style>";
     this.disp = function (elmId) {
         var place = (elmId)? "#" + elmId: "body";
-        $e(place).write(this.html + this.css,true);
+        $e(place).write(this.html + this.css, true);
         this.setStorage();
     };
     this.update = function () {
         if (localStorage[this.name]) this.val = JSON.parse(localStorage[this.name]);
-        else this.setStorage()
+        else this.setStorage();
+        this.html = complexTable(this.name, this.headerRow, this.content, this.headerCol, name);
     };
     this.searchAndRemove = function (vals) { //Vals = range|..
         for (var n = 0; n < vals.length; n++) {
@@ -128,6 +129,67 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
         }
     };
 
+    return this;
+}
+
+/**
+ * @description Database
+ * @param {string} [name="DB"] Name
+ * @param {Array} [headers=["Index", "Value"]] Column headers
+ * @param {Array} [rows=[range(1), new Array(range(1).length).fill("...")].translate()] Rows
+ * @param {Array} [headerRows] Rows headers
+ * @return {DB} DB
+ * @this DB
+ * @constructor
+ */
+function DB (name, headers, rows, headerRows) {
+    this.name = name || "DB";
+    this.head = headers || ["Index", "Value"];
+    this.val = rows || [range(1), new Array(range(1).length).fill("...")].translate();
+    this.css = "<style>*{font-family:Consolas,Segoe UI,Tahoma;}table{background: #000;}table,td,th{border:1px solid #000;color:#000;background:#fff;}tr:nth-child(even) td,tr:nth-child(even) th{background:#eee;}</style>";
+    this.html = "";
+    this.build = function () {
+        this.html = isNon(headerRows)? complexTable("", this.val.line(), this.val.block(1), this.head, this.name, true, this.css): complexTable("", headerRows, this.val, this.head, this.name, true, this.css);
+    };
+    this.fill = function (len) {
+        this.val = [];
+        for (var i = 0; i < len; i++) {
+            this.val[i] = [i].append(new Array(range(len - 1 || 1).length).fill("..."));
+        }
+        return this.val;
+    };
+    this.save = function () {
+        localStorage[this.name] = JSON.stringify(this.val);
+    };
+    this.update = function () {
+        if (localStorage[this.name]) this.val = JSON.parse(localStorage[this.name]);
+        else this.save();
+        this.build();
+    };
+    this.set = function (nval, i, j) {
+        this.val[i || 0][j || 0] = nval || null;
+    };
+    this.get = function (i, j) {
+        return !isNon(j)? this.val[i || 0][j]: this.val[i || 0];
+    };
+    this.find = function (val) {
+        return lookfor(val, this.val);
+    };
+    this.see = function () {
+        return copy(this.val).prepend(copy(this.head).reverse());
+    };
+    this.view = function (id) {
+        var place = id? "#" + id: "body";
+        $e(place).write(this.html + this.css, true);
+    };
+    this.add = function (vals) {
+        this.val.append(vals.unshift(parseInt(this.val.last()[0]) + 1));
+    };
+    this.init = function () {
+        this.build();
+        this.update();
+        console.table(this.see());
+    };
     return this;
 }
 
