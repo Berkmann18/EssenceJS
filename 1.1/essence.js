@@ -563,13 +563,15 @@ function Element (selector) { //The element object
     };
 
     this.toggleCSS = function (prop, params, stackLayer) { //Toggle between two or more values
-        if(!stackLayer) stackLayer = 0;
-        if(this.css(prop) === "" && stackLayer < 1) this.toggleCSS(prop, params, stackLayer + 1);
+        if (!stackLayer) stackLayer = 0;
+        if (this.css(prop) === "" && stackLayer < 1) this.toggleCSS(prop, params, stackLayer + 1);
         if (prop === "visibility") {
             (this.css("visibility") === "visible")? this.setCSS("visibility", "hidden"): this.setCSS("visibility", "visible");
-        }else if (prop === "enabled") {
+        } else if (prop === "enabled") {
             (this.css("enabled") === "enabled")? this.setCSS("enabled", "disabled"): this.setCSS("enabled", "enabled");
-        }else if (!isNon(prop) && !isNon(params)) { //For color, bgcolor, opacity, font-size, ...
+        } else if (prop === "display") {
+            (this.css("enabled") === "enabled")? this.setCSS("display", "none"): this.setCSS("display", params || "block");
+        } else if (!isNon(prop) && !isNon(params)) { //For color, bgcolor, opacity, font-size, ...
             if (isNon(this.css(prop))) this.setCSS(prop, params[0]);
             for (var i = 0; i < params.length; i++) { //Slide through the parameters and go to the next one if the one already set is present
                 if (this.css(prop) === params[i]) {
@@ -930,6 +932,21 @@ Array.prototype.max = function (start, end) {
 };
 
 /**
+ * @description Get the maximum value of the array
+ * @param {number} [start=0] Starting position
+ * @param {number} [n=this.length-1] Number of values
+ * @this Array
+ * @returns {*} Maximum value
+ * @since 1.0
+ * @method
+ */
+Array.prototype.maxOf = function (start, n) {
+    var m = this[start || 0];
+    for(var i = start + 1; i <= (n || this.length - 1); i++) m = Math.max(m, this[i]);
+    return m
+};
+
+/**
  * @description Get the median value of the array
  * @param {*} [nval] New value of the median cell
  * @this Array
@@ -959,6 +976,21 @@ Array.prototype.min = function (start, end) {
     if ((!start && !end) || (start === 0 && end >= this.length-1)) for(var i = 1; i < this.length; i++) m = Math.min(m, this[i]);
     else if (start && !end) for(i = start + 1; i < this.length; i++) m = Math.min(m, this[i]);
     else for(i = start + 1; i <= end; i++) m = Math.min(m, this[i]);
+    return m
+};
+
+/**
+ * @description Get the minimum value of the array
+ * @param {number} [start=0] Starting position
+ * @param {number} [n=this.length-1] Number of values
+ * @this Array
+ * @returns {*} Minimum value
+ * @since 1.0
+ * @method
+ */
+Array.prototype.minOf = function (start, n) {
+    var m = this[start || 0];
+    for(var i = start + 1; i <= (n || this.length - 1); i++) m = Math.min(m, this[i]);
     return m
 };
 
@@ -1034,7 +1066,7 @@ Array.prototype.remove = function (c) {
         arr = arr.map(function (x) { //Double check
             return x === c? undefined: x
         });
-        if (arr.indexOf(undefined)!=-1 && arr.length > 0) {
+        if (arr.indexOf(undefined) != -1 && arr.length > 0) {
             var w = [];
             for ( i = 0; i < arr.length; i++) {
                 if (arr[i] !== undefined) w.push(isType(arr[i], "Number")? parseFloat(arr[i]): arr[i]);
@@ -1153,7 +1185,7 @@ Array.prototype.sum2d = function (start, end) {
 };
 
 /**
- * @description Mean of each elements
+ * @description Mean of each elements or a portion of it
  * @param {number} [nbDec=2] Number of decimals
  * @param {number} [start=0] Starting position
  * @param {number} [end=this.length-1] Ending position
@@ -1165,7 +1197,56 @@ Array.prototype.mean = function (nbDec, start, end) {
     if (!start) start = 0;
     if (!end) end = this.lastIndex();
     var sum = this.sum(start, end);
-    return (sum / (this.length - start)).toNDec(nbDec) + 0; //To avoid getting the Number object representation rather than the actual result
+    return (sum / (this.get(start, end).length)).toNDec(nbDec) + 0; //To avoid getting the Number object representation rather than the actual result
+};
+
+/**
+ * @description Mean of each elements
+ * @param {number} [nbDec=2] Number of decimals
+ * @param {number} [start=0] Starting position
+ * @param {number} [n=this.length-start-1] Number of values to take into account
+ * @returns {number} Mean of N
+ * @since 1.1
+ * @method
+ */
+Array.prototype.meanOf = function (nbDec, start, n) {
+    if (!start) start = 0;
+    if (!n) n = this.length - start - 1;
+    var sum = 0;
+    for (var i = 0; i < n; i++) sum += this[start + i];
+    return (sum / n).toNDec(nbDec) + 0; //To avoid getting the Number object representation rather than the actual result
+};
+
+/**
+ * @description Minimum mean of n of all the means of the values
+ * @param {number} [n=this.length-1] Number of values for the mean of n
+ * @param {number} [nbDec=2] Number of decimals
+ * @returns {*} Minimum Mean of N
+ * @since 1.1
+ * @method
+ */
+Array.prototype.minMean = function (n, nbDec) {
+    if (!n) n = this.length - 1;
+    if (this.length - (n - 1) < 0) throw  new Error("You're expecting a minimum mean with more values than the are.");
+    var means = [];
+    for (var i = 0; i < n; i++) means.push(this.meanOf(nbDec, i, n));
+    return means.min();
+};
+
+/**
+ * @description Maximum mean of n of all the means of the values
+ * @param {number} [n=this.length-1] Number of values for the mean of n
+ * @param {number} [nbDec=2] Number of decimals
+ * @returns {*} Maximum Mean of N
+ * @since 1.1
+ * @method
+ */
+Array.prototype.maxMean = function (n, nbDec) {
+    if (!n) n = this.length - 1;
+    if (this.length - (n - 1) < 0) throw  new Error("You're expecting a maximum mean with more values than the are.");
+    var means = [];
+    for (var i = 0; i < n; i++) means.push(this.meanOf(nbDec, i, n));
+    return means.max();
 };
 
 /**
@@ -1180,8 +1261,59 @@ Array.prototype.mean = function (nbDec, start, end) {
 Array.prototype.avg = function (nbDec, start, end) {
     if (!start) start = 0;
     if (!end) end = this.lastIndex();
-    var sum = this.sum(start, end) - this.slice(start, end + 1).max() - this.slice(start, end + 1).min();
-    return (sum / (this.length - 2 - start)).toNDec(nbDec) + 0
+    var sum = this.sum(start, end) - this.max(start, end) - this.min(start, end);
+    return (sum / (this.get(start, end).length - 2)).toNDec(nbDec) + 0
+};
+
+/**
+ * @description Timewise (Speedcubing) average of n times
+ * @param {number} [nbDec=2] Number of decimals
+ * @param {number} [start=0] Starting positions
+ * @param {number} [n=this.length-start] Ending positions
+ * @returns {number} Average Of N
+ * @since 1.1
+ * @method
+ */
+Array.prototype.avgOf = function (nbDec, start, n) {
+    if (!start) start = 0;
+    if (!n) n = this.length - start - 1;
+    var sum = 0;
+    for (var i = 0; i < n; i++) {
+        if (this[start + i] != this.maxOf(start, n) || this[start + i] != this.minOf(start, n)) sum += this[start + i];
+    }
+    return (sum / (n - 2)).toNDec(nbDec) + 0
+};
+
+/**
+ * @description Minimum timewise average of n of all the means of the times
+ * @param {number} [n=this.length-1] Number of times for the mean of n
+ * @param {number} [nbDec=2] Number of decimals
+ * @returns {*} Minimum Average of N
+ * @since 1.1
+ * @method
+ */
+Array.prototype.minAvg = function (n, nbDec) {
+    if (!n) n = this.length - 1;
+    if (this.length - (n - 1) < 0) throw  new Error("You're expecting a minimum average with more values than the are.");
+    var avgs = [];
+    for (var i = 0; i < n; i++) avgs.push(this.avgOf(nbDec, i, n));
+    return avgs.min();
+};
+
+/**
+ * @description Maximum timewise average of n of all the means of the times
+ * @param {number} [n=this.length-1] Number of times for the mean of n
+ * @param {number} [nbDec=2] Number of decimals
+ * @returns {*} Maximum Average of N
+ * @since 1.1
+ * @method
+ */
+Array.prototype.maxAvg = function (n, nbDec) {
+    if (!n) n = this.length - 1;
+    if (this.length - (n - 1) < 0) throw  new Error("You're expecting a maximum average with more values than the are.");
+    var avgs = [];
+    for (var i = 0; i < n; i++) avgs.push(this.avgOf(nbDec, i, n));
+    return avgs.max();
 };
 
 /**
@@ -1829,7 +1961,7 @@ Array.prototype.translate = function () {
  */
 Array.prototype.lookFor = function (x) {
     for (var i = 0; i < this.length; i++) {
-        if (this[i] === x) return i;
+        if (this[i] === x || this[i].equals(x)) return i;
     }
     return -1
 };
