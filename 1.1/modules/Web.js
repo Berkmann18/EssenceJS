@@ -167,7 +167,9 @@ function DB (name, headers, rows, headerRows) {
         this.build();
     };
     this.set = function (nval, i, j) {
-        this.val[i || 0][j || 0] = nval || null;
+        if ( j === -1) {
+            for (var k = 0; k < nval.length; k++) this.val[i || 0][k] = nval[k];
+        } else this.val[i || 0][j || 0] = nval || null;
     };
     this.get = function (i, j) {
         return !isNon(j)? this.val[i || 0][j]: this.val[i || 0];

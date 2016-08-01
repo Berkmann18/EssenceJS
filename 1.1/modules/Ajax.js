@@ -141,8 +141,58 @@ function AJAXpost (data, to, xml) {
     }
     return res
 }
-/* eslint no-undef: 2 */
 
+/**
+ * @description Load a JSON file
+ * @param {string} [file="data"] Filename (without the '.json' bit)
+ * @func
+ * @since 1.1
+ * @returns {*} JSON data
+ */
+function loadJSON (file) {
+    var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
+    xhr.overrideMimeType("application/json");
+    xhr.open("GET", (file || "data") + ".json", true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) (function () {
+            $G["json"] = JSON.parse(xhr.responseText);
+            return JSON.parse(xhr.responseText);
+        })();
+    };
+    xhr.send(null);
+}
+
+/**
+ * @description Load a JSON file and do whatever with it afterwards
+ * @param {string} [file="data"] Filename (without the '.json' bit)
+ * @param {Function} cb Callback
+ * @func
+ * @since 1.1
+ * @returns {*} JSON data
+ */
+function calledLoadJSON (file, cb) {
+    var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
+    xhr.overrideMimeType("application/json");
+    xhr.open("GET", (file || "data") + ".json", true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) cb(xhr.responseText);
+    };
+    xhr.send(null);
+}
+
+/**
+ * @description Get a JSON file
+ * @param {string} file JSON file
+ * @todo Needs some improvements
+ * @return {*} JSON data
+ */
+function getJSON (file) {
+    return calledLoadJSON(file, function (ans) {
+        return JSON.parse(ans);
+    });
+}
+
+/* eslint no-undef: 2 */
 /**
  * @description HTPP status message
  * @param {number} status HTTP status (e.g: xhr.status)
@@ -200,4 +250,32 @@ function getHTTPMsg (status) {
         case 505: return "HTTP Version Not Supported";
         default: return "Unknown status"
     }
+}
+
+/**
+ * @description Cross Origin Resource Sharing request maker
+ * @source {@link https://stackoverflow.com/questions/3076414/ways-to-circumvent-the-same-origin-policy}
+ * @param {string} [method="get"] Method
+ * @param {string} url URL
+ * @returns {XMLHttpRequest} CORS request
+ * @example
+ * var request = createCORSRequest("get", "http://www.stackoverflow.com/");
+ if (request){
+    request.onload = function() {
+        // ...
+    };
+    request.onreadystatechange = handler;
+    request.send();
+ }
+ * @since 1.1
+ * @func
+ */
+function createCORSRequest(method, url){
+    var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
+    if ("withCredentials" in xhr) xhr.open(method || "get", url, true);
+    else if (typeof XDomainRequest != "undefined") {
+        xhr = new XDomainRequest();
+        xhr.open(method || "get", url);
+    } else xhr = null;
+    return xhr;
 }

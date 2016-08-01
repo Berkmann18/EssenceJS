@@ -201,7 +201,7 @@ function save (txt, name, type) { //Save into a file of the corresponding type
 /**
  * @description Get the file's content
  * @param {string} fname File name
- * @returns {undefined}
+ * @returns {string}
  * @since 1.0
  * @func
  */
@@ -217,5 +217,17 @@ function getFileContent (fname) {
             }
         }
     };
-    rawFile.send(null)
+    rawFile.send(null);
+    return $G["fct"];
+}
+
+/**
+ * @description Evaluate a file (useful for getting JSON data and into JS objects)
+ * @param {string} filename Filename
+ * @returns {*} Object of the file
+ * @since 1.1
+ * @func
+ */
+function evalFile (filename) {
+    return (new Function('return ' + getFileContent(filename)))();
 }

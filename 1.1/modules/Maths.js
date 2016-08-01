@@ -288,6 +288,7 @@ function dec2min (dec) {
  * @func
  */
 function toS (i) {
+    if (i == parseFloat(i)) return parseFloat(i);
     var withH = i.count(":") === 2;
     if (!i) i = withH? "00:00:00.000": "00:00.000"; //Avoid having errors
     if (!isType(i, "String")) i += "";
