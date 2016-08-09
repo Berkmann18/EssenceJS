@@ -1,2 +1,3 @@
 + getJSON(), calledLoadJSON(), createCORSRequest(), evalFile()
 ^ Added the default support of "display" foe $e().toggleCSS(), Array.lookFor(), loadJSON(), getFileContent(), DB.set(), simpleTable(), rowTable(), colTable(), complexTable(), colourTable(), DB()
+^ Linted

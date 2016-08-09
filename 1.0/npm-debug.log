@@ -1,0 +1,228 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install' ]
+2 info using npm@2.14.12
+3 info using node@v4.3.2
+4 verbose readDependencies loading dependencies from C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\package.json
+5 warn package.json EssenceJS@1.0.0 No README data
+6 verbose install where, deps [ 'C:\\Users\\Administrator\\Dropbox\\Projects\\EssenceJS\\1.0',
+6 verbose install   [ 'eslint',
+6 verbose install     'eslint-config-google',
+6 verbose install     'eslint-config-standard',
+6 verbose install     'eslint-plugin-promise',
+6 verbose install     'eslint-plugin-standard' ] ]
+7 verbose install where, peers [ 'C:\\Users\\Administrator\\Dropbox\\Projects\\EssenceJS\\1.0',
+7 verbose install   [] ]
+8 verbose installManyTop reading for lifecycle C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\package.json
+9 info preinstall EssenceJS@1.0.0
+10 verbose installManyTop reading scoped package data from C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\node_modules\eslint\package.json
+11 verbose installManyTop reading scoped package data from C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\node_modules\eslint-config-google\package.json
+12 verbose installManyTop reading scoped package data from C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\node_modules\eslint-config-standard\package.json
+13 verbose installManyTop reading scoped package data from C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\node_modules\eslint-plugin-promise\package.json
+14 info package.json eslint-config-google@0.5.0 license should be a valid SPDX license expression
+15 verbose readDependencies loading dependencies from C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\package.json
+16 verbose targetResolver reading package data from C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\node_modules\eslint\package.json
+17 verbose targetResolver reading package data from C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\node_modules\eslint-config-google\package.json
+18 verbose targetResolver reading package data from C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\node_modules\eslint-config-standard\package.json
+19 verbose targetResolver reading package data from C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\node_modules\eslint-plugin-promise\package.json
+20 verbose targetResolver reading package data from C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\node_modules\.bin\eslint\package.json
+21 verbose already installed skipping eslint-plugin-promise@^1.1.0 C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0
+22 silly cache add args [ 'eslint-plugin-standard@^1.3.2', null ]
+23 verbose cache add spec eslint-plugin-standard@^1.3.2
+24 silly cache add parsed spec Result {
+24 silly cache add   raw: 'eslint-plugin-standard@^1.3.2',
+24 silly cache add   scope: null,
+24 silly cache add   name: 'eslint-plugin-standard',
+24 silly cache add   rawSpec: '^1.3.2',
+24 silly cache add   spec: '>=1.3.2 <2.0.0',
+24 silly cache add   type: 'range' }
+25 silly addNamed eslint-plugin-standard@>=1.3.2 <2.0.0
+26 verbose addNamed ">=1.3.2 <2.0.0" is a valid semver range for eslint-plugin-standard
+27 silly addNameRange { name: 'eslint-plugin-standard',
+27 silly addNameRange   range: '>=1.3.2 <2.0.0',
+27 silly addNameRange   hasData: false }
+28 silly mapToRegistry name eslint-plugin-standard
+29 silly mapToRegistry using default registry
+30 silly mapToRegistry registry https://registry.npmjs.org/
+31 silly mapToRegistry uri https://registry.npmjs.org/eslint-plugin-standard
+32 verbose addNameRange registry:https://registry.npmjs.org/eslint-plugin-standard not in flight; fetching
+33 verbose already installed skipping eslint@^2.8.0 C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0
+34 verbose already installed skipping eslint-config-google@^0.5.0 C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0
+35 verbose already installed skipping eslint-config-standard@^5.1.0 C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0
+36 verbose request uri https://registry.npmjs.org/eslint-plugin-standard
+37 verbose request no auth needed
+38 info attempt registry request try #1 at 10:31:26 AM
+39 verbose request id 54dae1f17a08a09f
+40 verbose etag "85R5KS4AY5PVJ3ZOIGABSIXIT"
+41 http request GET https://registry.npmjs.org/eslint-plugin-standard
+42 http 304 https://registry.npmjs.org/eslint-plugin-standard
+43 verbose headers { date: 'Tue, 09 Aug 2016 09:30:40 GMT',
+43 verbose headers   via: '1.1 varnish',
+43 verbose headers   'cache-control': 'max-age=300',
+43 verbose headers   etag: '"85R5KS4AY5PVJ3ZOIGABSIXIT"',
+43 verbose headers   age: '185',
+43 verbose headers   connection: 'keep-alive',
+43 verbose headers   'x-served-by': 'cache-fra1241-FRA',
+43 verbose headers   'x-cache': 'HIT',
+43 verbose headers   'x-cache-hits': '1',
+43 verbose headers   'x-timer': 'S1470735040.614835,VS0,VE0',
+43 verbose headers   vary: 'Accept-Encoding' }
+44 silly get cb [ 304,
+44 silly get   { date: 'Tue, 09 Aug 2016 09:30:40 GMT',
+44 silly get     via: '1.1 varnish',
+44 silly get     'cache-control': 'max-age=300',
+44 silly get     etag: '"85R5KS4AY5PVJ3ZOIGABSIXIT"',
+44 silly get     age: '185',
+44 silly get     connection: 'keep-alive',
+44 silly get     'x-served-by': 'cache-fra1241-FRA',
+44 silly get     'x-cache': 'HIT',
+44 silly get     'x-cache-hits': '1',
+44 silly get     'x-timer': 'S1470735040.614835,VS0,VE0',
+44 silly get     vary: 'Accept-Encoding' } ]
+45 verbose etag https://registry.npmjs.org/eslint-plugin-standard from cache
+46 verbose get saving eslint-plugin-standard to C:\Users\Administrator\AppData\Roaming\npm-cache\registry.npmjs.org\eslint-plugin-standard\.cache.json
+47 silly addNameRange number 2 { name: 'eslint-plugin-standard',
+47 silly addNameRange   range: '>=1.3.2 <2.0.0',
+47 silly addNameRange   hasData: true }
+48 silly addNameRange versions [ 'eslint-plugin-standard',
+48 silly addNameRange   [ '1.0.0',
+48 silly addNameRange     '1.1.0',
+48 silly addNameRange     '1.2.0',
+48 silly addNameRange     '1.3.0',
+48 silly addNameRange     '1.3.1',
+48 silly addNameRange     '1.3.2',
+48 silly addNameRange     '1.3.3',
+48 silly addNameRange     '2.0.0' ] ]
+49 silly addNamed eslint-plugin-standard@1.3.3
+50 verbose addNamed "1.3.3" is a plain semver version for eslint-plugin-standard
+51 silly cache afterAdd eslint-plugin-standard@1.3.3
+52 verbose afterAdd C:\Users\Administrator\AppData\Roaming\npm-cache\eslint-plugin-standard\1.3.3\package\package.json not in flight; writing
+53 verbose afterAdd C:\Users\Administrator\AppData\Roaming\npm-cache\eslint-plugin-standard\1.3.3\package\package.json written
+54 silly install resolved [ { name: 'eslint-plugin-standard',
+54 silly install resolved     description: 'ESlint Plugin for the Standard Linter',
+54 silly install resolved     version: '1.3.3',
+54 silly install resolved     author: { name: 'Jamund Ferguson', email: 'jamund@gmail.com' },
+54 silly install resolved     bugs: { url: 'https://github.com/xjamundx/eslint-plugin-standard/issues' },
+54 silly install resolved     dependencies: {},
+54 silly install resolved     devDependencies: { eslint: '^3.0.1', mocha: '^2.2.5' },
+54 silly install resolved     homepage: 'https://github.com/xjamundx/eslint-plugin-standard#readme',
+54 silly install resolved     keywords: [ 'eslint', 'eslintplugin' ],
+54 silly install resolved     license: 'MIT',
+54 silly install resolved     main: 'index.js',
+54 silly install resolved     repository:
+54 silly install resolved      { type: 'git',
+54 silly install resolved        url: 'git+https://github.com/xjamundx/eslint-plugin-standard.git' },
+54 silly install resolved     scripts: { test: 'standard && mocha tests/' },
+54 silly install resolved     gitHead: '860d50b34c311ff629adcc456f0c96af9060f4c7',
+54 silly install resolved     _id: 'eslint-plugin-standard@1.3.3',
+54 silly install resolved     _shasum: 'a3085451523431e76f409c70cb8f94e32bf0ec7f',
+54 silly install resolved     _from: 'eslint-plugin-standard@>=1.3.2 <2.0.0',
+54 silly install resolved     _npmVersion: '3.8.9',
+54 silly install resolved     _nodeVersion: '6.2.0',
+54 silly install resolved     _npmUser: { name: 'feross', email: 'feross@feross.org' },
+54 silly install resolved     dist:
+54 silly install resolved      { shasum: 'a3085451523431e76f409c70cb8f94e32bf0ec7f',
+54 silly install resolved        tarball: 'https://registry.npmjs.org/eslint-plugin-standard/-/eslint-plugin-standard-1.3.3.tgz' },
+54 silly install resolved     maintainers: [ [Object], [Object] ],
+54 silly install resolved     _npmOperationalInternal:
+54 silly install resolved      { host: 'packages-16-east.internal.npmjs.com',
+54 silly install resolved        tmp: 'tmp/eslint-plugin-standard-1.3.3.tgz_1468347107380_0.5808704509399831' },
+54 silly install resolved     directories: {},
+54 silly install resolved     _resolved: 'https://registry.npmjs.org/eslint-plugin-standard/-/eslint-plugin-standard-1.3.3.tgz',
+54 silly install resolved     readme: 'ERROR: No README data found!' } ]
+55 info install eslint-plugin-standard@1.3.3 into C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0
+56 info installOne eslint-plugin-standard@1.3.3
+57 verbose installOne of eslint-plugin-standard to C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0 not in flight; installing
+58 verbose lock using C:\Users\Administrator\AppData\Roaming\npm-cache\_locks\eslint-plugin-standard-45f6b63ddf0b9303.lock for C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\node_modules\eslint-plugin-standard
+59 silly install write writing eslint-plugin-standard 1.3.3 to C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\node_modules\eslint-plugin-standard
+60 verbose unbuild node_modules\eslint-plugin-standard
+61 silly gentlyRm C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\node_modules\eslint-plugin-standard is being purged from base C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0
+62 verbose gentlyRm don't care about contents; nuking C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\node_modules\eslint-plugin-standard
+63 verbose tar unpack C:\Users\Administrator\AppData\Roaming\npm-cache\eslint-plugin-standard\1.3.3\package.tgz
+64 verbose tar unpacking to C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\node_modules\eslint-plugin-standard
+65 silly gentlyRm C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\node_modules\eslint-plugin-standard is being purged
+66 verbose gentlyRm don't care about contents; nuking C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\node_modules\eslint-plugin-standard
+67 silly gunzTarPerm modes [ '777', '666' ]
+68 silly gunzTarPerm extractEntry package.json
+69 silly gunzTarPerm modified mode [ 'package.json', 420, 438 ]
+70 silly gunzTarPerm extractEntry .npmignore
+71 silly gunzTarPerm modified mode [ '.npmignore', 420, 438 ]
+72 silly gunzTarPerm extractEntry README.md
+73 silly gunzTarPerm modified mode [ 'README.md', 420, 438 ]
+74 silly gunzTarPerm extractEntry LICENSE
+75 silly gunzTarPerm modified mode [ 'LICENSE', 420, 438 ]
+76 silly gunzTarPerm extractEntry index.js
+77 silly gunzTarPerm modified mode [ 'index.js', 420, 438 ]
+78 silly gunzTarPerm extractEntry .eslintrc
+79 silly gunzTarPerm modified mode [ '.eslintrc', 420, 438 ]
+80 silly gunzTarPerm extractEntry rules/array-bracket-even-spacing.js
+81 silly gunzTarPerm modified mode [ 'rules/array-bracket-even-spacing.js', 420, 438 ]
+82 silly gunzTarPerm extractEntry rules/computed-property-even-spacing.js
+83 silly gunzTarPerm modified mode [ 'rules/computed-property-even-spacing.js', 420, 438 ]
+84 silly gunzTarPerm extractEntry rules/object-curly-even-spacing.js
+85 silly gunzTarPerm modified mode [ 'rules/object-curly-even-spacing.js', 420, 438 ]
+86 silly gunzTarPerm extractEntry tests/array-bracket-even-spacing.js
+87 silly gunzTarPerm modified mode [ 'tests/array-bracket-even-spacing.js', 420, 438 ]
+88 silly gunzTarPerm extractEntry tests/computed-property-even-spacing.js
+89 silly gunzTarPerm modified mode [ 'tests/computed-property-even-spacing.js', 420, 438 ]
+90 silly gunzTarPerm extractEntry tests/object-curly-even-spacing.js
+91 silly gunzTarPerm modified mode [ 'tests/object-curly-even-spacing.js', 420, 438 ]
+92 verbose write writing to C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\node_modules\eslint-plugin-standard\package.json
+93 info preinstall eslint-plugin-standard@1.3.3
+94 verbose readDependencies loading dependencies from C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\node_modules\eslint-plugin-standard\package.json
+95 verbose readDependencies loading dependencies from C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\node_modules\eslint-plugin-standard\package.json
+96 silly install resolved []
+97 verbose about to build C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\node_modules\eslint-plugin-standard
+98 info build C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\node_modules\eslint-plugin-standard
+99 info linkStuff eslint-plugin-standard@1.3.3
+100 silly linkStuff eslint-plugin-standard@1.3.3 has C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\node_modules as its parent node_modules
+101 verbose linkBins eslint-plugin-standard@1.3.3
+102 verbose linkMans eslint-plugin-standard@1.3.3
+103 verbose rebuildBundles eslint-plugin-standard@1.3.3
+104 info install eslint-plugin-standard@1.3.3
+105 info postinstall eslint-plugin-standard@1.3.3
+106 verbose unlock done using C:\Users\Administrator\AppData\Roaming\npm-cache\_locks\eslint-plugin-standard-45f6b63ddf0b9303.lock for C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0\node_modules\eslint-plugin-standard
+107 info build C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0
+108 info linkStuff EssenceJS@1.0.0
+109 silly linkStuff EssenceJS@1.0.0 has C:\Users\Administrator\Dropbox\Projects\EssenceJS as its parent node_modules
+110 verbose linkBins EssenceJS@1.0.0
+111 verbose linkMans EssenceJS@1.0.0
+112 verbose rebuildBundles EssenceJS@1.0.0
+113 verbose rebuildBundles [ '.bin',
+113 verbose rebuildBundles   'eslint',
+113 verbose rebuildBundles   'eslint-config-google',
+113 verbose rebuildBundles   'eslint-config-standard',
+113 verbose rebuildBundles   'eslint-plugin-promise',
+113 verbose rebuildBundles   'eslint-plugin-standard' ]
+114 info install EssenceJS@1.0.0
+115 verbose unsafe-perm in lifecycle true
+116 info EssenceJS@1.0.0 Failed to exec install script
+117 verbose stack Error: EssenceJS@1.0.0 install: `minify essence.js --no-comments`
+117 verbose stack Exit status 1
+117 verbose stack     at EventEmitter.<anonymous> (C:\Program Files\nodejs\node_modules\npm\lib\utils\lifecycle.js:214:16)
+117 verbose stack     at emitTwo (events.js:87:13)
+117 verbose stack     at EventEmitter.emit (events.js:172:7)
+117 verbose stack     at ChildProcess.<anonymous> (C:\Program Files\nodejs\node_modules\npm\lib\utils\spawn.js:24:14)
+117 verbose stack     at emitTwo (events.js:87:13)
+117 verbose stack     at ChildProcess.emit (events.js:172:7)
+117 verbose stack     at maybeClose (internal/child_process.js:821:16)
+117 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:211:5)
+118 verbose pkgid EssenceJS@1.0.0
+119 verbose cwd C:\Users\Administrator\Dropbox\Projects\EssenceJS\1.0
+120 error Windows_NT 10.0.10586
+121 error argv "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install"
+122 error node v4.3.2
+123 error npm  v2.14.12
+124 error code ELIFECYCLE
+125 error EssenceJS@1.0.0 install: `minify essence.js --no-comments`
+125 error Exit status 1
+126 error Failed at the EssenceJS@1.0.0 install script 'minify essence.js --no-comments'.
+126 error This is most likely a problem with the EssenceJS package,
+126 error not with npm itself.
+126 error Tell the author that this fails on your system:
+126 error     minify essence.js --no-comments
+126 error You can get their info via:
+126 error     npm owner ls EssenceJS
+126 error There is likely additional logging output above.
+127 verbose exit [ 1, true ]

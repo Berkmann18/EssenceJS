@@ -5939,7 +5939,7 @@ function A(start, goal, grid) { //JS version of https://en.wikipedia.org/wiki/A*
 			if (closedSet.indexOf(n[i]) > -1) continue;
 			var tentativeGScore = gScore[closedSet.indexOf(current)] + 1;
 			if (closedSet.indexOf(n[i]) === -1) openSet.push(n[i]);
-			else if (tentativeGScore >= gScore[i]) 
+			else if (tentativeGScore >= gScore[i]) break;
 		}
 
 		cameFrom[i] = current;
@@ -7383,7 +7383,7 @@ function server (name, admin, type, ver, mxsz) {
 			if (this.slots[pos] != [pcs.name, pcs.author, pcs.description, pcs.content, pcs.bitsize] && this.nb_slots < this.maxsize) { //Check if the process was added to the server
 				this.nb_slots += this.maxsize / this.nb_slots//Extend by one slot
 				this.slots[this.nb_slots] = [pcs.name, pcs.author, pcs.description, pcs.content, pcs.bitsize];
-			};
+			};;
 		}
 	};
 	this.add = function (data) {
