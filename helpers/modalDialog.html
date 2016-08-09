@@ -1,0 +1,53 @@
+<div id="overlay">
+     <div>
+          <p>Content you want the user to see goes here.</p>
+		  <p>Click here to <button onClick='go()'>close</button></p>
+     </div>
+</div>
+<style>
+#overlay {
+     visibility: hidden;
+     position: absolute;
+     left: 0px;
+     top: 0px;
+     width:100%;
+     height:100%;
+     text-align:center;
+     z-index: 1000;
+	 background: rgba(127, 127, 127, .5);
+}/*
+#overlay div {
+     width:300px;
+     margin: 100px auto;
+     background: #fbfbfb;
+     border:1px solid #bababa;
+     padding:15px;
+     text-align:center;
+	 box-shadow: 3px 3px 3px #333;
+	 border-radius: 5px;
+}*/
+</style>
+<a href='#' onclick='Essence.addCSS("#overlay{visibility:hidden;position:absolute;left:0px;top:0px;width:100%;height:100%;text-align:center;z-index:1000;background:rgba(127,127,127,.5);}#overlay div{width:300px;margin:100px auto;background:#fbfbfb;border:1px solid#bababa;padding:15px;text-align:center;box-shadow:3px 3px 3px#333;border-radius:5px;}");go()'>Click here to show the overlay</a>
+<script>
+function overlay() {
+	el = document.getElementById("overlay");
+	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+}
+function include(file, type){//include a file as a child of the document
+	if(!type) type = (file.indexOf(".js")>0)? "script": "style";
+    var el = document.createElement(type);
+    el.src = file;
+    el.type = (type=="script")? "text/javascript": "text/css";
+    document.head.appendChild(el);
+}
+window.onload = function(){
+	include("file:///C:/Users/User/Documents/GitHub/Essence/essence.js", "script");
+	if(!Essence) new Essence();
+	var overlay = elm("#overlay");
+};
+Essence.addCSS("#overlay{visibility:hidden;position:absolute;left:0px;top:0px;width:100%;height:100%;text-align:center;z-index:1000;background:rgba(127,127,127,.5);}#overlay div{width:300px;margin:100px auto;background:#fbfbfb;border:1px solid#bababa;padding:15px;text-align:center;box-shadow:3px 3px 3px#333;border-radius:5px;}");
+function go(){
+	Essence.applyCSS();
+	toggleStyle("#overlay", "visibility");
+}
+</script>

@@ -1,0 +1,54 @@
+{
+  "name": "EssenceJS",
+  "version": "1.1.0",
+  "description": "ES5 All-In-One library",
+  "main": "essence.js",
+  "scripts": {
+    "preinstall": "minify essence.js --no-comments",
+    "install": "minify modules --no-comments",
+    "test": "eslint essence.js moduldes"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Berkmann18/EssenceJS/1.1"
+  },
+  "keywords": [
+    "Essence",
+    "JS",
+    "library",
+    "DHTML2",
+    "PHP",
+    "NoSQL",
+    "Maths",
+    "DOM",
+    "Web",
+    "Data",
+    "structure",
+    "UI",
+    "AJAX",
+    "miscellaneous",
+    "Security",
+    "ML"
+  ],
+  "author": "Maximilian Berkmann",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Berkmann18/EssenceJS/issues"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.11.4",
+    "babel-polyfill": "^6.9.1",
+    "babel-preset-es2015": "^6.9.0",
+    "eslint": "^2.8.0",
+    "eslint-config-google": "^0.5.0",
+    "eslint-config-standard": "^5.1.0",
+    "eslint-plugin-promise": "^1.1.0",
+    "eslint-plugin-standard": "^1.3.2"
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true
+    }
+  },
+  "homepage": "https://github.com/Berkmann18/EssenceJS/1.1"
+}

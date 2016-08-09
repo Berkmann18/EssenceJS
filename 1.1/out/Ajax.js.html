@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Ajax.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Ajax.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @module Ajax
+ * @description AJAX module for AJAX stuff
+ * @version 1.0
+ * @since 1.1
+ * @license MIT
+ * @author Maximilian Berkmann &lt;maxieberkmann@gmail.com>
+ * @copyright Maximilian Berkmann 2016
+ * @requires ../essence
+ * @namespace
+ * @type {{name: string, version: number, run: Ajax.run, description: string, dependency: Array, author: string, complete: boolean}}
+ * @since 1.1
+ * @exports Ajax
+ */
+var Ajax = {
+    name: "Ajax",
+    version: 1,
+    run: function () {
+
+    },
+    description: "AJAX stuff",
+    dependency: [],
+    author: "Maximilian Berkmann",
+    complete: false,
+    toString: function () {
+        return "Module(name='" + this.name + "', version=" + this.version + ", description='" + this.description + "', author='" + this.author + "', complete=" + this.complete + ", run=" + this.run + ")";
+    }
+};
+
+(function () {
+    Ajax.complete = true
+})();
+
+/**
+ * @description HTTP GET request. Equivalent to parseURL($name, function (x) {this = x})
+ * @param {string} name Name of the key
+ * @returns {string} Value of the key
+ * @since 1.0
+ * @func
+ */
+function GET (name) { //HTTP GET request, method &lt;=> parseURL(name, function (x) {this = x})
+    if (name === (new RegExp("[?&amp;]" + encodeURIComponent(name) + "=([^&amp;]*)")).exec(location.search)) return decodeURIComponent(name[1]);
+}
+
+/**
+ * @description HTTP POST request
+ * @param {string} path Path of the file to post to
+ * @param {Object} params Parameters
+ * @source StackOverflow
+ * @returns {undefined}
+ * @since 1.0
+ * @func
+ */
+function POST (path, params) {
+    var form = document.createElement("form");
+    form.setAttribute("method", "post");
+    form.setAttribute("action", path);
+
+    for (var key in params) {
+        if (params.hasOwnProperty(key)) {
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", key);
+            hiddenField.setAttribute("value", params[key]);
+            form.appendChild(hiddenField);
+        }
+    }
+    document.body.appendChild(form);
+    form.submit()
+}
+
+/**
+ * @description HTTP PUT request
+ * @returns {undefined}
+ * @todo Fill it
+ * @since 1.0
+ * @func
+ */
+function PUT () {
+
+}
+
+/**
+ * @description HTTP DELETE request
+ * @returns {undefined}
+ * @todo Fill it
+ * @since 1.0
+ * @func
+ */
+function DELETE () {
+
+}
+
+/**
+ * @description Load a document/file using AJAX
+ * @param {string} url URL
+ * @param {Function} callback What to do when the document/file is loaded
+ * @returns {undefined}
+ * @since 1.0
+ * @func
+ */
+function loadDoc (url, callback) {
+    var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 &amp;&amp; xhr.status === 200) callback(xhr);
+    };
+    xhr.open("GET", url, true);
+    xhr.send()
+}
+
+/**
+ * @description AJAX post
+ * @param {*} data Data to send
+ * @param {string} to Receiving URL
+ * @param {boolean} xml XML/Text flag
+ * @returns {undefined}
+ * @since 1.0
+ * @func
+ */
+function AJAXpost (data, to, xml) {
+    var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
+    xhr.onreadystatechange = function () {
+        //Request complete and HTTP OK response
+        /* readyStates
+         0: request not initialized
+         1: server connection established
+         2: request received
+         3: processing request
+         4: request finished and response is ready
+         */
+        if (xhr.readyState === 4 &amp;&amp; xhr.status === 200) res = xml? xhr.responseXML: xhr.responseText;
+    };
+    xhr.open("POST", to, true);
+    if (xml) {
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.send(data);
+    } else {
+        xhr.setRequestHeader("Content-Type", "text/plain");
+        xhr.send(data);
+    }
+}
+
+/**
+ * @description HTPP status message
+ * @param {number} status HTTP status (e.g: xhr.status)
+ * @returns {string} Status message
+ * @since 1.0
+ * @func
+ */
+function getHTTPMsg (status) {
+    switch (status) {
+        //Information
+        case 100: return "Continue";
+        case 101: return "Switching Protocols";
+        //Success
+        case 200: return "OK";
+        case 201: return "Created";
+        case 202: return "Accepted";
+        case 203: return "Non-Authoriative Information";
+        case 204: return "No Content";
+        case 205: return "Reset Content";
+        case 206: return "Partial Content";
+        //Redirection
+        case 300: return "Multiple Choices";
+        case 301: return "Moved Permanently";
+        case 302: return "Found";
+        case 303: return "See Other";
+        case 304: return "Not Modified";
+        case 305: return "Use Proxy";
+        case 306: return "Unused";
+        case 307: return "Temporary Redirect";
+        //Client error
+        case 400: return "Bad Request";
+        case 401: return "Unauthorized";
+        case 402: return "Payment Required";
+        case 403: return "Forbidden";
+        case 404: return "Not Found";
+        case 405: return "Method Not Allowed";
+        case 406: return "Not Acceptable";
+        case 407: return "Proxy Authentification Required";
+        case 408: return "Request Timeout";
+        case 409: return "Conflict";
+        case 410: return "Gone";
+        case 411: return "Length Required";
+        case 412: return "Precondition Failed";
+        case 413: return "Requeust Entity Too Large";
+        case 414: return "Request-url Too Long";
+        case 415: return "Bad Request";
+        case 416: return "Unsupported Media Type";
+        case 417: return "Expectation Failed";
+        //Server error
+        case 500: return "Internal Server Error";
+        case 501: return "Not Implemented";
+        case 502: return "Bad Gateway";
+        case 503: return "Service Unavailable";
+        case 504: return "Gateway Timeout";
+        case 505: return "HTTP Version Not Supported";
+        default: return "Unknown status"
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-File.html">File</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Classes</h3><ul><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Misc-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Interfaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Jul 22 2016 14:14:04 GMT+0100 (GMT Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
