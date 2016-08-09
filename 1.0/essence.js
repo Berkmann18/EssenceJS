@@ -1441,7 +1441,7 @@ Array.prototype.translate = function () {
  */
 Array.prototype.lookFor = function (x) {
 	for (var i = 0; i < this.length; i++) {
-		if (this[i] === x) return i;
+		if (this[i] === x || this[i].equals(x)) return i;
 	}
 	return -1
 };
@@ -2691,7 +2691,7 @@ function include_once (file, type, parentPath) {
  * @returns {string} Tagless string
  */
 function stripTags (str) {
-	return str.replace(/<[\s\S]+ >(.*?)<\/[\s\S]+ >/, "$1")
+	return str.replace(/<[\s\S]+>(.*?)<\/[\s\S]+>/, "$1")
 }
 
 /**
@@ -2958,6 +2958,7 @@ function dec2min (dec) {
  * @see sec2time
  */
 function toS (i) {
+	if (i == parseFloat(i)) return parseFloat(i);
 	var withH = i.count(":") === 2;
 	if (!i) i = withH? "00:00:00.000": "00:00.000"; //Avoid having errors
 	if (!isType(i, "String")) i += "";
@@ -3788,7 +3789,9 @@ function save (txt, name, type) { //Save into a file of the corresponding type
 /**
  * @description Get the file's content
  * @param {string} fname File name
- * @returns {undefined}
+ * @returns {string} File content
+ * @since 1.0
+ * @func
  */
 function getFileContent (fname) {
 	$G["fct"] = ""; //File content
@@ -3802,7 +3805,8 @@ function getFileContent (fname) {
 			}
 		}
 	};
-	rawFile.send(null)
+	rawFile.send(null);
+	return $G["fct"];
 }
 
 /**
@@ -5935,7 +5939,7 @@ function A(start, goal, grid) { //JS version of https://en.wikipedia.org/wiki/A*
 			if (closedSet.indexOf(n[i]) > -1) continue;
 			var tentativeGScore = gScore[closedSet.indexOf(current)] + 1;
 			if (closedSet.indexOf(n[i]) === -1) openSet.push(n[i]);
-			else if (tentativeGScore >= gScore[i]) continue;
+			else if (tentativeGScore >= gScore[i]) break;
 		}
 
 		cameFrom[i] = current;
@@ -6461,12 +6465,13 @@ function Polygon (pts, b, v) {
  * @func
  */
 function simpleTable (caption, rows, id, style, split, cellIds) {
-	var tab = (caption)? "<table id=" + id + " style=" + style + " cellspacing=0 cellpadding=2><caption>" + caption + "</caption>": "<table>";
+	if (isNon(style)) style = "";
+	var tab = "<table id='" + (id || "t") + "' style='" + style + "' cellspacing=0 cellpadding=2>" + (caption? "<caption>" + caption + "</caption>": "");
 	for (var i = 0; i < rows.length; i++) {
 		tab += "<tr>";
 		if (split) {
-			for(var j = 0; j < rows[i].length; j++) tab += "<td id='" + (isNon(cellIds)? i+"_"+j: cellIds[i][j]) + "'>" + rows[i][j] + "</td>";
-		} else  tab += "<td id='" + (isNon(cellIds)? i: cellIds[i]) + "'>" + rows[i] + "</td>";
+			for(var j = 0; j < rows[i].length; j++) tab += "<td id='" + (id || "t") + (isNon(cellIds)? i+"_"+j: cellIds[i][j]) + "'>" + rows[i][j] + "</td>";
+		} else  tab += "<td id='" + (id || "t") + (isNon(cellIds)? i: cellIds[i]) + "'>" + rows[i] + "</td>";
 		tab += "</tr>";
 	}
 	tab += "</table><style>table{background: #000;}table, td {border: 1px solid #000; color: #000; background: #fff;} tr:nth-child(even) td{background: #ddd;} tr td:hover{background: #bbb;}</style>";
@@ -6485,16 +6490,17 @@ function simpleTable (caption, rows, id, style, split, cellIds) {
  * @returns {string} HTML code
  */
 function rowTable (caption, headerRows, rows, id, split, style, cellIds) {
-	var tab = (caption)? "<table id=" + id + " style=" + style + " cellspacing=0 cellpadding=2><caption>" + caption + "</caption>": "<table>";
-	//Var rowspan = (headerRows.length <= rows.length)? rows.length/headerRows.length: headerRows.length/rows.length;
-	//Console.log(rowspan);
+	if (isNon(style)) style = "";
+	var tab = "<table id='" + (id || "t") + "' style='" + style + "' cellspacing=0 cellpadding=2>" + (caption? "<caption>" + caption + "</caption>": "");
+	//var rowspan = (headerRows.length <= rows.length)? rows.length/headerRows.length: headerRows.length/rows.length;
+	//console.log(rowspan);
 	for (var i = 0; i < rows.length; i++) {
 		tab += headerRows? "<tr><th>" + headerRows[i] + "</th>": "<tr>";
 		if (split) {
 			for (var j = 0; j < rows[i].length; j++) {
-				tab += "<td id='" + (isNon(cellIds)? i+"_"+j: cellIds[i][j]) + "'>" + rows[i][j] + "</td>";
+				tab += "<td id='" + (id || "t") + (isNon(cellIds)? i+"_"+j: cellIds[i][j]) + "'>" + rows[i][j] + "</td>";
 			}
-		} else tab += "<td id='" + (isNon(cellIds)? i: cellIds[i]) + "'>" + rows[i] + "</td>";
+		} else tab += "<td id='" + (id || "t") + (isNon(cellIds)? i: cellIds[i]) + "'>" + rows[i] + "</td>";
 		tab += "</tr>";
 	}
 	tab += "</table><style>table{background: #000;}table, td, th{border: 1px solid #000; color: #000; background: #fff;}tr:nth-child(even) td, tr:nth-child(even) th{background: #ddd;}tr td:hover, tr th:hover{background: #bbb;}</style>";
@@ -6513,9 +6519,10 @@ function rowTable (caption, headerRows, rows, id, split, style, cellIds) {
  * @returns {string} HTML code
  */
 function colTable (caption, headerCols, cols, id, split, style, cellIds) {
-	var tab = (caption)? "<table id=" + id + " style=" + style + " cellspacing=0 cellpadding=2><caption>" + caption + "</caption>": "<table>";
-	//Var colspan = (headerCols.length <= cols.length)? cols.length/headerCols.length: headerCols.length/cols.length;
-	//Console.log(colspan);
+	if (isNon(style)) style = "";
+	var tab = "<table id='" + (id || "t") + "' style='" + style + "' cellspacing=0 cellpadding=2>" + (caption? "<caption>" + caption + "</caption>": "");
+	//var colspan = (headerCols.length <= cols.length)? cols.length/headerCols.length: headerCols.length/cols.length;
+	//console.log(colspan);
 	if (headerCols) {
 		tab += "<tr>";
 		for (var i = 0; i < headerCols.length; i++) {
@@ -6527,12 +6534,12 @@ function colTable (caption, headerCols, cols, id, split, style, cellIds) {
 		tab +="<tr>";
 		if (split) {
 			for (var j = 0; j < cols[i].length; j++) {
-				tab += "<td id='" + (isNon(cellIds)? i+"_"+j: cellIds[i][j]) + "'>" + cols[j][i] + "</td>";
+				tab += "<td id='" + (id || "t") + (isNon(cellIds)? i+"_"+j: cellIds[i][j]) + "'>" + cols[j][i] + "</td>";
 			}
-		} else tab += "<td id='" + (isNon(cellIds)? i: cellIds[i]) + "'>" + cols[i] + "</td>";
+		} else tab += "<td id='" + (id || "t") + (isNon(cellIds)? i: cellIds[i]) + "'>" + cols[i] + "</td>";
 		tab += "</tr>"
 	}
-	tab += "</table><style>table{background: #000;}table, td, th{border: 1px solid #000; color: #000; background: #fff;}tr:nth-child(even) td{background: #ddd;}tr td:hover{background: #bbb;}";
+	tab += "</table><style>table{background: #000;}table, td, th{border: 1px solid #000; color: #000; background: #fff;}tr:nth-child(even) td{background: #ddd;}tr td:hover{background: #bbb;}</style>";
 	return tab
 }
 
@@ -6550,16 +6557,16 @@ function colTable (caption, headerCols, cols, id, split, style, cellIds) {
  */
 function complexTable (caption, headerRows, rows, headerCols, id, split, style, cellIds) {
 	if (isNon(style)) style = "";
-	var tab = "<table id='" + id + "' style='" + style + "' cellspacing=0 cellpadding=2>" + ((caption)? "<caption>" + caption + "</caption><tr><td></td>": "<tr><td></td>");
+	var tab = "<table id='" + (id || "t") + "' style='" + style + "' cellspacing=0 cellpadding=2>" + (caption? "<caption>" + caption + "</caption><tr><td></td>": "<tr><td></td>");
 	for(var i = 0; i < headerCols.length; i++) tab += "<th>" + headerCols[i] + "</th>";
 	tab += "</tr>";
 	for (i = 0; i < rows.length; i++) {
 		tab += (headerRows)? "<tr><th>" + headerRows[i] + "</th>": "<tr>";
 		if (split) {
 			for (var j = 0; j < rows[i].length; j++) {
-				tab += "<td id='" + (isNon(cellIds)? i+"_"+j: cellIds[i][j]) + "'>" + rows[i][j] + "</td>";
+				tab += "<td id='" + (id || "t") + (isNon(cellIds)? i + "_" + j: cellIds[i][j]) + "'>" + rows[i][j] + "</td>";
 			}
-		} else tab += "<td id='" + (isNon(cellIds)? i: cellIds[i]) + "'>" + rows[i] + "</td></tr>";
+		} else tab += "<td id='" + (id || "t") + (isNon(cellIds)? i: cellIds[i]) + "'>" + rows[i] + "</td></tr>";
 		tab += "</tr>";
 	}
 	tab += "</table><style>table{background: #000;}table, td, th{border: 1px solid #000; color: #000; background: #fff;}tr:nth-child(even) td{background: #ddd;}tr td:hover{background: #bbb;}</style>";
@@ -6568,16 +6575,18 @@ function complexTable (caption, headerRows, rows, headerCols, id, split, style, 
 
 /**
  * @description HTML table with coloured empty cells
- * @param {string|number} caption Caption
+ * @param {NumberLike} caption Caption
  * @param {Array} cols Columns
  * @param {string[]} clrs Colours list
  * @param {string} id ID of the table
  * @param {boolean} [split=false] Split the cells into multiple ones
  * @param {string} [style] Style of the table
  * @returns {string} Colour HTML table
+ * @since 1.0
+ * @func
  */
 function colourTable (caption, cols, clrs, id, split, style) {
-	var tab = (caption)? "<table id=" + id + " style=" + style + " cellspacing=0 cellpadding=2><caption>" + caption + "</caption>": "<table>";
+	var tab = "<table id='" + (id || "c") + "' style='" + style + "' cellspacing=0 cellpadding=2>" + (caption? "<caption>" + caption + "</caption>": "");
 	if (cols) {
 		tab += "<tr>";
 		for(var i = 0; i < cols.length; i++) tab += "<th>" + cols[i] + "</th>";
@@ -6690,8 +6699,9 @@ function DB (name, headers, rows, headerRows) {
 	this.val = rows || [range(1), new Array(range(1).length).fill("...")].translate();
 	this.css = "<style>*{font-family:Consolas,Segoe UI,Tahoma;}table{background: #000;}table,td,th{border:1px solid #000;color:#000;background:#fff;}tr:nth-child(even) td,tr:nth-child(even) th{background:#eee;}</style>";
 	this.html = "";
+	this.rows = headerRows || false;
 	this.build = function () {
-		this.html = isNon(headerRows)? complexTable("", this.val.line(), this.val.block(1), this.head, this.name, true, this.css): complexTable("", headerRows, this.val, this.head, this.name, true, this.css);
+		this.html = isNon(this.rows)? complexTable("", this.val.line(), this.val.block(1), this.head, this.name, true, this.css): complexTable("", this.rows, this.val, this.head, this.name, true, this.css);
 	};
 	this.fill = function (len) {
 		this.val = [];
@@ -6702,14 +6712,22 @@ function DB (name, headers, rows, headerRows) {
 	};
 	this.save = function () {
 		localStorage[this.name] = JSON.stringify(this.val);
+		localStorage[this.name + "_head"] = JSON.stringify(this.head);
+		localStorage[this.name + "_html"] = this.html;
+		localStorage[this.name + "_rows"] = this.rows;
 	};
 	this.update = function () {
-		if (localStorage[this.name]) this.val = JSON.parse(localStorage[this.name]);
-		else this.save();
-		this.build();
+		if (localStorage[this.name]) {
+			this.val = JSON.parse(localStorage[this.name]);
+			this.head = JSON.parse(localStorage[this.name + "_head"]);
+			this.html = localStorage[this.name + "_html"];
+			this.rows = localStorage[this.name + "_rows"].split(",");//JSON.parse(localStorage[this.name + "_rows"]);
+		} else this.save();
 	};
 	this.set = function (nval, i, j) {
-		this.val[i || 0][j || 0] = nval || null;
+		if ( j === -1) {
+			for (var k = 0; k < nval.length; k++) this.val[i || 0][k] = nval[k];
+		} else this.val[i || 0][j || 0] = nval || null;
 	};
 	this.get = function (i, j) {
 		return !isNon(j)? this.val[i || 0][j]: this.val[i || 0];
@@ -7302,7 +7320,7 @@ function process (name, auth, summup, ctt) {
 	//Rights/privileges ?!
 	this.update = function () {
 		if (this.author != auth || this.author === "Anonymous" || isNon(this.author)) this.sig = this.name[0] + this.name[this.name.length-1] + "-" + this.name.prod() + this.author.slice(0, 2) + "-" + getType(this.content)[0]; //H4ck
-		else this.sig = this.name[0] + this.name[this.name.length - 1] + this.name.prod() + this.author.slice(0, 2) + "-" + (getType(this.content))[0];;
+		else this.sig = this.name[0] + this.name[this.name.length - 1] + this.name.prod() + this.author.slice(0, 2) + "-" + (getType(this.content))[0];
 		if (this.sig[this.sig.length - 1] === "N") this.bitsize = 8 * conv(this.content, 10, 2).sum();
 		else if (this.sig[this.sig.length - 1] === "B") this.bitsize = 8;
 		else if (this.sig[this.sig.length - 1] === "A") this.bitsize = (is2dArray(this.content))? 8 * this.content.numElm(): 8 * this.content.length;
@@ -7365,7 +7383,7 @@ function server (name, admin, type, ver, mxsz) {
 			if (this.slots[pos] != [pcs.name, pcs.author, pcs.description, pcs.content, pcs.bitsize] && this.nb_slots < this.maxsize) { //Check if the process was added to the server
 				this.nb_slots += this.maxsize / this.nb_slots//Extend by one slot
 				this.slots[this.nb_slots] = [pcs.name, pcs.author, pcs.description, pcs.content, pcs.bitsize];
-			}
+			};;
 		}
 	};
 	this.add = function (data) {
@@ -9066,6 +9084,35 @@ function AJAXpost (data, to, xml) {
 }
 
 /**
+ * @description Load a JSON file
+ * @param {string} [file="data"] Filename (without the '.json' bit)
+ * @param {Function} cb Callback
+ * @func
+ * @since 1.1
+ * @returns {*} JSON data
+ */
+function loadJSON (file, cb) {
+	var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
+	xhr.overrideMimeType("application/json");
+	xhr.open("GET", (file || "data") + ".json", true);
+	xhr.onreadystatechange = function () {
+		if (xhr.readyState === 4 && xhr.status === 200) cb(xhr.responseText);
+	};
+	xhr.send(null);
+}
+
+/**
+ * @description Get a JSON file
+ * @param {string} file JSON file
+ * @return {*} JSON data
+ */
+function getJSON (file) {
+	return loadJSON(file, function (ans) {
+		return JSON.parse(ans);
+	});
+}
+
+/**
  * @description HTPP status message
  * @param {number} status HTTP status (e.g: xhr.status)
  * @returns {string} Status message
@@ -9123,8 +9170,36 @@ function getHTTPMsg (status) {
 }
 
 /**
+ * @description Cross Origin Resource Sharing request maker
+ * @source {@link https://stackoverflow.com/questions/3076414/ways-to-circumvent-the-same-origin-policy}
+ * @param {string} [method="get"] Method
+ * @param {string} url URL
+ * @returns {XMLHttpRequest} CORS request
+ * @example
+ * var request = createCORSRequest("get", "http://www.stackoverflow.com/");
+ if (request){
+    request.onload = function() {
+        // ...
+    };
+    request.onreadystatechange = handler;
+    request.send();
+ }
+ * @since 1.1
+ * @func
+ */
+function createCORSRequest (method, url) {
+	var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
+	if ("withCredentials" in xhr) xhr.open(method || "get", url, true);
+	else if (typeof XDomainRequest != "undefined") {
+		xhr = new XDomainRequest();
+		xhr.open(method || "get", url);
+	} else xhr = null;
+	return xhr;
+}
+
+/**
  * @description Templating + conversion
- * @param {string} [name="Template"] Name
+ 	* @param {string} [name="Template"] Name
  * @param {string} [path="Template.jst"] Path
  * @param {string} [txt=""] Text/code containing the {{params}}
  * @param {string[]} [params=["tab", "date", "time", "timestamp", "br"]] Parameters
@@ -9730,4 +9805,22 @@ function exp2dict (exp) {
 	];
 	//matches: re.exec(str).last()
 	return res;
+}
+
+/**
+ * @description Evaluate a file (useful for getting JSON data and into JS objects)
+ * @param {string} filename Filename
+ * @returns {*} Object of the file
+ */
+function evalFile (filename) {
+	return (new Function("return " + getFileContent(filename)))();
+}
+
+/**
+ * @description Make tabs up
+ * @param {number} [n=1] Number of tabs
+ * @returns {string} Tabs
+ */
+function tabs (n) {
+	return "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".repeat(n || 1);
 }
