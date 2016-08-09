@@ -76,3 +76,4 @@ exit /b
 if "%~2" == "" git log --graph --oneline --decorate
 if "%~2" == "all" git log --graph --oneline --decorate --all
 if "%~2" == "change" git log --name-status
+exit /b
