@@ -231,3 +231,59 @@ function getFileContent (fname) {
 function evalFile (filename) {
     return (new Function('return ' + getFileContent(filename)))();
 }
+
+/**
+ * @description Keyword getter
+ * @param {string} text Text
+ * @param {boolean} [noSymbols=false] Ignore symbols
+ * @returns {Array} Keywords
+ * @since 1.1
+ * @func
+ */
+function getKeywords (text, noSymbols) {
+    var txt = text.replace(/(\.|!|\?|;|:|"|,|\t|\n|\f|\r|\v|\{|})+/gm, " ").split(" ").remove(""), kw, occ; //The \b would treat a-b as "a - b"
+    kw = occurrenceSort(txt).filter(function (x) { //Filter out non-keywords words
+        return noSymbols? (["=", "+", "-", "*", "/", "\\", "%", "#", "'", "@", "^", "$", "£", "µ", "~", "&", "[", "]", "(", ")", "|", "`"].indexOf(x) > -1? false: txt.count(x) > 2): txt.count(x) > 2;
+    });
+    occ = kw.map(function (w) { //Occurrences of each keywords
+        return txt.count(w);
+    });
+
+    return kw.map(function (w) {
+        return w + ": " + txt.count(w) + " (" + markConv(txt.count(w), txt.length) + "%)";
+    });
+}
+
+/**
+ * @description Web spider
+ * @param {string[]} [filenames=[]] Names of each files to crawl through
+ * @returns {Spider} Web spider
+ * @this {Spider}
+ * @since 1.1
+ * @constructor
+ */
+function Spider (filenames) {
+    this.dir = filenames || [];
+    this.idx = "";
+    this.keywords = [];
+    this.getKeywords = function (withSymbols) {
+        /*
+        Words: getKeywords(...).map(x => x.split(":")[0])
+        Occurrences: getKeywords(...).map(x => parseInt(x.split(" ")[1]))
+        Percentages: getKeywords(...).map(x => parseFloat(x.split(" ")[2].replace(/^\((\d|\d\.\d)\%\)$/, "$1")))
+         */
+        for (this.idx = 0; this.idx < this.dir.length; this.idx++) this.keywords[this.idx] = getKeywords(getFileContent(this.dir[this.idx]), !withSymbols);
+        return this.keywords;
+    };
+    this.getGlobalKeywords = function (withSymbols) {
+        var fullDir = this.dir.map(function (file) {
+           return getFileContent(file);
+        }).toStr();
+        return getKeywords(fullDir, !withSymbols);
+    };
+
+    this.toString = function () {
+        return "Spider(dir=" + this.dir + ", idx=" + this.idx + ", keywords= " + this.keywords.toStr(true) + ")";
+    };
+    return this;
+}

@@ -115,11 +115,11 @@ function Person (fname, sname, lname, title, nickname, num, country, city, sex, 
     };
 
     this.getAge = function () {
-        return (date2num(getDate()) - date2num(this.birthday)).toNDec(2);
+            return (date2num(getDate()) - date2num(this.birthday)).toNDec(2);
     };
 
     this.isMajor = function () {
-        return ((this.country.get(0, 1) === "UN" || this.country.toLowerCase() === "united states") && this.getAge() > 20) || ((this.country.get(0, 1) != "UN" || this.country.toLowerCase() != "united states") && this.getAge() > 18);
+        return ((this.country.get(0, 1) === "UN" || this.country.toLowerCase() === "united states") && this.getAge() > 20) || ((this.country.get(0, 1) != "UN" || this.country.toLowerCase() != "united states") && this.getAge() > 17);
     };
 
     this.getFullName = function () {
@@ -255,12 +255,12 @@ var base64 = {
         var pads, i, b10;
         var imax = s.length;
         if (imax === 0) return s;
-        if (imax % 4 != 0) throw "Cannot decode base64";
+        else if (imax % 4 != 0) throw "Cannot decode base64";
 
         pads = 0;
-        if (s.charAt(imax-1) === base64.PADCHAR) {
+        if (s.charAt(imax - 1) === base64.PADCHAR) {
             pads = 1;
-            if (s.charAt(imax-2) === base64.PADCHAR) pads = 2;
+            if (s.charAt(imax - 2) === base64.PADCHAR) pads = 2;
             // either way, we want to ignore this last block
             imax -= 4;
         }
@@ -292,7 +292,7 @@ var base64 = {
         if (arguments.length != 1) throw "SyntaxError: Only arguments please";
         var pc = this.PADCHAR;
         var alpha = this.ALPHA;
-        var gb = this.gb;
+        var gb = this.getbyte;
 
         var i, b10, x = [];
 
@@ -529,129 +529,6 @@ function Memory (cpy, type, prefix) {
 }
 
 /**
- * @description Show some information about the event
- * @param {Event} evt Event
- * @returns {undefined}
- * @since 1.0
- * @func
- */
-function EvtShow (evt) {
-    alert("\tName: " + evt.name + "\nsource: " + evt.source + "\ndata: " + evt.data + "\ntarget: " + evt.target + "\ntime stamp: " + evt.timeStamp)
-}
-
-/**
- * @description Event console log
- * @param {Event} event Event
- * @returns {undefined}
- * @since 1.0
- * @func
- */
-function evtLog (event) {
-    for(var atr in event) {
-        if (event.hasOwnProperty(atr)) Essence.say(atr + ": " + event[atr])
-    }
-}
-/* Types
- - EvalError: instance representing an error that occurs regarding the global function eval()
- - InternalError: instance representing an error that occurs when an internal error in the JavaScript engine is thrown. E.g. "too much recursion"
- - RangeError: instance representing an error that occurs when a numeric variable or parameter is outside of its valid range
- - ReferenceError: instance representing an error that occurs when de-referencing an invalid reference
- - SynthaxError: instance representing a syntax error that occurs while parsing code in eval()
- - TypeError: instance representing an error that occurs when a variable or parameter is not of a valid type
- - URIError: instance representing an error that occurs when encodeURI() or decodeURI() are passed invalid parameters
- function MyError(message) { //From Mozilla ?
- this.name = 'MyError';
- this.message = message || 'Default Message';
- this.stack = (new Error()).stack
- }
- MyError.prototype = Object.create(Error.prototype);
- MyError.prototype.constructor = MyError; */
-
-InvalidParamError.inheritsFrom(Error);
-/**
- * @description Invalid parameter error
- * @param {string} [msg="The parameter used at $lineNum is invalid"]  Message
- * @param {string} fname Filename
- * @param {number} lineNum Line number
- * @constructor
- * @returns {InvalidParamError} Error
- * @extends {Error}
- * @this {InvalidParamError}
- * @since 1.0
- */
-function InvalidParamError(msg, fname, lineNum) { //Invalid parameter
-    this.name = "Invalid parameter error";
-    this.fileName = fname;
-    this.lineNumber = lineNum;
-    this.message = msg || "The parameter used at " + this.lineNumber + " is invalid !";
-    this.stack = (new Error()).stack;
-
-    return this;
-}
-
-/**
- * @description Get the caller's trace's location
- * @returns {string} Trace location
- * @since 1.0
- * @func
- */
-function getTrace () {
-    var err = function () {
-        try {
-            throw Error("")
-        } catch(e) {
-            return e;
-        }
-        //return new Error("");
-    };
-    var fn = stripPath(err().stack.split("\n").last());
-    return fn.split(" ").last();
-}
-
-/**
- * @description Get the caller's trace's line number and column number
- * @param {boolean} [noCols=false] Remove the column number
- * @returns {string} Line number (with the column number)
- * @since 1.0
- * @func
- */
-function getLineNum (noCols) {
-    return noCols ? getTrace().split(":")[1] : getTrace().get(getTrace().indexOf(":") + 1).remove(")");
-}
-
-
-/**
- * @description Test an error
- * @param {Error} err Error
- * @returns {undefined}
- * @since 1.0
- * @func
- */
-function testErr(err) {
-    try {
-        throw err;
-    } catch (e) {
-        Essence.say("%cTested error%c:\n" + e.stack, "erro", "text-decoration: underline; color: #000;", "text-decoration: none; color: #000;");
-    }
-}
-
-/**
- * @description Error testing for beginner's
- * @param {Function} fx Function
- * @param {*} [param] Parameter
- * @returns {undefined}
- * @since 1.0
- * @func
- */
-function noobTest (fx, param) { //Source: https://scontent-lhr3-1.xx.fbcdn.net/hphotos-xfl1/v/t1.0-9/12705609_1071795346206130_3757520485028328706_n.jpg?oh = cb99a4624d9732414b787f7eb8437c73&oe = 57383223
-    try {
-        fx(param);
-    } catch(e) {
-        location.href = "http://Stackoverflow.com/search?q=[js]+" + e.message;
-    }
-}
-
-/**
  * @description System (a bit like in Java)
  * @type {{in: {recording: boolean, record: Sys.in.record, startRecording: Sys.in.startRecording, stopRecording: Sys.in.stopRecording, data: Array}, log: Sys.log, debug: Sys.debug, out: Sys.out, toString: Sys.toString}}
  * @global
@@ -781,14 +658,14 @@ function Objectify (keyArr, valArr) {
  */
 function name2type(name, param) {
     switch(name) {
-        case "Number": return Number(param, arguments.toArray().get(2));
-        case "String": return String(param, arguments.toArray().get(2));
-        case "Boolean": return Boolean(param, arguments.toArray().get(2));
+        case "Number": return Number(param);
+        case "String": return String(param);
+        case "Boolean": return Boolean(param);
         case "Function": return Function(param, arguments.toArray().get(2));
         case "Object": return Object(param, arguments.toArray().get(2));
         case "Date": return Date(param, arguments.toArray().get(2));
         case "Array": return Array(param, arguments.toArray().get(2));
-        case "RegExp": return RegExp(param, arguments.toArray().get(2));
+        case "RegExp": return RegExp(param, arguments.toArray().get(2).toString());
         case "Error": return Error(param, arguments.toArray().get(2));
         case "File": return File(param, arguments.toArray().get(2));
         case "URL": return URL(param, arguments.toArray().get(2));
@@ -797,7 +674,7 @@ function name2type(name, param) {
         case "Blob": return Blob(param, arguments.toArray().get(2));
         case "Element": return Element(param, arguments.toArray().get(2));
         case "Person": return Person(param, arguments.toArray().get(2));
-        case "Item": return Item(param, arguments.toArray().get(2));
+        case "Item": return Item(param, parseFloat(arguments.toArray().get(2)));
         case "Colour": return Colour(param, arguments.toArray().get(2));
         case "LinkedList": return LinkedList(param, arguments.toArray().get(2));
         case "TreeNode": return TreeNode(param, arguments.toArray().get(2));
@@ -824,7 +701,7 @@ function name2type(name, param) {
         case "process": return process(param, arguments.toArray().get(2));
         case "server": return server(param, arguments.toArray().get(2));
         case "Archive": return Archive(param, arguments.toArray().get(2));
-        case "Machine": return Machine(param, arguments.toArray().get(2));
+        case "Machine": return Machine(param, arguments.toArray().get(2).toString());
         case "Memory": return Memory(param, arguments.toArray().get(2));
         case "WebPage": return WebPage(param, arguments.toArray().get(2));
         case "WebApp": return WebApp(param, arguments.toArray().get(2));

@@ -270,7 +270,7 @@ function getHTTPMsg (status) {
  * @since 1.1
  * @func
  */
-function createCORSRequest(method, url){
+function createCORSRequest (method, url) {
     var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
     if ("withCredentials" in xhr) xhr.open(method || "get", url, true);
     else if (typeof XDomainRequest != "undefined") {

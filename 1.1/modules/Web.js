@@ -7,6 +7,7 @@
  * @author Maximilian Berkmann <maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
  * @requires ../essence
+ * @requires DataStruct
  * @namespace
  * @type {{name: string, version: number, run: Web.run, description: string, dependency: Array, author: string, complete: boolean}}
  * @since 1.1
@@ -19,7 +20,7 @@ var Web = {
 
     },
     description: "Web stuff",
-    dependency: [],
+    dependency: ["DataStruct"],
     author: "Maximilian Berkmann",
     complete: false,
     toString: function () {
@@ -148,8 +149,9 @@ function DB (name, headers, rows, headerRows) {
     this.val = rows || [range(1), new Array(range(1).length).fill("...")].translate();
     this.css = "<style>*{font-family:Consolas,Segoe UI,Tahoma;}table{background: #000;}table,td,th{border:1px solid #000;color:#000;background:#fff;}tr:nth-child(even) td,tr:nth-child(even) th{background:#eee;}</style>";
     this.html = "";
+    this.rows = headerRows || false;
     this.build = function () {
-        this.html = isNon(headerRows)? complexTable("", this.val.line(), this.val.block(1), this.head, this.name, true, this.css): complexTable("", headerRows, this.val, this.head, this.name, true, this.css);
+        this.html = isNon(this.rows)? complexTable("", this.val.line(), this.val.block(1), this.head, this.name, true, this.css): complexTable("", this.rows, this.val, this.head, this.name, true, this.css);
     };
     this.fill = function (len) {
         this.val = [];
@@ -160,11 +162,17 @@ function DB (name, headers, rows, headerRows) {
     };
     this.save = function () {
         localStorage[this.name] = JSON.stringify(this.val);
+        localStorage[this.name + "_head"] = JSON.stringify(this.head);
+        localStorage[this.name + "_html"] = this.html;
+        localStorage[this.name + "_rows"] = this.rows;
     };
     this.update = function () {
-        if (localStorage[this.name]) this.val = JSON.parse(localStorage[this.name]);
-        else this.save();
-        this.build();
+        if (localStorage[this.name]) {
+            this.val = JSON.parse(localStorage[this.name]);
+            this.head = JSON.parse(localStorage[this.name + "_head"]);
+            this.html = localStorage[this.name + "_html"];
+            this.rows = localStorage[this.name + "_rows"].split(",");//JSON.parse(localStorage[this.name + "_rows"]);
+        } else this.save();
     };
     this.set = function (nval, i, j) {
         if ( j === -1) {
@@ -278,7 +286,7 @@ function server (name, admin, type, ver, mxsz) {
             if (this.slots[pos] != [pcs.name, pcs.author, pcs.description, pcs.content, pcs.bitsize] && this.nb_slots < this.maxsize) { //Check if the process was added to the server
                 this.nb_slots += this.maxsize / this.nb_slots//Extend by one slot
                 this.slots[this.nb_slots] = [pcs.name, pcs.author, pcs.description, pcs.content, pcs.bitsize];
-            }
+            };
         }
     };
     this.add = function (data) {
@@ -969,19 +977,94 @@ $G["i"] = 0;
  * @func
  */
 function loadBar (dlb, cb, delay) {
-    if(!dlb) dlb = "#dlb";
+    if (!dlb) dlb = "#dlb";
     Essence.addCSS(dlb + " {border: none;background: #0F0;max-width: 200px;text-align: center;font-size: 28px;padding: 2px;}#bar {border: 1px ridge #CCC;text-align: center;width: 201px;});");
-    if(!delay) delay = 30;
+    if (!delay) delay = 30;
     $e(dlb).setCSS("position", "relative");
     $e(dlb).setCSS("width", $e(dlb).css("width") + $G["i"]);
     //or use a progress tag
     $e(dlb).write($G["i"] + "%");
     $G["i"]++;
     $G["timer"] = setTimeout("loadBar(" + dlb + ", " + cb + ", " + delay + ")", delay);
-    if($G["i"] >= 100) {
+    if ($G["i"] >= 100) {
         clearTimeout($G["timer"]);
         $G["i"] = 0;
         $e(dlb).write("Download finished");
         cb();
     }
+}
+
+/**
+ * @description Console (like the terminal but on a webpage)
+ * @param {string} [title="Console"] Title
+ * @param {*} [entry=""] Entry on the console at first use
+ * @param {string} [usr="User"] User
+ * @constructor
+ * @this {Console}
+ * @returns {Console} Console
+ * @since 1.1
+ * @todo Add more commands ?
+ */
+function Console (title, entry, usr) {
+    this.title = title || "Console";
+    this.val = entry || "";
+    this.history = new virtualHistory(this.val);
+    this.user = usr || "User";
+    this.exec = function (ins) {
+        if (ins[0] != "/") this.out("<span class='error'>Invalid command</span>");
+        else this.val = ins;
+        this.history.add(ins);
+        var cmd = ins.split(" ")[0].get(1).toLowerCase(), params = ins.split(" ").get(1);
+        switch (cmd) {
+            case "say":
+                this.out(params.join(" "), "&lt" + this.user + "&gt;");
+                break;
+            case "help":
+                this.out("<b>Help: </b><br />/say [text]" + tabs() + "Let the user say something on the console<br />/help" + tabs() + "Show this<br />/reload" + tabs() + "Reload the console<br />/title [title]" + tabs() + "/$" + tabs() + "Display EssenceJS's version<br />/exp [...]" + tabs() + "Evaluate an expression");
+                break;
+            case "reload":
+                this.val = "";
+                $e("#consoleOut").write("");
+                break;
+            case "title":
+                $e("#consoleTitle").write(params.join(" "));
+                break;
+            case "$":
+                this.out("Essence v" + Essence.version);
+                break;
+            case "exp": //Caution, this can be used for XSS attacks
+                this.out(eval(params.join(" ")), "$EXP&gt;");
+                break;
+            default:
+                this.exec("/help");
+        }
+    };
+    this.html = "<table id='console' cellpadding=0 cellspacing=0><thead><th id='consoleTitle'>" + this.title + "</th></thead><tr><td><span id='consoleOut'>" + this.val + "</span></td></tr><tr><td><input id='consoleIn' /></td></tr></table>";
+
+    this.out = function (word, prefix) {
+        $e("#consoleOut").after((prefix? "<span style='color: #0f0'>" + prefix + "</span> ": "") + word + "<br />", true);
+    };
+
+    this.place = function (id) {
+        $e(id? "#" + id: "body").write(this.html, true);
+    };
+
+    this.init = function (id) {
+        this.place(id || "console");
+        $n("#consoleOut").innerHTML = (this.val || "Hello world !") + "<br/>";
+        var self = this;
+
+        $e("#consoleIn").on("change", function () {
+            /**
+             * @this $n("#consoleIn")
+             */
+            self.exec(this.value);
+            /**
+             * @this $n("#consoleIn")
+             */
+            this.value = "";
+        });
+    };
+
+    return this;
 }

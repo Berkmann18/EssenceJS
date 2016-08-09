@@ -153,6 +153,21 @@ function randFloatSpread (range) {
 }
 
 /**
+ * @description Generate an array of random numbers
+ * @param {number} [n=10] Number of numbers
+ * @param {number} [min=0] Minimum
+ * @param {number} [max=100] Maximimum
+ * @param {boolean} [float=true] Floating point
+ * @param {Bool} [base=false] Base
+ * @returns {Array} Random number array
+ */
+function randNum (n, min, max, float, base) {
+    var r = [];
+    for (var i = 0; i < (n || 10); i++) r[i] = base? conv(rand(min || 0, max || 100, !float || true), 10, base): rand(min || 0, max || 100, !float);
+    return r
+}
+
+/**
  * @description Generate a nearly sorted array
  * @param {number} n Number of elements
  * @param {number} min Minimum
@@ -220,7 +235,7 @@ function negateBin (bin, toArr) {
 
 /**
  * @description Floating point binary number to decimal number
- * @param {number} bin Binary number
+ * @param {string} bin Binary number
  * @returns {number} Decimal number
  * @since 1.0
  * @func
@@ -228,26 +243,47 @@ function negateBin (bin, toArr) {
 function floatingPtBin (bin) {
     //%= .05859375 (sign) + .27734375 (exponent) + .6640625 (mantissa)
     /* Lookup table aid
-     var s = new Stream(8, "x*2", 4);
+     var s = new Stream(8, "x*2", 5);
      table(s.data.map(function (x) {
      return [(.05859375 * x), (.27734375 * x), (.6640625 * x), (.05859375 * x) + (.27734375 * x) + (.6640625 * x)];
      }))
+     S/E/M              (x2/x??/x??)
+     1/4/3 (8bit) -%> .125/.5/.375
+     1/6/9 (16bit) -%> .0625/.375/.5625
+     1/8/23 (32bit) -%> .03125/.25/.71875
+     1/11/52 (64bit) -%> .015625/.171875/.8125
+     1/14/112 (128bit) -%> .0078125/.109375/.875
+     1/x/y (Nbit) -%> .0484375/.28125/.66875 => .9984375
+     var s = new Stream(8, "x*2", 5);
+     table(s.data.map(function (x) {
+     return [1, (.3212890625 * x), (.6787109375 * x), (.3212890625 * x) + (.6787109375 * x)];
+     }))
      */
-    var s = (bin[0] === 1)? -1: 1, e, m; //sign, exponent, mantissa
+    var s = (bin[0] === 1)? -1: 1, e, m, mLoop = function (x, M) {
+        var res = 0;
+        for (var i = 0; i < M; i++) res += parseInt(x[i]) * Math.pow(2, -i - 1);
+        return res;
+    }; //sign, exponent, mantissa
     switch(bin.length) {
         case 8:
-            e = ((bin[1] === 1)? 1: -1) * conv(bin.get(2, 3), 2);
-            m = bin.get(4);
-            m = m[0] * Math.pow(2, -1) + m[1] * Math.pow(2, -2) + m[2] * Math.pow(2, -3) + m[3] * Math.pow(2, -4);
+            e = ((bin[1] === 1)? 1: -1) * conv(bin.get(2, 4));
+            m = mLoop(bin.get(5), 3);
             break;
         case 16:
-
+            e = ((bin[1] === 1)? 1: -1) * conv(bin.get(2, 6));
+            m = mLoop(bin.get(7), 9);
             break;
         case 32:
-
+            e = ((bin[1] === 1)? 1: -1) * conv(bin.get(2, 8));
+            m = mLoop(bin.get(9), 23);
             break;
         case 64:
-
+            e = ((bin[1] === 1)? 1: -1) * conv(bin.get(2, 11));
+            m = mLoop(bin.get(12), 52);
+            break;
+        case 128:
+            e = ((bin[1] === 1)? 1: -1) * conv(bin.get(2, 14));
+            m = mLoop(bin.get(15), 112);
             break;
         default:
             throw new Error("Unvalid binary number");
@@ -581,7 +617,7 @@ function Po2Norm (l, x) { //Poisson to Normal
 
 /**
  * @description Gaussian Error
- * @source http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function
+ * @source {@link http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function}
  * @param {number} z Number
  * @returns {number} Gaussian error
  * @since 1.0
@@ -595,7 +631,7 @@ function erf (z) {
 
 /**
  * @description Normal estimate
- * @source http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function
+ * @source {@link http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function}
  * @param {number} n Total number of attempts
  * @param {number} p Success probability
  * @param {number} r Number of attempts
@@ -660,6 +696,17 @@ function clampBottom (x, a) {
  */
 function clampTop (x, b) {
     return (x > b)? b: x
+}
+
+/**
+ * @description Keeps an ascii code in the alphabetical range in the ascii table
+ * @param {number} code Ascii code
+ * @returns {number} Clamped code
+ * @since 1.0
+ * @func
+ */
+function abcClamp(code) {
+    return code === 32? 32: revClamp(clamp(code, 65, 122), 90, 97);
 }
 
 /**
@@ -951,6 +998,7 @@ function eqSolver (formula, res, a, b) {
     }); //Filter out the values which doesn't match the result and returns only (x, y)
 }
 
+
 /**
  * @description Manual equation solver
  * @param {string} eq Equation
@@ -984,7 +1032,6 @@ function manuEqSolver (eq, max, dim, r) {
     return p
 }
 
-
 /**
  * @description Remove the text from the string to keep the numbers
  * @param {string} x String
@@ -999,7 +1046,7 @@ function getNumFromStr (x) { //Remove the text from the string to keep the numbe
 /**
  * @description X unit to y px
  * @param {string} x Number with a unit
- * @source http://www.endmemo.com/sconvert/centimeterpixel.php
+ * @source {@link http://www.endmemo.com/sconvert/centimeterpixel.php}
  * @returns {number} Pixels
  * @see fromPixel
  * @since 1.0
@@ -1198,6 +1245,7 @@ function range2base (min, inc, max, b) { //Same as range(...) but to the base b
  * @param {number} [max=100] Maximum
  * @param {boolean} [noRepeat=false] No repeated numbers
  * @returns {Array} Mixed range
+ * @todo fix the error where undefined values are in the resulting array when min=1
  * @since 1.0
  * @func
  */
@@ -1211,7 +1259,7 @@ function mixedRange (min, inc, max, noRepeat) {
     } else {
         for(var i = min; i <= max; i++) val[i] = available.rand();
     }
-    return val
+    return val.remove(undefined)
 }
 
 /**
@@ -1415,17 +1463,6 @@ function readCoord (str, isInt) {
 }
 
 /**
- * @description Keeps an ascii code in the alphabetical range in the ascii table
- * @param {number} code Ascii code
- * @returns {number} Clamped code
- * @since 1.0
- * @func
- */
-function abcClamp(code) {
-    return code === 32? 32: revClamp(clamp(code, 65, 122), 90, 97);
-}
-
-/**
  * @description x % b where x < a isn't allowed
  * @param {number} x Number
  * @param {number} a Lowest bound
@@ -1463,7 +1500,7 @@ function abcModulus(code) {
  */
 function bruteForceNum(min, cond, max) { //Brute force through R to find a x such that min <= x <= max and cond is true for x
     for (var x = min; x < max; x++) {
-        if(eval(cond.replace(RegExpify("x"), x))) return x;
+        if(eval(cond.replace(RegExpify("x"), x+""))) return x;
     }
     return false;
 }

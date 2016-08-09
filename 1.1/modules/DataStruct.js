@@ -361,8 +361,7 @@ function Node (pl, nx, pv) {
         if (this.payload === n) return d;
         if (this.next) return this.next.find(n, d + 1);
         return [-1, d]
-    }
-
+    };
     return this;
 }
 
@@ -574,7 +573,7 @@ function NTreeNode (pl, ch) {
 /**
  * @description Mathematical set.
  * It's depreciated in the next version (in favour of ES6) and will have the following methods instead:
- * - add(*), has(*), delete(*), size()->size, values(), clear()
+ *   add(*), has(*), delete(*), size()->size, values(), clear()
  * @param {Array} [arr=[]] Array or element
  * @returns {Set} Set
  * @constructor
@@ -582,16 +581,16 @@ function NTreeNode (pl, ch) {
  * @since 1.0
  */
 function Set (arr) {
-    this.value = (isType(arr, "arr")? arr: [arr]) || [];
+    this.value = (isType(arr, "Array")? arr: [arr]) || [];
     this.size = function () {
         return this.value.length
     };
 
     this.add = function (item) {
-        if (this.value.indexOf(item) === -1) {
-            if (isType(item, "array")) this.value = this.value.concat(item);
-            else this.value.push(item)
+        if (isType(item, "array")) {
+            for (var i = 0; i < item.length; i++) this.add(item[i]);
         }
+        if (this.value.indexOf(item) === -1) this.value.push(item)
     };
 
     this.remove = function (item) {
@@ -602,19 +601,19 @@ function Set (arr) {
         }
     };
 
-    this.clear = function () {
-        this.value = []
+    this.clear = function (index) {
+        index? this.value = this.value.remove(this.value[index]): this.value = []
     };
 
     this.isEmpty = function () {
-        return this.value === []
+        return this.value.length === 0
     };
 
     this.contains = function (item) {
         if (isType(item, "array")) {
             var c = true;
             for (var i = 0; i < item.length; i++) {
-                if (!c) return false; //Reduce the cost of the operation by not doing any unecessary work
+                if (!c) return false; //Reduce the cost of the operation by not doing any unnecessary work
                 c = c && this.contains(item[i]);
             }
             return c
@@ -647,12 +646,20 @@ function Set (arr) {
         return this.value[i]
     };
 
+    this.indexOf = function (val) {
+        return this.value.indexOf(val);
+    };
+
+    this.set = function (i, val) {
+        this.value[i] = val;
+    };
+
     this.first = function () {
         return this.value[0]
     };
 
     this.last = function () {
-        return this.value[this.value.lastIndex()]
+        return this.value.last()
     };
 
     this.min = function (s, e) {
@@ -664,7 +671,7 @@ function Set (arr) {
     };
 
     this.median = function (s, e) {
-        return this.value.max(s, e)
+        return this.value.median(s, e)
     };
 
     return this;
@@ -1126,7 +1133,7 @@ function A(start, goal, grid) { //JS version of https://en.wikipedia.org/wiki/A*
             if (closedSet.indexOf(n[i]) > -1) continue;
             var tentativeGScore = gScore[closedSet.indexOf(current)] + 1;
             if (closedSet.indexOf(n[i]) === -1) openSet.push(n[i]);
-            else if (tentativeGScore >= gScore[i]) continue;
+            else if (tentativeGScore >= gScore[i]) break;
         }
 
         cameFrom[i] = current;
@@ -1159,6 +1166,7 @@ function reconPath(cameFrom, current, grid) {
  * @since 1.0
  * @func
  * @see Astar
+ * @todo Do it !
  */
 function IDAstar () {
 
@@ -1198,14 +1206,19 @@ function alphabetSort (x) {
  * @description Sort the array/string from the most occurring item to the least occurring ones
  * @param {Array|string} arr Array/string to sort
  * @returns {Array} Sorted occurrence list
+ * @todo Improve because it's not right all the time
  * @since 1.0
  * @func
  */
 function occurrenceSort(arr) {
-    var tmp = rmDuplicates(arr), res = [], counts = [];
-    for (var i = 0; i < tmp.length; i++) counts[i] = arr.count(tmp[i]);
-    while(tmp.length > 0) {
-        for (i = 0; i < tmp.length; i++) {
+    var tmp = rmDuplicates(arr), res = [];
+    var counts = tmp.map(function (x) {
+        return arr.count(x);
+    });
+    console.log("tmp", tmp, "\ncounts", counts);
+    while (tmp.length > 0) {
+        console.log(" tmp", tmp, "\ncounts", counts);
+        for (var i = 0; i < tmp.length; i++) {
             if (counts[i] === counts.max()) {
                 res.push(tmp[i]);
                 counts = counts.remove(counts[i]);
@@ -1214,6 +1227,23 @@ function occurrenceSort(arr) {
         }
     }
     return res;
+}
+
+/**
+ * @description 2nd occurrence sorting alg
+ * @todo Work on it !
+ * @param {Array} arr Array to sort
+ * @returns {{}} Result
+ * @func
+ * @since 1.1
+ */
+function occSort (arr) {
+    var counts = arr.map(function (x) {
+        return arr.count(x);
+    }), vals = rmDuplicates(arr);
+    var lookup = Objectify(vals, counts);
+
+    return lookup;
 }
 
 /**
@@ -1329,7 +1359,7 @@ function virtualHistory (elm) {
     };
 
     this.redo = function () {
-        if (this.state ==(this.states.size()-1)) throw new Error("Set overflow, it's not possible to redo to a non-existent state.");
+        if (this.state === (this.states.size() - 1)) throw new Error("Set overflow, it's not possible to redo to a non-existent state.");
         this.state++;
         this.src = this.get(this.state);
     };
@@ -1339,7 +1369,7 @@ function virtualHistory (elm) {
     };
 
     this.isStateDefault = function () { //Check if the current state is the default
-        return this.src == this.DEFAULT_STATE
+        return this.src === this.DEFAULT_STATE
     };
 
     return this;
@@ -1541,5 +1571,89 @@ function EventTable(name, srcs) {
         return "'" + this.table[pos][1] + "' at " + this.table[pos][0];
     };
 
+    return this;
+}
+
+//will be depreciated by Map in ES6
+/**
+ * @description Map (Hashless Hashmap).
+ * It's depreciated in the next version (in favour of ES6) and will have the following methods instead:
+ *
+ * @param {*} [keys=[]] Keys
+ * @constructor
+ * @this {Map}
+ * @returns {Map} Map
+ * @since 1.1
+ */
+function Map (keys) {
+    this.keys = new Set(keys || []);
+    this.values = //Objectify(this.keys.value, new Array(this.keys.size()).fill([]));
+    this.add = function (key, value) {
+        Essence.say("Adding key/value: " + key + " / " + value);
+        if (isType(key, "Array") && isType(value, "Array")) {
+            for (var i = 0; i < key; i++) this.add(key[i], value[i]);
+            Essence.say("Multi")
+        } else if (isType(key, "Array")) {
+            for (i = 0; i < key; i++) this.add(key[i], value);
+            Essence.say("Multi key");
+        }
+        this.keys.add(key);
+        if (this.values[key] === undefined) this.values[key] = [];
+        this.values[key].push(value || null);
+    };
+    this.clear = function (key) {
+        key? this.values[key] = []: this.keys = new Set();
+    };
+    this.has = function (val) {
+        for (var k in this.keys) {
+            if (this.keys.hasOwnProperty(k) && this.keys[k].indexOf(val) > -1) return true;
+        }
+        return false;
+    };
+    this.hasKey = function (key) {
+        return this.keys.contains(key);
+    };
+    this.size = function () {
+        var el = this.values;
+      return this.keys.value.map(function (k) {
+          return el[k].length;
+      });
+    };
+    this.elements = function (spaced) {
+        var el = this.values;
+        return this.keys.value.map(function (k) {
+            return spaced? el[k].toStr(true): el[k].toString();
+        }).toStr(true);
+    };
+    this.isEmpty = function () {
+        return this.keys.isEmpty(); //No need to check the values
+    };
+    this.get = function (key) {
+        return this.values[key];
+    };
+    this.remove = function (key, value) {
+        value? this.values[key] = this.values[key].remove(value): this.keys.remove(key);
+    };
+    this.toString = function () {
+        return "Map(key/values=" + this.values.toArray().toStr(true) + ")";
+    };
+    this.forEach = function (act) {
+        for (var i = 0; i < this.keys.size(); i++) act(this.keys.get(i));
+    };
+    this.merge = function (table) {
+        this.keys.add(table.keys.value, table.values);
+    };
+    this.set = function (key, value) {
+        this.keys.set(this.keys.indexOf(key), value);
+    };
+    this.replace = function (key, oldVal, newVal) {
+        if (this.values[key].indexOf(oldVal) > -1) this.values[key] = this.values[key].replace(oldVal, newVal);
+    };
+    this.replaceAll = function (oldVal, newVal) {
+        var self = this;
+        this.forEach(function (k) {
+            self.replace(k, oldVal, newVal);
+        });
+    };
     return this;
 }

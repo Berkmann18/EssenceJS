@@ -149,8 +149,9 @@ function testErr(err) {
  * @returns {undefined}
  * @since 1.0
  * @func
+ * @source {@link https://scontent-lhr3-1.xx.fbcdn.net/hphotos-xfl1/v/t1.0-9/12705609_1071795346206130_3757520485028328706_n.jpg?oh=cb99a4624d9732414b787f7eb8437c73&oe = 57383223}
  */
-function noobTest (fx, param) { //Source: https://scontent-lhr3-1.xx.fbcdn.net/hphotos-xfl1/v/t1.0-9/12705609_1071795346206130_3757520485028328706_n.jpg?oh = cb99a4624d9732414b787f7eb8437c73&oe = 57383223
+function noobTest (fx, param) {
     try {
         fx(param);
     } catch(e) {
