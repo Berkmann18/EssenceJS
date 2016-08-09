@@ -76,13 +76,13 @@ var Essence = {
             else console.log("%c[EssenceJS]%c " + msg, "color: #808080; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000");
         }
     },
-    applyCSS: function () {
-        include_once("essence.min.css", "link");
-        if ($e("html").val(true).indexOf("<body></body>") > -1) { //A bit of cleaning
+    applyCSS: function (nonMinify) {
+        nonMinify? include_once(getNumFromStr(this.version) + "/essence.css", "link", getDirectoryPath()): include_once(getNumFromStr(this.version) + "/essence.min.css", "link", getDirectoryPath());
+        /*if ($e("html").val(true).indexOf("<body></body>") > -1) { //A bit of cleaning
             var ix = $e("html").val(true).indexOf("<body></body>");
             var bfr = $e("html").val(true).slice(0, ix), aft = $e("html").val(true).slice(ix + 13, $e("html").val(true).length);
             $e("html").write(bfr + aft, true);
-        }
+        }*/
     },
     addCSS: function (nstyle) {
         var s = document.createElement("style");
@@ -95,13 +95,13 @@ var Essence = {
     }, update: function () { //To keep the script updated !!
         var scriptArr = $e("*script");
         for (var i = 0; i < scriptArr.length; i ++) {
-            if (scriptArr[i].src.indexOf("essence.js")>-1 || scriptArr[i].src.indexOf("essence.min.js")>-1) scriptArr[i].src = this.source || Essence.source;
+            if (scriptArr[i].src.indexOf("essence.js") > -1 || scriptArr[i].src.indexOf("essence.min.js") > -1) scriptArr[i].src = this.source || Essence.source;
         }
         Essence.say("%cEssence.(min).js%c has been updated", "succ", "text-decoration: underline", "text-decoration: none");
     },
-    eps: Math.pow(2, -52),//Matlab's epsilon (useful when dealing with null values to keep them in the real range or just not null
+    eps: Math.pow(2, -52), //Matlab's epsilon (useful when dealing with null values to keep them in the real range or just not null
     emptyDoc: function (title, author) { //Empty the document and fill it with a basic structure
-        $e("html").write("<head><title>" + (title || document.title) + "</title><meta charset = 'UTF-8' /><meta name = 'author' content = " + (author || "unknown") + " /><script type = 'text/javascript' src = " + Essence.source + "></script></head><body></body>", true);
+        $e("html").write("<head><title>" + (title || document.title) + "</title><meta charset='UTF-8' /><meta name='author' content=" + (author || "unknown") + " /><script type='text/javascript' src=" + Essence.source + "></script></head><body></body>", true);
     }, editor: function (ctt) {
         location.href = "data:text/html, <html contenteditable>" + (ctt? ctt + "</html>": "</html>");
     }, processList: [["Name (signature)", "Author", "Size"]],
@@ -193,7 +193,7 @@ function require (mdl, ver, extpath) {
     if (isType(mdl, "Array")) {
         for (var i = 0; i < mdl.length; i++) require(mdl[i], ver);
     } else if (modules.indexOf(mdl) === -1) {
-        include_once((ver? ver + "/": "") + "modules/" + mdl + ".js", "script", getDirectoryPath());
+        include_once((ver? ver + "/": "") + "modules/" + mdl + ".js", "script", extpath || getDirectoryPath());
         modules.push(mdl);
         if (debugging) console.log("The module %c%s%c is now included into %c%s    " + getTimestamp(true), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFilename());
     } else if (debugging) console.log("The module %c%s%c is already included into %c%s    " + getTimestamp(true), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFilename());
@@ -281,7 +281,6 @@ function init (mdls, mid, cb, ver, argsMid, argsCB) {
  * @ignore
  * @inheritsdoc
  * @param {string} path Path
- * @param {string} [localPath="file:///"] Local path
  * @returns {string} Directory path
  * @since 1.1
  */
@@ -300,17 +299,23 @@ gatherScripts = function (asList) {
     var $s = $n("*script"), res = asList? []: {};
     for(var i = 0; i<$s.length; i++) asList? res.push($s[i].src): res[$s[i].src.split("/")[$s[i].src.split("/").length - 1]] = $s[i].src;
     return res
-}, getCurrentPath = function (path, localPath) {
+}, /**
+ * @inheritsdoc
+ * @param {string} path Path
+ * @param {string} [localPath="file:///"] Local path
+ * @returns {string} Current path
+ */
+    getCurrentPath = function (path, localPath) {
     if (!localPath) localPath = "file:///";
-    var parts = path.split("/"), res = "", pParts = localPath.split("/"), i = 0, j = 0, _get = function (o, start, end) {
-        var res = [];
+    var parts = path.split("/"), res, pParts = localPath.split("/"), i = 0, j = 0, _get = function (o, start, end) {
+        var r = [];
         if (start < 0 && !end) {
             end = start;
             start = 0;
         }
         if (end < 0) end = o.length + end - 1;
-        for(var i = (start || 0); i <= (end || o.length - 1); i++) res.push(o[i]);
-        return res.remove()
+        for(var i = (start || 0); i <= (end || o.length - 1); i++) r.push(o[i]);
+        return r.remove()
     };
     while(localPath.indexOf(parts[i]) > -1) i++;
     res = _get(parts, i).join("/");
@@ -323,7 +328,7 @@ gatherScripts = function (asList) {
         for(i = 0; i < j; i++) res = "../" + res;
     }
     return res
-},
+}/*,
 getExtPath = function (path) {
     var cp = location.href, safi = function (str0, str) {
         var sf = "", pos = -1;
@@ -338,7 +343,7 @@ getExtPath = function (path) {
     var portion = getCurrentPath(path, parentPath);
     var derive = "../".repeat(portion.count("/"));
     return derive + getCurrentPath(path, parentPath);
-};
+}*/;
     
 /**
  * @summary Module Loading section
@@ -407,10 +412,10 @@ function $n (selector) { //To get directly the node without having to use $e(sel
  * @since 1.0
  */
 function Element (selector) { //The element object
-    if (/^([#\.\*_-`~&]\W*|\S|undefined|null|)$/.test(selector)) throw new InvalidParamError("Element cannot accept the selector '" + selector + "' as it's invalid.")//Reject invalid selectors
+    if (/^([#\.\*_-`~&]\W*|\S|undefined|null|)$/.test(selector)) throw new InvalidParamError("Element cannot accept the selector '" + selector + "' as it's invalid."); //Reject invalid selectors
     if (selector[0] === "#") this.node = document.querySelector(selector) || document.getElementById(selector.slice(1, selector.length)); //Id
     else if (selector[0] === ".") this.node = document.querySelector(selector) || document.getElementByClassName(selector.slice(1, selector.length)); //Class
-    else if (selector[0] === "*") this.node = document.querySelectorAll(selector.slice(1, selector.length)) || document.getElementsByTagName(selector.slice(1, selector.length))//Node array
+    else if (selector[0] === "*") this.node = document.querySelectorAll(selector.slice(1, selector.length)) || document.getElementsByTagName(selector.slice(1, selector.length)); //Node array
     else this.node = document.querySelector(selector);
 
     this.val = function (getHTML, withTags) { //Get the value of the element's node
@@ -612,6 +617,50 @@ function Element (selector) { //The element object
         return this.node.tagName.toLowerCase()
     };
 
+    this.scrollTop = function () {
+        this.node.scrollTop = this.node.offsetTop;
+    };
+
+    this.scrollBottom = function () {
+        this.node.scrollTop = this.node.offsetHeight - this.node.offsetTop;
+    };
+
+    this.scrollLeft = function () {
+        this.node.scrollLeft = this.node.offsetLeft;
+    };
+
+    this.scrollRight = function () {
+        this.node.scrollLeft = this.node.offsetWidth - this.node.offsetLeft;
+    };
+
+    this.scroll = function (x, y) {
+        this.node.scrollLeft += x || 0;
+        this.node.scrollTop += y || 0;
+    };
+    
+    this.autoScroll = function (dir, speed) {
+        if (!dir) dir = "d";
+        var self = this, iv = setInterval(function () {
+            switch (dir.toLowerCase()[0]) {
+                case "l":
+                    self.scroll(-1, 0);
+                    if (self.node.scrollLeft === self.node.offsetLeft) clearInterval(iv);
+                break;
+                case "r":
+                    self.scroll(1, 0);
+                    if (self.node.scrollLeft === self.node.offsetWidth - self.node.offsetLeft) clearInterval(iv);
+                break;
+                case "u":
+                    self.scroll(0, -1);
+                    if (self.node.scrollTop === self.node.offsetTop) clearInterval(iv);
+                break;
+                default: //d
+                    self.scroll(0, 1);
+                    if (self.node.scrollTop === self.node.scrollHeight - self.node.offsetTop) clearInterval(iv);
+            }
+        }, speed || 50);
+    };
+    //Maybe do something with $n(...).scrollIntoView()
     return this
 }
 
@@ -630,7 +679,10 @@ function include (file, type) {
     if (!type) type = (file.indexOf(".js") > 0)? "script": "link";
     var el = document.createElement(type);
     if (type === "script") el.src = file;
-    else el.href = file;
+    else {
+        el.href = file;
+        el.rel = "stylesheet";
+    }
     el.type = (type === "script")? "text/javascript": "text/css";
     document.head.appendChild(el)
 }
@@ -646,7 +698,7 @@ function include (file, type) {
  * @see include
  */
 function include_once (file, type, parentPath) {
-    if (!type) type = (file.indexOf(".js") > 0)? "script": "style";
+    if (!type) type = (file.indexOf(".js") > 0)? "script": "link";
     var r = type === "script"? gatherScripts(true): gatherStylesheets(true);
     if (parentPath && (keyList(r, true).indexOf(parentPath + file) > -1 || valList(r, true).indexOf(parentPath + file) > -1)) return false;
     else if (keyList(r, true).indexOf(file) > -1 || valList(r, true).indexOf(file) > -1) return false;
@@ -745,13 +797,14 @@ Object.prototype.isIterable = function () {
 /**
  * @description Self-destruction of the object.
  * @this Object
- * @source https://Google.github.io/styleguide/javascriptguide.xml?showone=delete#delete
+ * @source {@link https://Google.github.io/styleguide/javascriptguide.xml?showone=delete#delete}
  * @returns {undefined}
  * @since 1.0
  * @method
  */
 Object.prototype.delete = function () {
-    this.property_ = null
+    this.property_ = null;
+    delete this;
 };
 
 /**
@@ -1197,7 +1250,7 @@ Array.prototype.mean = function (nbDec, start, end) {
     if (!start) start = 0;
     if (!end) end = this.lastIndex();
     var sum = this.sum(start, end);
-    return (sum / (this.get(start, end).length)).toNDec(nbDec) + 0; //To avoid getting the Number object representation rather than the actual result
+    return (sum / (this.get(start, end).length)).toNDec(nbDec); //To avoid getting the Number object representation rather than the actual result
 };
 
 /**
@@ -1214,7 +1267,7 @@ Array.prototype.meanOf = function (nbDec, start, n) {
     if (!n) n = this.length - start - 1;
     var sum = 0;
     for (var i = 0; i < n; i++) sum += this[start + i];
-    return (sum / n).toNDec(nbDec) + 0; //To avoid getting the Number object representation rather than the actual result
+    return (sum / n).toNDec(nbDec); //To avoid getting the Number object representation rather than the actual result
 };
 
 /**
@@ -1262,7 +1315,7 @@ Array.prototype.avg = function (nbDec, start, end) {
     if (!start) start = 0;
     if (!end) end = this.lastIndex();
     var sum = this.sum(start, end) - this.max(start, end) - this.min(start, end);
-    return (sum / (this.get(start, end).length - 2)).toNDec(nbDec) + 0
+    return (sum / (this.get(start, end).length - 2)).toNDec(nbDec)
 };
 
 /**
@@ -1281,7 +1334,7 @@ Array.prototype.avgOf = function (nbDec, start, n) {
     for (var i = 0; i < n; i++) {
         if (this[start + i] != this.maxOf(start, n) || this[start + i] != this.minOf(start, n)) sum += this[start + i];
     }
-    return (sum / (n - 2)).toNDec(nbDec) + 0
+    return (sum / (n - 2)).toNDec(nbDec)
 };
 
 /**
@@ -1626,10 +1679,10 @@ Array.prototype.bruteForceSort = function () {
  */
 Array.prototype.maxSort = function () {
     //Ignores repeated values and loose data
-    var mn = this.min(), med = this.median(), mx = this.max(), res = new Array(this.length), inc = this.getIncrement(3), q1 = this.quartile(1), q3 = this.quartile(3);
+    var med = this.median(), res = new Array(this.length), inc = this.getIncrement(3), q1 = this.quartile(1), q3 = this.quartile(3);
     //Pre-sort some elements
-    res[0] = mn;
-    res[res.length-1] = mx;
+    res[0] = this.min();
+    res.last(this.max());
     if(parseInt(res.length / 2) === (res.length / 2)) res[res.length / 2] = med;
     if(parseInt(res.length / 4) === (res.length / 4)) res[res.length / 4] = q1;
     if(parseInt(3 * res.length / 4) === (3 * res.length / 4)) res[3 * res.length / 4] = q3;
@@ -1844,7 +1897,7 @@ Array.prototype.rot = function (deg) {
         if (deg === 90) {
             tmp = this[0].get(-1); //Get all but the last element of the first row
             for (var j = 0; j < 1/*this.length / 2*/; j++) { //Weird error
-                tmp = this[j].get(-1)
+                tmp = this[j].get(-1);
                 for (var i = 0; i < this.maxLength() - 1; i++) {
                     if(j > 0) Essence.say("#" + i);
                     if(j > 0) Essence.say(this[j][i] + "<-" +  this[this.length - 1 - i][j]);
@@ -2379,6 +2432,7 @@ Array.prototype.uniquePush = function(obj) { //Post-init duplicate safe push
             if (this.indexOf(obj[i]) === -1) this.push(obj[i]);
         }
     } else if (this.indexOf(obj) > -1) throw "the object " + obj.toString() + "is already present in " + this.toString();
+    else this.push(obj);
 };
 
 /**
@@ -2979,7 +3033,7 @@ function getTime (ms) {
  */
 function getDate (short) {
     var m = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], d = new Date();
-    return short? d.getDate().toNDigits() + m[d.getMonth()] + d.getUTCFullYear(): d.getDate().toNDigits() + "/" + (d.getMonth() + 1).toNDigits() + "/" + d.getUTCFullYear()
+    return short? d.getDate().toNDigits() + m[d.getMonth()] + d.getUTCFullYear(): d.toLocaleDateString();
 }
 
 /**
@@ -2987,10 +3041,38 @@ function getDate (short) {
  * @param {boolean} [readable=false] Readable (dd/MM/yyyy hh:mm:ss.xxx) or not (ddMMM-hh-mm-ss)
  * @returns {string} Timestamp
  * @since 1.0
+ * @see getDate, getTime
  * @func
  */
 function getTimestamp (readable) {
     return readable? getDate() + " " + getTime(true): getDate(true) + "-" + getTime().replace(/\:/g, "-")
+}
+
+/**
+ * @description Date to textual format
+ * @param {Date} d Date
+ * @returns {string} Textual format (in dd/mm/yyyy)
+ * @see txt2date
+ * @func
+ * @see 1.1
+ */
+function date2txt (d) {
+    if (!isType(d, "Date")) throw new Error("$d is not a Date object");
+
+    return d.getDate().toNDigits() + "/" + (d.getMonth() + 1).toNDigits() + "/" + d.getFullYear();
+}
+
+/**
+ * @description Textual date (in dd/mm/yyyy) to Date
+ * @param {string} txt Textual date
+ * @returns {Date} Date
+ * @see date2txt
+ * @func
+ * @since 1.1
+ */
+function txt2date (txt) {
+    var p = txt.split("/");
+    return new Date(p[2], p[1] - 1, p[0]);
 }
 
 /**
@@ -3016,24 +3098,25 @@ function dateTime (id) {
     if (m < 10) m = "0" + m;
     s = date.getSeconds();
     if (s < 10) s = "0" + s;
-    GMT = (GMT >= 0)? "GMT + " + GMT: "GMT-" + GMT;
+    GMT = (GMT >= 0)? "GMT+" + GMT: "GMT-" + GMT;
     var result = "We're " + days[day] + " " + d + " " + months[month] + " " + year + " and it's " + h + ":" + m + ":" + s + " " + tt + " " + GMT;
-    $e("#" + id).write(result, true);
+    $e("#" + id).write(result);
     setTimeout("dateTime(\"" + id + "\");", 1000);
 }
 
 /**
- * @description Gives the week day of the given data
+ * @description Gives the week day of the given data (slightly inaccurate)
  * @param {string} d Date (in the form dd/mm/yyyy)
  * @todo Getting it right
  * @returns {string} Week day
  * @since 1.0
+ * @see dayOfWeek
  * @func
  */
 function weekDay (d) {
-    var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], k = parseInt(d.split("/")[0]), m = parseInt(d.split("/")[1]), y = parseInt(d.split("/").last()), c;
+    var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], k = parseInt(d.split("/")[0]), m = parseInt(d.split("/")[1]), y = parseInt(d.split("/").last()), c;
     c = Math.floor(y / 100); //Century
-    y = y % 100;
+    y %= 100;
     return days[Math.round((1 + 2.6 * m - 0.2 + k + y + y / 4 + c / 4 - 2 * c) % 7) - 1]
 }
 
@@ -3046,13 +3129,12 @@ function weekDay (d) {
  * @func
  */
 function dayOfWeek (d) {
-    var day = parseInt(d.split("/")[0]), m = [0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5], days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]//Months from Jan to Dec
+    var day = parseInt(d.split("/")[0]), m = [0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5], days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]; //Months from Jan to Dec
     var y = parseInt(d.split("/").last()) % 100 + Math.floor(d.split("/").last() / 4), c = Math.floor(d.split("/").last() / 100 % 4), cCode;
     if (c === 0) cCode = 6;
     else if (c === 1) cCode = 4;
     else if (c === 2) cCode = 2;
     else cCode = 0;
-    //console.log("m=" + m[parseInt(d.split("/")[1]) - 1] + "\ny=" + y + "\n" + "\ncCode = " + cCode + "\nRes = " + day + m[parseInt(d.split("/")[1]) - 1] + y + cCode);
     return days[(day + m[parseInt(d.split("/")[1]) - 1] + y + cCode) % 7]
 }
 
@@ -3063,6 +3145,7 @@ function dayOfWeek (d) {
  * @see num2date
  * @since 1.0
  * @func
+ * @see num2date
  */
 function date2num (d) {
     if(!d) d = getDate();
@@ -3077,10 +3160,72 @@ function date2num (d) {
  * @see date2num
  * @since 1.0
  * @func
+ * @see date2num
  */
 function num2date (n) {
     var p = n.toString().split(".");
     return p[1].get(3) + "/" + p[1].get(-3) + "/" + p[0];
+}
+
+/**
+ * @description Date difference calculator
+ * @param {Date} [from=new Date()] Starting date
+ * @param {Date} to Ending date
+ * @param {string} [part="d"] Part
+ * @param {boolean} [round=false] Rounding flag
+ * @returns {number} Difference
+ * @func
+ * @source {@link http://www.htmlgoodies.com/html5/javascript/calculating-the-difference-between-two-dates-in-javascript.html}
+ * @since 1.1
+ */
+function dateDiff (from, to, part, round) {
+    if (!from) from = new Date();
+    var divideBy = { //in ms
+        y: 959230512000,
+        m: 2628028800.0000005,
+        w: 604800000,
+        d: 86400000,
+        h: 3600000,
+        min: 60000,
+        s: 1000,
+        ms: 1
+    };
+
+    return round? Math.round( (to - from) / divideBy[part || "d"]): (to - from) / divideBy[part];
+}
+
+/**
+ * @description Date (days/weeks/months/years) to seconds
+ * @param {number} [d=0] Days
+ * @param {number} [w=0] Weeks
+ * @param {number} [m=0] Months
+ * @param {number} [y=0] Years
+ * @returns {number} Seconds
+ * @func
+ * @since 1.1
+ * @see s2date
+ */
+function date2s (d, w, m, y) {
+    return (d || 0) * 86400 + (w || 0) * 7 * 86400 + (m || 0) * 30.417 * 86400 + (y || 0) * 365 * 30.417 * 86400;
+}
+
+/**
+ * @description Seconds to days/weeks/months/years
+ * @param {number} s Seconds
+ * @param {string} [what="d"] Option
+ * @returns {number} Result
+ * @func
+ * @since 1.1
+ * @see date2s
+ */
+function s2date (s, what) {
+    if (!what) what = "d";
+    switch (what.toLowerCase()[0]) {
+        case "w": return s / (7 * 86400); //Weeks
+        case "m": return s / (30.417 * 86400); //Months
+        case "y": return s / (365 * 30.417 * 86400); //Years
+        default: return s / 86400; //Days
+    }
 }
 
 /**
@@ -3285,7 +3430,7 @@ function keyList (map, propOnly) {
         for (var key in map) {
             if (map.hasOwnProperty(key)) list.push(key);
         }
-    }else for(key in map) list.push(key);
+    } else for(key in map) list.push(key);
     return list
 }
 
@@ -3317,7 +3462,7 @@ function valList (map, propOnly) {
  * @func
  */
 function keyTable (map, propOnly) { //Same as above but in the form of the HTML table
-    var table = map.hasName()? "<table cellspacing=0><caption>KeyTable: <i>" + map.getName() + "</i></caption><tr><th>Key</th><th>Value</th></tr>": "<table><caption> KeyTable</caption><tr><th>Key</th><th>Value</th></tr>";
+    var table = "<table cellspacing=0><caption>KeyTable" + (map.hasName()? ": <i>" + map.getName() + "</i></caption><tr><th>Key</th><th>Value</th></tr>": "</caption><tr><th>Key</th><th>Value</th></tr>");
     for (var key in map) {
         table += (propOnly && map.hasOwnProperty(key))? "<tr><td>" + key + "</td><td>" + map[key] + "</td></tr>": "<tr><td>" + key + "</td><td>" + map[key] + "</td></tr>";
     }
@@ -3406,10 +3551,10 @@ function num2txt (num, base) {
  * @func
  */
 function timeUp (act, pref, params) {
-    var t1 = new Date(), t2 = 0;
+    var t1 = new Date();
     t1 = (t1.getMinutes() * 60 + t1.getSeconds()) * 1000 + t1.getMilliseconds();
     act(params);
-    t2 = new Date();
+    var t2 = new Date();
     t2 = (t2.getMinutes() * 60 + t2.getSeconds()) * 1000 + t2.getMilliseconds();
     if (isNon(pref) || pref.slice(0, 4).toLowerCase() === "auto" || pref.slice(0, 4).toLowerCase() === "none") return (t2-t1 > 1000)? (t2-t1)/1000 + "s": (t2-t1) + "ms";
     else if (pref.toLowerCase() === "ms" || pref.slice(0, 8).toLowerCase() === "millisec") return (t2-t1) + "ms";
