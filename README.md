@@ -24,22 +24,17 @@ Some ideas to add:
 -	History (event history, command history, viewed pages, ...)
 -	IP address getter
 -	Colour.getColourName() (prototype already placed)
--	Algebraic formula to truth table
--	Something like Java's System.in that allows the code to grab the user's input without having to use JS prompt, contentEditable or HTML's input/textarea fields
 -	Parser for MIPS, Batch, Java, Python to DHTML/PHP and eventually to MIPS
 -	Heap ?
 -	cookie historic for multi cookie storage !?
 -	greyish hover effect for rows/columns headers that would highlight the whole row/column
 -	Essence.say("... ?", "quest")/Essence.ask("... ?") corresponding with Sys.in to get the user input
--	Object.compareTo() ?
--	Colour.getColourName()
--	console.log/Essence.say styling using %c, "color: ..."
 -	Add: select, datetime, datetime-local, time, month, range, search, week, url; to validate()
 -	Prim's alg (already there as A* ?!)
 -	Kruskal's alg
 -	More maths stuff (from the booklet or/and the Discrete Maths book) ?
--   Combinations using a list of characters to make up all the possible combinations with n characters
 -   AI system that stores it's rules in a database and update it after learning
+-   Keyword getter (goes through a text/file and get a list of the keywords/most used/important words)
 
 To fix/continue:
 -	Path finding using A*\IDA* with Euclidian/Manhattan
@@ -67,9 +62,10 @@ To fix/continue:
 -	archive.getResult()
 -	InvalidParamError
 -	A(), reconPath()
--	floatingPtBin()
 -	Permutations
 -   FA, exp2dict
+-	Algebraic formula to truth table
+-	Something like Java's System.in that allows the code to grab the user's input without having to use JS prompt, contentEditable or HTML's input/textarea fields
 
 ##About the future of Essence.js
 1.	Once this library is heading toward a state where having everything in one single script will no longer be good for readability and maintenance causing it to be splitted into several files (modules) which would make it less portable and slower in some cases but it will be way more organised, more readable and more maintanable.
