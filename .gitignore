@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Logs
 logs
 *.log
@@ -56,4 +55,4 @@ helpers
 
 # Win
 Thumbs.db
-desktop.init
+desktop.ini
