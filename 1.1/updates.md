@@ -1,11 +1,12 @@
 ## essence
-
+^ genStr()
 
 ## Ajax
 
 
 ## DataStruct
-
++ Set.forEach()
+^ Stack.pop(), Map, Set, occSort() becomes occurrenceSort()
 
 ## DOM
 
@@ -17,7 +18,7 @@
 
 
 ## Misc
-
++ Tablify()
 
 ## Security
 

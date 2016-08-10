@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Essence (main)
 - $e, $n, Element
 - include, include_once, exclude
@@ -322,4 +321,3 @@
 - FA
 - exp2dict
 - arrayLiteral
->>>>>>> 4dd0ddfc485b6426448ba21d404b62492c783a9b

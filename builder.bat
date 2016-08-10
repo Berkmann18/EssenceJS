@@ -19,6 +19,12 @@ if not "%~1" == "" (
 	if "%~2" == "--no-doc" set doc=0
 	if "%~3" == "--no-doc" set doc=0
 	if "%~4" == "--no-doc" set doc=0
+	if "%~1" == "-l" set min=0 & set doc=0
+	if "%~2" == "-l" set min=0 & set doc=0
+	if "%~1" == "-m" set lint=0 & set doc=0
+	if "%~2" == "-m" set lint=0 & set doc=0
+	if "%~1" == "-d" set lint=0 & set min=0
+	if "%~2" == "-d" set lint=0 & set min=0
 	if "%~1" == "1.0" goto v10
 	if "%~1" == "1.1" goto v11
 	if "%~1" == "1.2" goto v12

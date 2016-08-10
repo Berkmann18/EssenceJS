@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ProjectTasksOptions">
-    <TaskOptions isEnabled="true">
+    <TaskOptions isEnabled="false">
       <option name="arguments" value="$FileName$" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" value="Lint .css files" />
       <option name="exitCodeBehavior" value="ERROR" />
       <option name="fileExtension" value="css" />
-      <option name="immediateSync" value="true" />
+      <option name="immediateSync" value="false" />
       <option name="name" value="CSSHint" />
       <option name="output" value="" />
       <option name="outputFilters">
@@ -15,7 +15,7 @@
       </option>
       <option name="outputFromStdout" value="false" />
       <option name="program" value="$USER_HOME$/AppData/Roaming/npm/csshint.cmd" />
-      <option name="scopeName" value="Project Files" />
+      <option name="scopeName" value="Changed Files" />
       <option name="trackOnlyRoot" value="false" />
       <option name="workingDir" value="$FileDir$" />
       <envs />
@@ -24,9 +24,9 @@
       <option name="arguments" value="$FileName$ -o $FileNameWithoutExtension$.min.js --no-comments" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" value="Minify .js files" />
-      <option name="exitCodeBehavior" value="ALWAYS" />
+      <option name="exitCodeBehavior" value="ERROR" />
       <option name="fileExtension" value="js" />
-      <option name="immediateSync" value="true" />
+      <option name="immediateSync" value="false" />
       <option name="name" value="MinifyJS" />
       <option name="output" value="$FileNameWithoutExtension$.min.js" />
       <option name="outputFilters">
@@ -34,18 +34,18 @@
       </option>
       <option name="outputFromStdout" value="false" />
       <option name="program" value="$USER_HOME$/AppData/Roaming/npm/minify.cmd" />
-      <option name="scopeName" value="Project Files" />
+      <option name="scopeName" value="Changed Files" />
       <option name="trackOnlyRoot" value="true" />
       <option name="workingDir" value="$FileDir$" />
       <envs />
     </TaskOptions>
-    <TaskOptions isEnabled="true">
+    <TaskOptions isEnabled="false">
       <option name="arguments" value="$FileName$ -o $FileNameWithoutExtension$.min.css --no-comments" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" value="Minify .css files" />
-      <option name="exitCodeBehavior" value="ALWAYS" />
+      <option name="exitCodeBehavior" value="ERROR" />
       <option name="fileExtension" value="css" />
-      <option name="immediateSync" value="true" />
+      <option name="immediateSync" value="false" />
       <option name="name" value="MinifyCSS" />
       <option name="output" value="$FileNameWithoutExtension$.min.css" />
       <option name="outputFilters">
@@ -53,28 +53,28 @@
       </option>
       <option name="outputFromStdout" value="false" />
       <option name="program" value="$USER_HOME$/AppData/Roaming/npm/minify" />
-      <option name="scopeName" value="Project Files" />
+      <option name="scopeName" value="Changed Files" />
       <option name="trackOnlyRoot" value="true" />
       <option name="workingDir" value="$FileDir$" />
       <envs />
     </TaskOptions>
     <TaskOptions isEnabled="true">
-      <option name="arguments" value="$Filename$" />
+      <option name="arguments" value="$FileName$" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" value="Documenting JS scripts" />
       <option name="exitCodeBehavior" value="ERROR" />
-      <option name="fileExtension" value="UNKNOWN" />
-      <option name="immediateSync" value="true" />
+      <option name="fileExtension" value="js" />
+      <option name="immediateSync" value="false" />
       <option name="name" value="JSDoc" />
       <option name="output" value="" />
       <option name="outputFilters">
         <array />
       </option>
       <option name="outputFromStdout" value="false" />
-      <option name="program" value="$USER_HOME$/AppData/Roaming/npm/jsdoc" />
-      <option name="scopeName" value="Project Files" />
+      <option name="program" value="$USER_HOME$/AppData/Roaming/npm/jsdoc.cmd" />
+      <option name="scopeName" value="Changed Files" />
       <option name="trackOnlyRoot" value="false" />
-      <option name="workingDir" value="" />
+      <option name="workingDir" value="$FileDir$" />
       <envs />
     </TaskOptions>
   </component>

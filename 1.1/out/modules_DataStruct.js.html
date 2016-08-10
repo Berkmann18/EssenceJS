@@ -39,7 +39,7 @@
  * @requires Maths
  * @requires Files
  * @namespace
- * @type {{name: string, version: number, run: DataStruct.run, description: string, dependency: Array, author: string, complete: boolean}}
+ * @type {{name: string, version: number, run: module:DataStruct.run, description: string, dependency: string[], author: string, complete: boolean, toString: module:DataStruct.toString}}
  * @since 1.1
  * @exports DataStruct
  */
@@ -389,8 +389,7 @@ function Node (pl, nx, pv) {
         if (this.payload === n) return d;
         if (this.next) return this.next.find(n, d + 1);
         return [-1, d]
-    }
-
+    };
     return this;
 }
 
@@ -610,7 +609,7 @@ function NTreeNode (pl, ch) {
  * @since 1.0
  */
 function Set (arr) {
-    this.value = (isType(arr, "Array")? arr: [arr]) || [];
+    this.value = (isType(arr, "Array")? rmDuplicates(arr): [arr]) || [];
     this.size = function () {
         return this.value.length
     };
@@ -703,6 +702,10 @@ function Set (arr) {
         return this.value.median(s, e)
     };
 
+    this.forEach = function (act) {
+        for (var i = 0; i &lt; this.size(); i++) act(this.get(i));
+    };
+
     return this;
 }
 
@@ -720,10 +723,15 @@ function SortedSet (arr) {
     this.value = arr || [];
     this.add = function (item) {
         if (this.value.indexOf(item) === -1) {
-            if (isType(item, "array")) this.value = this.value.concat(item);
+            if (isType(item, "array")) this.value = this.value.concat(rmDuplicates(item));
             else this.value.push(item);
         }
+        this.value = rmDuplicates(this.value);
         this.value.quickSort();
+    };
+
+    this.toString = function () {
+        return "SortedSet(" + this.value.toString() + ")"
     };
 
     return this;
@@ -758,9 +766,7 @@ function Stack (arr, lim) {
 
     this.pop = function () {
         if (this.isEmpty()) throw new Error("Stack underflow !");
-        var it = this.peek();
-        this.value.pop(it);
-        return it
+        return this.value.pop();
     };
 
     this.isEmpty = function () {
@@ -1162,7 +1168,7 @@ function A(start, goal, grid) { //JS version of https://en.wikipedia.org/wiki/A*
             if (closedSet.indexOf(n[i]) > -1) continue;
             var tentativeGScore = gScore[closedSet.indexOf(current)] + 1;
             if (closedSet.indexOf(n[i]) === -1) openSet.push(n[i]);
-            else if (tentativeGScore >= gScore[i]) continue;
+            else if (tentativeGScore >= gScore[i]) break;
         }
 
         cameFrom[i] = current;
@@ -1232,47 +1238,25 @@ function alphabetSort (x) {
 }
 
 /**
- * @description Sort the array/string from the most occurring item to the least occurring ones
- * @param {Array|string} arr Array/string to sort
- * @returns {Array} Sorted occurrence list
- * @todo Improve because it's not right all the time
- * @since 1.0
- * @func
- */
-function occurrenceSort(arr) {
-    var tmp = rmDuplicates(arr), res = [];
-    var counts = tmp.map(function (x) {
-        return arr.count(x);
-    });
-    console.log("tmp", tmp, "\ncounts", counts);
-    while (tmp.length > 0) {
-        console.log(" tmp", tmp, "\ncounts", counts);
-        for (var i = 0; i &lt; tmp.length; i++) {
-            if (counts[i] === counts.max()) {
-                res.push(tmp[i]);
-                counts = counts.remove(counts[i]);
-                tmp = tmp.remove(tmp[i]);
-            }
-        }
-    }
-    return res;
-}
-
-/**
- * @description 2nd occurrence sorting alg
- * @todo Work on it !
+ * @description Sort the array from the most occurring items to the least occurring ones
  * @param {Array} arr Array to sort
- * @returns {{}} Result
+ * @returns {Array} Sorted array (by occurrence obviously)
  * @func
  * @since 1.1
  */
-function occSort (arr) {
+function occurrenceSort (arr) {
     var counts = arr.map(function (x) {
         return arr.count(x);
     }), vals = rmDuplicates(arr);
-    var lookup = Objectify(vals, counts);
-
-    return lookup;
+    var lookup = new Map(counts), res = []; //Tablify(counts, vals);
+    vals.map(function (x) {
+        lookup.add(arr.count(x), x);
+    });
+    //lookup.forEach(function (x, i) { console.log(lookup.keys.get(i), x.toStr(true)); }, true)
+    lookup.forEach(function (x) {
+       res.prepend(x);
+    }, true);
+    return res;
 }
 
 /**
@@ -1612,19 +1596,18 @@ function EventTable(name, srcs) {
  * @constructor
  * @this {Map}
  * @returns {Map} Map
+ * @todo Get rid of the links between each buckets which makes them identical
  * @since 1.1
  */
 function Map (keys) {
-    this.keys = new Set(keys || []);
-    this.values = //Objectify(this.keys.value, new Array(this.keys.size()).fill([]));
+    this.keys = new SortedSet(keys || []);
+    this.values = Tablify(this.keys.value);
+    /*this.keys.forEach(function (k) {
+        this.values[k] = [];
+    });*/
     this.add = function (key, value) {
-        Essence.say("Adding key/value: " + key + " / " + value);
-        if (isType(key, "Array") &amp;&amp; isType(value, "Array")) {
-            for (var i = 0; i &lt; key; i++) this.add(key[i], value[i]);
-            Essence.say("Multi")
-        } else if (isType(key, "Array")) {
-            for (i = 0; i &lt; key; i++) this.add(key[i], value);
-            Essence.say("Multi key");
+        if (isType(key, "Array")) {
+            for (var i = 0; i &lt; key; i++) this.add(key[i], isType(value, "Array")? value[i]: value);
         }
         this.keys.add(key);
         if (this.values[key] === undefined) this.values[key] = [];
@@ -1666,8 +1649,8 @@ function Map (keys) {
     this.toString = function () {
         return "Map(key/values=" + this.values.toArray().toStr(true) + ")";
     };
-    this.forEach = function (act) {
-        for (var i = 0; i &lt; this.keys.size(); i++) act(this.keys.get(i));
+    this.forEach = function (act, valuesInstead) {
+        for (var i = 0; i &lt; this.keys.size(); i++) valuesInstead? act(this.values[this.keys.get(i)], i): act(this.keys.get(i), i);
     };
     this.merge = function (table) {
         this.keys.add(table.keys.value, table.values);
@@ -1701,7 +1684,7 @@ function Map (keys) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Aug 08 2016 17:17:43 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Aug 10 2016 19:49:49 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -8,13 +8,14 @@ if not "%~1" == "" (
   if /i "%~2" == "-b" set branch=%~3 & shift /2
   if /i "%~3" == "-b" set branch=%~4 & shift /2
   if /i "%~4" == "-b" set branch=%~5 & shift /2
-  if /i "%~1" == "-?" goto help
   if /i "%~1" == "/?" goto help
+  if /i "%~1" == "-h" goto help
   if /i "%~1" == "-i" goto init
   if /i "%~1" == "-u" goto main
   if /i "%~1" == "-d" goto dl
   if /i "%~1" == "-a" goto add
   if /i "%~1" == "-r" goto restore
+  if /i "%~1" == "-l" goto log
   if "%~1" == "" goto main
   shift
   goto st
@@ -36,7 +37,7 @@ echo   username@host:/path/to/repo Place to get it (default: Berkmann18@github:[
 echo   -a [file] [comment] Add a file with the corresponding commit message
 echo   -b branch  Branch to deploy at
 echo   -r file    File to restore from HEAD (if you messed something)
-echo   -l [all^|change] Log, all logs or logs on the changes
+echo   -l [^|all^|change] Log, all logs or logs on the changes
 exit /b
 
 :init
@@ -75,5 +76,5 @@ exit /b
 :log
 if "%~2" == "" git log --graph --oneline --decorate
 if "%~2" == "all" git log --graph --oneline --decorate --all
-if "%~2" == "change" git log --name-status
+if "%~2" == "change" git log --name-status & echo.
 exit /b

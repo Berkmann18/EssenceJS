@@ -235,7 +235,7 @@ h3 {
 #consoleIn {
     background: #000;
     color: #fff;
-    border: 0 solid #fff;
+    border: 1px solid #fff;
     margin: 0;
     width: 100%;
 }

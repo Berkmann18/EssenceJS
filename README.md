@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Essence.js
 My All-in-One JavaScript library.
 
@@ -156,4 +155,3 @@ To fix/continue:
 -	EssenceJS 1.0 will be the ES4-5 All-In-One version
 -	EssenceJS 1.1 will be the ES5 framework (ES4-like module based)
 -	EssenceJS 1.2 will be the ES5-6 framework
->>>>>>> 4dd0ddfc485b6426448ba21d404b62492c783a9b
