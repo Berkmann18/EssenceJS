@@ -9,28 +9,11 @@
  * @requires ../essence
  * @requires Maths
  * @namespace
- * @type {{name: string, version: number, run: module:UI.run, description: string, dependency: string[], author: string, complete: boolean, toString: module:UI.toString}}
+ * @type {Module}
  * @since 1.1
  * @exports UI
  */
-var UI = {
-    name: "UI",
-    version: 1,
-    run: function () {
-        
-    },
-    description: "UI stuff",
-    dependency: ["Maths"],
-    author: "Maximilian Berkmann",
-    complete: false,
-    toString: function () {
-        return "Module(name='" + this.name + "', version=" + this.version + ", description='" + this.description + "', author='" + this.author + "', complete=" + this.complete + ", run=" + this.run + ")";
-    }
-};
-
-(function () {
-    UI.complete = true;
-})();
+var UI = new Module("UI", "UI stuff", ["Maths"]);
 
 /* eslint no-undef: 0 */
 /**
@@ -38,6 +21,7 @@ var UI = {
  * @returns {undefined}
  * @since 1.0
  * @func
+ * @throws {Error} Impossible to maximise the size
  */
 function toMaxSize () {
     try {
@@ -120,6 +104,27 @@ function getWinDim () {
  * @constructor
  * @since 1.0
  * @func
+ * @property {Function} Colour.constructor Constructor
+ * @property {NumberLike} Colour.red Red
+ * @property {NumberLike} Colour.green Green
+ * @property {NumberLike} Colour.blue Blue
+ * @property {NumberLike} Colour.alpha Alpha (transparency)
+ * @property {string} Colour.hex Hex colour
+ * @property {string} Colour.rgba RGBA colour
+ * @property {Function} Colour.update Update the HEX/RGBA colours
+ * @property {Function} Colour.getRGBAPerc RGBA percentage
+ * @property {Function} Colour.getMaxClr Brightest colour shade
+ * @property {Function} Colour.getMinClr Darkest colour shade
+ * @property {Function} Colour.negative Negate all shades
+ * @property {Function} Colour.redNegative Negate the red
+ * @property {Function} Colour.greenNegative Negate the green
+ * @property {Function} Colour.blueNegative Negate the blue
+ * @property {Function} Colour.rand Randomise the colour
+ * @property {Function} Colour.toLocaleString String representation
+ * @property {Function} Colour.toString RGBA string representation
+ * @property {Function} Colour.get RGBA array representation
+ * @property {Function} Colour.increment Increment all the colour shades
+ * @todo Add the getColourName method
  */
 function Colour (r, g, b, a) {
     this.constructor = function (r, g, b, a) {
@@ -154,7 +159,7 @@ function Colour (r, g, b, a) {
         this.rgba = "rgba(" + this.red + ", " + this.green + ", " + this.blue + ", " + this.alpha + ")";
     };
     this.getRGBAPerc = function () {
-        return "rgba(" + markConv(this.red, 255) + ", " + markConv(this.green, 255) + ", " + markConv(this.blue, 255) + ", " + markConv(this.alpha, 255) + ")"
+        return "rgba(" + markConv(this.red, 255) + "%, " + markConv(this.green, 255) + "%, " + markConv(this.blue, 255) + "%, " + markConv(this.alpha, 255) + "%)"
     };
 
     this.getMaxClr = function () {
@@ -166,7 +171,7 @@ function Colour (r, g, b, a) {
     };
 
     this.negative = function (withAlpha) { //Negative mod
-        //conv(parseInt(conv("EE", 16)) + parseInt(conv('11', 16)), 10, 16)= "FF" = 255 (always)
+        //conv(parseInt(conv("EE", 16)) + parseInt(conv(11, 16)), 10, 16)= "FF" = 255 (always)
         this.red = 255 - parseInt(this.red);
         this.green = 255 - parseInt(this.green);
         this.blue = 255 - parseInt(this.blue);
@@ -198,7 +203,7 @@ function Colour (r, g, b, a) {
     };
 
     this.toLocaleString = function () {
-        return "Colour(r = " + this.red + ", g = " + this.green + ", b = " + this.blue + ", a = " + this.alpha + ")"
+        return "Colour(r=" + this.red + ", g=" + this.green + ", b=" + this.blue + ", a=" + this.alpha + ")"
     };
 
     this.toString = function () {
@@ -235,7 +240,7 @@ function Colour (r, g, b, a) {
  * @since 1.0
  * @func
  */
-function hex2rgb (hex, toArray) { //Hexadecimal to RGB
+function hex2rgb (hex, toArray) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     if (result) {
         return toArray? [parseInt(result[1], 16), parseInt(result.last(), 16), parseInt(result[3], 16)]: parseInt(result[1], 16) + ", " + parseInt(result.last(), 16) + ", " + parseInt(result[3], 16)
@@ -254,7 +259,7 @@ function hex2rgb (hex, toArray) { //Hexadecimal to RGB
  * @since 1.0
  * @func
  */
-function rgb2hex (rgb, toArray) { //RGB to hexademical
+function rgb2hex (rgb, toArray) {
     rgb = rgb.slice(4, rgb.length - 1).split(", ");
     return toArray? [conv(rgb[0], 10, 16).toNDigits(), conv(rgb[1], 10, 16).toNDigits(), conv(rgb.last(), 10, 16).toNDigits()]: "#" + conv(rgb[0], 10, 16).toNDigits() + conv(rgb[1], 10, 16).toNDigits() + conv(rgb.last(), 10, 16).toNDigits()
 }
@@ -381,8 +386,25 @@ function rgbList (inc, intOnly, debug) {
  * @param {number} [b=1] Border
  * @param {Vector} [v=new Vector()] Velocity
  * @constructor
- * @interface
+ * @namespace
  * @since 1.0
+ * @property {number} Shape.x X coordinate
+ * @property {number} Shape.y Y coordinate
+ * @property {number} Shape.border Border
+ * @property {Vector} Shape.vel Velocity
+ * @property {Vector} Shape.norm Normal of the velocity
+ * @property {Function} Shape.update Update the shape
+ * @property {Function} Shape.stop Stop the shape from moving
+ * @property {Function} Shape.toString String representation
+ * @property {Function} Shape.offset Offset
+ * @property {Function} Shape.bounce Bounce the shape off an object
+ * @property {Function} Shape.copy Get a copy of the shape
+ * @property {Function} Shape.mult Multiply the shape's position
+ * @property {Function} Shape.div Divide the shape's position
+ * @property {Function} Shape.add Add to the shape's position
+ * @property {Function} Shape.sub Sub to the shape's position
+ * @property {Function} Shape.draw Draw the shape
+ * @property {Function} Shape.getSpeed Get the speed
  */
 function Shape (x, y, b, v) {
     this.x = x || 0;
@@ -406,7 +428,7 @@ function Shape (x, y, b, v) {
     };
 
     this.offset = function (s) {
-        return (s === "l") ?  this.x - 1 - this.border: ((s === "r")? this.x + 1+ this.border: ((s === "u")? this.y - 1 - this.border: this.y + 1 + border))
+        return (s === "l") ?  this.x - 1 - this.border: ((s === "r")? this.x + 1+ this.border: ((s === "u")? this.y - 1 - this.border: this.y + 1 + this.border))
     };
 
     this.bounce = function (n) {
@@ -470,20 +492,35 @@ function Shape (x, y, b, v) {
  * @this Box
  * @constructor
  * @since 1.0
+ * @property {number} Box.x X coordinate
+ * @property {number} Box.y Y coordinate
+ * @property {number} Box.z Z coordinate
+ * @property {number} Box.width Width
+ * @property {number} Box.height Height
+ * @property {number} Box.depth Depth
+ * @property {number} Box.borderSize Border size
+ * @property {string} Box.borderColor Border colour
+ * @property {number} Box.borderRadius Border radius
+ * @property {string} Box.color Colour of the box
+ * @property {Function} Box.rot Rotate the box
+ * @property {Function} Box.translate Translate the box
+ * @property {Function} Box.toString String representation
+ * @property {Function} Box.draw Draw the box
+ * @property {Function} Box.erase Erase the box
  */
-function Box (x, y, z, w, h, d, bsz, bclr, bgclr, brd) {
+function Box (x, y, z, w, h, d, bsz, bclr, clr, brd) {
     this.x = x || 0;
     this.y = y || 0;
     this.z = z || 0;
     this.width = w || 10;
     this.height = h || 10;
-    this.deepth = d || .1;
+    this.depth = d || .1;
     this.borderSize = bsz || 1;
     this.borderColor = bclr || "#000";
     this.borderRadius = brd || 0;
-    this.backgroundColor = bgclr || "#fff";
-    this.ratio = (this.height/this.width).toNDigits(4);
-    this.ratio3d = [this.ratio, this.height/non0(this.deepth), this.width/non0(this.deepth)].mean(4);
+    this.color = clr || "#fff";
+    this.ratio = (this.height / this.width).toNDigits(4);
+    this.ratio3d = [this.ratio, this.height / non0(this.depth), this.width / non0(this.depth)].mean(4);
     this.draw = function () {
 
     };
@@ -498,7 +535,7 @@ function Box (x, y, z, w, h, d, bsz, bclr, bgclr, brd) {
 
     };
     this.toString = function () {
-        return "Box(x=" + this.x + ", y=" + this.y + ", z=" + this.z + ", width=" + this.width + ", height=" + this.height + ", deepth=" + this.deepth + ", borderSize=" + this.borderSize + ", borderColor=" + this.borderColor + ", borderRadius=" + this.borderRadius + ", backgroundColor=" + this.backgroundColor + ")"
+        return "Box(x=" + this.x + ", y=" + this.y + ", z=" + this.z + ", width=" + this.width + ", height=" + this.height + ", depth=" + this.depth + ", borderSize=" + this.borderSize + ", borderColor=" + this.borderColor + ", borderRadius=" + this.borderRadius + ", color=" + this.color + ")"
     };
 
     return this;
@@ -518,12 +555,33 @@ AABB.inheritsFrom(Shape);
  * @this AABB
  * @constructor
  * @implements {Shape}
+ * @inheritdoc
  * @see Shape
  * @since 1.0
+ * @property {number} AABB.x X coordinate
+ * @property {number} ABB.y Y coordinate
+ * @property {number} AABB.w Width
+ * @property {number} AABB.h Height
+ * @property {number} AABB.border Border
+ * @property {Vector} AABB.vel Velocity
+ * @property {number} AABB.ratio Ratio
+ * @property {Vector} AABB.norm Normal of the velocity
+ * @property {Function} AABB.getPoints Get the points of the box
+ * @property {Function} AABB.equals Equality check
+ * @property {Function} AABB.toString String representation
+ * @property {Function} AABB.hit Was it hit by something
+ * @property {Function} AABB.copy Get a copy of the AABB
+ * @property {Function} AABB.concat Concat an AABB to it
+ * @property {Function} AABB.deconcat Deconcat an AABB from it
+ * @property {Function} AABB.draw Draw the AABB
+ * @property {Function} AABB.getPerimeter Perimeter of the AABB
+ * @property {Function} AABB.getArea Area of the AABB
+ * @property {Function} AABB.getDiag Diagonal of the AABB
+ *
  */
 function AABB (x, y, w, h, b, v) {
     this.x = x || 0;
-    this.y = y || this.y;
+    this.y = y || this.x;
     this.w = w || 10;
     this.h = h || this.w;
     this.border = b || 1;
@@ -594,6 +652,20 @@ Circ.inheritsFrom(Shape);
  * @implements {Shape}
  * @see Shape
  * @since 1.0
+ * @inheritdoc
+ * @property {number} Circ.x X coordinate
+ * @property {number} Circ.y Y coordinate
+ * @property {number} Circ.r Radius
+ * @property {number} Circ.border Border
+ * @property {Vector} Circ.vel Velocity
+ * @property {Vector} Circ.norm Normal of the velocity
+ * @property {Function} Circ.stop Stop the shape from moving
+ * @property {Function} Circ.toString String representation
+ * @property {Function} Circ.offset Offset
+ * @property {Function} Circ.bounce Bounce the shape off an object
+ * @property {Function} Circ.hit Was the circle hit by something ?
+ * @property {Function} Shape.draw Draw the shape
+ * @property {Function} Circ.getCircumference Circumference
  */
 function Circ (x, y, r, b, v) {
     this.x = x || 0;
@@ -646,19 +718,24 @@ Pt.inheritsFrom(Shape);
  * @implements {Shape}
  * @constructor
  * @since 1.0
+ * @inheritdoc
+ * @property {number} Pt.x X coordinate
+ * @property {number} Pt.y Y coordinate
+ * @property {Vector} Pt.vel Velocity
+ * @property {Function} Pt.equals Equality check
+ * @property {Function} Pt.toString String representation
  */
 function Pt (x, y) {
-    this.prototype = Shape.prototype;
     this.x = x || 0;
     this.y = y || 0;
     this.vel = new Vector();
 
     this.equals = function (p) {
-        return this.x == p.x && this.y == p.y
+        return this.x === p.x && this.y === p.y
     };
 
     this.toString = function () {
-        return "Pt(x = " + this.x + ", y = " + this.y + ")"
+        return "Pt(x=" + this.x + ", y=" + this.y + ")"
     };
 
     return this;
@@ -675,6 +752,11 @@ Line.inheritsFrom(Shape);
  * @implements {Shape}
  * @constructor
  * @since 1.0
+ * @inheritdoc
+ * @property {Pt} Line.s Starting point
+ * @property {Pt} Line.e Ending point
+ * @property {Function} Line.equals Equality check
+ * @property {Function} Line.toString String representation
  */
 function Line (a, b) {
     this.s = a;
@@ -702,6 +784,23 @@ Vector.inheritsFrom(Shape);
  * @implements {Shape}
  * @constructor
  * @since 1.0
+ * @inheritdoc
+ * @property {*} Vector.prototype Prototype
+ * @property {number} Vector.x X coordinate
+ * @property {number} Vector.y Y coordinate
+ * @property {Function} Vector.equals Equality check
+ * @property {Function} Vector.toString String representation
+ * @property {Function} Vector.copy Get a copy of the vector
+ * @property {Function} Vector.normalise Normalise the vector
+ * @property {Function} Vector.getNormal Get the normal of the vector
+ * @property {Function} Vector.zero Null vector
+ * @property {Function} Vector.neg Negate the vector
+ * @property {Function} Vector.dot Dot/scalar product
+ * @property {Function} Vector.cross Cross/vector product
+ * @property {Function} Vector.lenSq Length squared
+ * @property {Function} Vector.length Length
+ * @property {Function} Vector.reflect Reflect the vector on a something
+ * @property {Function} Vector.angle Angle between two vector
  */
 function Vector (x, y) {
     this.prototype = Shape.prototype; //To avoid bugs
@@ -783,6 +882,16 @@ Polygon.inheritsFrom(Shape);
  * @implements {Shape}
  * @constructor
  * @since 1.0
+ * @inheritdoc
+ * @property {Pt[]} Polygon.points Points
+ * @property {number} Polygon.border Border
+ * @property {Vector} Polygon.vel Velocity
+ * @property {Vector} Polygon.norm Normal
+ * @property {Function} Polygon.equals Equality check
+ * @property {Function} Polygon.toString String representation
+ * @property {Function} Polygon.hit Was it hit by something ?
+ * @property {Function} Polygon.copy Get a copy of the polygon
+ * @property {Function} Polygon.draw Draw the polygon
  */
 function Polygon (pts, b, v) {
     this.points = pts;
@@ -987,7 +1096,8 @@ function radialGradient (clrI, clrF, n) {
  * @type {boolean}
  * @default
  * @since 1.0
- * @func
+ * @external ../essence:$G
+ * @memberof external:$G
  */
 $G["dnM"] = false;
 /**
@@ -1010,7 +1120,9 @@ function daynightMode (exch) { //Switch between enabled or not for Day/Night pag
  * @description Old/initial tab
  * @type {string}
  * @since 1.0
- * @func
+ * @default
+ * @external ../essence:$G
+ * @memberof external:$G
  */
 $G["oldTab"] = "home";
 /**
@@ -1054,6 +1166,7 @@ function moveHTMLRange (id, n) { //Move an HTML range left or right which was ma
  * @see moveHTMLRange
  * @since 1.0
  * @func
+ * @throws {Error} No ID found
  */
 function htmlRange (id, min, val, max) {
     if (!id) throw new Error("htmlRange needs to know the id of the element implementing the range");
@@ -1113,6 +1226,7 @@ function labelPwSwap (id, lbl) {
  * @see labelFieldSwap
  * @since 1.0
  * @func
+ * @throws {Error} No ID found
  */
 function htmlInput (id, type, lbl) {
     if (!id) throw new Error("htmlInput needs to know the id of the element implementing the input");
@@ -1128,6 +1242,7 @@ function htmlInput (id, type, lbl) {
  * @see labelPwSwap
  * @since 1.0
  * @func
+ * @throws {Error} No ID found
  */
 function htmlPassword (id, lbl) {
     if (!id) throw new Error("htmlPassword needs to know the id of the element implementing the input");

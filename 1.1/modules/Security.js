@@ -8,28 +8,11 @@
  * @copyright Maximilian Berkmann 2016
  * @requires ../essence
  * @namespace
- * @type {{name: string, version: number, run: module:Security.run, description: string, dependency: Array, author: string, complete: boolean, toString: module:Security.toString}}
+ * @type {Module}
  * @since 1.1
  * @exports Security
  */
-var Security = {
-    name: "Security",
-    version: 1,
-    run: function () {
-
-    },
-    description: "Security stuff",
-    dependency: [],
-    author: "Maximilian Berkmann",
-    complete: false,
-    toString: function () {
-        return "Module(name='" + this.name + "', version=" + this.version + ", description='" + this.description + "', author='" + this.author + "', complete=" + this.complete + ", run=" + this.run + ")";
-    }
-};
-
-(function () {
-    Security.complete = true;
-})();
+var Security = new Module("Security", "Security stuff");
 
 /* eslint no-undef: 0 */
 
@@ -323,7 +306,7 @@ function genPassword () {
         if (i <= 90 || i >= 97) chars[i-65] = String.fromCharCode(i);
     }
     chars = chars.concat(sym, range(0, 1, 9)).remove(undefined);
-    if (chars.indexOf(undefined) > -1) chars = chars.concat(sym, range(0, 1, 9)).remove(undefined);
+    if (chars.has(undefined)) chars = chars.concat(sym, range(0, 1, 9)).remove(undefined);
     while (word.length < 20) word += chars[randTo(chars.length-1)];
     if (word.length < 20) word += chars[randTo(chars.length-1)];
     return word
@@ -338,16 +321,67 @@ function genPassword () {
  * @since 1.0
  * @func
  */
-function genHash (password) {
+function genHash (password, withRest) {
     var hash = "", k = (821 - password.sum()) / password.prod() * password.charCodeAt(0).toNDigits(1), rest, c;
     for (var i = 0; i < password.length; i++) {
         rest = password.charCodeAt(i) + k.toNDigits(1) % 255;
         //c = clamp(password.charCodeAt(i) + k, 32, 126);
-        c = Math.abs(password.charCodeAt(i) + k).toNDigits(1) + rest;
+        c = Math.abs(password.charCodeAt(i) + k).toNDigits(1) + (withRest? rest: 0);
         if (c < 32) c += 48;
         //console.log("k= " + k + "\trest (" + password.charCodeAt(i) + " + " + k + ")=" + rest + "\tc=" + c);
         //console.log("Adjust: " + parseInt(48 + Math.round(password.charCodeAt(password.length - 1) / 10 + rest)));
         hash += String.fromCharCode(clamp(c % 127, 32, 126));
     }
-    return hash;
+    return (hash === password)? genHash(hash, true): hash;
+}
+
+function hash (word) {
+    var m = word.mean(), s = getStep(word.split("").map(function (x) {
+            return x.charCodeAt(0);
+        }).min(), word.split("").map(function (x) {
+            return x.charCodeAt(0);
+        }).max()
+    ), w = word.split("");
+    var p = w.even().concat(w.odd()).join("").map(function (c) {
+        return String.fromCharCode(abcModulus(c.charCodeAt(0) + s));
+    });
+    p = p.split("").portion(2).concat(p.split("").portion(-2)).join("");
+    return toFSHA(p.split("").portion(2).concat(p.split("").portion(-2)).join(""));
+}
+
+/**
+ * @description String/array to Fake SHA hash
+ * @param {Str} str String/array
+ * @return {Str} Fake SHA hash
+ * @func
+ * @since 1.1
+ */
+function toFSHA (str) {
+    return str.map(function (c) {
+       return /[A-Za-z]/.test(c)? c: c.charCodeAt(0);
+    });
+}
+
+/**
+ * @description Fake SHA hash to string
+ * @param {Str} fsha Fake SHA hash
+ * @return {string} String
+ * @todo Get it right
+ * @func
+ * @since 1.1
+ */
+function fromFSHA (fsha) {
+    /*return fsha.map(function (c) {
+        return /[A-Za-z]/.test(c)? c: String.fromCharCode(c);
+    });*/
+    var res = "";
+    for (var i = 0; i < fsha.length; i++) {
+        if (/[A-Za-z]/.test(fsha[i])) res += fsha[i];
+        else if (/\d+/.test(fsha[i])) {
+            var j = i + 1;
+            while (j < fsha.length - 1 && /\d+/.test(fsha[j])) j++;
+            res += String.fromCharCode(fsha.get(i, j));
+        }
+    }
+    return res;
 }

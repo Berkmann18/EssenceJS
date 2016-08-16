@@ -9,28 +9,11 @@
  * @requires ../essence
  * @requires DataStruct
  * @namespace
- * @type {{name: string, version: number, run: module:Web.run, description: string, dependency: string[], author: string, complete: boolean, toString: module:Web.toString}}
+ * @type {Module}
  * @since 1.1
  * @exports Web
  */
-var Web = {
-    name: "Web",
-    version: 1,
-    run: function () {
-
-    },
-    description: "Web stuff",
-    dependency: ["DataStruct"],
-    author: "Maximilian Berkmann",
-    complete: false,
-    toString: function () {
-        return "Module(name='" + this.name + "', version=" + this.version + ", description='" + this.description + "', author='" + this.author + "', complete=" + this.complete + ", run=" + this.run + ")";
-    }
-};
-
-(function () {
-    Web.complete = true;
-})();
+var Web = new Module("Web", "Web stuff", ["DataStruct"]);
 
 /* eslint no-undef: 0 */
 
@@ -80,6 +63,21 @@ function setCookie (c_name, value, exdays) {
  * @param {number} [ver=1.0] Version
  * @this database
  * @returns {database} Database
+ * @property {string} database.name Name
+ * @property {NumberLike[]} database.headerRow Row headers
+ * @property {NumberLike[]} database.headerCol Column headers
+ * @property {Array[]} database.content Content
+ * @property {string} database.admin Administrator
+ * @property {number} database.version Version
+ * @property {Array[]} database.val Value (extended content) of the database
+ * @property {Function} database.setStorage Store the database
+ * @property {string|XML} database.html HTML code
+ * @property {string} database.css CSS code
+ * @property {Function} database.disp Display the database
+ * @property {Function} database.update Update the database
+ * @property {Function} database.searchAndRemove Search and remove a value
+ * @property {Function} database.remove Remove a cell from the database
+ * @property {Function} database.toString String representation
  */
 function database (name, headR, cells, headC, admin, ver) { //Local database
     this.name = name || "Database";
@@ -95,7 +93,7 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
         this.val[i][0] = (this.headerRow)? this.headerRow[i]: i;
         for (var j = 0; j < this.content[i].length; j++) {
             this.val[i][j + 1] = this.content[i][j];
-            console.log("Processing " + this.content[i][j] + " at ", i, j);
+            //console.log("Processing " + this.content[i][j] + " at ", i, j);
         }
     }
     this.setStorage = function () {
@@ -104,8 +102,7 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
     this.html = complexTable(this.name, this.headerRow, this.content, this.headerCol, name);
     this.css = "<style>*{font-family:Consolas,Segoe UI,Tahoma;}table{background: #000;}table,td,th{border:1px solid #000;color:#000;background:#fff;}tr:nth-child(even) td,tr:nth-child(even) th{background:#eee;}</style>";
     this.disp = function (elmId) {
-        var place = (elmId)? "#" + elmId: "body";
-        $e(place).write(this.html + this.css, true);
+        $e(elmId? "#" + elmId: "body").write(this.html + this.css, true);
         this.setStorage();
     };
     this.update = function () {
@@ -130,6 +127,10 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
         }
     };
 
+    this.toString = function () {
+        return "database(name=" + this.name + ", headerRow=" + this.headerRow + ", headerCol=" + this.headerCol + ", content=" + this.content + ", admin=" + this.admin + ", version=" + this.version + ")";
+    };
+
     return this;
 }
 
@@ -142,12 +143,31 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
  * @return {DB} DB
  * @this DB
  * @constructor
+ * @property {string} DB.name Name
+ * @property {NumberLike[]} DB.rows Row headers
+ * @property {NumberLike[]} DB.headers Column headers
+ * @property {Array} DB.val Content of the database
+ * @property {Function} database.setStorage Store the database
+ * @property {string|XML} DB.html HTML code
+ * @property {string} DB.css CSS code
+ * @property {Function} DB.build Build the database
+ * @property {Function} DB.fill Fill-in the database
+ * @property {Function} DB.save Save the database
+ * @property {Function} DB.update Update the database
+ * @property {Function} DB.set Change the value of a cell
+ * @property {Function} DB.get Get the value of a cell
+ * @property {Function} DB.find Look for an item
+ * @property {Function} DB.see Get a viewable copy of the database
+ * @property {Function} DB.view Display the database
+ * @property {Function} database.add Add a cell to the database
+ * @property {Function} DB.init Initialise the database
+ * @property {Function} database.toString String representation
  */
 function DB (name, headers, rows, headerRows) {
     this.name = name || "DB";
     this.head = headers || ["Index", "Value"];
     this.val = rows || [range(1), new Array(range(1).length).fill("...")].translate();
-    this.css = "<style>*{font-family:Consolas,Segoe UI,Tahoma;}table{background: #000;}table,td,th{border:1px solid #000;color:#000;background:#fff;}tr:nth-child(even) td,tr:nth-child(even) th{background:#eee;}</style>";
+    this.css = "<style>*{font-family:Consolas,Segoe UI,Tahoma,sans-serif;}table{background: #000;}table,td,th{border:1px solid #000;color:#000;background:#fff;}tr:nth-child(even) td,tr:nth-child(even) th{background:#eee;}</style>";
     this.html = "";
     this.rows = headerRows || false;
     this.build = function () {
@@ -180,7 +200,7 @@ function DB (name, headers, rows, headerRows) {
         } else this.val[i || 0][j || 0] = nval || null;
     };
     this.get = function (i, j) {
-        return !isNon(j)? this.val[i || 0][j]: this.val[i || 0];
+        return isNon(j)? this.val[i || 0]: this.val[i || 0][j];
     };
     this.find = function (val) {
         return lookfor(val, this.val);
@@ -189,8 +209,7 @@ function DB (name, headers, rows, headerRows) {
         return copy(this.val).prepend(copy(this.head).reverse());
     };
     this.view = function (id) {
-        var place = id? "#" + id: "body";
-        $e(place).write(this.html + this.css, true);
+        $e(id? "#" + id: "body").write(this.html + this.css, true);
     };
     this.add = function (vals) {
         this.val.append(vals.unshift(parseInt(this.val.last()[0]) + 1));
@@ -200,6 +219,11 @@ function DB (name, headers, rows, headerRows) {
         this.update();
         console.table(this.see());
     };
+
+    this.toString = function () {
+        return "DB(name=" + this.name + ", head=" + this.head + ", val=" + this.val + ", rows=" + this.rows + ")";
+    };
+
     return this;
 }
 
@@ -211,6 +235,14 @@ function DB (name, headers, rows, headerRows) {
  * @param {string} [ctt=""] Content
  * @returns {process} Process
  * @since 1.0
+ * @property {string} process.name Name
+ * @property {string} process.author Author
+ * @property {number} process.bitsize Size in bits
+ * @property {string} process.description Description
+ * @property {string} process.content Content
+ * @property {Function} process.update Update the process
+ * @property {Function} process.askPermission Ask the permission to integrate a particular server
+ * @property {Function} process.destroy Self-destruction
  */
 function process (name, auth, summup, ctt) {
     this.name = name;
@@ -238,6 +270,7 @@ function process (name, auth, summup, ctt) {
     this.destroy = function () {
         Essence.say("The process named " + this.name + " (created by " + this.author + ") has been destroyed !", "info");
         this.delete();
+        Essence.processList = Essence.processList.remove(this);
     };
     Essence.addProcess(this);
 
@@ -246,31 +279,46 @@ function process (name, auth, summup, ctt) {
 
 /**
  * @description Server
- * @todo Content<->> database issues to fix
- * @param {string} name Name
- * @param {string} admin Admin
- * @param {string} [type="data"] Type
+ * @param {string} [name="Server" Name
+ * @param {string} [admin=""] Admin
+ * @param {string} [type="data"] Type (data, process, storage, authentification, register, location)
  * @param {number} [ver=1.0] Version
  * @param {number} [mxsz=2⁶] Maximum size of the server's database
  * @returns {server} Server
- * @see database
+ * @see DB
  * @since 1.0
+ * @throws {Error} Invalid server type
+ * @property {string} server.name Name
+ * @property {string} server.admin Administrator
+ * @property {number} server.version Version
+ * @property {number} server.maxsize Maximum size
+ * @property {number} server.nb_slots Number of Slots
+ * @property {Array} server.slots Slots
+ * @property {string} server.type Server type
+ * @property {DB} server.data Database
+ * @property {Function} server.addProcess Process adder (only useful for process servers)
+ * @property {Function} server.add Data adder (useless for process servers)
+ * @property {Function} server.rm Remove a data from the server
+ * @property {Function} server.store Store the server
+ * @property {Function} server.update Update the server
+ * @property {Function} server.fire Remove a process from the server
+ * @property {Function} server.reset Reset the server
+ * @property {Function} server.toString String representation
  */
 function server (name, admin, type, ver, mxsz) {
-    this.name = name;
-    this.admin = admin;
+    this.name = name || "Server";
+    this.admin = admin || "";
     this.version = ver || 1.0;
     this.maxsize = mxsz || Math.pow(2, 14);
     this.nb_slots = Math.pow(2, 6);
     this.slots = mkArray(this.nb_slots, 1, "empty");
-    this.type = type || "data";
-    this.type = this.type.toLowerCase();
-    if (this.type === "data") this.data = new database(this.name, range(1, 1, this.maxsize), this.slots, ["Index", "Value"], this.admin, this.version);
-    else if (this.type === "process") this.data = new database(this.name, range(1, 1, this.maxsize), this.slots, ["N°", "Name", "Author", "Description", "Content", "Bit size"], this.admin, this.version);
-    else if (this.type === "storage") this.data = new database(this.name, range(1, 1, this.maxsize), this.slots, ["Key", "Value"], this.admin, this.version);
-    else if (this.type === "authentification") this.data = new database(this.name, range(1, 1, this.maxsize), this.slots, ["Username", "Password", "Email", "Hash"], this.admin, this.version);
-    else if (this.type === "register" || this.type =="details") this.data = new database(this.name, range(1, 1, this.maxsize), this.slots, ["First name", "Last Name", "Title", "Email", "Phone", "Sex", "City/Country", "Birthday", "Websites", "Job", "Quote"], this.admin, this.version);
-    else if (this.type === "location") this.data = new database(this.name, range(1, 1, this.maxsize), this.slots, ["Name", "Longitude", "Latitude"], this.admin, this.version);
+    this.type = (type || "data").toLowerCase();
+    if (this.type === "data") this.data = new DB("db_" + this.name, ["Index", "Value"], this.slots, range(1, 1, this.maxsize));//database(this.name, range(1, 1, this.maxsize), this.slots, ["Index", "Value"], this.admin, this.version);
+    else if (this.type === "process") this.data = new DB("db_" + this.name, ["N°", "Name", "Author", "Description", "Content", "Bit size"], this.slots, range(1, 1, this.maxsize)); //database(this.name, range(1, 1, this.maxsize), this.slots, ["N°", "Name", "Author", "Description", "Content", "Bit size"], this.admin, this.version);
+    else if (this.type === "storage") this.data = new DB("db_" + this.name, ["Key", "Value"], this.slots, range(1, 1, this.maxsize));//database(this.name, range(1, 1, this.maxsize), this.slots, ["Key", "Value"], this.admin, this.version);
+    else if (this.type === "authentification") this.data = new DB("db_" + this.name, ["Username", "Password", "Email"], this.slots, range(1, 1, this.maxsize));//database(this.name, range(1, 1, this.maxsize), this.slots, ["Username", "Password", "Email", "Hash"], this.admin, this.version);
+    else if (this.type === "register" || this.type =="details") this.data = new DB("db_" + this.name, ["First name", "Last Name", "Title", "Email", "Phone", "Sex", "City/Country", "Birthday", "Websites", "Job", "Quote"], this.slots, range(1, 1, this.maxsize));//database(this.name, range(1, 1, this.maxsize), this.slots, ["First name", "Last Name", "Title", "Email", "Phone", "Sex", "City/Country", "Birthday", "Websites", "Job", "Quote"], this.admin, this.version);
+    else if (this.type === "location") this.data = new DB("db_" + this.name, ["Name", "Longitude", "Latitude"], this.slots, range(1, 1, this.maxsize));//database(this.name, range(1, 1, this.maxsize), this.slots, ["Name", "Longitude", "Latitude"], this.admin, this.version);
     else throw new Error(this.type + " is an invalid server type.");
     this.addProcess = function (pcs) {
         if (pcs.sig.last() === "-" || pcs.bitsize > this.maxsize/this.nb_slots) console.log("[Server:" + name + "] The process named " + pcs.name + " has been rejected");
@@ -280,20 +328,21 @@ function server (name, admin, type, ver, mxsz) {
                 if (isNon(this.slots[i])) {
                     this.slots[i] = [pcs.name, pcs.author, pcs.description, pcs.content, pcs.bitsize];
                     pos = i;
-                    i = this.nb_slots;break;
+                    i = this.nb_slots;
+                    break;
                 }
             }
             if (this.slots[pos] != [pcs.name, pcs.author, pcs.description, pcs.content, pcs.bitsize] && this.nb_slots < this.maxsize) { //Check if the process was added to the server
-                this.nb_slots += this.maxsize / this.nb_slots//Extend by one slot
+                this.nb_slots += this.maxsize / this.nb_slots; //Extend by one slot
                 this.slots[this.nb_slots] = [pcs.name, pcs.author, pcs.description, pcs.content, pcs.bitsize];
-            };
+            }
         }
     };
     this.add = function (data) {
         var pos;
         for (var i = 0; i < this.nb_slots; i++) {
-            if (isNon(this.slots[i])) {
-                this.slots[i] = JSON.stringify(this);
+            if (isNon(this.slots[i]) || this.slots[i].equals([])) {
+                this.slots[i] = JSON.stringify(data);
                 pos = i;
                 i = this.nb_slots;
                 break;
@@ -301,7 +350,7 @@ function server (name, admin, type, ver, mxsz) {
         }
         if (this.slots[pos] != data && this.nb_slots < this.maxsize) { //Check if the process was added to the server
             this.nb_slots += this.maxsize / this.nb_slots; //Extend by one slot
-            this.slots[this.nb_slots] = JSON.stringify(this);
+            this.slots[this.nb_slots] = JSON.stringify(data);
         }
     };
     this.rm = function (n) {
@@ -312,13 +361,14 @@ function server (name, admin, type, ver, mxsz) {
     };
     this.update = function () {
         if (localStorage["server_" + this.name]) {
-            this.name = localStorage["server_" + this.name].name;
-            this.admin = localStorage["server_" + this.name].admin;
-            this.version = localStorage["server_" + this.name].version;
-            this.maxsize = localStorage["server_" + this.name].maxsize;
-            this.nb_slots = localStorage["server_" + this.name].nb_slots;
-            this.slots = JSON.parse(localStorage["server_" + this.name].slots);
-            this.data = localStorage["server_" + this.name].data;
+            var self = JSON.parse(localStorage["server_" + this.name]);
+            this.name = self.name;
+            this.admin = self.admin;
+            this.version = self.version;
+            this.maxsize = self.maxsize;
+            this.nb_slots = self.nb_slots;
+            this.slots = self.slots;
+            this.data = new DB(self.data.name, self.data.head, self.data.val, self.data.rows) || self.data;
         }else this.store()
     };
     this.fire = function (pcs) {
@@ -331,6 +381,11 @@ function server (name, admin, type, ver, mxsz) {
             if(this.slots.hasOwnProperty(i)) this.rm(i)
         }
     };
+
+    this.toString = function () {
+        return "server(name=" + this.name + ", admin=" + this.admin + ", type=" + this.type + ", version=" + this.version + ", maxsize=" + this.maxsize +", slots=[" + this.slots.toStr(true) + "])";
+    };
+
     Essence.addServer(this);
 
     return this;
@@ -471,7 +526,7 @@ function evalPing (ms) {
 
 /**
  * @description Getting the URL parameters just like in PHP.
- * @param {string|string[]} p Parameter(s)
+ * @param {Str} p Parameter(s)
  * @param {Function} action Action to be done with the value(s) of the parameter(s)
  * @returns {undefined}
  * @since 1.0
@@ -527,6 +582,20 @@ function parseURL (p, action) { //Doing some PHP without PHP :) !!
  * @returns {WebPage} Web page
  * @see WebApp
  * @since 1.0
+ * @property {string} WebPage.title Title
+ * @property {string} WebPage.subtitle Subtitle
+ * @property {string} WebPage.type Document type
+ * @property {string} WebPage.name Name of the file
+ * @property {string} WebPage.path Path of the file
+ * @property {string} WebPage.author Author
+ * @property {number} WebPage.version Version
+ * @property {string} WebPage.structure Page structure
+ * @property {string|XML} WebPage.code Code
+ * @property {string|XML} WebPage.template Code template
+ * @property {Template|string} WebPage.page Page
+ * @property {Function} WebPage.word2code Word (components) to template code
+ * @property {Function} WebPage.genTemplate Transform the structure into a template
+ * @property {Function} WebPage.genPage Transform the template into a page
  */
 function WebPage (title, name, path, author, ver, stct, type, subtitle) {
     this.title = title || "My web page";
@@ -570,7 +639,7 @@ function WebPage (title, name, path, author, ver, stct, type, subtitle) {
         }
     };
 
-    this.genTemplate = function () { //Transform the structure into a template
+    this.genTemplate = function () {
         var cpnt = this.structure.split("!");
         this.template = "<table class='none'>";
         for (var i = 0; i < cpnt.length; i++) {
@@ -584,9 +653,9 @@ function WebPage (title, name, path, author, ver, stct, type, subtitle) {
         return this.template
     };
 
-    this.genPage = function (params) { //Transform the template into a page
+    this.genPage = function (params) {
         this.page = new Template(this.title, this.name, this.template, ["title", "subtitle", "content", "aside", "footer", "0", "1", "2", "article_title", "article_content", "article_footer"]);
-        return this.page.gen({
+        this.page = this.page.gen({
             title: this.title,
             subtitle: this.subtitle,
             content: params.content || $G["lorem"],
@@ -599,6 +668,7 @@ function WebPage (title, name, path, author, ver, stct, type, subtitle) {
             1: "About us",
             2: "Contact us"
         });
+        return this.page;
     };
 
     return this;
@@ -616,6 +686,13 @@ function WebPage (title, name, path, author, ver, stct, type, subtitle) {
  * @constructor
  * @see WebPage
  * @since 1.0
+ * @property {string} WebApp.name Name of the app
+ * @property {string} WebPage.path Path of the file
+ * @property {string} WebPage.author Author
+ * @property {number} WebPage.version Version
+ * @property {string[]} WebPage.dirs List of directories
+ * @property {Template} WebPage.pages Pages
+ * @property {Function} WebPage.build Build the pages
  */
 function WebApp (name, path, author, ver, stct) {
     this.name = name || "Web App";
@@ -641,8 +718,34 @@ function WebApp (name, path, author, ver, stct) {
  * @param {Toolbar} [tb=new Toolbar()] Toolbar
  * @this {Editor}
  * @returns {Editor} Editor
+ * @todo Fill up the synthax highlighting list
  * @constructor
  * @since 1.0
+ * @property {string} Editor.id ID of the element
+ * @property {HTMLElement} Editor.node Node
+ * @property {string} Editor.linesId ID of the lines' element
+ * @property {number} Editor.nbLines Number of lines
+ * @property {string} Editor.language Language
+ * @property {Preview|*} Editor.previewer Previewer
+ * @property {Parser|*} Editor.parser Parser
+ * @property {string|XML} Editor.code Code
+ * @property {virtualHistory} Editor.codeHistory Historic of the code
+ * @property {Toolbar} Editor.toolbar Toolbar
+ * @property {Editor} Editor.toolbar.for This editor
+ * @property {Function} Editor.toggleLine Toggle line (when marked)
+ * @property {Function} Editor.update Update
+ * @property {Function} Editor.clear Clear the editor
+ * @property {Function} Editor.undo Undo the editor
+ * @property {Function} Editor.redo Redo the editor
+ * @property {Function} Editor.save Save the code
+ * @property {Function} Editor.select Select the code
+ * @property {Function} Editor.copy Copy the code
+ * @property {Function} Editor.paste Paste the code to the editor
+ * @property {Function} Editor.load Load a file into the editor
+ * @property {Function} Editor.generate Save the parsed code
+ * @property {Function} Editor.view See the result
+ * @property {Function} Editor.highlightSynthax Highlight the synthax
+ * @property {Function} Editor.toString String representation
  */
 function Editor (id, lang, prev, parser, tb) {
     this.id = id || "#editor";
@@ -658,7 +761,7 @@ function Editor (id, lang, prev, parser, tb) {
     this.toolbar = tb || new Toolbar();
     this.toolbar.for = this;
     this.toggleLine = function (id) {
-        $e("#" + id).setCSS("background", ($e("#" + id).css("background") === "rgba(0, 0, 0, 0)")? "red": "rgba(0, 0, 0, 0)");
+        $e("#" + id).toggleCSS("background", ["rgba(0, 0, 0, 0)", "red"]);
     };
     this.update = function (n) {
         if (this.node != $n(this.id)) this.node = $n(this.id);
@@ -691,7 +794,7 @@ function Editor (id, lang, prev, parser, tb) {
         this.codeHistory.redo();
         $e(this.id).write(this.codeHistory.src)
     };
-    this.save = function () { //Save the actual code
+    this.save = function () {
         save($e(this.id).val(), "script" + getTimestamp() + ".ws", "webscript")
     };
     this.select = function () {
@@ -706,12 +809,11 @@ function Editor (id, lang, prev, parser, tb) {
     this.load = function () {
         var file = prompt("File: ", ".ws");
         this.clear();
-        getFileContent(file);
-        $e(this.id).write($G["fct"])
+        $e(this.id).write(getFileContent(file));
     };
     this.generate = function () { //Save the parsed code
-        if (this.previewer) /\<\?php([\s\S] * ?)\?\>/.test($e(this.id).val())? save($e(this.previewer.id).val(true), "script" + getTimestamp() + ".php", "php"): save($e(this.previewer.id).val(true), "script" + getTimestamp() + ".html", "html");
-        else /\<\?php([\s\S] * ?)\?\>$/g.test($e(this.id).val())? save($e("#preview").val(true), "script" + getTimestamp() + ".php", "php"): save($e(prev.id).val(true), "script" + getTimestamp() + ".html", "html")
+        if (this.previewer) /<\?php([\s\S] * ?)\?>/.test($e(this.id).val())? save($e(this.previewer.id).val(true), "script" + getTimestamp() + ".php", "php"): save($e(this.previewer.id).val(true), "script" + getTimestamp() + ".html", "html");
+        else /<\?php([\s\S] * ?)\?>$/g.test($e(this.id).val())? save($e("#preview").val(true), "script" + getTimestamp() + ".php", "php"): save($e(prev.id).val(true), "script" + getTimestamp() + ".html", "html")
     };
     this.view = function () {
         this.previewer.run($e(this.id).val(), true)
@@ -769,6 +871,10 @@ function Editor (id, lang, prev, parser, tb) {
         return code
     };
 
+    this.toString = function () {
+        return "Editor(id=" + this.id + ", linesId=" + this.linesId + ", nbLines=" + this.nbLines + ", language=" + this.language + ", previewer=" + this.previewer + ", parser=" + this.parser + ", code=" + this.code + ", toolbar=" + this.toolbar + ")";
+    };
+
     return this;
 }
 
@@ -782,6 +888,15 @@ function Editor (id, lang, prev, parser, tb) {
  * @returns {Preview} Previewer
  * @constructor
  * @since 1.0
+ * @property {string} Preview.id ID of the element
+ * @property {HTMLElement} Preview.node Node
+ * @property {string} Preview.language Language
+ * @property {Parser} Preview.associatedParser Associated parser
+ * @property {Editor} Preview.associatedEditor Associated editor
+ * @property {Function} Preview.update Update
+ * @property {Function} Preview.run Run the code
+ * @property {Function} Preview.viewCode See the code
+ * @property {Function} Preview.toString String representation
  */
 function Preview (id, lang, parser, editor) {
     this.id = id || "#preview";
@@ -803,6 +918,10 @@ function Preview (id, lang, parser, editor) {
         win.document.write("<style>" + Essence.css + "</style>")
     };
 
+    this.toString = function () {
+        return "Preview(id=" + this.id + ", language=" + this.language + ", associatedParser=" + this.associatedParser + ", associatedEditor=" + this.associatedEditor + ")";
+    };
+
     return this;
 }
 
@@ -815,6 +934,12 @@ function Preview (id, lang, parser, editor) {
  * @this {Debugger}
  * @constructor
  * @since 1.0
+ * @property {string} Debugger.id ID of the element
+ * @property {HTMLElement} Debugger.node Node
+ * @property {string} Debugger.language Language
+ * @property {Function} Debugger.update Update
+ * @property {Function} Debugger.run Run the code
+ * @property {Function} Preview.toString String representation
  */
 function Debugger (id, lang) {
     this.id = id || "#debugger";
@@ -826,7 +951,9 @@ function Debugger (id, lang) {
     this.run = function () {
         //Useful node stuff: reportValidity(), validity{}, setCustomValidity()
     };
-
+    this.toString = function () {
+        return "Debugger(id=" + this.id + ", language=" + this.language + ")";
+    };
     return this;
 }
 
@@ -834,61 +961,78 @@ function Debugger (id, lang) {
  * @description Dummy text
  * @type {string}
  * @returns {undefined}
+ * @external ../essence:$G
  * @since 1.0
- * @memberof $G
+ * @memberof external:$G
+ * @default
+ * @readonly
  */
 $G["lorem"] = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,";
+
 
 /**
  * @description Language parser
  * @param {string} [from="WebScript"] Parsed language
  * @param {string} [to="DHTML"] Resulting language
- * @param {Function} [customParse= function(code){...] Custom parsing
+ * @param {Function} [customParse=function(code){...}] Custom parsing
  * @this {Parser}
  * @constructor
  * @since 1.0
+ * @property {string} Parser.from Origin language
+ * @property {string} Parser.to Destination language
+ * @property {Function} Parser.run Run the code
+ * @property {Function} Parser.toString String representation
  */
 function Parser (from, to, customParse) {
     this.from = from || "WebScript";
     this.to = to || "DHTML";
+    /**
+     * @param {XML|string} code Code to parse
+     * @type {Function}
+     * @returns {XML|string} Parsed code
+     */
     this.run = customParse || function (code) {
-            var res = code;
-            res = res.replace(/<tab \/>/gm, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-            res = res.replace(/\{\{tab}}/gm, "\t");
-            res = res.replace(/<info>(.*?)<\/info>/gm, "<span class='block info'>$1</span>");
-            res = res.replace(/<question>(.*?)<\/question>/gm, "<span class='block question'>$1</span>");
-            res = res.replace(/<error>(.*?)<\/error>/gm, "<span class='block error'>$1</span>");
-            res = res.replace(/<warning>(.*?)<\/warning>/gm, "<span class='block warning'>$1</span>");
-            res = res.replace(/<success>(.*?)<\/success>/gm, "<span class='block success'>$1</span>");
-            res = res.replace(/(\{\{)LOREM(}})/ig, $G["lorem"]);
-            res = res.replace(/(?:\{\{)LOREM\x7c(\d+)-(\d+)(?:}})/ig, $G["lorem"].chunk("$1", "$2"));
-            res = res.replace(/(?:\{\{)HW(?:}})/ig, "Hello World !");
-            res = res.replace(/<icon \/>/gm, "<img src='img/icon.png' class='icon'/>");
-            res = res.replace(/<icon size=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/icon.png' class='icon' style='width: $1; height: $1;' />");
-            res = res.replace(/<icon name=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/$1.png' class='icon' />");
-            res = res.replace(/<(s|m|l|xs|xl):icon name=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<img src='img/$2.png' class='$1-icon' />");
-            res = res.replace(/<js>([\s\S]*?)<\/js>/gm,"<script type='text/javascript'>$1<\/script>");
-            res = res.replace(/<js src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"<script type='text/javascript' src='$1'><\/script>");
-            res = res.replace(/<vb>([\s\S]*?)<\/vb>/gm, "<script type='text/vbscript'>$1<\/script>");
-            res = res.replace(/<vb src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"<script type = 'text/vbscript' src='$1'><\/script>");
-            res = res.replace(/<css>([\s\S]*?)<\/css>/gm, "<style type='text/css'>$1</style>");
-            res = res.replace(/<css href=(?:\"|\')([A-Za-z_ -\.]+)(?:\"|\') \/>/gm, "<link rel='stylesheet' type='text/css' href='$1' />");
-            res = res.replace(/<charset=(?:\"|\')(\w + )(?:\"|\') \/>/gm, "<meta charset='$1' />");
-            res = res.replace(/<author name=(?:\"|\')(\w + )(?:\"|\') href=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<meta name='author' content='$1' /><link rel='author' href='$2' />");
-            res = res.replace(/<desc>(.*?)<\/desc>/gm, "<meta name='description' content='$1' />");
-            res = res.replace(/<copy>(.*?)<\/copy>/gm, "<meta name='copyrights' content='$1' />");
-            res = res.replace(/<lbl>(.*?)<\/lbl>/gm, "<label>$1</label>");
-            res = res.replace(/<submit \/>/gm, "<input type='submit' />");
-            res = res.replace(/<submit val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<input type='submit' value='$1' />");
-            res = res.replace(/<reset \/>/gm, "<input type='reset' />");
-            res = res.replace(/<reset val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<input type='reset' value = '$1' />");
-            res = res.replace(/<hdn name=(?:\"|\')(\w+)(?:\"|\')>(.*?)<\/hdn>/gm, "<input type='hidden' name='$1' value='$2' />");
-            res = res.replace(/<hdn name=(?:\"|\')(\w+)(?:\"|\') id=(?:\"|\')(\w+)(?:\"|\')>(.*?)<\/hdn>/gm, "<input type='hidden' name='$1' value='$3' id='$2' />");
-            res = res.replace(/<txt ((?:id|name|class)(\=(?:\"|\')(\w+)(?:\"|\'))(| ))\/>/gm, "<input type='text' />");
-            res = res.replace(/<sql query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\t$r = mysqli_query($$dbc, '$1');\n\t}else printMsg('error', 'No ping');\n\?>");
-            res = res.replace(/<sqlt table=(?:\"|\')(\w+)(?:\"|\') query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\techo 'Last updated at '._time().\"<br />\";selectTable($dbc, '$1', '$2');\n\t}else printMsg('error', 'No ping');\n\?>");
-            return res
-        }
+        var res = code;
+        res = res.replace(/<tab \/>/gm, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+        res = res.replace(/\{\{tab}}/gm, "\t");
+        res = res.replace(/<info>(.*?)<\/info>/gm, "<span class='block info'>$1</span>");
+        res = res.replace(/<question>(.*?)<\/question>/gm, "<span class='block question'>$1</span>");
+        res = res.replace(/<error>(.*?)<\/error>/gm, "<span class='block error'>$1</span>");
+        res = res.replace(/<warning>(.*?)<\/warning>/gm, "<span class='block warning'>$1</span>");
+        res = res.replace(/<success>(.*?)<\/success>/gm, "<span class='block success'>$1</span>");
+        res = res.replace(/(\{\{)LOREM(}})/ig, $G["lorem"]);
+        res = res.replace(/(?:\{\{)LOREM\x7c(\d+)-(\d+)(?:}})/ig, $G["lorem"].chunk("$1", "$2"));
+        res = res.replace(/(?:\{\{)HW(?:}})/ig, "Hello World !");
+        res = res.replace(/<icon \/>/gm, "<img src='img/icon.png' class='icon'/>");
+        res = res.replace(/<icon size=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/icon.png' class='icon' style='width: $1; height: $1;' />");
+        res = res.replace(/<icon name=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/$1.png' class='icon' />");
+        res = res.replace(/<(s|m|l|xs|xl):icon name=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<img src='img/$2.png' class='$1-icon' />");
+        res = res.replace(/<js>([\s\S]*?)<\/js>/gm,"<script type='text/javascript'>$1<\/script>");
+        res = res.replace(/<js src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"<script type='text/javascript' src='$1'><\/script>");
+        res = res.replace(/<vb>([\s\S]*?)<\/vb>/gm, "<script type='text/vbscript'>$1<\/script>");
+        res = res.replace(/<vb src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"<script type = 'text/vbscript' src='$1'><\/script>");
+        res = res.replace(/<css>([\s\S]*?)<\/css>/gm, "<style type='text/css'>$1</style>");
+        res = res.replace(/<css href=(?:\"|\')([A-Za-z_ -\.]+)(?:\"|\') \/>/gm, "<link rel='stylesheet' type='text/css' href='$1' />");
+        res = res.replace(/<charset=(?:\"|\')(\w + )(?:\"|\') \/>/gm, "<meta charset='$1' />");
+        res = res.replace(/<author name=(?:\"|\')(\w + )(?:\"|\') href=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<meta name='author' content='$1' /><link rel='author' href='$2' />");
+        res = res.replace(/<desc>(.*?)<\/desc>/gm, "<meta name='description' content='$1' />");
+        res = res.replace(/<copy>(.*?)<\/copy>/gm, "<meta name='copyrights' content='$1' />");
+        res = res.replace(/<lbl>(.*?)<\/lbl>/gm, "<label>$1</label>");
+        res = res.replace(/<submit \/>/gm, "<input type='submit' />");
+        res = res.replace(/<submit val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<input type='submit' value='$1' />");
+        res = res.replace(/<reset \/>/gm, "<input type='reset' />");
+        res = res.replace(/<reset val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<input type='reset' value = '$1' />");
+        res = res.replace(/<hdn name=(?:\"|\')(\w+)(?:\"|\')>(.*?)<\/hdn>/gm, "<input type='hidden' name='$1' value='$2' />");
+        res = res.replace(/<hdn name=(?:\"|\')(\w+)(?:\"|\') id=(?:\"|\')(\w+)(?:\"|\')>(.*?)<\/hdn>/gm, "<input type='hidden' name='$1' value='$3' id='$2' />");
+        res = res.replace(/<txt ((?:id|name|class)(\=(?:\"|\')(\w+)(?:\"|\'))(| ))\/>/gm, "<input type='text' />");
+        res = res.replace(/<sql query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\t$r = mysqli_query($$dbc, '$1');\n\t}else printMsg('error', 'No ping');\n\?>");
+        res = res.replace(/<sqlt table=(?:\"|\')(\w+)(?:\"|\') query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\techo 'Last updated at '._time().\"<br />\";selectTable($dbc, '$1', '$2');\n\t}else printMsg('error', 'No ping');\n\?>");
+        return res
+    };
+
+    this.toString = function () {
+        return "Parser(" + this.from + "->" + this.to + ")";
+    };
 }
 
 /**
@@ -900,6 +1044,13 @@ function Parser (from, to, customParse) {
  * @returns {Toolbar} Toolbar
  * @constructor
  * @since 1.0
+ * @property {string} Toolbar.id ID of the element
+ * @property {HTMLElement} Toolbar.node Node
+ * @property {string[]} Toolbar.tools Tools
+ * @property {string[]} Toolbar.fn Function associated with each tools
+ * @property {*} Toolbar.for Owner of the toolbar (generally Editors or Preview)
+ * @property {Function} Toolbar.update Update
+ * @property {Function} Toolbar.toString String representation
  */
 function Toolbar (id, tools, mdl) {
     this.id = id || "#toolbar";
@@ -914,6 +1065,10 @@ function Toolbar (id, tools, mdl) {
          for (var i = 0; i < this.tools.length; i++) {
          $e(this.id).after("<img src = 'img/" + this.tools[i] + ".png' title = '" + this.tools[i].capitalize() + "' alt = '" + this.tools[i] + "' onClick = '" + this[this.tools[i]] + "' class = 'tbicon' id = 'tool" + i+"' />", true);
          } */
+    };
+
+    this.toString = function () {
+        return "Toolbar(id=" + this.id + ", tools=" + this.tools.toStr(true) + ", fn=" + this.fn + ", for=" + this.for + ")";
     };
 
     return this;
@@ -932,6 +1087,18 @@ function Toolbar (id, tools, mdl) {
  * @constructor
  * @see Editor Preview Parser Debugger
  * @since 1.0
+ * @property {string} IDE.language Language
+ * @property {Editor} IDE.editor Editor
+ * @property {Parser} IDE.parser Parser
+ * @property {Preview} IDE.preview Previewer
+ * @property {Parser} IDE.preview.associatedParser Parser
+ * @property {Preview} IDE.editor.previewer Previewer
+ * @property {Parser} IDE.editor.parser Parser
+ * @property {Debugger} IDE.debugger Debugger
+ * @property {Function} IDE.init Initialiser
+ * @property {Toolbar} IDE.toolbar Toolbar
+ * @property {Function} IDE.update Update
+ * @property {Function} IDE.toString String representation
  */
 function IDE (lang, edt, prev, ps, dbg, tb) {
     this.editor = edt || new Editor();
@@ -956,15 +1123,20 @@ function IDE (lang, edt, prev, ps, dbg, tb) {
         this.debugger.update();
     };
 
+    this.toString = function () {
+        return "IDE(editor=" + this.editor + ", parser=" + this.parser + ", preview=" + this.preview + ", debugger=" + this.debugger + ", language=" + this.language + ")";
+    };
+
     return this;
 }
 
 /**
  * @description Loading percentage
  * @type {number}
+ * @external ../essence:$G
  * @default
  * @since 1.0
- * @memberof $G
+ * @memberof external:$G
  */
 $G["i"] = 0;
 /**
@@ -1054,14 +1226,11 @@ function Console (title, entry, usr) {
         $n("#consoleOut").innerHTML = (this.val || "Hello world !") + "<br/>";
         var self = this;
 
+        /** @listens $e("#consoleIn").onchange */
         $e("#consoleIn").on("change", function () {
-            /**
-             * @this $n("#consoleIn")
-             */
+            /** @this $n("#consoleIn") */
             self.exec(this.value);
-            /**
-             * @this $n("#consoleIn")
-             */
+            /** @this $n("#consoleIn") */
             this.value = "";
         });
     };

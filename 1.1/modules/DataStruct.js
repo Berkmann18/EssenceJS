@@ -11,27 +11,14 @@
  * @requires Maths
  * @requires Files
  * @namespace
- * @type {{name: string, version: number, run: module:DataStruct.run, description: string, dependency: string[], author: string, complete: boolean, toString: module:DataStruct.toString}}
+ * @type {Module}
  * @since 1.1
  * @exports DataStruct
  */
-var DataStruct = {
-    name: "DataStruct",
-    version: 1,
-    run: function () {
-
-    },
-    description: "Data structures",
-    dependency: ["DOM", "Maths", "Files"],
-    author: "Maximilian Berkmann",
-    complete: false,
-    toString: function () {
-        return "Module(name='" + this.name + "', version=" + this.version + ", description='" + this.description + "', author='" + this.author + "', complete=" + this.complete + ", run=" + this.run + ")";
-    }
-};
+var DataStruct = new Module("DataStruct", "Data structures", ["DOM", "Maths", "Files"]);
 
 (function () {
-    DataStruct.complete = true;
+    //DataStruct.complete = true;
 })();
 
 /* eslint no-undef: 0 */
@@ -45,6 +32,12 @@ var DataStruct = {
  * @this LinkedList
  * @constructor
  * @since 1.0
+ * @property {NumberLike} LinkedList.payload Payload
+ * @property {LinkedList|Object} LinkedList.next Next element
+ * @property {string} LinkedList.name Name
+ * @property {Function} LinkedList.show Show the linked list
+ * @property {Function} LinkedList.next.show Show the linked list
+ * @property {Function} LinkedList.toString String representation
  */
 function LinkedList (pl, nx, name) {
     this.payload = pl || 1;
@@ -73,6 +66,35 @@ function LinkedList (pl, nx, name) {
  * @interface
  * @constructor
  * @since 1.0
+ * @property {TreeNode} TreeNode.left Left child
+ * @property {TreeNode} TreeNode.right Right child
+ * @property {NumberLike} TreeNode.payload Payload
+ * @property {Function} TreeNode.add Child adder
+ * @property {Function} TreeNode.addLeft Left child adder
+ * @property {Function} TreeNode.addRight Right child adder
+ * @property {Function} TreeNode.traverse Tree traversal
+ * @property {Function} TreeNode.printInOrder Console in-order printing
+ * @property {Function} TreeNode.printPreOrder Console pre-order printing
+ * @property {Function} TreeNode.printPostOrder Console post-order printing
+ * @property {Function} TreeNode.printInOrder Console in-order printing
+ * @property {Function} TreeNode.inOrder Window in-order printing
+ * @property {Function} TreeNode.preOrder Window pre-order printing
+ * @property {Function} TreeNode.postOrder Window post-order printing
+ * @property {Function} TreeNode.getInOrder In-order getter
+ * @property {Function} TreeNode.getPreOrder Pre-order getter
+ * @property {Function} TreeNode.getPostOrder Post-order getter
+ * @property {Function} TreeNode.isLeaf Leaf check
+ * @property {Function} TreeNode.find Look for a tree-node
+ * @property {Function} TreeNode.dfs Depth First Search
+ * @property {Function} TreeNode.bfs Breath First Search
+ * @property {Function} TreeNode.sum Sum of the payloads
+ * @property {Function} TreeNode.min Smallest payload
+ * @property {Function} TreeNode.max Biggest payload
+ * @property {Function} TreeNode.nbOfBranches Branches counter
+ * @property {Function} TreeNode.avg Average of the payloads
+ * @property {Function} TreeNode.printBFS Print in the BFS order
+ * @property {Function} TreeNode.toString String representation
+ * @property {Function} TreeNode.toArray Array representation
  */
 function TreeNode (pl, l, r) { //Binary tree
     this.left = l;
@@ -296,6 +318,18 @@ function TreeNode (pl, l, r) { //Binary tree
  * @return {Node} Node
  * @constructor
  * @since 1.0
+ * @property {NumberLike} Node.payload Payload
+ * @property {Node} Node.next Next node
+ * @property {Function} Node.traverse Node traversal
+ * @property {Function} Node.print Node printer
+ * @property {Function} Node.printList Node list printer
+ * @property {Function} Node.last Get the last node
+ * @property {Function} Node.append Append the list with a new node
+ * @property {Function} Node.remove Node remover
+ * @property {Function} Node.reverse List reversal
+ * @property {Function} Node.find Look for a node
+ * @property {Function} Node.equals Node comparator
+ * @property {Function} Node.toString String representation
  */
 function Node (pl, nx, pv) {
     this.payload = pl || 1;
@@ -373,10 +407,27 @@ function Node (pl, nx, pv) {
  * @this PathNode
  * @constructor
  * @since 1.0
+ * @property {number} PathNode.f Cost of the path (g) + heuristical estimate
+ * @property {PathNode} PathNode.parent Parent of the path-node
+ * @property {Function} PathNode.back Go n path-nodes back
+ * @property {Function} PathNode.isCloser Check if the current path-node is closer than the other one
+ * @property {Function} Node.toString String representation
  */
 function PathNode (g, h) { //Nodes for path finding algs
     this.f = g + h || 1;
     this.parent = null;
+
+    this.back = function (n) {
+        return (isNon(n) || n <= 1)? this.parent: this.parent.back(n - 1);
+    };
+
+    this.isCloser = function (pn) {
+        return this.f <= pn.f;
+    };
+
+    this.toString = function () {
+      return "PathNode(f=" + this.f + ", parent=" + this.parent.toString() + ")";
+    };
     return this;
 }
 
@@ -391,6 +442,32 @@ NTreeNode.inheritsFrom(TreeNode);
  * @implements {TreeNode}
  * @constructor
  * @since 1.0
+ * @property {NTreeNode[]} NTreeNode.childs Childs
+ * @property {NumberLike} NTreeNode.payload Payload
+ * @property {Function} NTreeNode.add Child adder
+ * @property {Function} NTreeNode.traverse Tree traversal
+ * @property {Function} NTreeNode.printInOrder Console in-order printing
+ * @property {Function} NTreeNode.printPreOrder Console pre-order printing
+ * @property {Function} NTreeNode.printPostOrder Console post-order printing
+ * @property {Function} NTreeNode.printInOrder Console in-order printing
+ * @property {Function} NTreeNode.inOrder Window in-order printing
+ * @property {Function} NTreeNode.preOrder Window pre-order printing
+ * @property {Function} NTreeNode.postOrder Window post-order printing
+ * @property {Function} NTreeNode.getInOrder In-order getter
+ * @property {Function} NTreeNode.getPreOrder Pre-order getter
+ * @property {Function} NTreeNode.getPostOrder Post-order getter
+ * @property {Function} NTreeNode.isLeaf Leaf check
+ * @property {Function} NTreeNode.find Look for a tree-node
+ * @property {Function} NTreeNode.dfs Depth First Search
+ * @property {Function} NTreeNode.bfs Breath First Search
+ * @property {Function} NTreeNode.sum Sum of the payloads
+ * @property {Function} NTreeNode.min Smallest payload
+ * @property {Function} NTreeNode.max Biggest payload
+ * @property {Function} NTreeNode.nbOfBranches Branches counter
+ * @property {Function} NTreeNode.avg Average of the payloads
+ * @property {Function} NTreeNode.printBFS Print in the BFS order
+ * @property {Function} NTreeNode.toString String representation
+ * @property {Function} NTreeNode.toArray Array representation
  */
 function NTreeNode (pl, ch) {
     this.payload = pl || 0;
@@ -496,7 +573,7 @@ function NTreeNode (pl, ch) {
         queue.unshift(this); //Add as the end
         while (queue != []) {
             b = 0;
-            var cur = new TreeNode(queue.pop()); //Get the first element of the queue
+            var cur = new NTreeNode(queue.pop()); //Get the first element of the queue
             if (cur.payload === n) return [b, tb];
             if (cur.left) queue.unshift(cur.left);
             if (cur.right) queue.unshift(cur.right);
@@ -540,7 +617,7 @@ function NTreeNode (pl, ch) {
         var queue = [], tab = t || "-"; //Better and easier than a Queue/QueueList
         queue.unshift(this); //Add as the end
         while (queue != []) {
-            var cur = new TreeNode(queue.pop()); //Get the first element of the queue
+            var cur = new NTreeNode(queue.pop()); //Get the first element of the queue
             println(tab + ">" + cur.payload);
             tab += "-";
             for (var c in this.childs) {
@@ -552,7 +629,7 @@ function NTreeNode (pl, ch) {
         /* Essence.txt2print = "";
          this.printInOrder();
          return "Tree(" + Essence.txt2print + ")" */
-        var str = "TreeNode(payload= " + this.payload + ", ";
+        var str = "NTreeNode(payload= " + this.payload + ", ";
         for (var c in this.childs) {
             if (this.childs.hasOwnProperty(c)) str += c.toString();
         }
@@ -579,6 +656,26 @@ function NTreeNode (pl, ch) {
  * @constructor
  * @this Set
  * @since 1.0
+ * @property {number[]} Set.value Values
+ * @property {Function} Set.size Size of the set
+ * @property {Function} Set.add Add an item to the set
+ * @property {Function} Set.remove Remove an item from the set
+ * @property {Function} Set.clear Clear the set or an item of it
+ * @property {Function} Set.isEmpty Check the emptiness of the set
+ * @property {Function} Set.contains Check if the set contains an item (or more)
+ * @property {Function} Set.equals Check if two sets are identical
+ * @property {Function} Set.isSame Check if two sets contains the same values
+ * @property {Function} Set.toString String representation
+ * @property {Function} Set.subset Subset of the set
+ * @property {Function} Set.get Get an item of the set
+ * @property {Function} Set.indexOf Index of an item in the set
+ * @property {Function} Set.set Set an item's value
+ * @property {Function} Set.first Get the first item of the set
+ * @property {Function} Set.last Get the last item of the set
+ * @property {Function} Set.min Smallest item of the set
+ * @property {Function} Set.max Biggest item of the set
+ * @property {Function} Set.median Median item of the set
+ * @property {Function} Set.forEach Act on each items of the set
  */
 function Set (arr) {
     this.value = (isType(arr, "Array")? rmDuplicates(arr): [arr]) || [];
@@ -617,7 +714,7 @@ function Set (arr) {
                 c = c && this.contains(item[i]);
             }
             return c
-        } else return this.value.indexOf(item) != -1
+        } else return this.value.has(item)
     };
 
     this.equals = function (s) {
@@ -689,7 +786,11 @@ SortedSet.inheritsFrom(Set);
  * @param {Array} arr Array
  * @returns {SortedSet} Sorted set
  * @constructor
+ * @inheritdoc
  * @since 1.0
+ * @property {number[]} SortedSet.value Values
+ * @property {Function} SortedSet.add Add an item to the set and sort it
+ * @property {Function} SortedSet.toString String representation
  */
 function SortedSet (arr) {
     this.value = arr || [];
@@ -711,31 +812,49 @@ function SortedSet (arr) {
 
 /**
  * @description Stack
- * @param {Array} [arr] Array
+ * @param {Array|*} [arr] Array
  * @param {number|null} [lim=null] Limit
  * @returns {Stack} Stack
  * @this Stack
  * @constructor
  * @since 1.0
+ * @property {number[]} Stack.value Values
+ * @property {number|null} Stack.limit Limit
+ * @property {Function} Stack.peek Returns the top value
+ * @property {Function} Stack.ground Returns the bottom value
+ * @property {Function} Stack.push Add items at the top
+ * @property {Function} Stack.pop Remove the top item
+ * @property {Function} Stack.isEmpty Emptiness check
+ * @property {Function} Stack.isFull Fullness check
+ * @property {Function} Stack.size Size
+ * @property {Function} Stack.toString String representation
  */
 function Stack (arr, lim) {
     this.value = isType(lim, "Number")? new Array(lim): [];
     this.limit = lim || null;
     if (arr) this.value.push(arr);
 
-    this.peek = function () { //Returns the top value
+    this.peek = function () {
         return this.value.last()
     };
 
-    this.ground = function () { //Returns the bottom value
+    this.ground = function () {
         return this.value[0]
     };
 
+    /**
+     * @throws {Error} Stack overflow
+     * @param {*} item Item
+     */
     this.push = function (item) {
         if (this.isFull()) throw new Error("Stack overflow !");
         isType(item, "array")? this.value.append(item): this.value.push(item);
     };
 
+    /**
+     * @throws {Error} Stack underflow
+     * @return {*} Item
+     */
     this.pop = function () {
         if (this.isEmpty()) throw new Error("Stack underflow !");
         return this.value.pop();
@@ -746,7 +865,7 @@ function Stack (arr, lim) {
     };
 
     this.isFull = function () {
-        return this.lim != null? this.value.length >= this.limit: false
+        return this.limit != null? this.value.length >= this.limit: false
     };
 
     this.size = function () {
@@ -755,10 +874,6 @@ function Stack (arr, lim) {
 
     this.toString = function () {
         return "Stack(" + this.value.toString() + ")"
-    };
-
-    this.equals = function (s) {
-        return this.toString() === s.toString()
     };
 
     return this;
@@ -771,15 +886,35 @@ function Stack (arr, lim) {
  * @this StackArray
  * @constructor
  * @since 1.0
+ * @property {number[]} StackArray.value Values
+ * @property {number} StackArray.top Top index
+ * @property {Function} StackArray.peek Returns the top value
+ * @property {Function} StackArray.ground Returns the bottom value
+ * @property {Function} StackArray.push Add items at the top
+ * @property {Function} StackArray.pop Remove the top item
+ * @property {Function} StackArray.isEmpty Emptiness check
+ * @property {Function} StackArray.isFull Fullness check
+ * @property {Function} StackArray.size Size
+ * @property {Function} StackArray.toString String representation
+ * @see Stack
  */
 function StackArray (sz) {
     this.value = new Array(sz);
+    /** @default */
     this.top = -1;
 
-    this.peek = function () { //Returns the top value
+    this.peek = function () {
         return this.value[this.top]
     };
 
+    this.ground = function () {
+        return this.value[0];
+    };
+
+    /**
+     * @throws {Error} Stack overflow
+     * @param {*} item Item
+     */
     this.push = function (item) {
         if (this.isFull()) throw new Error("Stack overflow !");
         if (isType(item, "array")) {
@@ -790,6 +925,11 @@ function StackArray (sz) {
         }
     };
 
+    /**
+     * @throws {Error} Stack underflow
+     * @param {*} item Item
+     * @returns {*} Item
+     */
     this.pop = function (item) {
         if (this.isEmpty()) throw new Error("Stack underflow !");
         if (isType(item, "array")) {
@@ -817,26 +957,36 @@ function StackArray (sz) {
         return "Stack(" + this.value.toString() + ")"
     };
 
-    this.equals = function (s) {
-        return this.toString() === s.toString()
-    };
-
     return this;
 }
 
 /**
  * @description Stack list
- * @param {Array|*} [arr] Array or element
+ * @param {Array|*} [arr] Array or payloads
  * @returns {StackList} Stack list
  * @this StackList
  * @constructor
  * @since 1.0
+ * @property {number[]} StackList.top Top node
+ * @property {Function} StackList.peek Returns the top value
+ * @property {Function} StackList.ground Returns the bottom value
+ * @property {Function} StackList.push Add items at the top
+ * @property {Function} StackList.pop Remove the top item
+ * @property {Function} StackList.isEmpty Emptiness check
+ * @property {Function} StackList.isFull Fullness check
+ * @property {Function} StackList.size Size
+ * @property {Function} StackList.toString String representation
+ * @see Stack
  */
 function StackList (arr) {
     this.top = new Node();
 
-    this.peek = function () { //Returns the top value
-        return (this.isEmpty() || this.top == null)? null: this.top.next.payload
+    this.peek = function () {
+        return (this.isEmpty() || this.top === null)? null: this.top.next.payload
+    };
+
+    this.ground = function () {
+        return this.top.payload;
     };
 
     this.push = function (item) {
@@ -850,6 +1000,11 @@ function StackList (arr) {
     };
     if (arr) this.push(arr);
 
+    /**
+     * @throws {Error} Stack underflow
+     * @param {number} [n] Number of pops to do
+     * @returns {Node} Item
+     */
     this.pop = function (n) {
         if (!this.isEmpty()) throw new Error("I can't pop from an empty stack list");
         if (n) {
@@ -880,17 +1035,35 @@ function StackList (arr) {
  * @this Queue
  * @constructor
  * @since 1.0
+ * @property {number[]} Queue.value Values
+ * @property {number|null} Queue.limit Limit
+ * @property {Function} Queue.head Returns the first value
+ * @property {Function} Queue.tail Returns the last value
+ * @property {Function} Queue.enqueue Add items at the end
+ * @property {Function} Queue.dequeue Remove the first item
+ * @property {Function} Queue.isEmpty Emptiness check
+ * @property {Function} Queue.isFull Fullness check
+ * @property {Function} Queue.size Size
+ * @property {Function} Queue.toString String representation
  */
 function Queue (arr, lim) {
     this.value = isType(lim, "Number")? new Array(lim): [];
     this.limit = lim || null;
     if (arr) this.value.push(arr);
 
+    /**
+     * @throws {Error} Queue overflow
+     * @param {*} item Item
+     */
     this.enqueue = function (item) {
         if (this.isFull()) throw new Error("Queue overflow !");
-        isType(item, "array")? this.value.preppend(item): this.value.unshift(item);
+        isType(item, "array")? this.value.prepend(item): this.value.unshift(item);
     };
 
+    /**
+     * @throws {Error} Queue undeflow
+     * @returns {*} Item
+     */
     this.dequeue = function () {
         if (this.isEmpty()) throw new Error("Queue underflow !");
         var it = this.head();
@@ -898,11 +1071,11 @@ function Queue (arr, lim) {
         return it
     };
 
-    this.head = function () { //Returns the first value
+    this.head = function () {
         return this.value.last()
     };
 
-    this.tail = function () { //Returns the last value
+    this.tail = function () {
         return this.value[0]
     };
 
@@ -911,7 +1084,7 @@ function Queue (arr, lim) {
     };
 
     this.isFull = function () {
-        return this.lim != null? this.value.length >= this.limit: false
+        return this.limit != null? this.value.length >= this.limit: false
     };
 
     this.size = function () {
@@ -919,11 +1092,7 @@ function Queue (arr, lim) {
     };
 
     this.toString = function () {
-        return "Queue(head = " + this.head() + ", tail = " + this.tail() + ", value = " + this.value.toString() + ")"
-    };
-
-    this.equals = function (queue) {
-        return this.toString() === queue.toString()
+        return "Queue(head=" + this.head() + ", tail=" + this.tail() + ", value=" + this.value.toString() + ")"
     };
 
     return this;
@@ -935,13 +1104,32 @@ function Queue (arr, lim) {
  * @returns {QueueArray} QueueArray
  * @this QueueArray
  * @constructor
- * @since 1.0
+ * @since 1.1
+ * @see Queue
+ * @property {number[]} QueueArray.value Values
+ * @property {number} QueueArray.front Front index
+ * @property {number} QueueArray.back Back index
+ * @property {Function} QueueArray.head Returns the first value
+ * @property {Function} QueueArray.tail Returns the last value
+ * @property {Function} QueueArray.enqueue Add items at the end
+ * @property {Function} QueueArray.dequeue Remove the first item
+ * @property {Function} QueueArray.isEmpty Emptiness check
+ * @property {Function} QueueArray.isFull Fullness check
+ * @property {Function} QueueArray.size Size
+ * @property {Function} QueueArray.toString String representation
  */
 function QueueArray (arr) {
+    /** @default */
     this.value = arr || [];
+    /** @default */
     this.front = -1;
+    /** @default */
     this.back = -1;
 
+    /**
+     * @throws {Error} Queue full
+     * @param {*} item Item
+     */
     this.enqueue = function (item) {
         if (isType(item, "array")) {
             for(var i = 0; i < item.length; i++) this.enqueue(item[i]);
@@ -958,6 +1146,10 @@ function QueueArray (arr) {
         }
     };
 
+    /**
+     * @throws {Error} Queue empty
+     * @returns {*}
+     */
     this.dequeue = function () {
         var val;
         if (this.isEmpty()) throw new Error("I can't dequeue from an empty queue");
@@ -984,11 +1176,7 @@ function QueueArray (arr) {
     };
 
     this.toString = function () {
-        return "Queue(front = " + this.front + ", back = " + this.back + ", value = " + this.value.toString() + ")"
-    };
-
-    this.equals = function (queue) {
-        return this.toString() === queue.toString()
+        return "Queue(front=" + this.front + ", back=" + this.back + ", value=" + this.value.toString() + ")"
     };
 
     return this;
@@ -1001,6 +1189,20 @@ function QueueArray (arr) {
  * @todo Probably add the pre-init similar to StackList() ?
  * @constructor
  * @since 1.0
+ * @property {number[]} QueueList.value Values
+ * @property {Node|null} QueueList.front Front node
+ * @property {Node|null} QueueList.back Back node
+ * @property {number} QueueList.len Length of the list
+ * @property {Function} QueueList.head Returns the first value
+ * @property {Function} QueueList.tail Returns the last value
+ * @property {Function} QueueList.enqueue Add items at the end
+ * @property {Function} QueueList.dequeue Remove the first item
+ * @property {Function} QueueList.isEmpty Emptiness check
+ * @property {Function} QueueList.isFull Fullness check
+ * @property {Function} QueueList.size Size
+ * @property {Function} QueueList.toString String representation
+ * @property {Function} QueueList.remove Node removal
+ * @property {Function} QueueList.insertAt Positional node insertion
  */
 function QueueList () {
     this.front = null;
@@ -1019,6 +1221,10 @@ function QueueList () {
         return this
     };
 
+    /**
+     * @throws {Error} Queue underflow
+     * @returns {null}
+     */
     this.dequeue = function () {
         if (this.isEmpty()) throw new Error("I can't dequeue an empty queue list");
         this.front = this.front.prev;
@@ -1041,10 +1247,6 @@ function QueueList () {
             crt = crt.prev;
         }
         return str
-    };
-
-    this.equals = function (queue) {
-        return this.toString() === queue.toString()
     };
 
     this.remove = function (pl) {
@@ -1102,7 +1304,7 @@ function Astar (start, goal) {
                     if (l != -1) {
                         l = l[0];
                         //If the current node is better then continue
-                        if (nodeCurrent.f < openList[l] || (lookfor(nodeSuccessor, closedList) != -1 && nodeCurrent.f < openList[lookfor(nodeSuccessor, closedList)][0])) continue;
+                        if (nodeCurrent.f < openList[l] || (lookfor(nodeSuccessor, closedList) != -1 && nodeCurrent.f < openList[lookfor(nodeSuccessor, closedList)][0].f)) continue;
                         openList = openList.remove(nodeSuccessor);
                         closedList = closedList.remove(nodeSuccessor);
                         nodeSuccessor.parent = nodeCurrent;
@@ -1137,7 +1339,7 @@ function A(start, goal, grid) { //JS version of https://en.wikipedia.org/wiki/A*
         var n = grid.neighbour(current[0], current[1]);
         Essence.say("neighbour of " + current + ":\n" + n.toStr(true), "info");
         for (var i = 0; i < n; i++) {
-            if (closedSet.indexOf(n[i]) > -1) continue;
+            if (closedSet.has(n[i])) continue;
             var tentativeGScore = gScore[closedSet.indexOf(current)] + 1;
             if (closedSet.indexOf(n[i]) === -1) openSet.push(n[i]);
             else if (tentativeGScore >= gScore[i]) break;
@@ -1185,9 +1387,10 @@ function IDAstar () {
  * @returns {string|Array} Sorted string|array
  * @since 1.0
  * @func
+ * @throws {TypeError} x isn't iterable
  */
 function alphabetSort (x) {
-    if (!x.isIterable()) throw new Error("alphabetSort cannot sort non iterable objects");
+    if (!x.isIterable()) throw new TypeError("alphabetSort cannot sort non iterable objects");
     if (isType(x, "String")) return x.split("").quickSort().join("");
 
     var res = x.uniform(), s = true, j = 1;
@@ -1260,11 +1463,16 @@ function binarySearch (list, x) {
  * @constructor
  * @this {Archive}
  * @since 1.0
+ * @property {string} Archive.name Name of the archive
+ * @property {string} Archive.data Data to compress
+ * @property {string[]} Archive.dictionary Dictionary (values formated as: letter=bitcode)
+ * @property {Function} Archive.updateDict Update the dictionary
+ * @property {Function} Archive.getResult Get the result
  */
-function Archive (name, data) { //Compressed data using Huffman's approach while differentiating uppercase and lowercase letters
+function Archive (name, data) {
     this.name = name || "Archive";
-    this.data = data || ""; //Data to compress
-    this.dictionnary = []; //Values should be in the format: letter = bitcode
+    this.data = data || "";
+    this.dictionary = [];
     this.result = [];
     this.updateDict = function () {
         var lexiq = [], count, tmp = alphabetSort(data);
@@ -1283,17 +1491,17 @@ function Archive (name, data) { //Compressed data using Huffman's approach while
         }
         //Essence.say("Lexiq of " + this.name + ": " + lexiq + "\ncounts: " + count);
 
-        this.dictionnary = occurrenceSort(this.data);
+        this.dictionary = occurrenceSort(this.data);
 
-        for (i = 0; i < this.dictionnary.length; i++) this.result[i] = conv(i, 10, 2);
+        for (i = 0; i < this.dictionary.length; i++) this.result[i] = conv(i, 10, 2);
     };
 
     this.getResult = function () {
         this.updateDict();
         var res = this.data;
         for (var i = 0; i < this.data.length; i++) {
-            console.log(i + "// " + this.dictionnary[this.dictionnary.indexOf(this.data[i])]);
-            res = res.replace(RegExpify(this.dictionnary[this.dictionnary.indexOf(this.data[i])]), this.result[i]);
+            console.log(i + "// " + this.dictionary[this.dictionary.indexOf(this.data[i])]);
+            res = res.replace(RegExpify(this.dictionary[this.dictionary.indexOf(this.data[i])]), this.result[i]);
         }
 
         return res;
@@ -1308,6 +1516,17 @@ function Archive (name, data) { //Compressed data using Huffman's approach while
  * @constructor
  * @returns {virtualHistory} Virtual history
  * @since 1.0
+ * @property {*} virtualHistory.src Source
+ * @property {*} virtualHistory.DEFAULT_STATE Default state of the source
+ * @property {number} virtualHistory.state State number
+ * @property {Function} virtualHistory.reset Reset the current state
+ * @property {Function} virtualHistory.update Update the current state if needed
+ * @property {Function} virtualHistory.add Add the new state to the list
+ * @property {Function} virtualHistory.get Get the i-th state
+ * @property {Function} virtualHistory.undo Go the the previous state
+ * @property {Function} virtualHistory.redo Go the following state
+ * @property {Function} virtualHistory.getStates List the states
+ * @property {*} virtualHistory.isStateDefault Check if the current state is the default one
  */
 function virtualHistory (elm) {
     this.src = elm;
@@ -1315,11 +1534,11 @@ function virtualHistory (elm) {
     this.states = new Set(this.src);
     this.state = 0;
 
-    this.reset = function () { //Go back to the default state
+    this.reset = function () {
         this.src = this.DEFAULT_STATE;
     };
 
-    this.update = function (elm) { //Update the current state if needed
+    this.update = function (elm) {
         if (this.src != elm) this.add(elm);
     };
 
@@ -1337,12 +1556,18 @@ function virtualHistory (elm) {
         return this.states.get(i)
     };
 
+    /**
+     * @throws {Error} Set underflow
+     */
     this.undo = function () {
         if (this.state === 0) throw new Error("Set underflow, it's not possible to undo to a non-existent state.");
         this.state--;
         this.src = this.get(this.state);
     };
 
+    /**
+     * @throws {Error} Set overflow
+     */
     this.redo = function () {
         if (this.state === (this.states.size() - 1)) throw new Error("Set overflow, it's not possible to redo to a non-existent state.");
         this.state++;
@@ -1365,9 +1590,10 @@ function virtualHistory (elm) {
  * @param {string} list String
  * @returns {{}} Occurent object list
  * @since 1.0
+ * @throws {TypeError} list must be iterable
  */
 function occurrenceList (list) {
-    if (!list.isIterable()) throw new Error("It must be an iterable object !");
+    if (!list.isIterable()) throw new TypeError("It must be an iterable object !");
     var nums = list.getOccurrences(true), chars = [], oc = list.getOccurrences(), res = {};
     for (var i = 0; i < oc.length; i++) chars[i] = oc[i].split(":")[0];
     for (i = 0; i < nums.length; i++) res[chars[i]] = nums[i];
@@ -1383,6 +1609,11 @@ function occurrenceList (list) {
  * @returns {Stream} Stream
  * @constructor
  * @since 1.0
+ * @property {number} Stream.start Initial value
+ * @property {string} Stream.formula Formula
+ * @property {number[]} Stream.data Data
+ * @property {Function} Stream.next Add an other value to the data
+ * @property {Function} Stream.toString String representation
  */
 function Stream (initVal, formula, nbVals) {
     this.start = initVal || 0;
@@ -1396,7 +1627,7 @@ function Stream (initVal, formula, nbVals) {
             [/(pow|max|min)\((.*?),(| )(.*?)\)/, "Math.$1($2, $3)"],
             [/(sqrt|cbrt|cos|sin|tan|acos|asin|cosh|sinh|tanh|acosh|asinh|atanh|exp|abs)\((.*?)\)/, "Math.$1($2)"],
             [/(ln|log|nthroot|clampTop|clampBottom)\((.*?),(| )(.*?)\)/, "$1($2, $3)"],
-            [/(clamp)\((.*?),(| )(.*?),(| )(.*?)\)/, "$1($2, $3, $)"],
+            [/(clamp)\((.*?),(| )(.*?),(| )(.*?)\)/, "$1($2, $3, $)"]
         ])));
     };
 
@@ -1420,8 +1651,15 @@ function Stream (initVal, formula, nbVals) {
  * @this {MultiStream}
  * @constructor
  * @since 1.0
+ * @property {number} MultiStream.start Initial value
+ * @property {string} MultiStream.formula Formula
+ * @property {number[]} MultiStream.results Results
+ * @property {number[]} MultiStream.data Data
+ * @property {Function} MultiStream.next Add an other value to the data
+ * @property {Function} MultiStream.toString String representation
+ * @property {Function} MultiStream.compute Compute a value
  */
-function MultiStream (initVal, formula, nbVals) { //Stream with multiple variables
+function MultiStream (initVal, formula, nbVals) {
     this.start = initVal || 0;
     this.formula = formula || "x + y";
     this.data = [this.start];
@@ -1471,6 +1709,12 @@ function MultiStream (initVal, formula, nbVals) { //Stream with multiple variabl
  * @this {Graph}
  * @constructor
  * @since 1.0
+ * @property {string[]} Graph.labels Labels
+ * @property {string} Graph.name Name
+ * @property {number[]} Graph.dimension Dimension
+ * @property {Equation} Graph.equation Name
+ * @property {number[]} Graph.data Data
+ * @property {Function} Graph.toString String representation
  */
 function Graph (formula, dims, lbls, name, precision) { //N-dimensional graph
     this.labels = lbls || ["x", "y"];
@@ -1482,7 +1726,7 @@ function Graph (formula, dims, lbls, name, precision) { //N-dimensional graph
     for (var i = 0; i < this.data.length; i++) this.data[i] = [this.data[i], this.equation.compute({x: this.data[i]})];
 
     this.toString = function () {
-        return "Graph(name=" + this.name + ", labels=" + this.labels.toStr(true) + ", dimension=" + this.dimension + ", this.formula=" + this.formula + ", data=" + this.data + ")";
+        return "Graph(name=" + this.name + ", labels=" + this.labels.toStr(true) + ", dimension=" + this.dimension + ", this.equation=" + this.equation.toString() + ", data=" + this.data + ")";
     };
 
     return this;
@@ -1512,6 +1756,13 @@ function Permutation(data) {
  * @constructor
  * @this {EventTable}
  * @since 1.0
+ * @property {string} EventTable.name Name
+ * @property {string[]} EventTable.sources Sources
+ * @property {Array[]} EventTable.table Event table
+ * @property {Function} EventTable.make Make the table
+ * @property {Function} EventTable.fill Fill in the table
+ * @property {Function} EventTable.getCleanTable Get a clean empty-cell-less table
+ * @property {Function} EventTable.loookAt Look at what happened at a particular time
  */
 function EventTable(name, srcs) {
     this.name = name ||"Event table";
@@ -1559,17 +1810,29 @@ function EventTable(name, srcs) {
     return this;
 }
 
-//will be depreciated by Map in ES6
 /**
  * @description Map (Hashless Hashmap).
  * It's depreciated in the next version (in favour of ES6) and will have the following methods instead:
- *
+ * size(), clear(), delete(key), entries(), forEach(cb, args), get(key), has(key), keys(), values()
  * @param {*} [keys=[]] Keys
  * @constructor
  * @this {Map}
  * @returns {Map} Map
- * @todo Get rid of the links between each buckets which makes them identical
  * @since 1.1
+ * @property {SortedSet} Map.keys Keys
+ * @property {Object} Map.values Mapped values
+ * @property {Function} Map.add Add a key/value
+ * @property {Function} Map.has Check if a map has a value
+ * @property {Function} Map.hasKey Check if a map has a key
+ * @property {Function} Map.size Size of the map
+ * @property {Function} Map.isEmpty Emptiness check
+ * @property {Function} Map.get Get the mapped values of a key
+ * @property {Function} Map.remove Remove a key or a value
+ * @property {Function} Map.toString String representation
+ * @property {Function} Map.forEach Act on each "buckets"
+ * @property {Function} Map.set Set a new value to a key
+ * @property {Function} Map.replace Replace the value of a key with a new one
+ * @property {Function} Map.replaceAll Replace all the value of all the keys with a new one
  */
 function Map (keys) {
     this.keys = new SortedSet(keys || []);
@@ -1590,7 +1853,7 @@ function Map (keys) {
     };
     this.has = function (val) {
         for (var k in this.keys) {
-            if (this.keys.hasOwnProperty(k) && this.keys[k].indexOf(val) > -1) return true;
+            if (this.keys.hasOwnProperty(k) && this.keys[k].has(val)) return true;
         }
         return false;
     };
@@ -1599,9 +1862,9 @@ function Map (keys) {
     };
     this.size = function () {
         var el = this.values;
-      return this.keys.value.map(function (k) {
-          return el[k].length;
-      });
+        return this.keys.value.map(function (k) {
+            return el[k].length;
+        });
     };
     this.elements = function (spaced) {
         var el = this.values;
@@ -1631,7 +1894,7 @@ function Map (keys) {
         this.keys.set(this.keys.indexOf(key), value);
     };
     this.replace = function (key, oldVal, newVal) {
-        if (this.values[key].indexOf(oldVal) > -1) this.values[key] = this.values[key].replace(oldVal, newVal);
+        if (this.values[key].has(oldVal)) this.values[key] = this.values[key].replace(oldVal, newVal);
     };
     this.replaceAll = function (oldVal, newVal) {
         var self = this;

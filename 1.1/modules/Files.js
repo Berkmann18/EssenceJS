@@ -6,30 +6,13 @@
  * @license MIT
  * @author Maximilian Berkmann <maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
- * @requires ../essence
+ * @requires module:../essence
  * @namespace
- * @type {{name: string, version: number, run: module:File.run, description: string, dependency: Array, author: string, complete: boolean, toString: module:File.toString}}
+ * @type {Module}
  * @since 1.1
  * @exports File
  */
-var Files = {
-    name: "Files",
-    version: 1,
-    run: function () {
-
-    },
-    description: "File management and control",
-    dependency: [],
-    author: "Maximilian Berkmann",
-    complete: false,
-    toString: function () {
-        return "Module(name='" + this.name + "', version=" + this.version + ", description='" + this.description + "', author='" + this.author + "', complete=" + this.complete + ", run=" + this.run + ")";
-    }
-};
-
-(function () {
-    File.complete = true;
-})();
+var Files = new Module("Files", "File management and control");
 
 /* eslint no-undef: 0 */
 /**
@@ -64,11 +47,11 @@ function getFilename (withExt) {
  */
 function getCurrentPath (path, localPath) {
     if (!localPath) localPath = "file:///";
-    var parts = path.split("/"), res = "", pParts = localPath.split("/"), i = 0, j = 0;
-    while(localPath.indexOf(parts[i]) > -1) i++;
+    var parts = path.split("/"), res, pParts = localPath.split("/"), i = 0, j = 0;
+    while(localPath.has(parts[i])) i++;
     res = parts.get(i).join("/");
 
-    while (res.indexOf(pParts[j]) > -1) {
+    while (res.has(pParts[j])) {
         console.log("Gone through " + pParts[j]);
         j++;
     }
@@ -89,10 +72,7 @@ function getCurrentPath (path, localPath) {
 function getExtPath (path) {
     var cp = location.href;
     var parentPath = cp.sameFirst(path);
-    var portion = getCurrentPath(path, parentPath);
-    var derive = "../".repeat(portion.count("/"));
-    //Essence.say("cp=" + cp + "\nparentPath= " + parentPath + "\nportion= " + portion + "\nderive= " + derive);
-    return derive + getCurrentPath(path, parentPath);
+    return "../".repeat(getCurrentPath(cp, parentPath).count("/")) + getCurrentPath(path, parentPath);
 }
 
 /**
@@ -201,8 +181,9 @@ function save (txt, name, type) { //Save into a file of the corresponding type
 /**
  * @description Get the file's content
  * @param {string} fname File name
- * @returns {string}
+ * @returns {string} File's content
  * @since 1.0
+ * @see getFC
  * @func
  */
 function getFileContent (fname) {
@@ -210,15 +191,33 @@ function getFileContent (fname) {
     var rawFile = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
     rawFile.open("GET", fname, false);
     rawFile.onreadystatechange = function () {
-        if (rawFile.readyState === 4) {
-            if (rawFile.status === 200 || rawFile.status == 0) {
+        if (this.readyState === 4 && this.status === 200) {
                 $G["fct"] = rawFile.responseText; //Because returning it won't allow the actual content to be returned
                 return rawFile.responseText
-            }
         }
     };
     rawFile.send(null);
     return $G["fct"];
+}
+
+//getFileContent's equivalent using XHR
+/**
+ * @description getFileContent using the XHR object
+ * @param {string} fname File name
+ * @returns {string} File's content
+ * @since 1.0
+ * @alias getFileContent
+ * @func
+ */
+function getFC (fname) {
+    var res = "", xhr = new XHR(fname, "GET", false, function (req) {
+        res = req.responseText;
+        return req.responseText;
+    }, function () {
+        return "Nothing";
+    });
+    xhr.init();
+    return res;
 }
 
 /**
@@ -229,7 +228,7 @@ function getFileContent (fname) {
  * @func
  */
 function evalFile (filename) {
-    return (new Function('return ' + getFileContent(filename)))();
+    return (new Function("return " + getFileContent(filename)))();
 }
 
 /**
@@ -243,7 +242,7 @@ function evalFile (filename) {
 function getKeywords (text, noSymbols) {
     var txt = (isType(text, "Array") ? text.join(" ") : text).replace(/(\.|!|\?|;|:|"|,|\t|\n|\f|\r|\v|\{|})+/gm, " ").split(" ").remove(""); //The \b would treat a-b as "a - b"
     var kw = occurrenceSort(txt).filter(function (x) { //Filter out non-keywords words
-        return noSymbols ? (["=", "+", "-", "*", "/", "\\", "%", "#", "'", "@", "^", "$", "£", "µ", "~", "&", "[", "]", "(", ")", "|", "`"].indexOf(x) > -1 ? false : txt.count(x) > 2) : txt.count(x) > 2;
+        return noSymbols ? (["=", "+", "-", "*", "/", "\\", "%", "#", "'", "@", "^", "$", "£", "µ", "~", "&", "[", "]", "(", ")", "|", "`"].has(x)? false: txt.count(x) > 3) : txt.count(x) > 3;
     });
 
     return kw.map(function (w) {
@@ -258,34 +257,50 @@ function getKeywords (text, noSymbols) {
  * @this {Spider}
  * @since 1.1
  * @constructor
+ * @property {string[]} Spider.name Directory containing the files to crawl through
+ * @property {string[]} Spider.keywords Keywords
+ * @property {Function} Spider.get Keyword getter
+ * @property {Function} Spider.getAll Get all the keywords nice and clean
+ * @property {Function} Spider.getWords Get all the key-words
+ * @property {Function} Spider.getOccurrences Get the number of occurrences of all the keywords
+ * @property {Function} Spider.getFreq Get the frequency of all the keywords
+ * @property {Function} Spider.getCoverage Get the coverage of all the keywords compared to all the words
+ * @property {Function} Spider.getGlobalKeywords Get all the keywords of all the file at once
+ * @property {Function} Spider.toString String representation
  */
 function Spider (filenames) {
     this.dir = filenames || [];
-    this.idx = 0;
     this.keywords = [];
     this.get = function (withSymbols) { //Keywords infos
         /*
         Words: getKeywords(...).map(x => x.split(":")[0])
         Occurrences: getKeywords(...).map(x => parseInt(x.split(" ")[1]))
-        Frequency: getKeywords(...).map(x => parseFloat(x.split(" ")[2].replace(/^\((\d|\d\.\d)\%\)$/, "$1")))
+        Frequency: getKeywords(...).map(x => parseFloat(x.split(" ")[2].replace(/^\((\d|\d\.\d{1,})\%\)$/, "$1")))
          */
-        for (this.idx = 0; this.idx < this.dir.length; this.idx++) this.keywords[this.idx] = getKeywords(getFileContent(this.dir[this.idx]), !withSymbols);
+        for (var i = 0; i < this.dir.length; i++) this.keywords[i] = getKeywords(getFileContent(this.dir[i]), !withSymbols);
         return this.keywords;
     };
+    this.getAll = function (withSymbols) {
+        return this.get(withSymbols).linearise();
+    };
     this.getWords = function (withSymbols) { //Occurrencing words
-      return this.get(withSymbols).map(function (x) {
+      return this.getAll(withSymbols).map(function (x) {
           return x.split(":")[0]
       })
     };
     this.getOccurrences = function (withSymbols) {
-        return this.get(withSymbols).map(function (x) {
+        return this.getAll(withSymbols).map(function (x) {
             return parseInt(x.split(" ")[1])
         })
     };
     this.getFreq = function (withSymbols) { //Frequency
-        return this.get(withSymbols).map(function (x) {
-            return parseFloat(x.split(" ")[2].replace(/^\((\d|\d\.\d)%\)$/, "$1"));
+        return this.getAll(withSymbols).map(function (x) {
+            return parseFloat(x.split(" ")[2].replace(/^\((\d{1,}|\d{1,}\.\d{1,})%\)$/, "$1"));
         })
+    };
+
+    this.getCoverage = function (withSymbols) {
+        return this.getFreq(withSymbols).sum().toNDec(2);
     };
     this.getGlobalKeywords = function (withSymbols) {
         var fullDir = this.dir.map(function (file) {
@@ -295,7 +310,7 @@ function Spider (filenames) {
     };
 
     this.toString = function () {
-        return "Spider(dir=" + this.dir + ", idx=" + this.idx + ", keywords= " + this.keywords.toStr(true) + ")";
+        return "Spider(dir=" + this.dir + ", keywords= " + this.keywords.toStr(true) + ")";
     };
     return this;
 }

@@ -10,28 +10,11 @@
  * @requires Maths
  * @requires DOM
  * @namespace
- * @type {{name: string, version: number, run: module:File.run, description: string, dependency: string[], author: string, complete: boolean, toString: module:File.toString}}
+ * @type {Module}
  * @since 1.1
  * @exports File
  */
-var QTest = {
-    name: "QTest",
-    version: 1,
-    run: function () {
-
-    },
-    description: "QA and tests",
-    dependency: ["Maths", "DOM"],
-    author: "Maximilian Berkmann",
-    complete: false,
-    toString: function () {
-        return "Module(name='" + this.name + "', version=" + this.version + ", description='" + this.description + "', author='" + this.author + "', complete=" + this.complete + ", run=" + this.run + ")";
-    }
-};
-
-(function () {
-    QTest.complete = true;
-})();
+var QTest = new Module("QTest", "QA and tests", ["Maths", "DOM"]);
 
 /* eslint no-undef: 0 */
 
@@ -85,6 +68,7 @@ InvalidParamError.inheritsFrom(Error);
  * @extends {Error}
  * @this {InvalidParamError}
  * @since 1.0
+ * @throws {Error}
  */
 function InvalidParamError(msg, fname, lineNum) { //Invalid parameter
     this.name = "Invalid parameter error";
@@ -101,6 +85,7 @@ function InvalidParamError(msg, fname, lineNum) { //Invalid parameter
  * @returns {string} Trace location
  * @since 1.0
  * @func
+ * @throws {Error}
  */
 function getTrace () {
     var err = function () {
@@ -133,6 +118,7 @@ function getLineNum (noCols) {
  * @returns {undefined}
  * @since 1.0
  * @func
+ * @throws {Error}
  */
 function testErr(err) {
     try {
@@ -160,10 +146,34 @@ function noobTest (fx, param) {
 }
 
 /**
+ * @description Test a function/expression
+ * @param {Function|String} fx Function/expression
+ * @returns {undefined}
+ * @since 1.1
+ * @func
+ */
+function test (fx) {
+    try {
+        isType(fx, "String")? eval(fx): fx(arguments.toArray().get(1));
+    } catch (e) {
+        Essence.handleError(e + "\n", getFilename(true), getLineNum(true));
+    }
+}
+
+/**
  * @description Unit test object
  * @type {{total: number, bad: number, failRate: number, coverage: number, test: UnitTest.test, reset: UnitTest.reset, multiTest: UnitTest.multiTest, report: UnitTest.report}}
  * @since 1.1
  * @this UnitTest
+ * @global
+ * @property {number} UnitTest.total Total number of tests done
+ * @property {number} UnitTest.bad Total number of failed tests
+ * @property {number} UnitTest.failRate Failure rate
+ * @property {number} UnitTest.coverage Coverage
+ * @property {Function} UnitTest.test Assertion tester
+ * @property {Function} UnitTest.reset Reset
+ * @property {Function} UnitTest.multiTest Multi assertion tester
+ * @property {Function} UnitTest.report Report loger
  */
 var UnitTest = {
     total: 0,
@@ -184,10 +194,10 @@ var UnitTest = {
         this.failRate = 0;
         this.coverage = 0;
     },
-    multiTest: function (pairs) {
+    multiTest: function (pairs, noisy) {
         this.reset();
         console.time("Unit test");
-        for (var i = 0; i < pairs.length - 1; i += 1) this.test(pairs[i], pairs[i + 1]);
+        for (var i = 0; i < pairs.length - 1; i += 1) this.test(pairs[i], pairs[i + 1], noisy);
         console.timeEnd("Unit test");
         this.report();
     },

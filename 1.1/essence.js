@@ -33,17 +33,50 @@
  * @this Essence
  * @namespace
  * @since 1.0
+ * @property {NumberLike} Essence.version EssenceJS' version
+ * @property {string} Essence.author Author
+ * @property {string} Essence.description Description of EssenceJS
+ * @property {string} Essence.source Source of the script
+ * @property {HTMLElement} Essence.element $n element
+ * @property {Function} Essence.handleError Error handler
+ * @property {Function} Essence.say EssenceJS's console logger
+ * @property {Function} Essence.applyCSS Apply EssenceJS's CSS
+ * @property {Function} Essence.addCSS Add CSS rules
+ * @property {Function} Essence.addJS Add JS commands
+ * @property {Function} Essence.update EssenceJS' self update's mechanism
+ * @property {number} Essence.eps Matlab's epsilon
+ * @property {Function} Essence.emptyDoc Empty the document
+ * @property {Function} Essence.editor In-browser editor
+ * @property {process[]} Essence.processList Process list
+ * @property {Object} Essence.global $G
+ * @property {Function} Essence.addProcess Process adder
+ * @property {number} Essence.processSize Total process size
+ * @property {server[]} Essence.serverList Server list
+ * @property {Function} Essence.addServer Server adder
+ * @property {number} Essence.serverSize Total server size
+ * @property {Function} Essence.toString String representation of EssenceJS's namespace
+ * @property {string} Essence.txt2pring Text to print
+ * @property {Function} Essence.addToPrinter Add text to the printer and print them
+ * @property {Function} Essence.print Print stuff to the screen
+ * @property {Function} Essence.preInit Pre-initialisation
+ * @property {Function} Essence.init Initialisation
+ * @property {Function} Essence.time Say something with the time stamped
+ * @property {Function} Essence.sayClr Log the colour
+ * @property {Function} Essence.ask Ask something to the user
+ * @property {Function} Essence.isComplete Module inclusion completeness check
+ * @property {string[]} Essence.loadedModules List of loaded modules
+ * @todo Get the Essence.source thingy right, i.e get a suitable place to get it from (e.g: a website or an expoitable place of Dropbox)
  */
 var Essence = {
     version: "1.1b",
     author: "Maximilian Berkmann",
     description: "library used for DHTML connexions, maths, database management and cryptography",
-    source: (document.URL.indexOf("essence.min.js") > -1)? "https://Www.dropbox.com/s/1prjdvv9ku0ga92/essence.min.js?dl=0": "https://Www.dropbox.com/s/n2sz2mxz5zwc05t/essence.js?dl=0",
+    source: "https://www.dropbox.com/s/n2sz2mxz5zwc05t/essence.js?dl=0",
     element: $n,
     handleError: function (msg, url, line) {
         isType(msg, "Error")? alert("[Essence.js] An error has occurred (line/column " + msg.lineNumber + "/" + msg.columnNumber + " of " + msg.fileName + ").\n\nMessage: " + msg.stack): alert("[Essence.js] An error has occurred (line " + line + " of " + url + ").\n\nMessage: " + msg)
     }, say: function (msg, type, style, style0, style1, style2) { //Say something in the console
-        type = (isNon(type))? "": type.slice(0, 4).toLowerCase();
+        type = isNon(type)? "": type.slice(0, 4).toLowerCase();
         if (style && !style0) {
             if (type === "info") console.info("%c[EssenceJS]%c " + msg, "color: #00f; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
             else if (type === "erro") console.error("%c[EssenceJS]%c " + msg, "color: #f00; text-decoration: bold;-webkit-text-decoration: bold;-moz-text-decoration: bold;", "color: #000", style);
@@ -97,8 +130,9 @@ var Essence = {
         for (var i = 0; i < scriptArr.length; i ++) {
             if (scriptArr[i].src.indexOf("essence.js") > -1 || scriptArr[i].src.indexOf("essence.min.js") > -1) scriptArr[i].src = this.source || Essence.source;
         }
-        Essence.say("%cEssence.(min).js%c has been updated", "succ", "text-decoration: underline", "text-decoration: none");
+        Essence.say("%cEssence(.min).js%c has been updated", "succ", "text-decoration: underline", "text-decoration: none");
     },
+    /** @const {number} Epsilon */
     eps: Math.pow(2, -52), //Matlab's epsilon (useful when dealing with null values to keep them in the real range or just not null
     emptyDoc: function (title, author) { //Empty the document and fill it with a basic structure
         $e("html").write("<head><title>" + (title || document.title) + "</title><meta charset='UTF-8' /><meta name='author' content=" + (author || "unknown") + " /><script type='text/javascript' src=" + Essence.source + "></script></head><body></body>", true);
@@ -154,8 +188,8 @@ var Essence = {
         var complete = true;
         this.loadedModules = [];
         for (var i = 0; i < modules.length; i++) {
-            complete &= window[modules[i]].complete;
-            if (window[modules[i]].complete) this.loadedModules.push(window[modules[i]].toString());
+            complete &= window[modules[i]].loaded;
+            if (window[modules[i]].loaded) this.loadedModules.push(window[modules[i]].toString());
         }
         return Boolean(complete);
     }, loadedModules: []
@@ -174,6 +208,31 @@ var Essence = {
      * @since 1.1
      */
     debugging = false;
+
+function Module (name, desc, dpc, ver, rn, pathVer) {
+    this.name = name || "Module";
+    this.version = ver || 1;
+    this.dependency = dpc || [];
+    this.description = desc || "";
+    this.run = rn || function () {};
+    this.loaded = false;
+    this.path = (pathVer? pathVer : Essence.version.substr(0, 3)) + "/modules/" + this.name + ".js";
+
+    this.load = function () {
+        if (debugging) Essence.say("Loading " + this.name);
+        if (this.dependency.length > 0) {
+            if (debugging) Essence.say("Initiating dependencies for %c" + this.name + "%c", "info", "color: #f0f", "color: #000");
+            //For less redundancy here: this.dependency -> complement(this.dependency, modules)
+            init(this.dependency, false, false, pathVer);
+        }
+        /*if (gatherExternalScripts(true).has(this.path) || filenameList(gatherExternalScripts(true)).has(this.path))*/ this.loaded = true;
+    };
+
+    this.toString = function () {
+        return "Module(name=" + this.name + ", version=" + this.version + ", dependency=" + this.dependency + ", description=" + this.description + ", loaded=" + this.loaded + ", run=" + this.run + ", path=" + this.path + ")";
+    }
+
+}
 
 /**
  * @description ES6-like module loader
@@ -199,6 +258,16 @@ function require (mdl, ver, extpath) {
     } else if (debugging) console.log("The module %c%s%c is already included into %c%s    " + getTimestamp(true), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFilename());
 }
 
+function $require (mdl) {
+    if (isType(mdl, "Array")) {
+        for (var i = 0; i < mdl.length; i++) $require(mdl[i]);
+    } else if (modules.indexOf(mdl) === -1) {
+        include_once(getExtPath(getDirectoryPath(gatherScripts()["essence.js"])) + "modules/" + mdl + ".js", "script");
+        modules.push(mdl);
+        if (debugging) console.log("The module %c%s%c is now included into %c%s    " + getTimestamp(true), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFilename());
+    } else if (debugging) console.log("The module %c%s%c is already included into %c%s    " + getTimestamp(true), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFilename());
+}
+
 /**
  * @description Run a module that was already imported (see {@link require}) after initiating its dependencies
  * @func
@@ -217,10 +286,11 @@ function run (module, ver) {
         var go = function () {
             try {
                 if (debugging) Essence.say("Running " + module + "    " + getTimestamp(true), "info");
-                init(window[module].dependency, false, function (x) {
+                /*init(window[module].dependency, false, function (x) {
                     if (debugging) Essence.say("%c" + x + "%c from %c" + module + "%c's dependency has been initiated !!    " + getTimestamp(true), "info", "color: #c0f", "color: #000", "color: #f0c", "color: #000");
                     //console.info("")
-                }, ver);
+                }, ver);*/
+                if (!window[module].loaded) window[module].load();
                 window[module].run();
             } catch (e) {
                 Essence.time("The module %c" + module + "%c have problems regarding it's run method.", "warn", "color: #c0f", "color: #000");
@@ -266,10 +336,11 @@ function init (mdls, mid, cb, ver, argsMid, argsCB) {
         for (var i = 0; i < mdls.length; i++) init(mdls[i], mid, cb, ver, mdls[i], mdls[i]);
     } else {
         if (debugging) Essence.say("Initiating " + mdls);
-        if (modules.indexOf(mdls) === -1) require(mdls, ver);
+        if (modules.indexOf(mdls) === -1) $require(mdls);
         else if (debugging) Essence.say("The module %c" + mdls + "%c was already initiated !!", "info", "color: #c0f", "color: #000");
         if (mid) mid(argsMid || mdls); //Used when initiating a module that has dependencies
         setTimeout(function () { //Delayed running to leave some time for the module to be fully available to this page
+            //if (!window[mdls].loaded) window[mdls].load();
             run(mdls);
             if (cb) cb(argsCB || mdls);
         }, 2);
@@ -277,8 +348,9 @@ function init (mdls, mid, cb, ver, argsMid, argsCB) {
 }
 
 /**
- * @see module:module/File
  * @ignore
+ * @external module/File:getDirectoryPath
+ * @see module:module/File
  * @inheritsdoc
  * @param {string} [path=location.href] Path
  * @returns {string} Directory path
@@ -288,19 +360,21 @@ var getDirectoryPath = function (path) {
     if(!path) path = location.href;
     return path.substring(0, path.indexOf(path.split("/")[path.split("/").length - 1]))
 }, /**
- * @see module:module/DOM
  * @ignore
+ * @see module:module/DOM
+ * @external module/DOM:gatherScripts
  * @inheritsdoc
  * @param {boolean} [asList=false] Result should be a list or an object
  * @returns {*} List/dictionary of scripts
- * @since 1.1
  */
 gatherScripts = function (asList) {
     var $s = $n("*script"), res = asList? []: {};
     for(var i = 0; i<$s.length; i++) asList? res.push($s[i].src): res[$s[i].src.split("/")[$s[i].src.split("/").length - 1]] = $s[i].src;
     return res
 }, /**
+ * @ignore
  * @inheritsdoc
+ * @external module/File:getCurrentPath
  * @param {string} path Path
  * @param {string} [localPath="file:///"] Local path
  * @returns {string} Current path
@@ -315,7 +389,7 @@ gatherScripts = function (asList) {
         }
         if (end < 0) end = o.length + end - 1;
         for(var i = (start || 0); i <= (end || o.length - 1); i++) r.push(o[i]);
-        return r.remove()
+        return r.filter(function (x) { return x != undefined; });
     };
     while(localPath.indexOf(parts[i]) > -1) i++;
     res = _get(parts, i).join("/");
@@ -328,22 +402,32 @@ gatherScripts = function (asList) {
         for(i = 0; i < j; i++) res = "../" + res;
     }
     return res
-}/*,
+}, /**
+ * @ignore
+ * @inheritdoc
+ * @external module/File:getExtPath
+ * @param {string} path Full path
+ * @returns {string} External path
+ */
 getExtPath = function (path) {
-    var cp = location.href, safi = function (str0, str) {
+    var cp = location.href, sF = function (s0, s1) {
         var sf = "", pos = -1;
-        while (pos <= Math.min(str0.length, str.length)) {
+        while (pos <= Math.min(s0.length, s1.length)) {
             pos++;
-            if (str0[pos] === str[pos]) sf += str0[pos];
+            if (s0[pos] === s1[pos]) sf += s0[pos];
             else break;
         }
         return sf;
+    }, ct = function (o, c) {
+        var n = 0;
+        for (var i = 0; i < o.length; i++) {
+            if (o[i] === c) n++;
+        }
+        return n
     };
-    var parentPath = safi(cp, path);
-    var portion = getCurrentPath(path, parentPath);
-    var derive = "../".repeat(portion.count("/"));
-    return derive + getCurrentPath(path, parentPath);
-}*/;
+    var parentPath = sF(cp, path);
+    return "../".repeat(ct(getCurrentPath(cp, parentPath), "/")) + getCurrentPath(path, parentPath);
+};
     
 /**
  * @summary Module Loading section
@@ -352,19 +436,28 @@ getExtPath = function (path) {
  * @func
  */
 (function () {
-    Essence.say("Initiating the ML");
-    require(["Files", "DOM", "UI", "Web", "Maths", "Ajax", "DataStruct", "Security", "Misc", "QTest"], 1.1);
+    //document.scripts[i].ownerDocument may be useful to correct the link of the included modules
+    if (debugging) Essence.say("Initiating the Module Loader");
+    $require(["Files", "DOM", "UI", "Web", "Maths", "Ajax", "DataStruct", "Security", "Misc", "QTest"]);
     /* init(["Web", "Maths", "Ajax", "DataStruct", "Security", "Misc", "QTest"], function (mdl) {
         Essence.say(mdl + " on the way!", "info");
     }, function (mdl) {
         Essence.say(mdl + " is ready!", "succ");
     }, 1.1); */
     setTimeout(function () {
-        Essence.isComplete()? Essence.say("Essence is complete !", "succ"): Essence.time("List of loaded modules: " + Essence.loadedModules.map(function (m) {
-            return m.split("'")[1];
+        if(debugging) Essence.isComplete()? Essence.say("Essence is complete !", "succ"): Essence.time("List of loaded modules: " + Essence.loadedModules.map(function (m) {
+            return m.split("=")[1].split(",")[0];
         }).toStr(true));
-        run(modules, 1.1);
-    }, 1e3);
+        run(modules, Essence.version.substr(0, 3));
+        if (Essence.isComplete() && !filenameList(gatherExternalScripts(true).has(Essence.source))) Essence.source = Essence.source.replace(".js", ".min.js");
+        if (debugging && !Essence.loadedModules.map(function (m) {
+                return m.split("=")[1].split(",")[0]
+            }).equals(modules)
+        ) Essence.say("The following modules weren't loaded: " + complement(modules, Essence.loadedModules.map(function (m) {
+                return m.split("=")[1].split(",")[0]
+            }))
+        );
+    }, 700);
 })();
 
 /**
@@ -413,6 +506,34 @@ function $n (selector) { //To get directly the node without having to use $e(sel
  * @returns {Element} Element object
  * @constructor
  * @since 1.0
+ * @throws {InvalidParamError} Invalid parameter
+ * @property {HTMLElement} Element.node Node
+ * @property {Function} Element.val Get the node's value
+ * @property {Function} Element.size Get the node's value's size
+ * @property {Function} Element.isEmpty Check if the node's value is empty
+ * @property {Function} Element.write Write something to the node
+ * @property {Function} Element.before Write something to the node before its value
+ * @property {Function} Element.after Write something to the node after its value
+ * @property {Function} Element.remove Remove a character/string from the node's value and optionally insert jointers
+ * @property {Function} Element.setCSS Set a CSS rule or change a CSS property
+ * @property {Function} Element.setStyles Set multiple CSS rules
+ * @property {Function} Element.css Get the value of a CSS property
+ * @property {Function} Element.hasClass Check if the node is affiliated to a class
+ * @property {Function} Element.hasCSS Check if the node's CSS include a particular rule
+ * @property {Function} Element.addClass Affiliate the node to a particular class
+ * @property {Function} Element.rmClass Disjoin the node from a particular class
+ * @property {Function} Element.toggleCSS Toggle a CSS property
+ * @property {Function} Element.shox Show the node
+ * @property {Function} Element.hide Hide the node
+ * @property {Function} Element.on Event handler
+ * @property {Function} Element.toString String representation of the element
+ * @property {Function} Element.tagName Tagname of the element
+ * @property {Function} Element.scrollBottom Scroll to the bottom of the node
+ * @property {Function} Element.scrollTop Scroll to the top of the node
+ * @property {Function} Element.scrollLeft Scroll to the left of the node
+ * @property {Function} Element.scrollRight Scroll to the right of the node
+ * @property {Function} Element.scroll Scroll in any directions
+ * @property {Function} Element.autoScroll Auto scrolling animation
  */
 function Element (selector) { //The element object
     if (/^([#\.\*_-`~&]\W*|\S|undefined|null|)$/.test(selector)) throw new InvalidParamError("Element cannot accept the selector '" + selector + "' as it's invalid."); //Reject invalid selectors
@@ -444,8 +565,8 @@ function Element (selector) { //The element object
         return this.val().length
     };
 
-    this.isEmpty = function () { //Check if the value is empty/unexistent
-        return this.val() === false || this.val() === undefined || this.val() === null || this.val() === "" || this.val() === [] || this.val() === {}
+    this.isEmpty = function () { //Check if the value is empty/inexistent
+        return isNon(this.val());
     };
 
     this.write = function (nval, parseToHTML, incTags) { //Assign #nval as the value of the element's node
@@ -607,9 +728,7 @@ function Element (selector) { //The element object
             "mouseenter", "mouseleave", "mousemove", "mouseout", "mouseover", "mouseup", "mousewheel", "offline", "online", "pagehide", "pageshow", "pause", "play", "playing", "popstate",
             "progress", "ratechange", "reset", "resize", "scroll", "search", "seeked", "seeking", "select", "show", "stalled", "storage", "submit", "suspend", "timeupdate", "toggle",
             "transitionend", "unload", "volumechange", "waiting", "webkitanimationend", "webkitanimationiteration", "webkitanimationstart", "webkittransitionend", "wheel"];
-        for (var i = 0; i < evts.length; i++) {
-            if (evt.normal() === evts[i]) this.node.addEventListener(evt, act, false);
-        }
+        if (evts.has(evt.normal())) this.node.addEventListener(evt.normal(), act);
     };
 
     this.toString = function () {
@@ -733,6 +852,7 @@ function exclude (file, type) {
  * @returns {boolean} Presence of a name/title in the object
  * @since 1.0
  * @method
+ * @memberof Object.prototype
  */
 Object.prototype.hasName = function () {
     return this.name !== undefined || this.title !== undefined
@@ -744,6 +864,7 @@ Object.prototype.hasName = function () {
  * @returns {string} Name/title of the object
  * @since 1.0
  * @method
+ * @memberof Object.prototype
  */
 Object.prototype.getName = function () {
     //noinspection JSUnresolvedVariable
@@ -760,6 +881,7 @@ Object.prototype.getName = function () {
  * @example
  * "Hello world".count("o"); //2
  * [4, 2, 0, -4, 1, 2, 3].count(0); //1
+ * @memberof Object.prototype
  */
 Object.prototype.count = function (c) {
     var n = 0;
@@ -778,6 +900,7 @@ Object.prototype.count = function (c) {
  * @method
  * @example
  * "AbcdAbc".positions("A"); //[0, 4]
+ * @memberof Object.prototype
  */
 Object.prototype.positions = function (c) {
     var pos = [];
@@ -794,6 +917,7 @@ Object.prototype.positions = function (c) {
  * @returns {boolean} Iterability check result
  * @since 1.0
  * @method
+ * @memberof Object.prototype
  */
 Object.prototype.isIterable = function () {
     return isType(this, "String") || isType(this, "Array") || isType(this, "Object")
@@ -806,6 +930,7 @@ Object.prototype.isIterable = function () {
  * @returns {undefined}
  * @since 1.0
  * @method
+ * @memberof Object.prototype
  */
 Object.prototype.delete = function () {
     this.property_ = null;
@@ -819,6 +944,7 @@ Object.prototype.delete = function () {
  * @returns {boolean} Equality check result
  * @since 1.0
  * @method
+ * @memberof Object.prototype
  */
 Object.prototype.equals = function(obj) { //Check if obj and the current object are the same
     return this.toString() === obj.toString() || this.toLocaleString() === obj.toLocaleString()
@@ -831,6 +957,7 @@ Object.prototype.equals = function(obj) { //Check if obj and the current object 
  * @returns {*} Resulting object
  * @since 1.0
  * @method
+ * @memberof Object.prototype
  */
 Object.prototype.multiReplace = function(rules) {
     var res = this.replace(rules[0][0], rules[0][1]);
@@ -844,6 +971,7 @@ Object.prototype.multiReplace = function(rules) {
  * @returns {Array} Resulting array
  * @since 1.0
  * @method
+ * @memberof Object.prototype
  */
 Object.prototype.toArray = function() {
     //Or perhaps Array.from(this)
@@ -858,15 +986,43 @@ Object.prototype.toArray = function() {
  * @description Comparison check
  * @param {*} obj Object to be compared to
  * @this Object
- * @returns {Bool} Comparison check result
+ * @returns {number} Comparison check result
  * @since 1.0
  * @method
+ * @throws {TypeError} Type difference between this and obj
+ * @memberof Object.prototype
  */
 Object.prototype.compareTo = function(obj) {
-    if(getType(this) != getType(obj)) return false;
+    if(getType(this) != getType(obj)) throw new TypeError(this + " and " + obj + "aren't of the same type, so can't be compared.");
     if((getType(this) === "Object" && getCustomType(this) === getCustomType(obj)) || getType(this) === getType(obj)) {
         return this.equals(obj)? 0: (this.toString() < obj.toString() || this.toLocaleString() < obj.toLocaleString())? -1: 1;
     }
+};
+
+/**
+ * @description Check if an object has a property
+ * @param {string} prop Property
+ * @return {boolean} Containment check result
+ * @memberof Object.prototype
+ * @since 1.1
+ * @this Object
+ * @method
+ */
+Object.prototype.has = function (prop) {
+  return this[prop] != undefined;
+};
+
+/**
+ * @description Check if an array has a value
+ * @param {*} val Value
+ * @return {boolean} Containment check result
+ * @this Array
+ * @method
+ * @since 1.1
+ * @memberof Array.prototype
+ */
+Array.prototype.has = function (val) {
+  return this.indexOf(val) > -1;
 };
 
 /**
@@ -876,6 +1032,7 @@ Object.prototype.compareTo = function(obj) {
  * @returns {*} First element
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.first = function (nval) {
     return !isNon(nval)? this[0] = nval: this[0]
@@ -888,9 +1045,10 @@ Array.prototype.first = function (nval) {
  * @returns {*} Last element
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.last = function (nval) {
-    return !isNon(nval)? this[this.length-1] = nval: this[this.length - 1]
+    return !isNon(nval)? this[this.length - 1] = nval: this[this.length - 1]
 };
 
 /**
@@ -900,6 +1058,7 @@ Array.prototype.last = function (nval) {
  * @since 1.0
  * @this Array
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.line = function (n) {
     return this.map(function (i) {
@@ -916,6 +1075,7 @@ Array.prototype.line = function (n) {
  * @this Array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.block = function (start, end) {
     return this.map(function (i) {
@@ -929,6 +1089,7 @@ Array.prototype.block = function (start, end) {
  * @returns {number} Last index
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.lastIndex = function () {
     return this.length - 1
@@ -941,6 +1102,7 @@ Array.prototype.lastIndex = function () {
  * @returns {number} Middle index
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.midIndex = function (under) {
     return under? Math.floor(this.length / 2) - 1: Math.floor(this.length / 2)
@@ -952,6 +1114,7 @@ Array.prototype.midIndex = function (under) {
  * @returns {Array} Array of elements
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.even = function () {
     var e = [];
@@ -965,6 +1128,7 @@ Array.prototype.even = function () {
  * @returns {Array} Array of elements
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.odd = function () {
     var o = [];
@@ -980,6 +1144,7 @@ Array.prototype.odd = function () {
  * @returns {*} Maximum value
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.max = function (start, end) {
     var m = this[start || 0];
@@ -997,6 +1162,7 @@ Array.prototype.max = function (start, end) {
  * @returns {*} Maximum value
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.maxOf = function (start, n) {
     var m = this[start || 0];
@@ -1011,6 +1177,7 @@ Array.prototype.maxOf = function (start, n) {
  * @returns {*} Median
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.median = function (nval) {
     var arr = this.sort(function (a, b) {
@@ -1028,6 +1195,7 @@ Array.prototype.median = function (nval) {
  * @returns {*} Minimum value
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.min = function (start, end) {
     var m = this[start || 0];
@@ -1045,6 +1213,7 @@ Array.prototype.min = function (start, end) {
  * @returns {*} Minimum value
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.minOf = function (start, n) {
     var m = this[start || 0];
@@ -1059,6 +1228,7 @@ Array.prototype.minOf = function (start, n) {
  * @returns {undefined}
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.shuffle = function (n) {
     for(var i = 0; i < (n || this.length); i++) swap(this, randTo(this.length - 1), randTo(this.length - 1))
@@ -1070,6 +1240,7 @@ Array.prototype.shuffle = function (n) {
  * @returns {number} Max length
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.maxLength = function () {
     var ml = 0;
@@ -1083,6 +1254,7 @@ Array.prototype.maxLength = function () {
  * @returns {number} Min length
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.minLength = function () {
     var ml = this[0].length;
@@ -1097,6 +1269,7 @@ Array.prototype.minLength = function () {
  * @return {Array} The array post-modification
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.Fill2D = function (c) {
     return this.fill(new Array(this.length).fill(c))
@@ -1104,12 +1277,13 @@ Array.prototype.Fill2D = function (c) {
 
 /**
  * @description Remove a character/number/string from the array without affecting the initial one (it should !)
- * @param {*} c Data to remove
+ * @param {*} [c] Data to remove
  * @todo Make it so that it will affect the initial array
  * @this Array
  * @returns {Array} Array after the operation
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.remove = function (c) {
     //Note: it will automatically remove undefined and it goes bunckers when trying to remove objects
@@ -1124,7 +1298,7 @@ Array.prototype.remove = function (c) {
         arr = arr.map(function (x) { //Double check
             return x === c? undefined: x
         });
-        if (arr.indexOf(undefined) != -1 && arr.length > 0) {
+        if (arr.has(undefined) && arr.length > 0) {
             var w = [];
             for ( i = 0; i < arr.length; i++) {
                 if (arr[i] !== undefined) w.push(isType(arr[i], "Number")? parseFloat(arr[i]): arr[i]);
@@ -1141,6 +1315,7 @@ Array.prototype.remove = function (c) {
  * @returns {undefined}
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.debug = function () {
     Essence.say("%cDebugging the following array:%c " + this, "text-decoration: bold", "text-decoration: none");
@@ -1155,6 +1330,7 @@ Array.prototype.debug = function () {
  * @returns {Array} Result
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.getOccurrences = function (simplified) {
     var arr = rmDuplicates(this), res = [];
@@ -1174,6 +1350,7 @@ Array.prototype.getOccurrences = function (simplified) {
  * @returns {Array|string} Result
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.replace = function (Ci, Cf, toStr) {
     for (var i = 0; i < this.length; i++) {
@@ -1190,6 +1367,7 @@ Array.prototype.replace = function (Ci, Cf, toStr) {
  * @returns {number} Sum
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.sum = function (start, end) {
     var s = 0;
@@ -1207,6 +1385,7 @@ Array.prototype.sum = function (start, end) {
  * @returns {number} Product
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.prod = function (start, end) {
     var p = 0;
@@ -1223,20 +1402,21 @@ Array.prototype.prod = function (start, end) {
  * @returns {number} Sum
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.sum2d = function (start, end) {
     var s = 0;
     if ((!start && !end) || (start.equals([0, 0]) && end >= this.length - 1)) {
         for (var i = 0; i < this.length; i++) {
-            for(var j = 0; j < this[i].length; j++) s += this[i][j];
+            for (var j = 0; j < this[i].length; j++) s += this[i][j];
         }
     } else if (start && !end) {
         for (i = start[0]; i < this.length; i++) {
-            for(j = start[1]; j < this[i].length; j++) s += this[i][j];
+            for (j = start[1]; j < this[i].length; j++) s += this[i][j];
         }
     } else {
         for (i = start[0]; i < end[0]; i++) {
-            for(j = start[1]; j < end[1]; j++) s += this[i][j];
+            for (j = start[1]; j < end[1]; j++) s += this[i][j];
         }
     }
     return s
@@ -1250,6 +1430,7 @@ Array.prototype.sum2d = function (start, end) {
  * @returns {number} Mean
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.mean = function (nbDec, start, end) {
     if (!start) start = 0;
@@ -1266,6 +1447,7 @@ Array.prototype.mean = function (nbDec, start, end) {
  * @returns {number} Mean of N
  * @since 1.1
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.meanOf = function (nbDec, start, n) {
     if (!start) start = 0;
@@ -1282,10 +1464,12 @@ Array.prototype.meanOf = function (nbDec, start, n) {
  * @returns {*} Minimum Mean of N
  * @since 1.1
  * @method
+ * @throws {Error} n should be less than or equal to this.length
+ * @memberof Array.prototype
  */
 Array.prototype.minMean = function (n, nbDec) {
     if (!n) n = this.length - 1;
-    if (this.length - (n - 1) < 0) throw  new Error("You're expecting a minimum mean with more values than the are.");
+    if (this.length - (n - 1) < 0) throw new Error("You're expecting a minimum mean with more values than the are.");
     var means = [];
     for (var i = 0; i < n; i++) means.push(this.meanOf(nbDec, i, n));
     return means.min();
@@ -1298,6 +1482,8 @@ Array.prototype.minMean = function (n, nbDec) {
  * @returns {*} Maximum Mean of N
  * @since 1.1
  * @method
+ * @throws {Error} n should be less than or equal to this.length
+ * @memberof Array.prototype
  */
 Array.prototype.maxMean = function (n, nbDec) {
     if (!n) n = this.length - 1;
@@ -1315,6 +1501,7 @@ Array.prototype.maxMean = function (n, nbDec) {
  * @returns {number} Average
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.avg = function (nbDec, start, end) {
     if (!start) start = 0;
@@ -1331,6 +1518,7 @@ Array.prototype.avg = function (nbDec, start, end) {
  * @returns {number} Average Of N
  * @since 1.1
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.avgOf = function (nbDec, start, n) {
     if (!start) start = 0;
@@ -1349,6 +1537,8 @@ Array.prototype.avgOf = function (nbDec, start, n) {
  * @returns {*} Minimum Average of N
  * @since 1.1
  * @method
+ * @throws {Error} n should be less than or equal to this.length
+ * @memberof Array.prototype
  */
 Array.prototype.minAvg = function (n, nbDec) {
     if (!n) n = this.length - 1;
@@ -1365,6 +1555,8 @@ Array.prototype.minAvg = function (n, nbDec) {
  * @returns {*} Maximum Average of N
  * @since 1.1
  * @method
+ * @throws {Error} n should be less than or equal to this.length
+ * @memberof Array.prototype
  */
 Array.prototype.maxAvg = function (n, nbDec) {
     if (!n) n = this.length - 1;
@@ -1381,6 +1573,7 @@ Array.prototype.maxAvg = function (n, nbDec) {
  * @returns {number} Variance
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.variance = function (nbDec) {
     return (sumPow2(this, nbDec) / this.length - Math.pow(this.mean(nbDec), 2)).toNDec(nbDec)
@@ -1393,6 +1586,7 @@ Array.prototype.variance = function (nbDec) {
  * @returns {number} Standard deviation
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.stddev = function (nbDec) {
     var stdDev = Math.sqrt(this.variance(nbDec));
@@ -1406,6 +1600,7 @@ Array.prototype.stddev = function (nbDec) {
  * @returns {*} Random element
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.rand = function (n) {
     if (n > 0) {
@@ -1423,6 +1618,7 @@ Array.prototype.rand = function (n) {
  * @returns {*} Nth quartile
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.quartile = function (n, nbDec) { //Q1, Q2, Q3
     return this.length % 2 === 0? ((this[Math.floor(n * this.length / 4) - 1] + this[Math.floor(n * this.length / 4)]) / 2).toNDec(nbDec): (this[Math.floor(n * this.length / 4)]).toNDec(nbDec)
@@ -1436,6 +1632,7 @@ Array.prototype.quartile = function (n, nbDec) { //Q1, Q2, Q3
  * @returns {*} Nth quintile
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.quintile = function (n, nbDec) { //Q1, ..., Q4
     return this.length % 2 === 0? ((this[Math.floor(n * this.length / 5) - 1] + this[Math.floor(n * this.length / 5)]) / 2).toNDec(nbDec): (this[Math.floor(n * this.length / 5)]).toNDec(nbDec)
@@ -1449,6 +1646,7 @@ Array.prototype.quintile = function (n, nbDec) { //Q1, ..., Q4
  * @returns {*} Nth decile
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.decile = function (n, nbDec) { //D1, ..., D9
     return this.length % 2 === 0? ((this[Math.floor(n * this.length / 10) - 1] + this[Math.floor(n * this.length / 10)]) / 2).toNDec(nbDec): (this[Math.floor(n * this.length / 10)]).toNDec(nbDec)
@@ -1462,6 +1660,7 @@ Array.prototype.decile = function (n, nbDec) { //D1, ..., D9
  * @returns {*} Nth percentile
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.percentile = function (n, nbDec) { //P1, ..., P99
     return this.length % 2 === 0? ((this[Math.floor(n * this.length / 100) - 1] + this[Math.floor(n * this.length / 100)]) / 2).toNDec(nbDec): (this[Math.floor(n * this.length / 100)]).toNDec(nbDec)
@@ -1474,9 +1673,10 @@ Array.prototype.percentile = function (n, nbDec) { //P1, ..., P99
  * @returns {Number} Increment
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.getIncrement = function (nbDec) {
-    return nbDec == 0? parseInt(((this.max() - this.min()) / (this.length - 1))): ((this.max() - this.min()) / (this.length - 1)).toNDec(nbDec)
+    return nbDec === 0? parseInt(((this.max() - this.min()) / (this.length - 1))): ((this.max() - this.min()) / (this.length - 1)).toNDec(nbDec)
 };
 
 /**
@@ -1485,6 +1685,7 @@ Array.prototype.getIncrement = function (nbDec) {
  * @returns {undefined}
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.increment = function (n) {
     for(var i = 0; i < this.length; i++) this[i] += n || 1
@@ -1497,9 +1698,10 @@ Array.prototype.increment = function (n) {
  * @returns {number} IQR
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.iqr = function (nbDec) { //Inter-Quartile Range
-    return this.quartile(3, nbDec)-this.quartile(1, nbDec).toNDec(nbDec)
+    return this.quartile(3, nbDec) - this.quartile(1, nbDec).toNDec(nbDec)
 };
 
 /**
@@ -1510,6 +1712,7 @@ Array.prototype.iqr = function (nbDec) { //Inter-Quartile Range
  * @returns {Array} Resulting sub-array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.get = function (start, end) {
     var res = [];
@@ -1530,6 +1733,7 @@ Array.prototype.get = function (start, end) {
  * @returns {Array} Sorted array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.quickSort = function (left, right) {
     if (!left && !right) {
@@ -1563,6 +1767,7 @@ Array.prototype.quickSort = function (left, right) {
  * @returns {Array} Sorted array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.revSort = function (left, right) {
     if (!left && !right) {
@@ -1595,6 +1800,7 @@ Array.prototype.revSort = function (left, right) {
  * @returns {Array} Sorted array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.bubbleSort = function (order) {
     var arr = this, j = 1, s = true;
@@ -1658,6 +1864,7 @@ Array.prototype.bubbleSort = function (order) {
  * @returns {Array} Sorted array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.bruteForceSort = function () {
     for (var i = 0; i < this.length; i++) {
@@ -1681,6 +1888,7 @@ Array.prototype.bruteForceSort = function () {
  * @returns {Array} Sorted Array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.maxSort = function () {
     //Ignores repeated values and loose data
@@ -1724,6 +1932,7 @@ Array.prototype.maxSort = function () {
  * @returns {Array} Sorted array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.cenSort = function (l, r) {
     //Ignores repeated values and loose database
@@ -1755,6 +1964,8 @@ Array.prototype.cenSort = function (l, r) {
  * @returns {Array} New array
  * @since 1.0
  * @method
+ * @source Somewhere
+ * @memberof Array.prototype
  */
 Array.prototype.setSort = function () { //A faster algorithm than quickSort only for integers where the extremities are known
     var t = [], l = this.length, res = [];
@@ -1773,13 +1984,14 @@ Array.prototype.setSort = function () { //A faster algorithm than quickSort only
  * @returns {Array} Cleaned array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.clean = function (noDuplic) { //Remove undesirable items
     var arr = [], j = 0;
     for (var i = 0; i < this.length; i++) {
         if (!isNon(this[i])) arr[j++] = this[i];
     }
-    return noDuplic? rmDuplicates(arr).remove(undefined): arr; //Take off (or not) duplicates of actual values and double clean it
+    return noDuplic? rmDuplicates(arr).remove(): arr; //Take off (or not) duplicates of actual values and double clean it
 };
 
 /**
@@ -1788,6 +2000,7 @@ Array.prototype.clean = function (noDuplic) { //Remove undesirable items
  * @returns {Array} Cleaned array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.xclean = function () {
     return this.clean(true).remove([undefined, "undefined", null, "null"])
@@ -1802,6 +2015,7 @@ Array.prototype.xclean = function () {
  * @returns {Array} Modified array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.chg = function(arr, s, e) {
     s = s || 0;
@@ -1820,6 +2034,7 @@ Array.prototype.chg = function(arr, s, e) {
  * @returns {Array} Current resulting array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.exchange = function(arr, s, e) {
     s = s || 0;
@@ -1842,6 +2057,8 @@ Array.prototype.exchange = function(arr, s, e) {
  * @returns {Array} Rotated array
  * @since 1.0
  * @method
+ * @throws {Error} deg isn't a multiple of 90°
+ * @memberof Array.prototype
  */
 Array.prototype.rot = function (deg) {
     var tmp;
@@ -1946,6 +2163,7 @@ Array.prototype.rot = function (deg) {
  * @returns {number} Number of elements
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.numElm = function () {
     return this.linearise().length
@@ -1958,6 +2176,7 @@ Array.prototype.numElm = function () {
  * @returns {string|number[]} Size
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.size = function (str) { //Get the w * h size of the array
     return str? this.length + "x" + this.maxLength(): [this.length, this.maxLength()]
@@ -1969,6 +2188,7 @@ Array.prototype.size = function (str) { //Get the w * h size of the array
  * @returns {number} Determinant
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.det = function () {
     var d = 0;
@@ -1985,6 +2205,7 @@ Array.prototype.det = function () {
  * @returns {Array} Translated array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.translate = function () {
     if (this.size()[0] === this.size()[1]) { //NxN
@@ -2016,6 +2237,7 @@ Array.prototype.translate = function () {
  * @returns {number} Position of the element
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.lookFor = function (x) {
     for (var i = 0; i < this.length; i++) {
@@ -2031,9 +2253,10 @@ Array.prototype.lookFor = function (x) {
  * @returns {Array} Resulting array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.divide = function (n) {
-    var res = new Array(Math.round(this.length/n)).fill(""), k = 0;
+    var res = new Array(Math.round(this.length / n)).fill(""), k = 0;
     for (var i = 0; i < res.length; i++) {
         for(var j = 0; j < n; j++) res[i] += this[k++];
     }
@@ -2046,6 +2269,7 @@ Array.prototype.divide = function (n) {
  * @returns {Array} Adjoint matrix
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.getAdjoint = function () {
     var m = this.translate(), res = mkArray(this.length, 2, Essence.eps);
@@ -2069,6 +2293,7 @@ Array.prototype.getAdjoint = function () {
  * @returns {boolean} Is it invertible ?
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.isInvertible = function() {
     return this.det() != 0
@@ -2081,6 +2306,7 @@ Array.prototype.isInvertible = function() {
  * @returns {Array} Resulting array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.dotProd = function (a) { //A.this where a is a scalar and this a matrix
     var res = [];
@@ -2097,6 +2323,7 @@ Array.prototype.dotProd = function (a) { //A.this where a is a scalar and this a
  * @since 1.0
  * @method
  * @returns {Array} Resulting array
+ * @memberof Array.prototype
  */
 Array.prototype.dotAdd = function (a) {
     var res = [];
@@ -2115,13 +2342,14 @@ Array.prototype.dotAdd = function (a) {
  * @returns {Array} Resulting array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.dotSub = function (a, order) {
     var res = [];
     order = order.toLowerCase().remove(" ");
     for (var i = 0; i < this.length; i++) {
         res[i] = [];
-        for(var j = 0; j < this[i].length; j++) res[i][j] = (order === "a-b")? a-this[i][j]: this[i][j]-a;
+        for(var j = 0; j < this[i].length; j++) res[i][j] = (order === "a-b")? a - this[i][j]: this[i][j] - a;
     }
     return res
 };
@@ -2133,13 +2361,14 @@ Array.prototype.dotSub = function (a, order) {
  * @returns {Array} Resulting array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.dotFrac = function (a, order) {
     var res = [];
     order = order.toLowerCase().remove(" ");
     for (var i = 0; i < this.length; i++) {
         res[i] = [];
-        for(var j = 0; j < this[i].length; j++) res[i][j] = (order === "a/b")? a/this[i][j]: this[i][j]/a;
+        for(var j = 0; j < this[i].length; j++) res[i][j] = (order === "a/b")? a / this[i][j]: this[i][j] / a;
     }
     return res
 };
@@ -2151,6 +2380,7 @@ Array.prototype.dotFrac = function (a, order) {
  * @returns {string} String representation
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.toStr = function (clean) {
     var str = "";
@@ -2167,11 +2397,12 @@ Array.prototype.toStr = function (clean) {
  * @returns {number} Integer representation
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.toInt = function () {
     var n = 0;
     for (var i in this) {
-        if (this.hasOwnProperty(i)) n += this[i] * Math.pow(10, this.length- i - 1);
+        if (this.hasOwnProperty(i)) n += this[i] * Math.pow(10, this.length - i - 1);
     }
     return n
 };
@@ -2182,9 +2413,10 @@ Array.prototype.toInt = function () {
  * @returns {Array|null} Inverse
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.inv = function () {
-    return this.isInvertible()? this.dotProd(1 / this.det(), this.getAdjoint()): null;
+    return this.isInvertible()? this.dotProd(1 / this.det() * this.getAdjoint()): null;
 };
 
 /**
@@ -2193,6 +2425,7 @@ Array.prototype.inv = function () {
  * @returns {Array} Mixed array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.mix = function () { //Mix up the array
     var randPos = mixedRange(0, 1, this.length - 1), res = [];
@@ -2206,6 +2439,7 @@ Array.prototype.mix = function () { //Mix up the array
  * @returns {Array} Mixed array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.littleMix = function() {
     var res = [], ic;
@@ -2231,6 +2465,7 @@ Array.prototype.littleMix = function() {
  * @returns {Array} New array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.append = function (arr) {
     for (var i = 0; i < arr.length; i++) this.push(arr[i]);
@@ -2244,6 +2479,7 @@ Array.prototype.append = function (arr) {
  * @returns {Array} New array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.prepend = function (arr) {
     for (var i = 0; i < arr.length; i++) this.unshift(arr[i]);
@@ -2256,6 +2492,7 @@ Array.prototype.prepend = function (arr) {
  * @returns {Array} Array of unique elements
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.unique = function () {
     var u = [];
@@ -2271,9 +2508,10 @@ Array.prototype.unique = function () {
  * @returns {Array} res Resulting 1D array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.to1d = function (jointer) {
-    var res = this;
+    var res = copy(this);
     for(var i = 0; i < res.length; i++) res[i] = res[i].join(jointer || "");
     return res
 };
@@ -2285,6 +2523,7 @@ Array.prototype.to1d = function (jointer) {
  * @returns {Array} Resulting N-D array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.toNd = function (n) {
     if(!n) n = 2;
@@ -2303,6 +2542,7 @@ Array.prototype.toNd = function (n) {
  * @returns {Array} Resulting array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.toNcol = function (n) {
     var res = [], k = 0; //Size of the sz**n
@@ -2320,6 +2560,7 @@ Array.prototype.toNcol = function (n) {
  * @returns {Array} Resulting array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.toNrow = function (n) {
     var res = [], k = 0; //Size of the sz**n
@@ -2336,6 +2577,7 @@ Array.prototype.toNrow = function (n) {
  * @returns {Array} Linearised array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.linearise = function() {
     return this.toString().split(",");
@@ -2347,6 +2589,7 @@ Array.prototype.linearise = function() {
  * @returns {Array} Uniformed array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.uniform = function (cr) {
     var res = this, ml = res.maxLength();
@@ -2362,6 +2605,7 @@ Array.prototype.uniform = function (cr) {
  * @returns {Array} Zipped array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.zip = function () {
     var res = [], j;
@@ -2373,7 +2617,7 @@ Array.prototype.zip = function () {
             i += j-1;
         }else res.push(this[i]);
     }
-    return res.length<this.length? res: this; //Make sure that the compressed array isn't longer than the initial one
+    return res.length < this.length? res: this; //Make sure that the compressed array isn't longer than the initial one
 };
 
 /**
@@ -2383,6 +2627,7 @@ Array.prototype.zip = function () {
  * @returns {Array} Unzipped array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.unzip = function (noPairs) {
     var res = [];
@@ -2400,6 +2645,7 @@ Array.prototype.unzip = function (noPairs) {
  * @returns {Array} res Trimed array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.trimAll = function(side) { //Trimes every elements
     var res = [];
@@ -2415,6 +2661,7 @@ Array.prototype.trimAll = function(side) { //Trimes every elements
  * @returns {boolean} Sorted or not
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.isSorted = function() { //Check if the array is sorted
     if (this[0] > this[1]) return false;
@@ -2431,13 +2678,14 @@ Array.prototype.isSorted = function() { //Check if the array is sorted
  * @returns {undefined}
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.uniquePush = function(obj) { //Post-init duplicate safe push
     if (isType(obj, "Array")) {
         for (var i = 0; i < obj.length; i++) {
             if (this.indexOf(obj[i]) === -1) this.push(obj[i]);
         }
-    } else if (this.indexOf(obj) > -1) throw "the object " + obj.toString() + "is already present in " + this.toString();
+    } else if (this.has(obj)) throw "the object " + obj.toString() + "is already present in " + this.toString();
     else this.push(obj);
 };
 
@@ -2448,10 +2696,11 @@ Array.prototype.uniquePush = function(obj) { //Post-init duplicate safe push
  * @returns {(Array|string)} Result
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.replaceAll = function(str, nstr) {
     var res = this.replace(str, nstr), i = 0;
-    while (res.indexOf(str) > -1 || i === this.length) {
+    while (res.has(str) || i === this.length) {
         res = this.replace(str, nstr);
         i++;
     }
@@ -2465,6 +2714,8 @@ Array.prototype.replaceAll = function(str, nstr) {
  * @returns {Array} Neighbours
  * @since 1.0
  * @method
+ * @throws {RangeError} y|x is too big
+ * @memberof Array.prototype
  */
 Array.prototype.neighbour = function(y, x) {
     var n = [], seq;
@@ -2481,15 +2732,15 @@ Array.prototype.neighbour = function(y, x) {
         seq = [[-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1]];
         for (var i = 0; i < seq.length; i++) {
             try {
-                if(!isNon(this[y + seq[i][0]][x + seq[i][1]])) n.push(this[y + seq[i][0]][x + seq[i][1]]);
+                if (!isNon(this[y + seq[i][0]][x + seq[i][1]])) n.push(this[y + seq[i][0]][x + seq[i][1]]);
             } catch (e) {
                 /* eslint no-empty: 0 */
             }
         }
     } else {
         try {
-            if(!isNon(this[y - 1])) n.push(this[y - 1]);
-            if(!isNon(this[y + 1])) n.push(this[y + 1]);
+            if (!isNon(this[y - 1])) n.push(this[y - 1]);
+            if (!isNon(this[y + 1])) n.push(this[y + 1]);
         } catch (e) {}
     }
     return n;
@@ -2502,6 +2753,7 @@ Array.prototype.neighbour = function(y, x) {
  * @returns {Array} Sanitised array
  * @since 1.0
  * @method
+ * @memberof Array.prototype
  */
 Array.prototype.sanitise = function(type) {
     for (var i = 0; i < this.length; i++) {
@@ -2511,24 +2763,51 @@ Array.prototype.sanitise = function(type) {
 };
 
 /**
+ * @description Get a portion of the array
+ * @param {number} [denominator=2] How many parts (halfs by default)
+ * @param {number} [numerator=1] Position of the part (1st half by default)
+ * @return {Array} Portion of the array
+ * @since 1.1
+ * @method
+ * @todo Add the support for odd lengthed arrays
+ * @memberof Array.prototype
+ */
+Array.prototype.portion = function (denominator, numerator) {
+    return this.get((numerator || 1) * Math.round(this.length) / (denominator || 2));
+};
+
+/**
+ * @description Check if the string has a character
+ * @inheritdoc
+ * @param {*} val Character
+ * @return {boolean} Containment check result
+ * @this String
+ * @method
+ * @since 1.1
+ * @memberof String.prototype
+ */
+String.prototype.has = Array.prototype.has;
+
+/**
  * @description Remove the character $c from the string
  * @param {string} c Character
  * @this String
  * @returns {string} Resulting string
  * @since 1.0
  * @method
+ * @memberof String.prototype
  */
 String.prototype.remove = function (c) { //Remove c from the string
     var str = this;
     if (isType(c, "Array")) {
-        for(var i in c) {
-            if(c.hasOwnProperty(i)) str = str.remove(i);
+        for (var i in c) {
+            if (c.hasOwnProperty(i)) str = str.remove(i);
         }
     } else {
         var v = str.split(c).map(function (x) {
             return x === c? undefined: x
         }).join("");
-        return (v.indexOf(undefined) != -1)? str.remove(): v
+        return v.has(undefined)? str.remove(): v
     }
 };
 
@@ -2539,12 +2818,13 @@ String.prototype.remove = function (c) { //Remove c from the string
  * @returns {String} Resulting string
  * @since 1.0
  * @method
+ * @memberof String.prototype
  */
 String.prototype.toNDigits = function (n) {
     var i = this;
     n = n || 2;
-    if (parseFloat(i) < Math.pow(10, n-1)) {
-        while(i.split(".")[0].length < n) i = "0" + i;
+    if (parseFloat(i) < Math.pow(10, n - 1)) {
+        while (i.split(".")[0].length < n) i = "0" + i;
     }
     return i
 };
@@ -2555,12 +2835,13 @@ String.prototype.toNDigits = function (n) {
  * @param {string} jointer Joining character
  * @this String
  * @returns {string} Mixed string
+ * @memberof String.prototype
  */
 String.prototype.mix = function (separator, jointer) {
     separator = isNon(separator)? "": separator;
     jointer = !jointer? separator: jointer;
     var randPos = mixedRange(0, 1, this.length - 1), iStr = this.split(separator), fStr = [];
-    for(var i = 0; i < this.length; i++) fStr[i] = iStr[randPos[i]];
+    for (var i = 0; i < this.length; i++) fStr[i] = iStr[randPos[i]];
     return fStr.join(jointer)
 };
 
@@ -2571,11 +2852,12 @@ String.prototype.mix = function (separator, jointer) {
  * @returns {string[]} Divided string
  * @since 1.0
  * @method
+ * @memberof String.prototype
  */
 String.prototype.divide = function (n) {
-    var res = new Array(Math.round(this.length/n)).fill(""), k = 0;
+    var res = new Array(Math.round(this.length / n)).fill(""), k = 0;
     for (var i = 0; i < res.length; i++) {
-        for(var j = 0; j < n; j++) res[i] += this[k++];
+        for (var j = 0; j < n; j++) res[i] += this[k++];
     }
     return res
 };
@@ -2587,6 +2869,7 @@ String.prototype.divide = function (n) {
  * @returns {string} String
  * @since 1.0
  * @method
+ * @memberof String.prototype
  */
 String.prototype.capitalize = function (whole) {
     var res = this.toString(); //Because it will return the String object rather than the actual string
@@ -2603,6 +2886,7 @@ String.prototype.capitalize = function (whole) {
  * @returns {number} Ascii sum
  * @since 1.0
  * @method
+ * @memberof String.prototype
  */
 String.prototype.sum = function () {
     var sum = 0;
@@ -2616,6 +2900,7 @@ String.prototype.sum = function () {
  * @returns {number} Ascii product
  * @since 1.0
  * @method
+ * @memberof String.prototype
  */
 String.prototype.prod = function () {
     var prod = 1;
@@ -2629,6 +2914,7 @@ String.prototype.prod = function () {
  * @returns {number} Mean
  * @since 1.0
  * @method
+ * @memberof String.prototype
  */
 String.prototype.mean = function () {
     var strArr = [];
@@ -2642,6 +2928,7 @@ String.prototype.mean = function () {
  * @returns {string} Normalised string
  * @since 1.0
  * @method
+ * @memberof String.prototype
  */
 String.prototype.normal = function () {
     return this.toLowerCase().remove(" ")
@@ -2653,6 +2940,9 @@ String.prototype.normal = function () {
  * @returns {undefined}
  * @since 1.0
  * @method
+ * @see Array.prototype.getOccurrences
+ * @inheritdoc
+ * @memberof String.prototype
  */
 String.prototype.getOccurrences = Array.prototype.getOccurrences;
 
@@ -2664,6 +2954,7 @@ String.prototype.getOccurrences = Array.prototype.getOccurrences;
  * @returns {string} Resulting string
  * @since 1.0
  * @method
+ * @memberof String.prototype
  */
 String.prototype.get = function (start, end) {
     var res = "";
@@ -2683,6 +2974,7 @@ String.prototype.get = function (start, end) {
  * @returns {string} Zipped string
  * @since 1.0
  * @method
+ * @memberof String.prototype
  */
 String.prototype.zip = function () { //Compress the string
     var res = "", j;
@@ -2704,6 +2996,7 @@ String.prototype.zip = function () { //Compress the string
  * @returns {string} Unzipped string
  * @since 1.0
  * @method
+ * @memberof String.prototype
  */
 String.prototype.unzip = function (noPairs) { //Decompress the string (when being compressed using String.zip()) with(out) pairs
     var res = "";
@@ -2723,11 +3016,12 @@ String.prototype.unzip = function (noPairs) { //Decompress the string (when bein
  * @returns {string} Modified string
  * @since 1.0
  * @method
+ * @memberof String.prototype
  */
 String.prototype.replaceAll = function(str, nstr, sep) {
     var res = sep? this.split(sep).replace(str, nstr) : this.replace(str, nstr), i = 0;
     if (sep === "") return this.replace(RegExpify(str), nstr); //Avoid the infinite loop caused by sep = ""
-    while (res.indexOf(str) > -1 || i === this.length) { //Look up the occurrences until there's none of them left or the interpreter reached the end
+    while (res.has(str) || i === this.length) { //Look up the occurrences until there's none of them left or the interpreter reached the end
         res = this.replace(str, nstr);
         i++;
     }
@@ -2742,6 +3036,7 @@ String.prototype.replaceAll = function(str, nstr, sep) {
  * @returns {string} Chunked string
  * @since 1.0
  * @method
+ * @memberof String.prototype
  */
 String.prototype.chunk = function (start, end) {
     return this.split(" ").get(start, end).join(" ");
@@ -2754,6 +3049,7 @@ String.prototype.chunk = function (start, end) {
  * @returns {string} Same string
  * @method
  * @since 1.1
+ * @memberof String.prototype
  */
 String.prototype.sameFirst = function (str) {
     var sf = "", pos = -1;
@@ -2773,6 +3069,7 @@ String.prototype.sameFirst = function (str) {
  * @returns {string} Same string
  * @method
  * @since 1.1
+ * @memberof String.prototype
  */
 String.prototype.sameLast = function (str) {
     var sf = "", pos = Math.min(this.length, str.length);
@@ -2786,14 +3083,26 @@ String.prototype.sameLast = function (str) {
 };
 
 /**
+ * @description String equivalent of Array.map
+ * @param {Function} cb Callback function
+ * @param {string} [sep=""] Seperator/jointor
+ * @return {string} Mapped string
+ * @memberof String.prototype
+ */
+String.prototype.map = function (cb, sep) {
+    return this.split(sep || "").map(cb).join(sep || "");
+};
+
+/**
  * @description Length of the number
  * @this Number
  * @returns {Nums} Length
  * @since 1.0
  * @method
+ * @memberof Number.prototype
  */
 Number.prototype.length = function () {
-    if (String(this).indexOf(".") > -1) return [parseInt(String(this).split(".")[0].length), parseInt(String(this).split(".")[1].length)];
+    if (String(this).has(".")) return [parseInt(String(this).split(".")[0].length), parseInt(String(this).split(".")[1].length)];
     var l = 0, x = this;
     while (Math.floor(x) != 0) {
         x /= 10;
@@ -2805,23 +3114,25 @@ Number.prototype.length = function () {
 
 /**
  * @description A FP fixing that preserve the number format
- * @param {number} n Number of decimals
+ * @param {number} [n=2] Number of decimals
  * @this Number
  * @returns {number} Floating point number
  * @since 1.0
  * @method
+ * @memberof Number.prototype
  */
 Number.prototype.toNDec = function (n) { //A bit like .toFixed(n) and .toPrecision(n) but returning a double instead of a string
     var pow10s = Math.pow(10, n || 2);
-    return (n)? Math.round(pow10s * this) / pow10s: this
+    return n? Math.round(pow10s * this) / pow10s: this
 };
 
 /**
  * @description Keep a fixed amount of unit digits
- * @param {number} n Number of digits
+ * @param {number} [n=2] Number of digits
  * @returns {string} New number
  * @since 1.0
  * @method
+ * @memberof Number.prototype
  */
 Number.prototype.toNDigits = function (n) { //Get the number to be a n-digit number
     var i = this + ""; //Because it won't work with other types than strings
@@ -2838,6 +3149,7 @@ Number.prototype.toNDigits = function (n) { //Get the number to be a n-digit num
  * @returns {NumberLike} Sign
  * @since 1.0
  * @method
+ * @memberof Number.prototype
  */
 Number.prototype.sign = function (str) { //Get the sign of the number
     return str? (this < 0? "-": (this > 0? " + ": "")): (this < 0? -1: (this > 0? 1: 0))
@@ -2849,6 +3161,7 @@ Number.prototype.sign = function (str) { //Get the sign of the number
  * @returns {boolean} Prime check result
  * @since 1.0
  * @method
+ * @memberof Number.prototype
  */
 Number.prototype.isPrime = function (n) {
     for (var i = 2; i < n; i++) {
@@ -2863,9 +3176,10 @@ Number.prototype.isPrime = function (n) {
  * @returns {*} Cleaned number
  * @since 1.0
  * @method
+ * @memberof Number.prototype
  */
 Number.prototype.clean = function (nbDec) {
-    if (this == 0) return 0;
+    if (this === 0) return 0;
     else if (this > 0 && this[0] == "+") return nbDec? this.slice(1, this.length).toNDec(nbDec): this.slice(1, this.length);
     else if (this == "-") return this + 1;
     else if (this == "+") return 1;
@@ -2877,6 +3191,7 @@ Number.prototype.clean = function (nbDec) {
  * @returns {number[]} Number array
  * @since 1.0
  * @method
+ * @memberof Number.prototype
  */
 Number.prototype.toArr = function () {
     var arr = new Array(this.length()), i = 0, n = this;
@@ -2894,6 +3209,8 @@ Number.prototype.toArr = function () {
  * @returns {Function} this Current function/constructor
  * @since 1.0
  * @method
+ * @memberof Function.prototype
+ * @source Somewhere
  */
 Function.prototype.inheritsFrom = function (parentClassOrObj) {
     if (parentClassOrObj.constructor === Function) { //Normal Inheritance
@@ -2949,14 +3266,14 @@ function getType (obj, preserve) { //Only works for native types. preserve would
 /**
  * @description Custom type getter
  * @param {*} obj Object
- * @param {boolean} [preserve=false] Preserve the format
+ * @param {boolean} [preserve=false] Preserve the format of strings like [object Element]
  * @returns {string} Custom type
  * @since 1.0
  * @func
  */
 function getCustomType (obj, preserve) { //Same as getType but for custom types which won't work for native types
     var t = obj.toLocaleString();
-    if (t.indexOf("[") > -1) return preserve? t: t.split(" ")[1].slice(0, t.split(" ")[1].length - 1); //[object Type]
+    if (t.indexOf("[") === 0) return preserve? t: t.split(" ")[1].slice(0, t.split(" ")[1].length - 1); //[object Type]
     else return t.split("(")[0].trim()
 }
 
@@ -2983,7 +3300,7 @@ function is2dArray (obj) { //Check if an array has 2 dimensions (nxm matrix)
  * @func
  */
 function isNon (val) {
-    return (val === false || val === undefined || val === null || val === "" || val === [] || val === {})
+    return (val === false || val === undefined || val === null || val === "" || val.equals([]) || val.equals({}))
 }
 
 /**
@@ -3061,6 +3378,7 @@ function getTimestamp (readable) {
  * @see txt2date
  * @func
  * @see 1.1
+ * @throws {Error} d isn't a Date
  */
 function date2txt (d) {
     if (!isType(d, "Date")) throw new Error("$d is not a Date object");
@@ -3285,6 +3603,7 @@ function genStr (len, filter) { //Generate a string
  * @returns {Array} Array
  * @since 1.0
  * @func
+ * @throws {Error} Invalid/unsupported dimension
  */
 function mkArray (len, dim, fill) { //Arr.fill(new Array(...).fill(...)) is already there
     var arr = [];
@@ -3396,6 +3715,7 @@ function swap (obj, e1, e2) { //Swap two proprietary elements or two elements
  * @returns {Array} Resized elements
  * @since 1.0
  * @func
+ * @throws {Error} a and b must be iterable
  */
 function toSameLength (a, b, cr) {
     if (!a.isIterable() || !b.isIterable()) throw new Error("invalid length equality operation on non-iterable objects");

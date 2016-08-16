@@ -9,30 +9,14 @@
  * @requires ../essence
  * @requires Misc
  * @namespace
- * @type {{name: string, version: number, run: module:DOM.run, description: string, dependency: string[], author: string, complete: boolean, toString: module:DOM.toString}}
+ * @type {Module}
  * @requires Misc
  * @since 1.1
  * @exports DOM
  */
-var DOM = {
-    name: "DOM",
-    version: 1,
-    run: function () {
-        BrowserDetect.init();
-    },
-    description: "DOM stuff",
-    dependency: ["Misc"],
-    author: "Maximilian Berkmann",
-    complete: false,
-    toString: function () {
-        return "Module(name='" + this.name + "', version=" + this.version + ", description='" + this.description + "', author='" + this.author + "', complete=" + this.complete + ", run=" + this.run + ")";
-    }
-};
-
-(function () {
-    DOM.complete = true;
-})();
-
+var DOM = new Module("DOM", "DOM stuff", ["Misc"], 1, function () {
+    BrowserDetect.init();
+});
 /* eslint no-undef: 0 */
 
 /**
@@ -46,8 +30,7 @@ var DOM = {
  * @func
  */
 function print (st, isHTML, sw) {
-    if (!sw) sw = "body";
-    $e(sw).after(st, isHTML)
+    $e(sw || "body").after(st, isHTML)
 }
 
 /**
@@ -60,8 +43,7 @@ function print (st, isHTML, sw) {
  * @func
  */
 function println (st, sw) {
-    if (!sw) sw = "body";
-    $e(sw).after(st + "<br />", true)
+    $e(sw || "body").after(st + "<br />", true)
 }
 
 /**
@@ -308,6 +290,7 @@ function getResources (rmEmpty) {
  * @param {boolean} [asList=false] Result should be a list or an object
  * @returns {*} List/dictionary of scripts
  * @see gatherStylesheets
+ * @todo Perhaps use document.scripts.toArray() instead ?
  * @since 1.0
  * @func
  */
@@ -318,10 +301,45 @@ function gatherScripts (asList) { //Sort of getResources() but dedicated to only
 }
 
 /**
+ * @description Gather internal scripts.
+ * @param {boolean} [format=false] Format to easy-to-use array
+ * @returns {Array} Internal scripts
+ * @since 1.1
+ * @func
+ */
+function gatherInternalScripts (format) {
+    return format? document.scripts.toArray().filter(function (x) {
+        return x.text != "";
+    }).map(function (x) {
+        return x.src;
+    }): document.scripts.toArray().filter(function (x) {
+        return x.text != "";
+    });
+}
+
+/**
+ * @description Gather external scripts.
+ * @param {boolean} [format=false] Format to easy-to-use array
+ * @returns {Array} External scripts
+ * @since 1.1
+ * @func
+ */
+function gatherExternalScripts (format) {
+    return format? document.scripts.toArray().filter(function (x) {
+        return x.src != "";
+    }).map(function (x) {
+        return x.src;
+    }): document.scripts.toArray().filter(function (x) {
+        return x.src != "";
+    });
+}
+
+/**
  * @description Get the list of stylesheets
  * @param {boolean} [asList=false] Result should be a list or an object
  * @returns {*} List/dictionary of stylesheets
- * @see gatherStylesheets
+ * @see gatherScripts
+ * @todo Perhaps use document.styleSheets[] instead ?
  * @since 1.0
  * @func
  */
@@ -329,6 +347,40 @@ function gatherStylesheets (asList) {
     var $l = $n("*link"), res = asList? []: {};
     for(var i = 0; i<$l.length; i++) asList? res.push($l[i].href): res[$l[i].href.split("/")[$l[i].href.split("/").length - 1]] = $l[i].href;
     return res
+}
+
+/**
+ * @description Gather internal stylesheets.
+ * @param {boolean} [format=false] Format to easy-to-use array
+ * @returns {Array} Internal stylesheets
+ * @since 1.1
+ * @func
+ */
+function gatherInternalStylesheets (format) {
+    return format? document.styleSheets.toArray().filter(function (x) {
+        return x.ownerNode.tagName === "STYLE";
+    }).map(function (x) {
+        return x.href;
+    }): document.styleSheets.toArray().filter(function (x) {
+        return x.ownerNode.tagName === "STYLE";
+    });
+}
+
+/**
+ * @description Gather external stylesheets.
+ * @param {boolean} [format=false] Format to easy-to-use array
+ * @returns {Array} External stylesheets
+ * @since 1.1
+ * @func
+ */
+function gatherExternalStylesheets (format) {
+    return format? document.styleSheets.toArray().filter(function (x) {
+        return x.ownerNode.tagName === "LINK";
+    }).map(function (x) {
+        return x.href;
+    }): document.styleSheets.toArray().filter(function (x) {
+        return x.ownerNode.tagName === "LINK";
+    });
 }
 
 /**
@@ -490,6 +542,7 @@ function colourTable (caption, cols, clrs, id, split, style) {
  * @returns {*} Comparison table result
  * @since 1.0
  * @func
+ * @throws {Error} Uncomparable matrices
  */
 function tableCompare(a, b, toHTML) { //Compare two matrices and display a table with all the different elements
     if(a.size(true) != b.size(true)) throw new Error("You can't compare two matrices of different sizes");
@@ -526,7 +579,7 @@ function addFav (url, title, elmId) { //Url = http://Www...." title = "My Websit
 function checkBrowser () {
     this.ver = navigator.appVersion;
     this.dom = document.getElementById? 1: 0;
-    this.ie5 = (this.ver.indexOf("MSIE 5") > -1 && this.dom)? 1: 0;
+    this.ie5 = (this.ver.has("MSIE 5") && this.dom)? 1: 0;
     this.ie4 = (document.all && !this.dom)? 1: 0;
     this.ns5 = (this.dom && parseInt(this.ver) >= 5)? 1: 0;
     this.ns4 = (document.layers && !this.dom)? 1: 0;
@@ -540,6 +593,12 @@ function checkBrowser () {
  * @since 1.0
  * @source Somewhere on the net
  * @global
+ * @property {Function} BrowserDetect.init Initializer
+ * @property {Function} BrowserDetect.searchString String search
+ * @property {Function} BrowserDetect.searchVersion Version search
+ * @property {Object[]} BrowserDetect.dataBrowser Browser data
+ * @property {Object[]} BrowserDetect.dataOS OS data
+ * @property {Function} BrowserDetect.info Information about the browser
  */
 var BrowserDetect = { //Browser detection system
     init: function () {
@@ -659,6 +718,14 @@ function writeMsg2 (msg, slc, HTML, speed, txt, pos) {
  * @returns {Template} Template
  * @since 1.0
  * @func
+ * @property {string} Template.name Name
+ * @property {string} Template.path Path (for saving)
+ * @property {string[]} Template.params Parameters (in {{...}})
+ * @property {string[]} Template.special Special parameters
+ * @property {string[]} Template.specialEq Special parameters equivalence
+ * @property {string} Template.text Raw text/code containing the parameters
+ * @property {Function} Template.gen Text/code generator
+ * @property {Function} Template.save Save the generated text/code in the specified path
  */
 function Template (name, path, txt, params, consoleSpecial) {
     this.name = name || "Template";

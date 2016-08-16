@@ -35,6 +35,7 @@ Some ideas to add:
 -	More maths stuff (from the booklet or/and the Discrete Maths book) ?
 -   AI system that stores it's rules in a database and update it after learning
 -   Keyword getter (goes through a text/file and get a list of the keywords/most used/important words)
+-   Combinations maker: 3*[a, b, c] -> [aaa, aab, aac, ..., ccc]
 
 To fix/continue:
 -	Path finding using A*\IDA* with Euclidian/Manhattan

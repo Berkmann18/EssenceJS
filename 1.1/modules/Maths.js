@@ -9,28 +9,11 @@
  * @requires ../essence
  * @requires Misc
  * @namespace
- * @type {{name: string, version: number, run: module:Maths.run, description: string, dependency: string[], author: string, complete: boolean, toString: module:Maths.toString}}
+ * @type {Module}
  * @since 1.1
  * @exports Maths
  */
-var Maths = {
-    name: "Maths",
-    version: 1,
-    run: function () {
-
-    },
-    description: "Maths stuff",
-    dependency: ["Misc"],
-    author: "Maximilian Berkmann",
-    complete: false,
-    toString: function () {
-        return "Module(name='" + this.name + "', version=" + this.version + ", description='" + this.description + "', author='" + this.author + "', complete=" + this.complete + ", run=" + this.run + ")";
-    }
-};
-
-(function () {
-    Maths.complete = true;
-})();
+var Maths = new Module("Maths", "Maths stuff", ["Misc"]);
 
 /* eslint no-undef: 0 */
 
@@ -239,6 +222,7 @@ function negateBin (bin, toArr) {
  * @returns {number} Decimal number
  * @since 1.0
  * @func
+ * @throws {Error} Invalid binary number
  */
 function floatingPtBin (bin) {
     //%= .05859375 (sign) + .27734375 (exponent) + .6640625 (mantissa)
@@ -286,7 +270,7 @@ function floatingPtBin (bin) {
             m = mLoop(bin.get(15), 112);
             break;
         default:
-            throw new Error("Unvalid binary number");
+            throw new Error("Invalid binary number");
     }
     return s * Math.pow(2, e) * m;
 }
@@ -371,7 +355,7 @@ function sec2time (i, withH) {
 }
 
 /**
- * Alias/Shortcuts
+ * Alias/Shortcut
  * @alias sec2time
  * @since 1.0
  * @func
@@ -1366,8 +1350,8 @@ function intersection (a, b, c, toSort) {
 
     for (var i in a) {
         if(a.hasOwnProperty(i)) {
-            if (b.indexOf(a[i]) > -1 && isNon(c)) inter.push(a[i]);
-            else if (b.indexOf(a[i]) > -1 && c.indexOf(a[i]) > -1) inter.push(a[i]);
+            if (b.has(a[i]) && isNon(c)) inter.push(a[i]);
+            else if (b.has(a[i]) && c.has(a[i])) inter.push(a[i]);
         }
     }
     return toSort? rmDuplicates(inter).quickSort(): rmDuplicates(inter)
@@ -1539,6 +1523,11 @@ function getClosest (x, opt) {
  * @this {Equation}
  * @constructor
  * @since 1.0
+ * @property {string} Equation.formula Formula
+ * @property {string} Equation.leftSide LHS
+ * @property {string} Equation.rightSide RHS
+ * @property {Function} Equation.compute Compute data
+ * @property {Function} Equation.toString String representation
  */
 function Equation (formula) {
     this.formula = formula.normal() || "y=x";
@@ -1588,7 +1577,7 @@ function truthTable(exp) { //Get the truth table of an expression
     // /(([a-z])(\+|\x2a))+/g
     var ascii = asciiTable("a-z"), vars = [], rows, res = [];
     for (var i = 0; i < ascii.length; i++) {
-        if(exp.indexOf(ascii[i]) > -1) vars.push(ascii[i]);
+        if(exp.has(ascii[i])) vars.push(ascii[i]);
     }
     Essence.say("variables: " + vars.toStr(true), "info");
     rows = binaryCases(vars.length);

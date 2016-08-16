@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: DB</title>
+    <title>JSDoc: Class: CORS</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: DB</h1>
+    <h1 class="page-title">Class: CORS</h1>
 
     
 
@@ -29,7 +29,7 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="module-Web.html">Web</a>~</span>DB</h2>
+            <span class="ancestors"><a href="module-Ajax.html">Ajax</a>~</span>CORS</h2>
         
     
 </header>
@@ -41,14 +41,14 @@
 
     
 
-    <h4 class="name" id="DB"><span class="type-signature"></span>new DB<span class="signature">(name<span class="signature-attributes">opt</span>, headers<span class="signature-attributes">opt</span>, rows<span class="signature-attributes">opt</span>, headerRows<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {DB}</span></h4>
+    <h4 class="name" id="CORS"><span class="type-signature"></span>new CORS<span class="signature">(url<span class="signature-attributes">opt</span>, method<span class="signature-attributes">opt</span>, async<span class="signature-attributes">opt</span>, success<span class="signature-attributes">opt</span>, fail<span class="signature-attributes">opt</span>, progress<span class="signature-attributes">opt</span>, creds<span class="signature-attributes">opt</span>, mime<span class="signature-attributes">opt</span>, body<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {CORS}</span></h4>
 
     
 
 
 
 <div class="description">
-    Database
+    Cross Origin Resource Sharing request
 </div>
 
 
@@ -56,9 +56,6 @@
 
 
 
-
-    <h5>This:</h5>
-    <ul><li>DB</li></ul>
 
 
 
@@ -91,7 +88,7 @@
 
         <tr>
             
-                <td class="name"><code>name</code></td>
+                <td class="name"><code>url</code></td>
             
 
             <td class="type">
@@ -118,25 +115,25 @@
             
                 <td class="default">
                 
-                    "DB"
+                    getDirectoryPath()
                 
                 </td>
             
 
-            <td class="description last">Name</td>
+            <td class="description last">URL</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>headers</code></td>
+                <td class="name"><code>method</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type">string</span>
 
 
             
@@ -157,25 +154,25 @@
             
                 <td class="default">
                 
-                    ["Index", "Value"]
+                    "GET"
                 
                 </td>
             
 
-            <td class="description last">Column headers</td>
+            <td class="description last">HTTP Method</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>rows</code></td>
+                <td class="name"><code>async</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type">boolean</span>
 
 
             
@@ -196,25 +193,25 @@
             
                 <td class="default">
                 
-                    [range(1), new Array(range(1).length).fill("...")].translate()
+                    true
                 
                 </td>
             
 
-            <td class="description last">Rows</td>
+            <td class="description last">Asynchronicity</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>headerRows</code></td>
+                <td class="name"><code>success</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type">XhrCallback</span>
 
 
             
@@ -238,7 +235,194 @@
                 </td>
             
 
-            <td class="description last">Rows headers</td>
+            <td class="description last">Success handler</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>fail</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">XhrCallback</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Failure handler</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>progress</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">XhrCallback</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Loading/progress handler</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>creds</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;string></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    ["", ""]
+                
+                </td>
+            
+
+            <td class="description last">Credentials (username, password)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>mime</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">MIME type</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>body</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Body of the request</td>
         </tr>
 
     
@@ -276,7 +460,7 @@
 
         <tr>
             
-                <td class="name"><code>DB.name</code></td>
+                <td class="name"><code>CORS.url</code></td>
             
 
             <td class="type">
@@ -292,132 +476,14 @@
 
             
 
-            <td class="description last">Name</td>
+            <td class="description last">URL</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>DB.rows</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;NumberLike></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Row headers</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>DB.headers</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;NumberLike></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Column headers</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>DB.val</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Content of the database</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>database.setStorage</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Store the database</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>DB.html</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">XML</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">HTML code</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>DB.css</code></td>
+                <td class="name"><code>CORS.method</code></td>
             
 
             <td class="type">
@@ -433,14 +499,106 @@
 
             
 
-            <td class="description last">CSS code</td>
+            <td class="description last">Method</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>DB.build</code></td>
+                <td class="name"><code>CORS.response</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Response</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>XHR.async</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Asynchronousness</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>CORS.xhr</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">XHR</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">XH/AXO request</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>CORS.forIE</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Is the request only for MS IE</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>CORS.init</code></td>
             
 
             <td class="type">
@@ -456,244 +614,14 @@
 
             
 
-            <td class="description last">Build the database</td>
+            <td class="description last">CORS initializer</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>DB.fill</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Fill-in the database</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>DB.save</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Save the database</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>DB.update</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Update the database</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>DB.set</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Change the value of a cell</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>DB.get</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Get the value of a cell</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>DB.find</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Look for an item</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>DB.see</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Get a viewable copy of the database</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>DB.view</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Display the database</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>database.add</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Add a cell to the database</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>DB.init</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Initialise the database</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>database.toString</code></td>
+                <td class="name"><code>CORS.toString()</code></td>
             
 
             <td class="type">
@@ -713,6 +641,29 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>CORS.viewResponse()</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Interpret the (X)HTML response</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -723,6 +674,9 @@
 
     
 
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.1</li></ul></dd>
     
 
     
@@ -748,12 +702,19 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Web.js.html">modules/Web.js</a>, <a href="modules_Web.js.html#line166">line 166</a>
+        <a href="modules_Ajax.js.html">modules/Ajax.js</a>, <a href="modules_Ajax.js.html#line253">line 253</a>
     </li></ul></dd>
     
 
     
 
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>XHR</li>
+        </ul>
+    </dd>
     
 
     
@@ -775,7 +736,7 @@
 
         
 <div class="param-desc">
-    DB
+    CORS object
 </div>
 
 
@@ -786,7 +747,7 @@
     </dt>
     <dd>
         
-<span class="param-type">DB</span>
+<span class="param-type">CORS</span>
 
 
     </dd>
@@ -832,7 +793,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Tue Aug 16 2016 21:41:27 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Tue Aug 16 2016 21:41:26 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>
