@@ -7,12 +7,13 @@
  * @author Maximilian Berkmann <maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
  * @requires module:../essence
+ * @requires Ajax
  * @namespace
  * @type {Module}
  * @since 1.1
  * @exports File
  */
-var Files = new Module("Files", "File management and control");
+var Files = new Module("Files", "File management and control", ["Ajax"]);
 
 /* eslint no-undef: 0 */
 /**
@@ -200,7 +201,6 @@ function getFileContent (fname) {
     return $G["fct"];
 }
 
-//getFileContent's equivalent using XHR
 /**
  * @description getFileContent using the XHR object
  * @param {string} fname File name

@@ -502,6 +502,25 @@ function StdNorm (m, sd, x) {
 }
 
 /**
+ * @description Inverse of Norm(x) (Inverse Normal CDF)
+ * @param x
+ * @return {*}
+ * @constructor
+ */
+function InvNorm (x) {
+    var a = [2.50662823884,	-18.61500062529, 41.39119773534, -25.44106049637], b = [-8.47351093090,	23.08336743743, -21.06224101826, 3.13082909833], c = [.3374754822726147, .9761690190917186,	.1607979714918209, .0276438810333863,	.0038405729373609,	.0003951896511919, .0000321767881768, .0000002888167364, .0000003960315187], y = x - .5, absY = Math.abs(y), sqY = y * y, res;
+
+    //Beasley-Springer function
+    if (absY < .42) res = y * (((a[3] * sqY + a[2]) * sqY + a[1]) * sqY + a[0]) / ((((b[3] * sqY +b[2]) * sqY + b[1]) * sqY + b[0]) * sqY + 1);
+    else { //Moro function
+        res = Math.log(-Math.log(y > 0? 1 - x: x));
+        res = c[0] + res * (c[1] + res * (c[2] + res * (c[3] + res * (c[4] + res * (c[5] + res * (c[6] + res * (c[7] + res * c[8])))))));
+        if (y < 0) res = -res;
+    }
+    return res;
+}
+
+/**
  * @description Poisson distribution
  * @param {number} l Lambda
  * @param {number} x Number
@@ -1619,3 +1638,54 @@ function getCNF(exp) {
     return cnf;
 }
 /* eslint no-unused-vars: 2 */
+
+/**
+ * @description Confidence interval with stats known for times
+ * @param {number} avg Average/mean
+ * @param {number} n Number of times
+ * @param {number} sd Standard Deviation
+ * @return {number[]} Confidence interval
+ * @since 1.1
+ * @func
+ */
+function timeCI (avg, n, sd) {
+    //avg needs to be the sample need bar(x) with the sum^2 thingy
+    return [avg + InvNorm(n / 200)/*normsinv(n/200)*/ * sd/Math.sqrt(n), avg - InvNorm(n / 200)/*normsinv(n/200)*/ * sd/Math.sqrt(n)];
+}
+
+/**
+ * @description Sample mean of a population/array
+ * @param {number[]} arr Population
+ * @return {number} Sample mean
+ */
+function sampleMean (arr) { //bar(x)
+    return Math.sqrt(sumPow2(arr) / arr.length - arr.mean());
+}
+
+/**
+ * @description Confidence interval with stats known
+ * @param {number} avg Average/mean
+ * @param {number} n Number of data
+ * @param {number} [c=.95] Confidence (eg.: 95%)
+ * @param {number} sd Standard Deviation
+ * @return {number[]} Confidence interval
+ * @todo Make $sd optional after having a t-Distribution table calculator
+ * @since 1.1
+ * @func
+ */
+function confidenceInterval (avg, n, c, sd) {
+    //avg needs to be the sample need bar(x) with the sum^2 thingy
+    var z = InvNorm(c || .95); //sd? InvNorm(c): TDistrib((1 - c) / 2, n - 1);
+    return [avg - z * sd / Math.sqrt(n), avg + z * sd / Math.sqrt(n)];
+}
+
+/**
+ * @description Confidence interval with data known
+ * @param {number[]} data Data
+ * @return {number[]} Confidence interval
+ * @since 1.1
+ * @func
+ */
+function CI (data) {
+    return timeCI(data.mean(), data.length, data.stddev());
+}

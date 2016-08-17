@@ -185,8 +185,8 @@ var UnitTest = {
         var res = then; //to avoid random changes while calling the same function/method with the same parameter(s)
         if (!res.equals(expected) || res !== expected) {
             this.bad++;
-            console.log("[Unit] Expected " + expected + " but was " + res);
-        } else if(noisy && res.equals(expected)) console.log("[Unit] The expection on " + expected + "was satisfied !"); //in case someone wants to not just see what failed
+            console.log("%c[Unit]%C Expected " + expected + " but was " + res, "color: #c0c", "color: #000");
+        } else if(noisy && res.equals(expected)) console.log("%c[Unit]%c The expectation on " + expected + " was satisfied !", "color: #c0c", "color: #000"); //in case someone wants to not just see what failed
     },
     reset: function () {
         this.total = 0;
@@ -203,6 +203,15 @@ var UnitTest = {
     },
     report: function () {
         this.failRate = markConv(this.bad, this.total);
-        console.info("[Unit] Pass/Fail: " + (this.total - this.bad) + "/" + this.bad + " (" + this.failRate + "%); on " + BrowserDetect.info());
+        console.info("%c[Unit]%c Pass/Fail: %c" + (this.total - this.bad) + "%c/%c" + this.bad + "%c (%c" + this.failRate + "%%c); on " + BrowserDetect.info(), "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000", "font-weight: bold", "font-weight: normal");
+    },
+    basicTests: function () {
+        this.reset();
+        this.multiTest([
+            [eval(1.0 + 2.0), 3.0], //Rounding
+            ["Hello World".split(" "), [["H", "e", "l", "l", "o"].join(""), ["W", "o", "r", "l", "d"].join("")]], //Diving and joining
+            [nthroot(5, 2, 4), Math.pow(5, 1/2).toNDec(4)]
+        ]);
+        this.report();
     }
 };

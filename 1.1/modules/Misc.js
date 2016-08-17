@@ -24,7 +24,7 @@ var Misc = new Module("Misc", "Miscellaneous", ["Files"]);
  * @since 1.0
  * @func
  */
-function asciiTable(start, end) {
+function asciiTable (start, end) {
     if (start === "A-Z" && !end) {
         start = 65;
         end = 90;
@@ -735,7 +735,7 @@ function Tablify (keyArr, val) {
  * @since 1.0
  * @func
  */
-function name2type(name, param) {
+function name2type (name, param) {
     switch(name) {
         case "Number": return Number(param);
         case "String": return String(param);
@@ -850,4 +850,19 @@ function exp2dict (exp) {
  */
 function arrayLiteral (arr, cjt) {
     return arr.length > 1? arr.get(-1).toStr(true) + " " + (cjt || "and") + " " + arr.last(): arr[0];
+}
+
+/**
+ * @description Module list
+ * @return {Array[]} Module list
+ * @func
+ * @since 1.1
+ */
+function moduleList (extended) {
+    var table = [["Name", "Version", "Description", "Dependencies"]];
+    if (extended) table[0].push("Weight");
+    Essence.loadedModules.map(function (m) {
+        extended? table.push([m.name, m.version, m.description, m.dependency.toStr(true), m.getWeight()]): table.push([m.name, m.version, m.description, m.dependency.toStr(true)]);
+    });
+    return table;
 }

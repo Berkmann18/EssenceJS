@@ -6,7 +6,7 @@
   "scripts": {
     "preinstall": "minify essence.js --no-comments",
     "install": "minify modules --no-comments",
-    "test": "eslint essence.js moduldes"
+    "test": "eslint essence.js modules"
   },
   "repository": {
     "type": "git",

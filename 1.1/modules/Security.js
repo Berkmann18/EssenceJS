@@ -7,12 +7,14 @@
  * @author Maximilian Berkmann <maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
  * @requires ../essence
+ * @requires Maths
+ * @requires DOM
  * @namespace
  * @type {Module}
  * @since 1.1
  * @exports Security
  */
-var Security = new Module("Security", "Security stuff");
+var Security = new Module("Security", "Security stuff", ["Maths", "DOM"]);
 
 /* eslint no-undef: 0 */
 
@@ -81,7 +83,7 @@ function decrypt (txt, key) {
         }
     }
     console.log(console.table(res));
-    return (!key)? complexTable("Decryption result for <i>" + txt + "</i>", range(-65536, 1, 65536), res, ["Key", "Result"], "decrypted_" + txt, false, Essence.css): txt + " => " + res;
+    return (!key)? complexTable("Decryption result for <i>" + txt + "</i>", range(-65536, 1, 65536), res, ["Key", "Result"], "decrypted_" + txt, false): txt + " => " + res;
     //simpleTable("Decryption result for <i>" + txt + "</i>", , res, "decrypt_" + txt, Essence.css)
 }
 

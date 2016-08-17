@@ -110,7 +110,7 @@ var Essence = {
         }
     },
     applyCSS: function (nonMinify) {
-        nonMinify? include_once(getNumFromStr(this.version) + "/essence.css", "link", getDirectoryPath()): include_once(getNumFromStr(this.version) + "/essence.min.css", "link", getDirectoryPath());
+        include_once(getExtPath(getDirectoryPath(gatherScripts()["essence.js"])) + (nonMinify? "essence.css": "essence.min.css"), "link", getDirectoryPath());
         /*if ($e("html").val(true).indexOf("<body></body>") > -1) { //A bit of cleaning
             var ix = $e("html").val(true).indexOf("<body></body>");
             var bfr = $e("html").val(true).slice(0, ix), aft = $e("html").val(true).slice(ix + 13, $e("html").val(true).length);
@@ -189,7 +189,7 @@ var Essence = {
         this.loadedModules = [];
         for (var i = 0; i < modules.length; i++) {
             complete &= window[modules[i]].loaded;
-            if (window[modules[i]].loaded) this.loadedModules.push(window[modules[i]].toString());
+            if (window[modules[i]].loaded) this.loadedModules.push(window[modules[i]]);
         }
         return Boolean(complete);
     }, loadedModules: []
@@ -209,6 +209,29 @@ var Essence = {
      */
     debugging = false;
 
+/**
+ * @description EssenceJS Module
+ * @param {string} [name="Module"] Name
+ * @param {string} [desc=""] Description
+ * @param {string[]} [dpc=[]] Dependencies
+ * @param {number} [ver=1] Version
+ * @param {Function} [rn=function() {}] Run method
+ * @param {string} [pathVer=Essence.version.substr(0, 3)] Path's version
+ * @constructor
+ * @this Module
+ * @returns {Module} Module
+ * @property {string} Module.name Name of the module
+ * @property {number} Module.version Version of the module
+ * @property {string[]} Module.dependency Dependencies
+ * @property {string} Module.description Description of the module
+ * @property {Function} Module.run Runner method
+ * @property {boolean} Module.loaded Loading flag
+ * @property {string} Module.path Path of the module
+ * @property {Function} Module.load Load the module as well as initializing its dependencies
+ * @property {Function} Module.toString String representation
+ * @property {Function} Module.getWeight Weight of the module on EssenceJS's module ecosystem
+ * @since 1.1
+ */
 function Module (name, desc, dpc, ver, rn, pathVer) {
     this.name = name || "Module";
     this.version = ver || 1;
@@ -225,13 +248,23 @@ function Module (name, desc, dpc, ver, rn, pathVer) {
             //For less redundancy here: this.dependency -> complement(this.dependency, modules)
             init(this.dependency, false, false, pathVer);
         }
-        /*if (gatherExternalScripts(true).has(this.path) || filenameList(gatherExternalScripts(true)).has(this.path))*/ this.loaded = true;
+        /*if (gatherExternalScripts(true).has(this.path) || filenameList(gatherExternalScripts(true)).has(this.path)) */this.loaded = true;
     };
 
     this.toString = function () {
-        return "Module(name=" + this.name + ", version=" + this.version + ", dependency=" + this.dependency + ", description=" + this.description + ", loaded=" + this.loaded + ", run=" + this.run + ", path=" + this.path + ")";
-    }
+        return "Module(name='" + this.name + "', version=" + this.version + ", dependency=[" + this.dependency + "], description='" + this.description + "', loaded=" + this.loaded + ", run=" + this.run + ", path='" + this.path + "')";
+    };
 
+    this.getWeight = function () {
+        var dpcs = moduleList().line(3).get(1), weight = 0, names = moduleList().line().get(1); //List of dependencies of all loaded modules
+        for (var i = 0; i < dpcs.length; i++) {
+            if (dpcs[i].has(this.name) && names[i] != this.name && dpcs[i].count(this.name) < 2) weight++;
+            else if (names[i] === this.name && dpcs[i].has(this.name)) weight--; //Penalty
+        }
+        return weight;
+    };
+
+    return this;
 }
 
 /**
@@ -445,16 +478,16 @@ getExtPath = function (path) {
         Essence.say(mdl + " is ready!", "succ");
     }, 1.1); */
     setTimeout(function () {
-        if(debugging) Essence.isComplete()? Essence.say("Essence is complete !", "succ"): Essence.time("List of loaded modules: " + Essence.loadedModules.map(function (m) {
-            return m.split("=")[1].split(",")[0];
+        if (debugging) Essence.isComplete()? Essence.say("Essence is complete !", "succ"): Essence.time("List of loaded modules: " + Essence.loadedModules.map(function (m) {
+            return m.name; //split("'")[1];
         }).toStr(true));
         run(modules, Essence.version.substr(0, 3));
         if (Essence.isComplete() && !filenameList(gatherExternalScripts(true).has(Essence.source))) Essence.source = Essence.source.replace(".js", ".min.js");
         if (debugging && !Essence.loadedModules.map(function (m) {
-                return m.split("=")[1].split(",")[0]
+                return m.name; //split("'")[1]
             }).equals(modules)
         ) Essence.say("The following modules weren't loaded: " + complement(modules, Essence.loadedModules.map(function (m) {
-                return m.split("=")[1].split(",")[0]
+                return m.name; //split("'")[1]
             }))
         );
     }, 700);
