@@ -6,7 +6,7 @@
  * @license MIT
  * @author Maximilian Berkmann <maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
- * @requires module:../essence
+ * @requires essence
  * @requires Ajax
  * @namespace
  * @type {Module}
@@ -204,13 +204,20 @@ function getFileContent (fname) {
 /**
  * @description getFileContent using the XHR object
  * @param {string} fname File name
+ * @param {boolean} [crossOrigin=false] Cross Origin flag (for accessing resources outside of the same origin)
  * @returns {string} File's content
  * @since 1.0
  * @alias getFileContent
  * @func
  */
-function getFC (fname) {
-    var res = "", xhr = new XHR(fname, "GET", false, function (req) {
+function getFC (fname, crossOrigin) {
+    if (!crossOrigin && (fname.has("://") && fname.split("//")[0] != location.protocol)) crossOrigin = true;
+    var res = "", xhr = crossOrigin? new CORS(fname, "GET", false, function (req) {
+        res = req.responseText;
+        return req.responseText;
+    }, function () {
+        return "Nothing";
+    }): new XHR(fname, "GET", false, function (req) {
         res = req.responseText;
         return req.responseText;
     }, function () {
@@ -259,52 +266,52 @@ function getKeywords (text, noSymbols) {
  * @constructor
  * @property {string[]} Spider.name Directory containing the files to crawl through
  * @property {string[]} Spider.keywords Keywords
- * @property {Function} Spider.get Keyword getter
- * @property {Function} Spider.getAll Get all the keywords nice and clean
- * @property {Function} Spider.getWords Get all the key-words
- * @property {Function} Spider.getOccurrences Get the number of occurrences of all the keywords
- * @property {Function} Spider.getFreq Get the frequency of all the keywords
- * @property {Function} Spider.getCoverage Get the coverage of all the keywords compared to all the words
- * @property {Function} Spider.getGlobalKeywords Get all the keywords of all the file at once
- * @property {Function} Spider.toString String representation
+ * @property {function(...boolean): Array[]} Spider.get Keyword getter
+ * @property {function(...boolean): string[]} Spider.getAll Get all the keywords nice and clean
+ * @property {function(...boolean): string[]} Spider.getWords Get all the key-words
+ * @property {function(...boolean): number[]} Spider.getOccurrences Get the number of occurrences of all the keywords
+ * @property {function(...boolean): number[]} Spider.getFreq Get the frequency of all the keywords
+ * @property {function(...boolean): number} Spider.getCoverage Get the coverage of all the keywords compared to all the words
+ * @property {function(...boolean): string[]} Spider.getGlobalKeywords Get all the keywords of all the file at once
+ * @property {function(): string} Spider.toString String representation
  */
 function Spider (filenames) {
     this.dir = filenames || [];
     this.keywords = [];
-    this.get = function (withSymbols) { //Keywords infos
+    this.get = function (withSymbols, crossOrigin) { //Keywords infos
         /*
         Words: getKeywords(...).map(x => x.split(":")[0])
         Occurrences: getKeywords(...).map(x => parseInt(x.split(" ")[1]))
         Frequency: getKeywords(...).map(x => parseFloat(x.split(" ")[2].replace(/^\((\d|\d\.\d{1,})\%\)$/, "$1")))
          */
-        for (var i = 0; i < this.dir.length; i++) this.keywords[i] = getKeywords(getFileContent(this.dir[i]), !withSymbols);
+        for (var i = 0; i < this.dir.length; i++) this.keywords[i] = getKeywords(getFC(this.dir[i], crossOrigin), !withSymbols);
         return this.keywords;
     };
-    this.getAll = function (withSymbols) {
-        return this.get(withSymbols).linearise();
+    this.getAll = function (withSymbols, crossOrigin) {
+        return this.get(withSymbols, crossOrigin).linearise();
     };
-    this.getWords = function (withSymbols) { //Occurrencing words
-      return this.getAll(withSymbols).map(function (x) {
+    this.getWords = function (withSymbols, crossOrigin) { //Occurring words
+      return this.getAll(withSymbols, crossOrigin).map(function (x) {
           return x.split(":")[0]
       })
     };
-    this.getOccurrences = function (withSymbols) {
-        return this.getAll(withSymbols).map(function (x) {
+    this.getOccurrences = function (withSymbols, crossOrigin) {
+        return this.getAll(withSymbols, crossOrigin).map(function (x) {
             return parseInt(x.split(" ")[1])
         })
     };
-    this.getFreq = function (withSymbols) { //Frequency
-        return this.getAll(withSymbols).map(function (x) {
-            return parseFloat(x.split(" ")[2].replace(/^\((\d{1,}|\d{1,}\.\d{1,})%\)$/, "$1"));
+    this.getFreq = function (withSymbols, crossOrigin) { //Frequency
+        return this.getAll(withSymbols, crossOrigin).map(function (x) {
+            return parseFloat(x.split(" ")[2].replace(/^\((\d+|\d+\.\d+)%\)$/, "$1"));
         })
     };
 
-    this.getCoverage = function (withSymbols) {
-        return this.getFreq(withSymbols).sum().toNDec(2);
+    this.getCoverage = function (withSymbols, crossOrigin) {
+        return this.getFreq(withSymbols, crossOrigin).sum().toNDec(2);
     };
-    this.getGlobalKeywords = function (withSymbols) {
+    this.getGlobalKeywords = function (withSymbols, crossOrigin) {
         var fullDir = this.dir.map(function (file) {
-           return getFileContent(file);
+           return getFC(file, crossOrigin);
         }).toStr();
         return getKeywords(fullDir, !withSymbols);
     };

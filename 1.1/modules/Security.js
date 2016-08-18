@@ -6,7 +6,7 @@
  * @license MIT
  * @author Maximilian Berkmann <maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
- * @requires ../essence
+ * @requires essence
  * @requires Maths
  * @requires DOM
  * @namespace
@@ -167,7 +167,7 @@ function abcEncode (txt) {
  * @description Alphabetically decode from hexadecimal to lowercase text.
  * @param {string} txt Hexadecimal code
  * @returns {string} Alphabtical text
- * @se abcEncode
+ * @see abcEncode
  * @since 1.0
  * @func
  */

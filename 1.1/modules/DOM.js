@@ -6,7 +6,7 @@
  * @license MIT
  * @author Maximilian Berkmann <maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
- * @requires ../essence
+ * @requires essence
  * @requires Misc
  * @namespace
  * @type {Module}
@@ -218,7 +218,7 @@ function validate (fm, ignoreRequired) { //Check if a form is valid
 /**
  * @description Get the HTML equivalent of the string
  * @param {string} str String
- * @returns {XML|string} HTML equivalent
+ * @returns {Code} HTML equivalent
  * @see unescapeHTML
  * @since 1.0
  * @func
@@ -588,17 +588,17 @@ function checkBrowser () {
 }
 
 /**
- * @description Browser detection system
+ * @description Browser detection system.
+ * Source: somewhere
  * @type {{init: BrowserDetect.init, searchString: BrowserDetect.searchString, searchVersion: BrowserDetect.searchVersion, dataBrowser: Array, dataOS: Array, info: BrowserDetect.info}}
  * @since 1.0
- * @source Somewhere on the net
  * @global
  * @property {Function} BrowserDetect.init Initializer
- * @property {Function} BrowserDetect.searchString String search
- * @property {Function} BrowserDetect.searchVersion Version search
+ * @property {function(Object): Object} BrowserDetect.searchString String search
+ * @property {function(string): number} BrowserDetect.searchVersion Version search
  * @property {Object[]} BrowserDetect.dataBrowser Browser data
  * @property {Object[]} BrowserDetect.dataOS OS data
- * @property {Function} BrowserDetect.info Information about the browser
+ * @property {function(): string} BrowserDetect.info Information about the browser
  */
 var BrowserDetect = { //Browser detection system
     init: function () {
@@ -611,7 +611,7 @@ var BrowserDetect = { //Browser detection system
             var dataString = data[i].string, dataProp = data[i].prop;
             this.versionSearchString = data[i].versionSearch || data[i].identity;
             if (dataString) {
-                if (dataString.indexOf(data[i].subString) != -1) return data[i].identity
+                if (dataString.has(data[i].subString)) return data[i].identity
             }else if (dataProp) return data[i].identity
         }
     },
@@ -724,8 +724,8 @@ function writeMsg2 (msg, slc, HTML, speed, txt, pos) {
  * @property {string[]} Template.special Special parameters
  * @property {string[]} Template.specialEq Special parameters equivalence
  * @property {string} Template.text Raw text/code containing the parameters
- * @property {Function} Template.gen Text/code generator
- * @property {Function} Template.save Save the generated text/code in the specified path
+ * @property {function(Object): (Code)} Template.gen Text/code generator
+ * @property {function(Object, string, string)} Template.save Save the generated text/code in the specified path
  */
 function Template (name, path, txt, params, consoleSpecial) {
     this.name = name || "Template";

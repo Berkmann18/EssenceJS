@@ -6,7 +6,7 @@
  * @license MIT
  * @author Maximilian Berkmann <maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
- * @requires ../essence
+ * @requires essence
  * @requires Maths
  * @namespace
  * @type {Module}
@@ -104,7 +104,7 @@ function getWinDim () {
  * @constructor
  * @since 1.0
  * @func
- * @property {Function} Colour.constructor Constructor
+ * @property {function(...number)} Colour.constructor Constructor
  * @property {NumberLike} Colour.red Red
  * @property {NumberLike} Colour.green Green
  * @property {NumberLike} Colour.blue Blue
@@ -112,18 +112,18 @@ function getWinDim () {
  * @property {string} Colour.hex Hex colour
  * @property {string} Colour.rgba RGBA colour
  * @property {Function} Colour.update Update the HEX/RGBA colours
- * @property {Function} Colour.getRGBAPerc RGBA percentage
- * @property {Function} Colour.getMaxClr Brightest colour shade
- * @property {Function} Colour.getMinClr Darkest colour shade
- * @property {Function} Colour.negative Negate all shades
+ * @property {function(): string} Colour.getRGBAPerc RGBA percentage
+ * @property {function(): number} Colour.getMaxClr Brightest colour shade
+ * @property {function(): number} Colour.getMinClr Darkest colour shade
+ * @property {function(boolean)} Colour.negative Negate all shades
  * @property {Function} Colour.redNegative Negate the red
  * @property {Function} Colour.greenNegative Negate the green
  * @property {Function} Colour.blueNegative Negate the blue
- * @property {Function} Colour.rand Randomise the colour
- * @property {Function} Colour.toLocaleString String representation
- * @property {Function} Colour.toString RGBA string representation
- * @property {Function} Colour.get RGBA array representation
- * @property {Function} Colour.increment Increment all the colour shades
+ * @property {function(boolean): string} Colour.rand Randomise the colour
+ * @property {function(): string} Colour.toLocaleString String representation
+ * @property {function(): string} Colour.toString RGBA string representation
+ * @property {function(): number[]} Colour.get RGBA array representation
+ * @property {function(number)} Colour.increment Increment all the colour shades
  * @todo Add the getColourName method
  */
 function Colour (r, g, b, a) {
@@ -235,7 +235,7 @@ function Colour (r, g, b, a) {
  * @description Hexadecimal to RGB
  * @param {string} hex Hexadecimal
  * @param {boolean} [toArray=false] Result as an array
- * @returns {number[]|string} RGB equivalent
+ * @returns {?number[]|?string} RGB equivalent
  * @see rgb2hex
  * @since 1.0
  * @func
@@ -316,7 +316,7 @@ function negateColour (elmt, attr, mod) {
 /**
  * @description Get the hexadecimal equivalent of the colour names
  * @param {string} clr Colour name
- * @returns {string} Hexadecimal equivalent
+ * @returns {?string} Hexadecimal equivalent
  * @since 1.0
  * @func
  */
@@ -395,16 +395,16 @@ function rgbList (inc, intOnly, debug) {
  * @property {Vector} Shape.norm Normal of the velocity
  * @property {Function} Shape.update Update the shape
  * @property {Function} Shape.stop Stop the shape from moving
- * @property {Function} Shape.toString String representation
- * @property {Function} Shape.offset Offset
- * @property {Function} Shape.bounce Bounce the shape off an object
- * @property {Function} Shape.copy Get a copy of the shape
- * @property {Function} Shape.mult Multiply the shape's position
- * @property {Function} Shape.div Divide the shape's position
- * @property {Function} Shape.add Add to the shape's position
- * @property {Function} Shape.sub Sub to the shape's position
+ * @property {function(): string} Shape.toString String representation
+ * @property {function(string): number} Shape.offset Offset
+ * @property {function(Vector)} Shape.bounce Bounce the shape off an object
+ * @property {function(): Shape} Shape.copy Get a copy of the shape
+ * @property {function(number): Shape} Shape.mult Multiply the shape's position
+ * @property {function(number): Shape} Shape.div Divide the shape's position
+ * @property {function(number): Shape} Shape.add Add to the shape's position
+ * @property {function(number): Shape} Shape.sub Sub to the shape's position
  * @property {Function} Shape.draw Draw the shape
- * @property {Function} Shape.getSpeed Get the speed
+ * @property {function(): number} Shape.getSpeed Get the speed
  */
 function Shape (x, y, b, v) {
     this.x = x || 0;
@@ -502,9 +502,9 @@ function Shape (x, y, b, v) {
  * @property {string} Box.borderColor Border colour
  * @property {number} Box.borderRadius Border radius
  * @property {string} Box.color Colour of the box
- * @property {Function} Box.rot Rotate the box
- * @property {Function} Box.translate Translate the box
- * @property {Function} Box.toString String representation
+ * @property {function(...number)} Box.rot Rotate the box
+ * @property {function(...number)} Box.translate Translate the box
+ * @property {function(): string} Box.toString String representation
  * @property {Function} Box.draw Draw the box
  * @property {Function} Box.erase Erase the box
  */
@@ -566,17 +566,17 @@ AABB.inheritsFrom(Shape);
  * @property {Vector} AABB.vel Velocity
  * @property {number} AABB.ratio Ratio
  * @property {Vector} AABB.norm Normal of the velocity
- * @property {Function} AABB.getPoints Get the points of the box
- * @property {Function} AABB.equals Equality check
- * @property {Function} AABB.toString String representation
- * @property {Function} AABB.hit Was it hit by something
- * @property {Function} AABB.copy Get a copy of the AABB
- * @property {Function} AABB.concat Concat an AABB to it
- * @property {Function} AABB.deconcat Deconcat an AABB from it
+ * @property {function(): Pt[]} AABB.getPoints Get the points of the box
+ * @property {function(AABB): boolean} AABB.equals Equality check
+ * @property {function(): string} AABB.toString String representation
+ * @property {function(Shape, string): boolean} AABB.hit Was it hit by something
+ * @property {function(): AABB} AABB.copy Get a copy of the AABB
+ * @property {function(AABB)} AABB.concat Concat an AABB to it
+ * @property {function(AABB)} AABB.deconcat Deconcat an AABB from it
  * @property {Function} AABB.draw Draw the AABB
- * @property {Function} AABB.getPerimeter Perimeter of the AABB
- * @property {Function} AABB.getArea Area of the AABB
- * @property {Function} AABB.getDiag Diagonal of the AABB
+ * @property {function(): number} AABB.getPerimeter Perimeter of the AABB
+ * @property {function(): number} AABB.getArea Area of the AABB
+ * @property {function(): number} AABB.getDiag Diagonal of the AABB
  *
  */
 function AABB (x, y, w, h, b, v) {
@@ -624,7 +624,7 @@ function AABB (x, y, w, h, b, v) {
     };
 
     this.getPerimeter = function () {
-        return 2 * this.w + 2*this.h
+        return 2 * this.w + 2 * this.h
     };
 
     this.getArea = function () {
@@ -659,13 +659,12 @@ Circ.inheritsFrom(Shape);
  * @property {number} Circ.border Border
  * @property {Vector} Circ.vel Velocity
  * @property {Vector} Circ.norm Normal of the velocity
- * @property {Function} Circ.stop Stop the shape from moving
- * @property {Function} Circ.toString String representation
- * @property {Function} Circ.offset Offset
- * @property {Function} Circ.bounce Bounce the shape off an object
- * @property {Function} Circ.hit Was the circle hit by something ?
- * @property {Function} Shape.draw Draw the shape
- * @property {Function} Circ.getCircumference Circumference
+ * @property {function(): string} Circ.toString String representation
+ * @property {function(string): number} Circ.offset Offset
+ * @property {function(Shape, string): boolean} Circ.hit Was the circle hit by something ?
+ * @property {Function} Circ.draw Draw the shape
+ * @property {function(Circ): boolean} Circ.equals Equality check
+ * @property {function(): number} Circ.getCircumference Circumference
  */
 function Circ (x, y, r, b, v) {
     this.x = x || 0;
@@ -692,8 +691,7 @@ function Circ (x, y, r, b, v) {
             this.bounce(obj.norm);
             this.update();
             return true
-        }
-        return false
+        } return false
     };
 
     this.draw = function () {
@@ -722,8 +720,8 @@ Pt.inheritsFrom(Shape);
  * @property {number} Pt.x X coordinate
  * @property {number} Pt.y Y coordinate
  * @property {Vector} Pt.vel Velocity
- * @property {Function} Pt.equals Equality check
- * @property {Function} Pt.toString String representation
+ * @property {function(Pt): boolean} Pt.equals Equality check
+ * @property {function(): string} Pt.toString String representation
  */
 function Pt (x, y) {
     this.x = x || 0;
@@ -755,8 +753,8 @@ Line.inheritsFrom(Shape);
  * @inheritdoc
  * @property {Pt} Line.s Starting point
  * @property {Pt} Line.e Ending point
- * @property {Function} Line.equals Equality check
- * @property {Function} Line.toString String representation
+ * @property {function(Line): boolean} Line.equals Equality check
+ * @property {function(): string} Line.toString String representation
  */
 function Line (a, b) {
     this.s = a;
@@ -788,19 +786,19 @@ Vector.inheritsFrom(Shape);
  * @property {*} Vector.prototype Prototype
  * @property {number} Vector.x X coordinate
  * @property {number} Vector.y Y coordinate
- * @property {Function} Vector.equals Equality check
- * @property {Function} Vector.toString String representation
- * @property {Function} Vector.copy Get a copy of the vector
+ * @property {function(Vector): boolean} Vector.equals Equality check
+ * @property {function(): string} Vector.toString String representation
+ * @property {function(): Vector} Vector.copy Get a copy of the vector
  * @property {Function} Vector.normalise Normalise the vector
- * @property {Function} Vector.getNormal Get the normal of the vector
- * @property {Function} Vector.zero Null vector
- * @property {Function} Vector.neg Negate the vector
- * @property {Function} Vector.dot Dot/scalar product
- * @property {Function} Vector.cross Cross/vector product
- * @property {Function} Vector.lenSq Length squared
- * @property {Function} Vector.length Length
- * @property {Function} Vector.reflect Reflect the vector on a something
- * @property {Function} Vector.angle Angle between two vector
+ * @property {function(): Vector} Vector.getNormal Get the normal of the vector
+ * @property {function(): Vector} Vector.zero Null vector
+ * @property {function(): Vector} Vector.neg Negate the vector
+ * @property {function(Vector): number} Vector.dot Dot/scalar product
+ * @property {function(Vector): number} Vector.cross Cross/vector product
+ * @property {function(): number} Vector.lenSq Length squared
+ * @property {function(): number} Vector.length Length
+ * @property {function(Vector): Vector} Vector.reflect Reflect the vector on a something
+ * @property {function(Vector): number} Vector.angle Angle between two vector
  */
 function Vector (x, y) {
     this.prototype = Shape.prototype; //To avoid bugs
@@ -845,7 +843,7 @@ function Vector (x, y) {
     };
 
     this.cross = function (v) {
-        return this.x * v.y-this.y * v.x
+        return this.x * v.y - this.y * v.x
     };
 
     this.lenSq = function () {
@@ -887,10 +885,10 @@ Polygon.inheritsFrom(Shape);
  * @property {number} Polygon.border Border
  * @property {Vector} Polygon.vel Velocity
  * @property {Vector} Polygon.norm Normal
- * @property {Function} Polygon.equals Equality check
- * @property {Function} Polygon.toString String representation
- * @property {Function} Polygon.hit Was it hit by something ?
- * @property {Function} Polygon.copy Get a copy of the polygon
+ * @property {function(Polygon): boolean} Polygon.equals Equality check
+ * @property {function(): string} Polygon.toString String representation
+ * @property {function(Shape, string): boolean} Polygon.hit Was it hit by something ?
+ * @property {function(): Polygon} Polygon.copy Get a copy of the polygon
  * @property {Function} Polygon.draw Draw the polygon
  */
 function Polygon (pts, b, v) {
@@ -1096,8 +1094,8 @@ function radialGradient (clrI, clrF, n) {
  * @type {boolean}
  * @default
  * @since 1.0
- * @external ../essence:$G
- * @memberof external:$G
+ * @external module:essence~$G
+ * @memberof external:essence~$G
  */
 $G["dnM"] = false;
 /**
@@ -1121,8 +1119,8 @@ function daynightMode (exch) { //Switch between enabled or not for Day/Night pag
  * @type {string}
  * @since 1.0
  * @default
- * @external ../essence:$G
- * @memberof external:$G
+ * @external module:essence~$G
+ * @memberof external:essence~$G
  */
 $G["oldTab"] = "home";
 /**

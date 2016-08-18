@@ -54,12 +54,12 @@
  * @requires modules/Security
  * @requires modules/QTest
  */
-
 /**
- * @description @description This is the main object of the library
+ * @description This is the main object of the library as well as being the core module of the framework.
  * @type {{version: string, author: string, description: string, source: string, element: $n, handleError: Essence.handleError, say: Essence.say, applyCSS: Essence.applyCSS, addCSS: Essence.addCSS, addJS: Essence.addJS, update: Essence.update, eps: number, emptyDoc: Essence.emptyDoc, editor: Essence.editor, processList: Array, global: null, addProcess: Essence.addProcess, processSize: number, serverList: Array, addServer: Essence.addServer, serverSize: number, toString: Essence.toString, txt2print: string, addToPrinter: Essence.addToPrinter, print: Essence.print, preInit: Essence.preInit, init: Essence.init, time: Essence.time, sayClr: Essence.sayClr, ask: Essence.ask, isComplete: Essence.isComplete, loadedModules: Array}}
  * @this Essence
  * @namespace
+ * @exports essence
  * @since 1.0
  * @property {NumberLike} Essence.version EssenceJS' version
  * @property {string} Essence.author Author
@@ -138,7 +138,7 @@ var Essence = {
         }
     },
     applyCSS: function (nonMinify) {
-        nonMinify? include_once(getNumFromStr(this.version) + "/essence.css", "link", getDirectoryPath()): include_once(getNumFromStr(this.version) + "/essence.min.css", "link", getDirectoryPath());
+        include_once(getExtPath(getDirectoryPath(gatherScripts()[gatherScripts()["essence.min.js"]? "essence.min.js": "essence.js"])) + (nonMinify? "essence.css": "essence.min.css"), "link", getDirectoryPath())
         /*if ($e("html").val(true).indexOf("&lt;body>&lt;/body>") > -1) { //A bit of cleaning
             var ix = $e("html").val(true).indexOf("&lt;body>&lt;/body>");
             var bfr = $e("html").val(true).slice(0, ix), aft = $e("html").val(true).slice(ix + 13, $e("html").val(true).length);
@@ -160,7 +160,7 @@ var Essence = {
         }
         Essence.say("%cEssence(.min).js%c has been updated", "succ", "text-decoration: underline", "text-decoration: none");
     },
-    /** @const {number} Epsilon */
+    /** @const {number} Essence.eps Epsilon */
     eps: Math.pow(2, -52), //Matlab's epsilon (useful when dealing with null values to keep them in the real range or just not null
     emptyDoc: function (title, author) { //Empty the document and fill it with a basic structure
         $e("html").write("&lt;head>&lt;title>" + (title || document.title) + "&lt;/title>&lt;meta charset='UTF-8' />&lt;meta name='author' content=" + (author || "unknown") + " />&lt;script type='text/javascript' src=" + Essence.source + ">&lt;/script>&lt;/head>&lt;body>&lt;/body>", true);
@@ -217,7 +217,7 @@ var Essence = {
         this.loadedModules = [];
         for (var i = 0; i &lt; modules.length; i++) {
             complete &amp;= window[modules[i]].loaded;
-            if (window[modules[i]].loaded) this.loadedModules.push(window[modules[i]].toString());
+            if (window[modules[i]].loaded) this.loadedModules.push(window[modules[i]]);
         }
         return Boolean(complete);
     }, loadedModules: []
@@ -237,6 +237,29 @@ var Essence = {
      */
     debugging = false;
 
+/**
+ * @description EssenceJS Module
+ * @param {string} [name="Module"] Name
+ * @param {string} [desc=""] Description
+ * @param {string[]} [dpc=[]] Dependencies
+ * @param {number} [ver=1] Version
+ * @param {Function} [rn=function() {}] Run method
+ * @param {string} [pathVer=Essence.version.substr(0, 3)] Path's version
+ * @constructor
+ * @this Module
+ * @returns {Module} Module
+ * @property {string} Module.name Name of the module
+ * @property {number} Module.version Version of the module
+ * @property {string[]} Module.dependency Dependencies
+ * @property {string} Module.description Description of the module
+ * @property {Function} Module.run Runner method
+ * @property {boolean} Module.loaded Loading flag
+ * @property {string} Module.path Path of the module
+ * @property {Function} Module.load Load the module as well as initializing its dependencies
+ * @property {Function} Module.toString String representation
+ * @property {Function} Module.getWeight Weight of the module on EssenceJS's module ecosystem
+ * @since 1.1
+ */
 function Module (name, desc, dpc, ver, rn, pathVer) {
     this.name = name || "Module";
     this.version = ver || 1;
@@ -253,13 +276,23 @@ function Module (name, desc, dpc, ver, rn, pathVer) {
             //For less redundancy here: this.dependency -> complement(this.dependency, modules)
             init(this.dependency, false, false, pathVer);
         }
-        /*if (gatherExternalScripts(true).has(this.path) || filenameList(gatherExternalScripts(true)).has(this.path))*/ this.loaded = true;
+        /*if (gatherExternalScripts(true).has(this.path) || filenameList(gatherExternalScripts(true)).has(this.path)) */this.loaded = true;
     };
 
     this.toString = function () {
-        return "Module(name=" + this.name + ", version=" + this.version + ", dependency=" + this.dependency + ", description=" + this.description + ", loaded=" + this.loaded + ", run=" + this.run + ", path=" + this.path + ")";
-    }
+        return "Module(name='" + this.name + "', version=" + this.version + ", dependency=[" + this.dependency + "], description='" + this.description + "', loaded=" + this.loaded + ", run=" + this.run + ", path='" + this.path + "')";
+    };
 
+    this.getWeight = function () {
+        var dpcs = moduleList().line(3).get(1), weight = 0, names = moduleList().line().get(1); //List of dependencies of all loaded modules
+        for (var i = 0; i &lt; dpcs.length; i++) {
+            if (dpcs[i].has(this.name) &amp;&amp; names[i] != this.name &amp;&amp; dpcs[i].count(this.name) &lt; 2) weight++;
+            else if (names[i] === this.name &amp;&amp; dpcs[i].has(this.name)) weight--; //Penalty
+        }
+        return weight;
+    };
+
+    return this;
 }
 
 /**
@@ -273,7 +306,7 @@ function Module (name, desc, dpc, ver, rn, pathVer) {
  * @example &lt;caption>Example 1:&lt;/caption>
  * require("myModule"); //It will import the script located at "modules/myModule.js"
  * require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js", "modules/moduleB.js" and "modules/moduleC.js"
- * &lt;caption>Example 2:&lt;/caption>
+ * @example &lt;caption>Example 2:&lt;/caption>
  * require("myModule", 1.1); //It will import the script located at "1.1/modules/myModule.js"
  */
 function require (mdl, ver, extpath) {
@@ -290,7 +323,7 @@ function $require (mdl) {
     if (isType(mdl, "Array")) {
         for (var i = 0; i &lt; mdl.length; i++) $require(mdl[i]);
     } else if (modules.indexOf(mdl) === -1) {
-        include_once(getExtPath(getDirectoryPath(gatherScripts()["essence.js"])) + "modules/" + mdl + ".js", "script");
+        gatherScripts()["essence.min.js"]? include_once(getExtPath(getDirectoryPath(gatherScripts()["essence.min.js"])) + "modules/" + mdl + ".min.js", "script"): include_once(getExtPath(getDirectoryPath(gatherScripts()["essence.js"])) + "modules/" + mdl + ".js", "script");
         modules.push(mdl);
         if (debugging) console.log("The module %c%s%c is now included into %c%s    " + getTimestamp(true), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFilename());
     } else if (debugging) console.log("The module %c%s%c is already included into %c%s    " + getTimestamp(true), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFilename());
@@ -311,6 +344,11 @@ function run (module, ver) {
     if (isType(module, "Array")) {
         for (var i = 0; i &lt; module.length; i++) run(module[i], ver);
     } else if (modules.indexOf(module) > -1) {
+        /**
+         * @description Go onto the running phase of the module
+         * @inner
+         * @func
+         */
         var go = function () {
             try {
                 if (debugging) Essence.say("Running " + module + "    " + getTimestamp(true), "info");
@@ -323,7 +361,12 @@ function run (module, ver) {
             } catch (e) {
                 Essence.time("The module %c" + module + "%c have problems regarding it's run method.", "warn", "color: #c0f", "color: #000");
             }
-        }, retry = function (stackLayer) {
+        }, /**
+         * @description Retry to get the module to be usable and launch go()
+         * @inner
+         * @funct
+         */
+        retry = function (stackLayer) {
             if (!stackLayer) stackLayer = 0;
             Essence.say("The module %c" + module + "%c isn't available !    " + getTimestamp(true), "erro", "color: #c0f", "color: #000");
             if (debugging) Essence.say("Retrying to run %c" + module + "%c    " + getTimestamp(true), "info", "color: #c0f", "color: #000");
@@ -349,7 +392,7 @@ function run (module, ver) {
  * @example &lt;caption>Example 1:&lt;/caption>
  * init("myModule"); //Initiate the module myModule
  * init(["moduleA", "moduleB"]); //Initiate the modules moduleA and moduleB
- * &lt;caption>Example 2:&lt;/caption>
+ * @example &lt;caption>Example 2:&lt;/caption>
  * init("myModule", function () {}, function () {
  *   Essence.say("myModule has been fully initiated !", "info");
  * }, "alpha"); //Initiate the myModule.js module located at alpha/modules/ and with a callback
@@ -377,8 +420,7 @@ function init (mdls, mid, cb, ver, argsMid, argsCB) {
 
 /**
  * @ignore
- * @external module/File:getDirectoryPath
- * @see module:module/File
+ * @external module/File~getDirectoryPath
  * @inheritsdoc
  * @param {string} [path=location.href] Path
  * @returns {string} Directory path
@@ -389,8 +431,7 @@ var getDirectoryPath = function (path) {
     return path.substring(0, path.indexOf(path.split("/")[path.split("/").length - 1]))
 }, /**
  * @ignore
- * @see module:module/DOM
- * @external module/DOM:gatherScripts
+ * @external module/DOM~gatherScripts
  * @inheritsdoc
  * @param {boolean} [asList=false] Result should be a list or an object
  * @returns {*} List/dictionary of scripts
@@ -402,7 +443,7 @@ gatherScripts = function (asList) {
 }, /**
  * @ignore
  * @inheritsdoc
- * @external module/File:getCurrentPath
+ * @external module/File~getCurrentPath
  * @param {string} path Path
  * @param {string} [localPath="file:///"] Local path
  * @returns {string} Current path
@@ -419,7 +460,7 @@ gatherScripts = function (asList) {
         for(var i = (start || 0); i &lt;= (end || o.length - 1); i++) r.push(o[i]);
         return r.filter(function (x) { return x != undefined; });
     };
-    while(localPath.indexOf(parts[i]) > -1) i++;
+    while (localPath.indexOf(parts[i]) > -1) i++;
     res = _get(parts, i).join("/");
 
     while (res.indexOf(pParts[j]) > -1) {
@@ -473,18 +514,24 @@ getExtPath = function (path) {
         Essence.say(mdl + " is ready!", "succ");
     }, 1.1); */
     setTimeout(function () {
-        if(debugging) Essence.isComplete()? Essence.say("Essence is complete !", "succ"): Essence.time("List of loaded modules: " + Essence.loadedModules.map(function (m) {
-            return m.split("=")[1].split(",")[0];
+        if (debugging) Essence.isComplete()? Essence.say("Essence is complete !", "succ"): Essence.time("List of loaded modules: " + Essence.loadedModules.map(function (m) {
+            return m.name; //split("'")[1];
         }).toStr(true));
         run(modules, Essence.version.substr(0, 3));
-        if (Essence.isComplete() &amp;&amp; !filenameList(gatherExternalScripts(true).has(Essence.source))) Essence.source = Essence.source.replace(".js", ".min.js");
+        if (Essence.isComplete() &amp;&amp; !filenameList(gatherExternalScripts(true)).has(Essence.source)) Essence.source = Essence.source.replace(".js", ".min.js");
         if (debugging &amp;&amp; !Essence.loadedModules.map(function (m) {
-                return m.split("=")[1].split(",")[0]
+                return m.name; //split("'")[1]
             }).equals(modules)
         ) Essence.say("The following modules weren't loaded: " + complement(modules, Essence.loadedModules.map(function (m) {
-                return m.split("=")[1].split(",")[0]
+                return m.name; //split("'")[1]
             }))
         );
+        if (Essence.source.has("essence.min")) { //If it's the minified version, change the modules to their minified version as well
+            var $s = $n("*script").toArray();
+            for (var i = 0; i &lt; $s.length; i++) {
+                if (!$s[i].src.has(".min.js")) $s[i].src.replace(".js", ".min.js");
+            }
+        }
     }, 700);
 })();
 
@@ -1021,8 +1068,8 @@ Object.prototype.toArray = function() {
  * @memberof Object.prototype
  */
 Object.prototype.compareTo = function(obj) {
-    if(getType(this) != getType(obj)) throw new TypeError(this + " and " + obj + "aren't of the same type, so can't be compared.");
-    if((getType(this) === "Object" &amp;&amp; getCustomType(this) === getCustomType(obj)) || getType(this) === getType(obj)) {
+    if (getType(this) != getType(obj)) throw new TypeError(this + " and " + obj + "aren't of the same type, so can't be compared.");
+    if ((getType(this) === "Object" &amp;&amp; getCustomType(this) === getCustomType(obj)) || getType(this) === getType(obj)) {
         return this.equals(obj)? 0: (this.toString() &lt; obj.toString() || this.toLocaleString() &lt; obj.toLocaleString())? -1: 1;
     }
 };
@@ -3411,7 +3458,7 @@ function getTimestamp (readable) {
 function date2txt (d) {
     if (!isType(d, "Date")) throw new Error("$d is not a Date object");
 
-    return d.getDate().toNDigits() + "/" + (d.getMonth() + 1).toNDigits() + "/" + d.getFullYear();
+    return d.getDate().toNDigits(2) + "/" + (d.getMonth() + 1).toNDigits(2) + "/" + d.getFullYear();
 }
 
 /**
@@ -3429,7 +3476,7 @@ function txt2date (txt) {
 
 /**
  * @description Display the date and at time at a particular place
- * @param {string} id ID of the element to be used
+ * @param {string} [id] ID of the element to be used
  * @returns {undefined}
  * @since 1.0
  * @func
@@ -3452,7 +3499,7 @@ function dateTime (id) {
     if (s &lt; 10) s = "0" + s;
     GMT = (GMT >= 0)? "GMT+" + GMT: "GMT-" + GMT;
     var result = "We're " + days[day] + " " + d + " " + months[month] + " " + year + " and it's " + h + ":" + m + ":" + s + " " + tt + " " + GMT;
-    $e("#" + id).write(result);
+    $e("#" + id || "body").write(result);
     setTimeout("dateTime(\"" + id + "\");", 1000);
 }
 
@@ -3928,13 +3975,13 @@ function timeUp (act, pref, params) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-File.html">File</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="external-$G..external__essence_$G.html">/essence:$G</a></li></ul><h3>Classes</h3><ul><li><a href="Element.html">Element</a></li><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-File-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="Essence.html">Essence</a></li><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$e">$e</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#$n">$n</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#bin2char">bin2char</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#char2bin">char2bin</a></li><li><a href="global.html#char2hex">char2hex</a></li><li><a href="global.html#copy">copy</a></li><li><a href="global.html#date2num">date2num</a></li><li><a href="global.html#date2s">date2s</a></li><li><a href="global.html#date2txt">date2txt</a></li><li><a href="global.html#dateDiff">dateDiff</a></li><li><a href="global.html#dateTime">dateTime</a></li><li><a href="global.html#dayOfWeek">dayOfWeek</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#Epsilon">Epsilon</a></li><li><a href="global.html#exclude">exclude</a></li><li><a href="global.html#genStr">genStr</a></li><li><a href="global.html#getCustomType">getCustomType</a></li><li><a href="global.html#getDate">getDate</a></li><li><a href="global.html#getFileContent">getFileContent</a></li><li><a href="global.html#getKey">getKey</a></li><li><a href="global.html#getTime">getTime</a></li><li><a href="global.html#getTimestamp">getTimestamp</a></li><li><a href="global.html#getType">getType</a></li><li><a href="global.html#hex2char">hex2char</a></li><li><a href="global.html#include">include</a></li><li><a href="global.html#include_once">include_once</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#is2dArray">is2dArray</a></li><li><a href="global.html#isCustomType">isCustomType</a></li><li><a href="global.html#isNon">isNon</a></li><li><a href="global.html#isType">isType</a></li><li><a href="global.html#keyList">keyList</a></li><li><a href="global.html#keyTable">keyTable</a></li><li><a href="global.html#lookfor">lookfor</a></li><li><a href="global.html#mkArray">mkArray</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#num2date">num2date</a></li><li><a href="global.html#num2txt">num2txt</a></li><li><a href="global.html#numArr">numArr</a></li><li><a href="global.html#require">require</a></li><li><a href="global.html#run">run</a></li><li><a href="global.html#s2date">s2date</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#swap">swap</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#timeUp">timeUp</a></li><li><a href="global.html#toSameLength">toSameLength</a></li><li><a href="global.html#txt2date">txt2date</a></li><li><a href="global.html#txt2num">txt2num</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#valList">valList</a></li><li><a href="global.html#weekDay">weekDay</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-File.html">File</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="external-$G..external__essence_$G.html">/essence:$G</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-File-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#getFileContent">getFileContent</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#UnitTest">UnitTest</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Tue Aug 16 2016 21:41:25 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Aug 18 2016 16:40:35 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

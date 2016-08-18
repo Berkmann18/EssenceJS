@@ -6,7 +6,7 @@
  * @license MIT
  * @author Maximilian Berkmann <maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
- * @requires ../essence
+ * @requires essence
  * @namespace
  * @type {Module}
  * @since 1.1
@@ -36,9 +36,9 @@ function GET (name) {
 
 /**
  * @description HTTP POST request. Create data.
+ * Source: Stackoverflow
  * @param {string} path Path of the file to post to
  * @param {Object} params Parameters
- * @source StackOverflow
  * @returns {undefined}
  * @since 1.0
  * @func
@@ -122,14 +122,15 @@ function load (url, cb) {
  * @property {number} XHR.status HTTP status
  * @property {Function} XHR.req.onreadystatechange State change handler
  * @property {Function} XHR.onChange State change handler
- * @property {Function} XHR.onSuccess Success handler
- * @property {Function} XHR.onFailure Failure handler
- * @property {Function} XHR.onLoad Progress handler
+ * @property {function((XMLHttpRequest|ActiveXObject))} XHR.onSuccess Success handler
+ * @property {function((XMLHttpRequest|ActiveXObject))} XHR.onFailure Failure handler
+ * @property {function((XMLHttpRequest|ActiveXObject))} XHR.onLoad Progress handler
  * @property {Function} XHR.handleResponse Response listener
- * @property {Function} XHR.init XHR initialiser
- * @property {Function} XHR.header Header manager
- * @property {Function} XHR.toString() String representation
+ * @property {function(?Array[])} XHR.init XHR initialiser
+ * @property {function(...?string): *} XHR.header Header manager
+ * @property {function(): string} XHR.toString() String representation
  * @property {string} XHR.body Body of the request
+ * @property {function(?string)} XHR.viewResponse() Interpret the (X)HTML response
  */
 function XHR (url, method, async, success, fail, progress, body, creds, mime) {
     this.url = url || location.href;
@@ -174,7 +175,7 @@ function XHR (url, method, async, success, fail, progress, body, creds, mime) {
         console.error("%c[XHR]%c There was an error in the request !", "color: #f00", "color: #000");
     };
     /**
-     * @listener XHR.req.responseType
+     * @listens XHR.req.responseType
      */
     this.handleResponse = function () {
         switch (this.req.responseType) {
@@ -243,12 +244,10 @@ function XHR (url, method, async, success, fail, progress, body, creds, mime) {
  * @property {string} CORS.url URL
  * @property {string} CORS.method Method
  * @property {*} CORS.response Response
- * @property {boolean} XHR.async Asynchronousness
  * @property {XHR} CORS.xhr XH/AXO request
  * @property {boolean} CORS.forIE Is the request only for MS IE
  * @property {Function} CORS.init CORS initializer
- * @property {Function} CORS.toString() String representation
- * @property {Function} CORS.viewResponse() Interpret the (X)HTML response
+ * @property {function(): string} CORS.toString() String representation
  */
 function CORS (url, method, async, success, fail, progress, body, creds, mime) {
     this.xhr = new XHR(url, method, async || true, success || function () {
@@ -287,7 +286,7 @@ function CORS (url, method, async, success, fail, progress, body, creds, mime) {
  * @param {*} data Data to send
  * @param {string} to Receiving URL
  * @param {boolean} xml XML/Text flag
- * @returns {string|XML} Response
+ * @returns {Code} Response
  * @since 1.0
  * @func
  */
@@ -407,10 +406,9 @@ function getXHRMsg (state) {
 
 /**
  * @description Cross Origin Resource Sharing request maker
- * @source {@link https://stackoverflow.com/questions/3076414/ways-to-circumvent-the-same-origin-policy}
+ * Source: {@link https://stackoverflow.com/questions/3076414/ways-to-circumvent-the-same-origin-policy}
  * @param {string} [method="get"] Method
  * @param {string} [url=getDirectoryPath()] URL
- * @soource {@link http://www.stackoverflow.com}
  * @returns {XMLHttpRequest} CORS request
  * @example
  * var request = createCORSRequest("get", "http://www.stackoverflow.com/");
@@ -441,7 +439,7 @@ function createCORSRequest (method, url) {
  * @param {string} [method="GET"] HTTP method
  * @param {boolean} [xml=false] Expect an XML response
  * @param {boolean} [withCreds=false] Add credentials
- * @param {string|XML} [body] Body of the request
+ * @param {Code} [body] Body of the request
  * @returns {*} CORS response
  * @see createCORSRequest
  * @since 1.1

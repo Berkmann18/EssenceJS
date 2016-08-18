@@ -1,9 +1,9 @@
 ## General
-
+^ Improved the documentation
 
 ## essence
 + Module.getWeight(), moduleList()
-^ Working module bundling
+^ Working module bundling (with the 'minfied scripts only' support)
 
 ## Ajax
 ^ Changed the dependency list
@@ -15,13 +15,13 @@
 
 
 ## File
-^ Changed the dependency list
+^ Changed the dependency list, slightly improved Spider
 
 ## Maths
 + CI(), timeCI(), confidenceInterval(), InvNorm()
 
 ## Misc
-
+^ Item.remove()
 
 ## Security
 

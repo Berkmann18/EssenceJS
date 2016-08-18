@@ -6,7 +6,7 @@
  * @license MIT
  * @author Maximilian Berkmann <maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
- * @requires ../essence
+ * @requires essence
  * @requires DataStruct
  * @namespace
  * @type {Module}
@@ -71,13 +71,13 @@ function setCookie (c_name, value, exdays) {
  * @property {number} database.version Version
  * @property {Array[]} database.val Value (extended content) of the database
  * @property {Function} database.setStorage Store the database
- * @property {string|XML} database.html HTML code
+ * @property {Code} database.html HTML code
  * @property {string} database.css CSS code
- * @property {Function} database.disp Display the database
+ * @property {function(?string)} database.disp Display the database
  * @property {Function} database.update Update the database
- * @property {Function} database.searchAndRemove Search and remove a value
- * @property {Function} database.remove Remove a cell from the database
- * @property {Function} database.toString String representation
+ * @property {function(*)} database.searchAndRemove Search and remove a value
+ * @property {function(number, number)} database.remove Remove a cell from the database
+ * @property {function(): string} database.toString String representation
  */
 function database (name, headR, cells, headC, admin, ver) { //Local database
     this.name = name || "Database";
@@ -147,21 +147,20 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
  * @property {NumberLike[]} DB.rows Row headers
  * @property {NumberLike[]} DB.headers Column headers
  * @property {Array} DB.val Content of the database
- * @property {Function} database.setStorage Store the database
- * @property {string|XML} DB.html HTML code
+ * @property {Code} DB.html HTML code
  * @property {string} DB.css CSS code
  * @property {Function} DB.build Build the database
- * @property {Function} DB.fill Fill-in the database
+ * @property {function(number)} DB.fill Fill-in the database
  * @property {Function} DB.save Save the database
  * @property {Function} DB.update Update the database
- * @property {Function} DB.set Change the value of a cell
- * @property {Function} DB.get Get the value of a cell
- * @property {Function} DB.find Look for an item
- * @property {Function} DB.see Get a viewable copy of the database
- * @property {Function} DB.view Display the database
- * @property {Function} database.add Add a cell to the database
+ * @property {function(*, number, number)} DB.set Change the value of a cell
+ * @property {function(number, number): *} DB.get Get the value of a cell
+ * @property {function(*): number} DB.find Look for an item
+ * @property {function(): Array} DB.see Get a viewable copy of the database
+ * @property {function(?string)} DB.view Display the database
+ * @property {function(Array)} database.add Add a cell to the database
  * @property {Function} DB.init Initialise the database
- * @property {Function} database.toString String representation
+ * @property {function(): string} database.toString String representation
  */
 function DB (name, headers, rows, headerRows) {
     this.name = name || "DB";
@@ -191,7 +190,7 @@ function DB (name, headers, rows, headerRows) {
             this.val = JSON.parse(localStorage[this.name]);
             this.head = JSON.parse(localStorage[this.name + "_head"]);
             this.html = localStorage[this.name + "_html"];
-            this.rows = localStorage[this.name + "_rows"].split(",");//JSON.parse(localStorage[this.name + "_rows"]);
+            this.rows = localStorage[this.name + "_rows"].split(","); //JSON.parse(localStorage[this.name + "_rows"]);
         } else this.save();
     };
     this.set = function (nval, i, j) {
@@ -241,8 +240,9 @@ function DB (name, headers, rows, headerRows) {
  * @property {string} process.description Description
  * @property {string} process.content Content
  * @property {Function} process.update Update the process
- * @property {Function} process.askPermission Ask the permission to integrate a particular server
+ * @property {function(server)} process.askPermission Ask the permission to integrate a particular server
  * @property {Function} process.destroy Self-destruction
+ * @todo Add a customisable run method ?
  */
 function process (name, auth, summup, ctt) {
     this.name = name;
@@ -296,14 +296,14 @@ function process (name, auth, summup, ctt) {
  * @property {Array} server.slots Slots
  * @property {string} server.type Server type
  * @property {DB} server.data Database
- * @property {Function} server.addProcess Process adder (only useful for process servers)
- * @property {Function} server.add Data adder (useless for process servers)
- * @property {Function} server.rm Remove a data from the server
+ * @property {function(process)} server.addProcess Process adder (only useful for process servers)
+ * @property {function(*)} server.add Data adder (useless for process servers)
+ * @property {function(number)} server.rm Remove a data from the server
  * @property {Function} server.store Store the server
  * @property {Function} server.update Update the server
- * @property {Function} server.fire Remove a process from the server
+ * @property {function(process)} server.fire Remove a process from the server
  * @property {Function} server.reset Reset the server
- * @property {Function} server.toString String representation
+ * @property {function(): string} server.toString String representation
  */
 function server (name, admin, type, ver, mxsz) {
     this.name = name || "Server";
@@ -527,7 +527,7 @@ function evalPing (ms) {
 /**
  * @description Getting the URL parameters just like in PHP.
  * @param {Str} p Parameter(s)
- * @param {Function} action Action to be done with the value(s) of the parameter(s)
+ * @param {function(...string)} action Action to be done with the value(s) of the parameter(s)
  * @returns {undefined}
  * @since 1.0
  * @func
@@ -590,12 +590,12 @@ function parseURL (p, action) { //Doing some PHP without PHP :) !!
  * @property {string} WebPage.author Author
  * @property {number} WebPage.version Version
  * @property {string} WebPage.structure Page structure
- * @property {string|XML} WebPage.code Code
- * @property {string|XML} WebPage.template Code template
- * @property {Template|string} WebPage.page Page
- * @property {Function} WebPage.word2code Word (components) to template code
- * @property {Function} WebPage.genTemplate Transform the structure into a template
- * @property {Function} WebPage.genPage Transform the template into a page
+ * @property {Code} WebPage.code Code
+ * @property {Code} WebPage.template Code template
+ * @property {Template|?string} WebPage.page Page
+ * @property {function(string): (Code)} WebPage.word2code Word (components) to template code
+ * @property {function(): (Code)} WebPage.genTemplate Transform the structure into a template
+ * @property {function(Object): (Code)} WebPage.genPage Transform the template into a page
  */
 function WebPage (title, name, path, author, ver, stct, type, subtitle) {
     this.title = title || "My web page";
@@ -726,26 +726,27 @@ function WebApp (name, path, author, ver, stct) {
  * @property {string} Editor.linesId ID of the lines' element
  * @property {number} Editor.nbLines Number of lines
  * @property {string} Editor.language Language
- * @property {Preview|*} Editor.previewer Previewer
- * @property {Parser|*} Editor.parser Parser
- * @property {string|XML} Editor.code Code
+ * @property {?Preview} Editor.previewer Previewer
+ * @property {?Parser} Editor.parser Parser
+ * @property {Code} Editor.code Code
  * @property {virtualHistory} Editor.codeHistory Historic of the code
  * @property {Toolbar} Editor.toolbar Toolbar
  * @property {Editor} Editor.toolbar.for This editor
- * @property {Function} Editor.toggleLine Toggle line (when marked)
- * @property {Function} Editor.update Update
+ * @property {function(string)} Editor.toggleLine Toggle line (when marked)
+ * @property {function(number)} Editor.update Update
  * @property {Function} Editor.clear Clear the editor
+ * @property {function(string)} Editor.write Clear the editor
  * @property {Function} Editor.undo Undo the editor
  * @property {Function} Editor.redo Redo the editor
  * @property {Function} Editor.save Save the code
  * @property {Function} Editor.select Select the code
  * @property {Function} Editor.copy Copy the code
- * @property {Function} Editor.paste Paste the code to the editor
+ * @property {function(boolean)} Editor.paste Paste the code to the editor
  * @property {Function} Editor.load Load a file into the editor
  * @property {Function} Editor.generate Save the parsed code
  * @property {Function} Editor.view See the result
- * @property {Function} Editor.highlightSynthax Highlight the synthax
- * @property {Function} Editor.toString String representation
+ * @property {function((Code), string): (Code)} Editor.highlightSynthax Highlight the synthax
+ * @property {function(): string} Editor.toString String representation
  */
 function Editor (id, lang, prev, parser, tb) {
     this.id = id || "#editor";
@@ -879,7 +880,7 @@ function Editor (id, lang, prev, parser, tb) {
 }
 
 /**
- * @descrition Previewer for IDEs.
+ * @description Previewer for IDEs.
  * @param {string} [id="#preview"] ID of the container
  * @param {string} [lang="none"] Language
  * @param {Parser} [parser=new Parser()"] Parser
@@ -894,9 +895,9 @@ function Editor (id, lang, prev, parser, tb) {
  * @property {Parser} Preview.associatedParser Associated parser
  * @property {Editor} Preview.associatedEditor Associated editor
  * @property {Function} Preview.update Update
- * @property {Function} Preview.run Run the code
+ * @property {function(string, boolan)} Preview.run Run the code
  * @property {Function} Preview.viewCode See the code
- * @property {Function} Preview.toString String representation
+ * @property {function(): string} Preview.toString String representation
  */
 function Preview (id, lang, parser, editor) {
     this.id = id || "#preview";
@@ -937,9 +938,9 @@ function Preview (id, lang, parser, editor) {
  * @property {string} Debugger.id ID of the element
  * @property {HTMLElement} Debugger.node Node
  * @property {string} Debugger.language Language
- * @property {Function} Debugger.update Update
+ * @property {function((Code))} Debugger.update Update
  * @property {Function} Debugger.run Run the code
- * @property {Function} Preview.toString String representation
+ * @property {function(): string} Preview.toString String representation
  */
 function Debugger (id, lang) {
     this.id = id || "#debugger";
@@ -948,7 +949,7 @@ function Debugger (id, lang) {
     this.update = function () {
         if (this.node != $n(this.id)) this.node = $n(this.id);
     };
-    this.run = function () {
+    this.run = function (code) {
         //Useful node stuff: reportValidity(), validity{}, setCustomValidity()
     };
     this.toString = function () {
@@ -961,9 +962,9 @@ function Debugger (id, lang) {
  * @description Dummy text
  * @type {string}
  * @returns {undefined}
- * @external ../essence:$G
+ * @external module:essence~$G
  * @since 1.0
- * @memberof external:$G
+ * @memberof external:essence~$G
  * @default
  * @readonly
  */
@@ -974,22 +975,22 @@ $G["lorem"] = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean 
  * @description Language parser
  * @param {string} [from="WebScript"] Parsed language
  * @param {string} [to="DHTML"] Resulting language
- * @param {Function} [customParse=function(code){...}] Custom parsing
+ * @param {function(Code): Code} [customParse=function(code){...}] Custom parsing
  * @this {Parser}
  * @constructor
  * @since 1.0
  * @property {string} Parser.from Origin language
  * @property {string} Parser.to Destination language
- * @property {Function} Parser.run Run the code
- * @property {Function} Parser.toString String representation
+ * @property {function(Code): Code} Parser.run Run the code
+ * @property {function(): string} Parser.toString String representation
  */
 function Parser (from, to, customParse) {
     this.from = from || "WebScript";
     this.to = to || "DHTML";
     /**
-     * @param {XML|string} code Code to parse
+     * @param {Code} code Code to parse
      * @type {Function}
-     * @returns {XML|string} Parsed code
+     * @returns {Code} Parsed code
      */
     this.run = customParse || function (code) {
         var res = code;
@@ -1050,7 +1051,7 @@ function Parser (from, to, customParse) {
  * @property {string[]} Toolbar.fn Function associated with each tools
  * @property {*} Toolbar.for Owner of the toolbar (generally Editors or Preview)
  * @property {Function} Toolbar.update Update
- * @property {Function} Toolbar.toString String representation
+ * @property {function(): string} Toolbar.toString String representation
  */
 function Toolbar (id, tools, mdl) {
     this.id = id || "#toolbar";
@@ -1095,10 +1096,10 @@ function Toolbar (id, tools, mdl) {
  * @property {Preview} IDE.editor.previewer Previewer
  * @property {Parser} IDE.editor.parser Parser
  * @property {Debugger} IDE.debugger Debugger
- * @property {Function} IDE.init Initialiser
+ * @property {function(string, string)} IDE.init Initialiser
  * @property {Toolbar} IDE.toolbar Toolbar
  * @property {Function} IDE.update Update
- * @property {Function} IDE.toString String representation
+ * @property {function(): string} IDE.toString String representation
  */
 function IDE (lang, edt, prev, ps, dbg, tb) {
     this.editor = edt || new Editor();
@@ -1133,10 +1134,10 @@ function IDE (lang, edt, prev, ps, dbg, tb) {
 /**
  * @description Loading percentage
  * @type {number}
- * @external ../essence:$G
+ * @external module:essence~$G
  * @default
  * @since 1.0
- * @memberof external:$G
+ * @memberof external:essence~$G
  */
 $G["i"] = 0;
 /**

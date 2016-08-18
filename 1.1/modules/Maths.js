@@ -6,7 +6,7 @@
  * @license MIT
  * @author Maximilian Berkmann <maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
- * @requires ../essence
+ * @requires essence
  * @requires Misc
  * @namespace
  * @type {Module}
@@ -114,7 +114,7 @@ function lenRand (len, if0) {
 
 /**
  * @description Random float in [0; 1] with 16-bits of randomness as Math.random() creates repetitive patterns when applied over larger space
- * @source Three.js
+ * Source: Three.js
  * @returns {number} Random float
  * @since 1.0
  * @func
@@ -124,9 +124,9 @@ function random16 () { //Random float from <0, 1> with 16 bits of randomness
 }
 
 /**
- * @description Random float in [-range/2, range/2]
+ * @description Random float in [-range / 2, range / 2]
+ * Source: Three.js
  * @param {number} range Range length
- * @source Three.js
  * @returns {number} Random float
  * @since 1.0
  * @func
@@ -620,7 +620,7 @@ function Po2Norm (l, x) { //Poisson to Normal
 
 /**
  * @description Gaussian Error
- * @source {@link http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function}
+ * Source: {@link http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function}
  * @param {number} z Number
  * @returns {number} Gaussian error
  * @since 1.0
@@ -634,7 +634,7 @@ function erf (z) {
 
 /**
  * @description Normal estimate
- * @source {@link http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function}
+ * Source: {@link http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function}
  * @param {number} n Total number of attempts
  * @param {number} p Success probability
  * @param {number} r Number of attempts
@@ -871,7 +871,7 @@ function compoundInterest (po, i, t, n) {
 /**
  * @description Everything but not 0
  * @param {number} x Number
- * @returns {*} Non-null number
+ * @returns {!number} Non-null number
  * @see Essence~Essence.eps
  * @since 1.0
  * @func
@@ -881,11 +881,11 @@ function non0 (x) {
 }
 
 /**
- * @description Fraction form of n
+ * @description Fraction form of n.
+ * Source: somewhere
  * @param {number} n Number
  * @param {number} prec Precision
  * @param {boolean} [up=false] Round up
- * @source Somewhere in on the net
  * @returns {string} Fraction
  * @since 1.0
  * @func
@@ -1048,8 +1048,8 @@ function getNumFromStr (x) { //Remove the text from the string to keep the numbe
 
 /**
  * @description X unit to y px
+ * Reference/help: {@link http://www.endmemo.com/sconvert/centimeterpixel.php}
  * @param {string} x Number with a unit
- * @source {@link http://www.endmemo.com/sconvert/centimeterpixel.php}
  * @returns {number} Pixels
  * @see fromPixel
  * @since 1.0
@@ -1545,8 +1545,8 @@ function getClosest (x, opt) {
  * @property {string} Equation.formula Formula
  * @property {string} Equation.leftSide LHS
  * @property {string} Equation.rightSide RHS
- * @property {Function} Equation.compute Compute data
- * @property {Function} Equation.toString String representation
+ * @property {function(NumberLike): number} Equation.compute Compute data
+ * @property {function(): string} Equation.toString String representation
  */
 function Equation (formula) {
     this.formula = formula.normal() || "y=x";

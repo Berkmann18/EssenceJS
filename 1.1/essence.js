@@ -15,6 +15,7 @@
  * @typedef {(number|boolean)} Bool
  * @typedef {(Array|Object|string)} Iterable
  * @typedef {(Array|Object)} Dict
+ * @typedef {(XML|string)} Code
  * @requires modules/Files
  * @requires modules/DOM
  * @requires modules/UI
@@ -26,44 +27,44 @@
  * @requires modules/Security
  * @requires modules/QTest
  */
-
 /**
- * @description @description This is the main object of the library
- * @type {{version: string, author: string, description: string, source: string, element: $n, handleError: Essence.handleError, say: Essence.say, applyCSS: Essence.applyCSS, addCSS: Essence.addCSS, addJS: Essence.addJS, update: Essence.update, eps: number, emptyDoc: Essence.emptyDoc, editor: Essence.editor, processList: Array, global: null, addProcess: Essence.addProcess, processSize: number, serverList: Array, addServer: Essence.addServer, serverSize: number, toString: Essence.toString, txt2print: string, addToPrinter: Essence.addToPrinter, print: Essence.print, preInit: Essence.preInit, init: Essence.init, time: Essence.time, sayClr: Essence.sayClr, ask: Essence.ask, isComplete: Essence.isComplete, loadedModules: Array}}
+ * @description This is the main object of the library as well as being the core module of the framework.
+ * @type {{version: string, author: string, description: string, source: string, element: $n, handleError: Essence.handleError, say: Essence.say, applyCSS: Essence.applyCSS, addCSS: Essence.addCSS, addJS: Essence.addJS, update: Essence.update, eps: number, emptyDoc: Essence.emptyDoc, editor: Essence.editor, processList: Array, global: ?Object, addProcess: Essence.addProcess, processSize: number, serverList: Array, addServer: Essence.addServer, serverSize: number, toString: Essence.toString, txt2print: string, addToPrinter: Essence.addToPrinter, print: Essence.print, preInit: Essence.preInit, init: Essence.init, time: Essence.time, sayClr: Essence.sayClr, ask: Essence.ask, isComplete: Essence.isComplete, loadedModules: Array}}
  * @this Essence
  * @namespace
+ * @exports essence
  * @since 1.0
  * @property {NumberLike} Essence.version EssenceJS' version
  * @property {string} Essence.author Author
  * @property {string} Essence.description Description of EssenceJS
  * @property {string} Essence.source Source of the script
  * @property {HTMLElement} Essence.element $n element
- * @property {Function} Essence.handleError Error handler
- * @property {Function} Essence.say EssenceJS's console logger
- * @property {Function} Essence.applyCSS Apply EssenceJS's CSS
- * @property {Function} Essence.addCSS Add CSS rules
- * @property {Function} Essence.addJS Add JS commands
+ * @property {function((string|Error), (URL|string), NumberLike)} Essence.handleError Error handler
+ * @property {function(...string)} Essence.say EssenceJS's console logger
+ * @property {function(boolean)} Essence.applyCSS Apply EssenceJS's CSS
+ * @property {function(Code)} Essence.addCSS Add CSS rules
+ * @property {function(string)} Essence.addJS Add JS commands
  * @property {Function} Essence.update EssenceJS' self update's mechanism
  * @property {number} Essence.eps Matlab's epsilon
- * @property {Function} Essence.emptyDoc Empty the document
- * @property {Function} Essence.editor In-browser editor
+ * @property {function(string, string)} Essence.emptyDoc Empty the document
+ * @property {function(Code)} Essence.editor In-browser editor
  * @property {process[]} Essence.processList Process list
  * @property {Object} Essence.global $G
- * @property {Function} Essence.addProcess Process adder
+ * @property {function(process)} Essence.addProcess Process adder
  * @property {number} Essence.processSize Total process size
  * @property {server[]} Essence.serverList Server list
- * @property {Function} Essence.addServer Server adder
+ * @property {function(server)} Essence.addServer Server adder
  * @property {number} Essence.serverSize Total server size
- * @property {Function} Essence.toString String representation of EssenceJS's namespace
+ * @property {function(): string} Essence.toString String representation of EssenceJS's namespace
  * @property {string} Essence.txt2pring Text to print
- * @property {Function} Essence.addToPrinter Add text to the printer and print them
- * @property {Function} Essence.print Print stuff to the screen
+ * @property {function(string, string)} Essence.addToPrinter Add text to the printer and print them
+ * @property {function(string, string)} Essence.print Print stuff to the screen
  * @property {Function} Essence.preInit Pre-initialisation
  * @property {Function} Essence.init Initialisation
- * @property {Function} Essence.time Say something with the time stamped
- * @property {Function} Essence.sayClr Log the colour
- * @property {Function} Essence.ask Ask something to the user
- * @property {Function} Essence.isComplete Module inclusion completeness check
+ * @property {function(...string)} Essence.time Say something with the time stamped
+ * @property {function(NumberLike[])} Essence.sayClr Log the colour
+ * @property {function(string, function(string))} Essence.ask Ask something to the user
+ * @property {function(): boolean} Essence.isComplete Module inclusion completeness check
  * @property {string[]} Essence.loadedModules List of loaded modules
  * @todo Get the Essence.source thingy right, i.e get a suitable place to get it from (e.g: a website or an expoitable place of Dropbox)
  */
@@ -110,7 +111,7 @@ var Essence = {
         }
     },
     applyCSS: function (nonMinify) {
-        include_once(getExtPath(getDirectoryPath(gatherScripts()["essence.js"])) + (nonMinify? "essence.css": "essence.min.css"), "link", getDirectoryPath());
+        include_once(getExtPath(getDirectoryPath(gatherScripts()[gatherScripts()["essence.min.js"]? "essence.min.js": "essence.js"])) + (nonMinify? "essence.css": "essence.min.css"), "link", getDirectoryPath())
         /*if ($e("html").val(true).indexOf("<body></body>") > -1) { //A bit of cleaning
             var ix = $e("html").val(true).indexOf("<body></body>");
             var bfr = $e("html").val(true).slice(0, ix), aft = $e("html").val(true).slice(ix + 13, $e("html").val(true).length);
@@ -132,7 +133,7 @@ var Essence = {
         }
         Essence.say("%cEssence(.min).js%c has been updated", "succ", "text-decoration: underline", "text-decoration: none");
     },
-    /** @const {number} Epsilon */
+    /** @const {number} Essence.eps Epsilon */
     eps: Math.pow(2, -52), //Matlab's epsilon (useful when dealing with null values to keep them in the real range or just not null
     emptyDoc: function (title, author) { //Empty the document and fill it with a basic structure
         $e("html").write("<head><title>" + (title || document.title) + "</title><meta charset='UTF-8' /><meta name='author' content=" + (author || "unknown") + " /><script type='text/javascript' src=" + Essence.source + "></script></head><body></body>", true);
@@ -155,7 +156,7 @@ var Essence = {
         return "[object Essence]"
     }, txt2print: "",
     addToPrinter: function (txt, type) { //Allow the usage of print without having to directly touch to txt2print
-        txt.indexOf("\n\r")>-1? this.print(txt, type): this.txt2print += txt;
+        txt.has("\n\r")? this.print(txt, type): this.txt2print += txt;
     }, print: function (txt, type) { //Works like the print in Java
         if (txt) this.txt2print += txt;
          this.txt2print = this.txt2print.split("\b");
@@ -215,7 +216,7 @@ var Essence = {
  * @param {string} [desc=""] Description
  * @param {string[]} [dpc=[]] Dependencies
  * @param {number} [ver=1] Version
- * @param {Function} [rn=function() {}] Run method
+ * @param {Function} [rn=function () {}] Run method
  * @param {string} [pathVer=Essence.version.substr(0, 3)] Path's version
  * @constructor
  * @this Module
@@ -228,8 +229,8 @@ var Essence = {
  * @property {boolean} Module.loaded Loading flag
  * @property {string} Module.path Path of the module
  * @property {Function} Module.load Load the module as well as initializing its dependencies
- * @property {Function} Module.toString String representation
- * @property {Function} Module.getWeight Weight of the module on EssenceJS's module ecosystem
+ * @property {function(): string} Module.toString String representation
+ * @property {function(): number} Module.getWeight Weight of the module on EssenceJS's module ecosystem
  * @since 1.1
  */
 function Module (name, desc, dpc, ver, rn, pathVer) {
@@ -278,7 +279,7 @@ function Module (name, desc, dpc, ver, rn, pathVer) {
  * @example <caption>Example 1:</caption>
  * require("myModule"); //It will import the script located at "modules/myModule.js"
  * require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js", "modules/moduleB.js" and "modules/moduleC.js"
- * <caption>Example 2:</caption>
+ * @example <caption>Example 2:</caption>
  * require("myModule", 1.1); //It will import the script located at "1.1/modules/myModule.js"
  */
 function require (mdl, ver, extpath) {
@@ -295,7 +296,7 @@ function $require (mdl) {
     if (isType(mdl, "Array")) {
         for (var i = 0; i < mdl.length; i++) $require(mdl[i]);
     } else if (modules.indexOf(mdl) === -1) {
-        include_once(getExtPath(getDirectoryPath(gatherScripts()["essence.js"])) + "modules/" + mdl + ".js", "script");
+        gatherScripts()["essence.min.js"]? include_once(getExtPath(getDirectoryPath(gatherScripts()["essence.min.js"])) + "modules/" + mdl + ".min.js", "script"): include_once(getExtPath(getDirectoryPath(gatherScripts()["essence.js"])) + "modules/" + mdl + ".js", "script");
         modules.push(mdl);
         if (debugging) console.log("The module %c%s%c is now included into %c%s    " + getTimestamp(true), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFilename());
     } else if (debugging) console.log("The module %c%s%c is already included into %c%s    " + getTimestamp(true), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFilename());
@@ -316,6 +317,11 @@ function run (module, ver) {
     if (isType(module, "Array")) {
         for (var i = 0; i < module.length; i++) run(module[i], ver);
     } else if (modules.indexOf(module) > -1) {
+        /**
+         * @description Go onto the running phase of the module
+         * @inner
+         * @func
+         */
         var go = function () {
             try {
                 if (debugging) Essence.say("Running " + module + "    " + getTimestamp(true), "info");
@@ -328,7 +334,12 @@ function run (module, ver) {
             } catch (e) {
                 Essence.time("The module %c" + module + "%c have problems regarding it's run method.", "warn", "color: #c0f", "color: #000");
             }
-        }, retry = function (stackLayer) {
+        }, /**
+         * @description Retry to get the module to be usable and launch go()
+         * @inner
+         * @func
+         */
+        retry = function (stackLayer) {
             if (!stackLayer) stackLayer = 0;
             Essence.say("The module %c" + module + "%c isn't available !    " + getTimestamp(true), "erro", "color: #c0f", "color: #000");
             if (debugging) Essence.say("Retrying to run %c" + module + "%c    " + getTimestamp(true), "info", "color: #c0f", "color: #000");
@@ -343,8 +354,8 @@ function run (module, ver) {
 /**
  * @description Initiate a module
  * @param {Str} mdls Module(s)
- * @param {Function|boolean} [mid] Mid-execution function
- * @param {Function|boolean} [cb] Callback function
+ * @param {function(*)} [mid] Mid-execution function
+ * @param {function(*)} [cb] Callback function
  * @param {NumberLike} [ver] Version (if the modules are in a version based partionning (e.g: 1.0/modules/ModuleA.js, 1.1/modules/ModuleA.js, beta/modules/ModuleA.js)
  * @param {*} [argsMid] Arguments for the mid()
  * @param {*} [argsCB] Arguments for the cb()
@@ -354,7 +365,7 @@ function run (module, ver) {
  * @example <caption>Example 1:</caption>
  * init("myModule"); //Initiate the module myModule
  * init(["moduleA", "moduleB"]); //Initiate the modules moduleA and moduleB
- * <caption>Example 2:</caption>
+ * @example <caption>Example 2:</caption>
  * init("myModule", function () {}, function () {
  *   Essence.say("myModule has been fully initiated !", "info");
  * }, "alpha"); //Initiate the myModule.js module located at alpha/modules/ and with a callback
@@ -382,9 +393,8 @@ function init (mdls, mid, cb, ver, argsMid, argsCB) {
 
 /**
  * @ignore
- * @external module/File:getDirectoryPath
- * @see module:module/File
- * @inheritsdoc
+ * @external module/File~getDirectoryPath
+ * @inheritdoc
  * @param {string} [path=location.href] Path
  * @returns {string} Directory path
  * @since 1.1
@@ -394,9 +404,8 @@ var getDirectoryPath = function (path) {
     return path.substring(0, path.indexOf(path.split("/")[path.split("/").length - 1]))
 }, /**
  * @ignore
- * @see module:module/DOM
- * @external module/DOM:gatherScripts
- * @inheritsdoc
+ * @external module/DOM~gatherScripts
+ * @inheritdoc
  * @param {boolean} [asList=false] Result should be a list or an object
  * @returns {*} List/dictionary of scripts
  */
@@ -406,8 +415,8 @@ gatherScripts = function (asList) {
     return res
 }, /**
  * @ignore
- * @inheritsdoc
- * @external module/File:getCurrentPath
+ * @inheritdoc
+ * @external module/File~getCurrentPath
  * @param {string} path Path
  * @param {string} [localPath="file:///"] Local path
  * @returns {string} Current path
@@ -424,7 +433,7 @@ gatherScripts = function (asList) {
         for(var i = (start || 0); i <= (end || o.length - 1); i++) r.push(o[i]);
         return r.filter(function (x) { return x != undefined; });
     };
-    while(localPath.indexOf(parts[i]) > -1) i++;
+    while (localPath.indexOf(parts[i]) > -1) i++;
     res = _get(parts, i).join("/");
 
     while (res.indexOf(pParts[j]) > -1) {
@@ -482,7 +491,7 @@ getExtPath = function (path) {
             return m.name; //split("'")[1];
         }).toStr(true));
         run(modules, Essence.version.substr(0, 3));
-        if (Essence.isComplete() && !filenameList(gatherExternalScripts(true).has(Essence.source))) Essence.source = Essence.source.replace(".js", ".min.js");
+        if (Essence.isComplete() && !filenameList(gatherExternalScripts(true)).has(Essence.source)) Essence.source = Essence.source.replace(".js", ".min.js");
         if (debugging && !Essence.loadedModules.map(function (m) {
                 return m.name; //split("'")[1]
             }).equals(modules)
@@ -490,12 +499,18 @@ getExtPath = function (path) {
                 return m.name; //split("'")[1]
             }))
         );
+        if (Essence.source.has("essence.min")) { //If it's the minified version, change the modules to their minified version as well
+            var $s = $n("*script").toArray();
+            for (var i = 0; i < $s.length; i++) {
+                if (!$s[i].src.has(".min.js")) $s[i].src.replace(".js", ".min.js");
+            }
+        }
     }, 700);
 })();
 
 /**
  * @description Globals won't be globals !!
- * @type {{t1: Date, t2: number, t: null, lastKeyPair: Array}}
+ * @type {{t1: Date, t2: number, t: ?number, lastKeyPair: Array}}
  * @default
  * @since 1.0
  * @global
@@ -541,32 +556,32 @@ function $n (selector) { //To get directly the node without having to use $e(sel
  * @since 1.0
  * @throws {InvalidParamError} Invalid parameter
  * @property {HTMLElement} Element.node Node
- * @property {Function} Element.val Get the node's value
- * @property {Function} Element.size Get the node's value's size
- * @property {Function} Element.isEmpty Check if the node's value is empty
- * @property {Function} Element.write Write something to the node
- * @property {Function} Element.before Write something to the node before its value
- * @property {Function} Element.after Write something to the node after its value
- * @property {Function} Element.remove Remove a character/string from the node's value and optionally insert jointers
- * @property {Function} Element.setCSS Set a CSS rule or change a CSS property
- * @property {Function} Element.setStyles Set multiple CSS rules
- * @property {Function} Element.css Get the value of a CSS property
- * @property {Function} Element.hasClass Check if the node is affiliated to a class
- * @property {Function} Element.hasCSS Check if the node's CSS include a particular rule
- * @property {Function} Element.addClass Affiliate the node to a particular class
- * @property {Function} Element.rmClass Disjoin the node from a particular class
- * @property {Function} Element.toggleCSS Toggle a CSS property
- * @property {Function} Element.shox Show the node
+ * @property {function(boolean, boolean): (NumberLike|XML)} Element.val Get the node's value
+ * @property {function(): number} Element.size Get the node's value's size
+ * @property {function(): boolean} Element.isEmpty Check if the node's value is empty
+ * @property {function(*, boolean, boolean)} Element.write Write something to the node
+ * @property {function(*, boolean, boolean)} Element.before Write something to the node before its value
+ * @property {function(*, boolean, boolean)} Element.after Write something to the node after its value
+ * @property {function(string, ?string)} Element.remove Remove a character/string from the node's value and optionally insert jointers
+ * @property {function(string, string)} Element.setCSS Set a CSS rule or change a CSS property
+ * @property {function(string[])} Element.setStyles Set multiple CSS rules
+ * @property {function(string): NumberLike} Element.css Get the value of a CSS property
+ * @property {function(string): boolean} Element.hasClass Check if the node is affiliated to a class
+ * @property {function(string): boolean} Element.hasCSS Check if the node's CSS include a particular rule
+ * @property {function(string)} Element.addClass Affiliate the node to a particular class
+ * @property {function(string)} Element.rmClass Disjoin the node from a particular class
+ * @property {function(string, (Str|Nums), number)} Element.toggleCSS Toggle a CSS property
+ * @property {Function} Element.show Show the node
  * @property {Function} Element.hide Hide the node
- * @property {Function} Element.on Event handler
- * @property {Function} Element.toString String representation of the element
- * @property {Function} Element.tagName Tagname of the element
+ * @property {function(string)} Element.on Event handler
+ * @property {function(): string} Element.toString String representation of the element
+ * @property {function(): string} Element.tagName Tagname of the element
  * @property {Function} Element.scrollBottom Scroll to the bottom of the node
  * @property {Function} Element.scrollTop Scroll to the top of the node
  * @property {Function} Element.scrollLeft Scroll to the left of the node
  * @property {Function} Element.scrollRight Scroll to the right of the node
- * @property {Function} Element.scroll Scroll in any directions
- * @property {Function} Element.autoScroll Auto scrolling animation
+ * @property {function(number, number)} Element.scroll Scroll in any directions
+ * @property {function(string, number)} Element.autoScroll Auto scrolling animation
  */
 function Element (selector) { //The element object
     if (/^([#\.\*_-`~&]\W*|\S|undefined|null|)$/.test(selector)) throw new InvalidParamError("Element cannot accept the selector '" + selector + "' as it's invalid."); //Reject invalid selectors
@@ -958,8 +973,8 @@ Object.prototype.isIterable = function () {
 
 /**
  * @description Self-destruction of the object.
+ * Source: {@link https://Google.github.io/styleguide/javascriptguide.xml?showone=delete#delete}
  * @this Object
- * @source {@link https://Google.github.io/styleguide/javascriptguide.xml?showone=delete#delete}
  * @returns {undefined}
  * @since 1.0
  * @method
@@ -1026,8 +1041,8 @@ Object.prototype.toArray = function() {
  * @memberof Object.prototype
  */
 Object.prototype.compareTo = function(obj) {
-    if(getType(this) != getType(obj)) throw new TypeError(this + " and " + obj + "aren't of the same type, so can't be compared.");
-    if((getType(this) === "Object" && getCustomType(this) === getCustomType(obj)) || getType(this) === getType(obj)) {
+    if (getType(this) != getType(obj)) throw new TypeError(this + " and " + obj + "aren't of the same type, so can't be compared.");
+    if ((getType(this) === "Object" && getCustomType(this) === getCustomType(obj)) || getType(this) === getType(obj)) {
         return this.equals(obj)? 0: (this.toString() < obj.toString() || this.toLocaleString() < obj.toLocaleString())? -1: 1;
     }
 };
@@ -1992,12 +2007,12 @@ Array.prototype.cenSort = function (l, r) {
 };
 
 /**
- * @description Set sort
+ * @description Set sort.
+ * Source: somewhere.
  * @this Array
  * @returns {Array} New array
  * @since 1.0
  * @method
- * @source Somewhere
  * @memberof Array.prototype
  */
 Array.prototype.setSort = function () { //A faster algorithm than quickSort only for integers where the extremities are known
@@ -2443,7 +2458,7 @@ Array.prototype.toInt = function () {
 /**
  * @description Invert the matrix
  * @this Array
- * @returns {Array|null} Inverse
+ * @returns {?Array} Inverse
  * @since 1.0
  * @method
  * @memberof Array.prototype
@@ -3238,12 +3253,12 @@ Number.prototype.toArr = function () {
 
 /**
  * @description Inheritance
+ * Source: Somewhere
  * @param {*} parentClassOrObj Parent
  * @returns {Function} this Current function/constructor
  * @since 1.0
  * @method
  * @memberof Function.prototype
- * @source Somewhere
  */
 Function.prototype.inheritsFrom = function (parentClassOrObj) {
     if (parentClassOrObj.constructor === Function) { //Normal Inheritance
@@ -3416,7 +3431,7 @@ function getTimestamp (readable) {
 function date2txt (d) {
     if (!isType(d, "Date")) throw new Error("$d is not a Date object");
 
-    return d.getDate().toNDigits() + "/" + (d.getMonth() + 1).toNDigits() + "/" + d.getFullYear();
+    return d.getDate().toNDigits(2) + "/" + (d.getMonth() + 1).toNDigits(2) + "/" + d.getFullYear();
 }
 
 /**
@@ -3434,7 +3449,7 @@ function txt2date (txt) {
 
 /**
  * @description Display the date and at time at a particular place
- * @param {string} id ID of the element to be used
+ * @param {string} [id] ID of the element to be used
  * @returns {undefined}
  * @since 1.0
  * @func
@@ -3457,7 +3472,7 @@ function dateTime (id) {
     if (s < 10) s = "0" + s;
     GMT = (GMT >= 0)? "GMT+" + GMT: "GMT-" + GMT;
     var result = "We're " + days[day] + " " + d + " " + months[month] + " " + year + " and it's " + h + ":" + m + ":" + s + " " + tt + " " + GMT;
-    $e("#" + id).write(result);
+    $e("#" + id || "body").write(result);
     setTimeout("dateTime(\"" + id + "\");", 1000);
 }
 
@@ -3525,14 +3540,14 @@ function num2date (n) {
 }
 
 /**
- * @description Date difference calculator
+ * @description Date difference calculator.
+ * Source: {@link http://www.htmlgoodies.com/html5/javascript/calculating-the-difference-between-two-dates-in-javascript.html}
  * @param {Date} [from=new Date()] Starting date
  * @param {Date} to Ending date
  * @param {string} [part="d"] Part
  * @param {boolean} [round=false] Rounding flag
  * @returns {number} Difference
  * @func
- * @source {@link http://www.htmlgoodies.com/html5/javascript/calculating-the-difference-between-two-dates-in-javascript.html}
  * @since 1.1
  */
 function dateDiff (from, to, part, round) {
@@ -3907,7 +3922,7 @@ function num2txt (num, base) {
 
 /**
  * @description Time how long an action took
- * @param {Function} act Action
+ * @param {function(*)} act Action
  * @param {string} [pref="auto"] Preference (auto/none, ms/millisec, s/sec)
  * @param {*} [params] Parameters
  * @returns {string} Time

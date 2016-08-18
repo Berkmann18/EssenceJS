@@ -6,7 +6,7 @@
  * @license MIT
  * @author Maximilian Berkmann <maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
- * @requires ../essence
+ * @requires essence
  * @requires Maths
  * @requires DOM
  * @namespace
@@ -129,13 +129,13 @@ function testErr(err) {
 }
 
 /**
- * @description Error testing for beginner's
+ * @description Error testing for beginner's.
+ * Source: {@link https://scontent-lhr3-1.xx.fbcdn.net/hphotos-xfl1/v/t1.0-9/12705609_1071795346206130_3757520485028328706_n.jpg?oh=cb99a4624d9732414b787f7eb8437c73&oe=57383223}
  * @param {Function} fx Function
  * @param {*} [param] Parameter
  * @returns {undefined}
  * @since 1.0
  * @func
- * @source {@link https://scontent-lhr3-1.xx.fbcdn.net/hphotos-xfl1/v/t1.0-9/12705609_1071795346206130_3757520485028328706_n.jpg?oh=cb99a4624d9732414b787f7eb8437c73&oe = 57383223}
  */
 function noobTest (fx, param) {
     try {
@@ -147,7 +147,7 @@ function noobTest (fx, param) {
 
 /**
  * @description Test a function/expression
- * @param {Function|String} fx Function/expression
+ * @param {function(*)|String} fx Function/expression
  * @returns {undefined}
  * @since 1.1
  * @func
@@ -170,9 +170,9 @@ function test (fx) {
  * @property {number} UnitTest.bad Total number of failed tests
  * @property {number} UnitTest.failRate Failure rate
  * @property {number} UnitTest.coverage Coverage
- * @property {Function} UnitTest.test Assertion tester
+ * @property {function(*, *, boolean)} UnitTest.test Assertion tester
  * @property {Function} UnitTest.reset Reset
- * @property {Function} UnitTest.multiTest Multi assertion tester
+ * @property {function(Array[], boolean)} UnitTest.multiTest Multi assertion tester
  * @property {Function} UnitTest.report Report loger
  */
 var UnitTest = {

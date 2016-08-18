@@ -6,7 +6,7 @@
  * @license MIT
  * @author Maximilian Berkmann <maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
- * @requires ../essence
+ * @requires essence
  * @requires Files
  * @namespace
  * @type {Module}
@@ -77,16 +77,16 @@ function asciiTable (start, end) {
  * @property {string} Person.city City of residence or birthplace
  * @property {string} Person.sex Sex
  * @property {string} Person.birthday Birthday
- * @property {string|null} Person.deathday Deathday
+ * @property {?string} Person.deathday Deathday
  * @property {Str} Person.jobs Job(s)
  * @property {Str} Person.activities Activity/Activities
  * @property {Str} Person.websites Website(s)
  * @property {Str} Person.quote Quote(s)
- * @property {Function} Person.toString String representation
- * @property {Function} Person.genID ID generator
- * @property {Function} Person.getAge Age getter
- * @property {Function} Person.isMajor Majority check
- * @property {Function} Person.getFullName Full name getter
+ * @property {function(): string} Person.toString String representation
+ * @property {function(): string} Person.genID ID generator
+ * @property {function(): number} Person.getAge Age getter
+ * @property {function(): boolean} Person.isMajor Majority check
+ * @property {function(): string} Person.getFullName Full name getter
  */
 function Person (fname, sname, lname, title, nickname, num, country, city, sex, bday, jobs, activities, websites, quote) {
     this.firstName = fname || "";
@@ -149,9 +149,9 @@ function Person (fname, sname, lname, title, nickname, num, country, city, sex, 
  * @property {number} Item.ageMinRequired Minimum age required to use the item
  * @property {number} Item.quantity Quantity
  * @property {Date} Item.firstMade First made date
- * @property {Function} Item.duplicate Duplication
- * @property {Function} Item.remove Remove the item from somewhere
- * @property {Function} Item.toString String representation
+ * @property {function(number, Item[])} Item.duplicate Duplication
+ * @property {function(*)} Item.remove Remove the item from somewhere
+ * @property {function(): string} Item.toString String representation
  */
 function Item (name, cat, price, amr, nb) { //An item like the ones that can be bought/sold/traded/used
     this.name = name || "unknown";
@@ -165,7 +165,7 @@ function Item (name, cat, price, amr, nb) { //An item like the ones that can be 
         for (var i = 0; i < n; i++) dest.push(new Item(this.name, this.category, this.price, this.ageMinRequired, this.quantity));
     };
     this.remove = function (dest) {
-        dest.remove(this)
+        isType(dest, "Array")? dest = dest.remove(this): dest.remove(this)
     };
     this.toString = function () {
         var str = "";
@@ -176,6 +176,8 @@ function Item (name, cat, price, amr, nb) { //An item like the ones that can be 
     };
     return this
 }
+
+
 
 /**
  * @description Letter pair array
@@ -243,17 +245,17 @@ function rmDuplicates (arr) {
 
 /**
  * @description Base64
+ * Source: somewhere
  * @type {{PADCHAR: string, ALPHA: string, getbyte64: base64.getbyte64, decode: base64.decode, getbyte: base64.getbyte, encode: base64.encode}}
- * @source Somewhere
  * @global
  * @this base64
  * @since 1.0
  * @property {string} base64.PADCHAR PAD character
  * @property {string} base64.ALPHA Alphabet
- * @property {Function} base64.getbyte64 b64 byte getter
- * @property {Function} base64.decoder Base64 decoder
- * @property {Function} base64.getbyte Byte getter
- * @property {Function} base64.encoder Base64 encoder
+ * @property {function(string, number): number} base64.getbyte64 b64 byte getter
+ * @property {function(string): string} base64.decoder Base64 decoder
+ * @property {function(string, number): string} base64.getbyte Byte getter
+ * @property {function(string): string} base64.encoder Base64 encoder
  * @todo Make it look more like it wasn't from somewhere
  */
 var base64 = {
@@ -273,7 +275,7 @@ var base64 = {
         if (i === -1) throw "Cannot decode base64";
         return i
     },
-    decode: function (s) { // convert to string
+    decode: function (s) { //Convert to string
         s += "";
         var gb64 = this.getbyte64;
         var pads, i, b10;
@@ -285,7 +287,7 @@ var base64 = {
         if (s.charAt(imax - 1) === base64.PADCHAR) {
             pads = 1;
             if (s.charAt(imax - 2) === base64.PADCHAR) pads = 2;
-            // either way, we want to ignore this last block
+            //Either way, we want to ignore this last block
             imax -= 4;
         }
 
@@ -307,6 +309,12 @@ var base64 = {
         }
         return x.join("")
     },
+    /**
+     * @throws Invalid character error: DOM Exception 5
+     * @param s
+     * @param i
+     * @return {Number}
+     */
     getbyte: function (s, i) {
         var x = s.charCodeAt(i || 0);
         if (x > 255) throw "INVALID_CHARACTER_ERR: DOM Exception 5";
@@ -365,17 +373,17 @@ var base64 = {
  * @property {number} Machine.capacity Capacity (in bits)
  * @property {number} Machine.version Version (1-6)
  * @property {string} Machine.name Name
- * @property {Function} Machine.operation Operation calculator
- * @property {Function} Machine.inv Data inverser
+ * @property {function(number, number, string): number} Machine.operation Operation calculator
+ * @property {function(string): string} Machine.inv Data inverter
  * @property {Memory} Machine.memory Memory
- * @property {Function} Machine.send Data sender
- * @property {Function} Machine.parse Machine code into a human readable code
- * @property {Function} Machine.unparse Human readable code into a machine code
- * @property {Function} Machine.store Data storer
+ * @property {function(*, string)} Machine.send Data sender
+ * @property {function(Str): *} Machine.parse Machine code into a human readable code
+ * @property {function(*): Str} Machine.unparse Human readable code into a machine code
+ * @property {function(*)} Machine.store Data storer
  * @property {Function} Machine.show Data log
- * @property {Function} Machine.specs Machine specifications
- * @property {Function} Machine.toString String representation
- * @property {Function} Machine.conv Data converter
+ * @property {function(): string} Machine.specs Machine specifications
+ * @property {function(): string} Machine.toString String representation
+ * @property {function(*, number): NumberLike} Machine.conv Data converter
  */
 function Machine (name, ver, cpy, type) {
     //ver (basis) := 1: binary, 2: ternary, 3: octal, 4: decimal, 5: hexadecimal, 6: base 36
@@ -501,13 +509,13 @@ function Machine (name, ver, cpy, type) {
  * @property {string} Memory.name Name
  * @property {number} Memory.free Index of the first free slot
  * @property {Function} Machine.save Save the memory
- * @property {Function} Machine.remove Data removal
- * @property {Function} Machine.getLocation Data location getter
+ * @property {function(*)} Machine.remove Data removal
+ * @property {function(*): number} Machine.getLocation Data location getter
  * @property {Function} Machine.clear Data reset
- * @property {Function} Machine.add Data adder
+ * @property {function(*)} Machine.add Data adder
  * @property {Function} Machine.print Print/log the data
  * @property {Function} Machine.pop Pop the last row of data
- * @property {Function} Machine.toString String representation
+ * @property {function(): string} Machine.toString String representation
  */
 function Memory (cpy, type, prefix) {
     this.capacity = cpy || 1024;
@@ -590,13 +598,13 @@ function Memory (cpy, type, prefix) {
  * @since 1.0
  * @property {Object} Sys.in Input
  * @property {boolean} Sys.in.recording Recording flag
- * @property {Function} Sys.in.record Input recorder
- * @property {Function} Sys.in.startRecording Record starter
- * @property {Function} Sys.in.stopRecording Record stopper
- * @property {Function} Sys.log Logger
- * @property {Function} Sys.debug Debugger
- * @property {Function} Sys.out Output
- * @property {Function} Sys.toString() String representation
+ * @property {function(keyStroke)} Sys.in.record Input recorder
+ * @property {function(keyStroke)} Sys.in.startRecording Record starter
+ * @property {function(): string} Sys.in.stopRecording Record stopper
+ * @property {function(*)} Sys.log Logger
+ * @property {function(Function)} Sys.debug Debugger
+ * @property {function(): string} Sys.out Output
+ * @property {function(): string} Sys.toString() String representation
  */
 var Sys = { //System
     in: {
@@ -649,7 +657,7 @@ window.onkeypress = function (keyStroke) {
 /**
  * @description Typing recorder
  * @deprecated
- * @param {Function} [cb] Callback
+ * @param {function(function(string))} [cb] Callback
  * @returns {string} Recorded keystrokes
  * @ignore
  * @see Sys

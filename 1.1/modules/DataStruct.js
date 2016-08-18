@@ -6,7 +6,7 @@
  * @license MIT
  * @author Maximilian Berkmann <maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
- * @requires ../essence
+ * @requires essence
  * @requires DOM
  * @requires Maths
  * @requires Files
@@ -26,7 +26,7 @@ var DataStruct = new Module("DataStruct", "Data structures", ["DOM", "Maths", "F
 /**
  * @description Linked list
  * @param {*} [pl=1] Payload
- * @param {LinkedList} [nx={payload: 1, next: null}] Next
+ * @param {LinkedList} [nx={payload: 1, next: ?LinkedList}] Next
  * @param {string} name Name of the linked list
  * @returns {LinkedList} Linked list
  * @this LinkedList
@@ -35,9 +35,9 @@ var DataStruct = new Module("DataStruct", "Data structures", ["DOM", "Maths", "F
  * @property {NumberLike} LinkedList.payload Payload
  * @property {LinkedList|Object} LinkedList.next Next element
  * @property {string} LinkedList.name Name
- * @property {Function} LinkedList.show Show the linked list
- * @property {Function} LinkedList.next.show Show the linked list
- * @property {Function} LinkedList.toString String representation
+ * @property {function(this:LinkedList): string} LinkedList.show Show the linked list
+ * @property {function(this:linkedList): string} LinkedList.next.show Show the linked list
+ * @property {function(): string} LinkedList.toString String representation
  */
 function LinkedList (pl, nx, name) {
     this.payload = pl || 1;
@@ -69,10 +69,10 @@ function LinkedList (pl, nx, name) {
  * @property {TreeNode} TreeNode.left Left child
  * @property {TreeNode} TreeNode.right Right child
  * @property {NumberLike} TreeNode.payload Payload
- * @property {Function} TreeNode.add Child adder
- * @property {Function} TreeNode.addLeft Left child adder
- * @property {Function} TreeNode.addRight Right child adder
- * @property {Function} TreeNode.traverse Tree traversal
+ * @property {function(?TreeNode, ?TreeNode)} TreeNode.add Child adder
+ * @property {function(TreeNode[])} TreeNode.addLeft Left child adder
+ * @property {function(TreeNode[])} TreeNode.addRight Right child adder
+ * @property {function(): TreeNode} TreeNode.traverse Tree traversal
  * @property {Function} TreeNode.printInOrder Console in-order printing
  * @property {Function} TreeNode.printPreOrder Console pre-order printing
  * @property {Function} TreeNode.printPostOrder Console post-order printing
@@ -80,21 +80,21 @@ function LinkedList (pl, nx, name) {
  * @property {Function} TreeNode.inOrder Window in-order printing
  * @property {Function} TreeNode.preOrder Window pre-order printing
  * @property {Function} TreeNode.postOrder Window post-order printing
- * @property {Function} TreeNode.getInOrder In-order getter
- * @property {Function} TreeNode.getPreOrder Pre-order getter
- * @property {Function} TreeNode.getPostOrder Post-order getter
- * @property {Function} TreeNode.isLeaf Leaf check
- * @property {Function} TreeNode.find Look for a tree-node
- * @property {Function} TreeNode.dfs Depth First Search
- * @property {Function} TreeNode.bfs Breath First Search
+ * @property {function(): string} TreeNode.getInOrder In-order getter
+ * @property {function(): string} TreeNode.getPreOrder Pre-order getter
+ * @property {function(): string} TreeNode.getPostOrder Post-order getter
+ * @property {function(): boolean} TreeNode.isLeaf Leaf check
+ * @property {function(*, string): number[]} TreeNode.find Look for a tree-node
+ * @property {function(*): number[]} TreeNode.dfs Depth First Search
+ * @property {function(*): number[]} TreeNode.bfs Breath First Search
  * @property {Function} TreeNode.sum Sum of the payloads
  * @property {Function} TreeNode.min Smallest payload
  * @property {Function} TreeNode.max Biggest payload
- * @property {Function} TreeNode.nbOfBranches Branches counter
- * @property {Function} TreeNode.avg Average of the payloads
- * @property {Function} TreeNode.printBFS Print in the BFS order
- * @property {Function} TreeNode.toString String representation
- * @property {Function} TreeNode.toArray Array representation
+ * @property {function(number): number} TreeNode.nbOfBranches Branches counter
+ * @property {function(): number} TreeNode.avg Average of the payloads
+ * @property {function(): string} TreeNode.printBFS Print in the BFS order
+ * @property {function(): string} TreeNode.toString String representation
+ * @property {Function(): Array} TreeNode.toArray Array representation
  */
 function TreeNode (pl, l, r) { //Binary tree
     this.left = l;
@@ -208,9 +208,8 @@ function TreeNode (pl, l, r) { //Binary tree
     this.find = function (n, method) {
         return (method.normal() === "bfs")? this.bfs(n): this.dfs(n)
     };
-    this.dfs = function (n, d, td) { //Depth First Search
-        if (!d) d = 0; //Depth
-        if (!td) td = 0; //Total depth
+    this.dfs = function (n) { //Depth First Search
+        var d = 0, td = 0; //Depth, total depth
         var stack = [];
         stack.push(this);
         while (stack != []) {
@@ -227,9 +226,8 @@ function TreeNode (pl, l, r) { //Binary tree
             td++;
         }
     };
-    this.bfs = function (n, b, tb) { //Breadth First Search
-        if (!b) b = 0; //Breadth
-        if (!tb) tb = 0; //Total breadth
+    this.bfs = function (n) { //Breadth First Search
+        var b = 0, tb = 0; //Breadth, total breadth
         var queue = [];
         queue.unshift(this); //Add as the end
         while (queue != []) {
@@ -271,7 +269,7 @@ function TreeNode (pl, l, r) { //Binary tree
         return n
     };
     this.avg = function () {
-        return this.sum()/this.nbOfBranches()
+        return this.sum() / this.nbOfBranches()
     };
     this.printBFS = function (sym) {
         if (!sym) sym = "->";
@@ -320,16 +318,16 @@ function TreeNode (pl, l, r) { //Binary tree
  * @since 1.0
  * @property {NumberLike} Node.payload Payload
  * @property {Node} Node.next Next node
- * @property {Function} Node.traverse Node traversal
+ * @property {function(): Node} Node.traverse Node traversal
  * @property {Function} Node.print Node printer
  * @property {Function} Node.printList Node list printer
- * @property {Function} Node.last Get the last node
- * @property {Function} Node.append Append the list with a new node
+ * @property {function(): Node} Node.last Get the last node
+ * @property {function(NumberLike)} Node.append Append the list with a new node
  * @property {Function} Node.remove Node remover
- * @property {Function} Node.reverse List reversal
- * @property {Function} Node.find Look for a node
- * @property {Function} Node.equals Node comparator
- * @property {Function} Node.toString String representation
+ * @property {function(): Node} Node.reverse List reversal
+ * @property {function(NumberLike, number): Nums} Node.find Look for a node
+ * @property {function(Node): boolean} Node.equals Node comparator
+ * @property {function(): string} Node.toString String representation
  */
 function Node (pl, nx, pv) {
     this.payload = pl || 1;
@@ -408,10 +406,10 @@ function Node (pl, nx, pv) {
  * @constructor
  * @since 1.0
  * @property {number} PathNode.f Cost of the path (g) + heuristical estimate
- * @property {PathNode} PathNode.parent Parent of the path-node
- * @property {Function} PathNode.back Go n path-nodes back
- * @property {Function} PathNode.isCloser Check if the current path-node is closer than the other one
- * @property {Function} Node.toString String representation
+ * @property {?PathNode} PathNode.parent Parent of the path-node
+ * @property {function(number): PathNode} PathNode.back Go n path-nodes back
+ * @property {function(PathNode): boolean} PathNode.isCloser Check if the current path-node is closer than the other one
+ * @property {function(): string} Node.toString String representation
  */
 function PathNode (g, h) { //Nodes for path finding algs
     this.f = g + h || 1;
@@ -444,30 +442,28 @@ NTreeNode.inheritsFrom(TreeNode);
  * @since 1.0
  * @property {NTreeNode[]} NTreeNode.childs Childs
  * @property {NumberLike} NTreeNode.payload Payload
- * @property {Function} NTreeNode.add Child adder
- * @property {Function} NTreeNode.traverse Tree traversal
+ * @property {function(NTreeNode)} NTreeNode.add Child adder
+ * @property {function(): NTreeNode} NTreeNode.traverse Tree traversal
  * @property {Function} NTreeNode.printInOrder Console in-order printing
  * @property {Function} NTreeNode.printPreOrder Console pre-order printing
  * @property {Function} NTreeNode.printPostOrder Console post-order printing
  * @property {Function} NTreeNode.printInOrder Console in-order printing
- * @property {Function} NTreeNode.inOrder Window in-order printing
- * @property {Function} NTreeNode.preOrder Window pre-order printing
- * @property {Function} NTreeNode.postOrder Window post-order printing
- * @property {Function} NTreeNode.getInOrder In-order getter
- * @property {Function} NTreeNode.getPreOrder Pre-order getter
- * @property {Function} NTreeNode.getPostOrder Post-order getter
- * @property {Function} NTreeNode.isLeaf Leaf check
- * @property {Function} NTreeNode.find Look for a tree-node
- * @property {Function} NTreeNode.dfs Depth First Search
- * @property {Function} NTreeNode.bfs Breath First Search
- * @property {Function} NTreeNode.sum Sum of the payloads
- * @property {Function} NTreeNode.min Smallest payload
- * @property {Function} NTreeNode.max Biggest payload
- * @property {Function} NTreeNode.nbOfBranches Branches counter
- * @property {Function} NTreeNode.avg Average of the payloads
- * @property {Function} NTreeNode.printBFS Print in the BFS order
- * @property {Function} NTreeNode.toString String representation
- * @property {Function} NTreeNode.toArray Array representation
+ * @property {function(number, string, number, string)} NTreeNode.inOrder Window in-order printing
+ * @property {function(number, string, number, string)} NTreeNode.preOrder Window pre-order printing
+ * @property {function(number, string, number, string)} NTreeNode.postOrder Window post-order printing
+ * @property {function(): string} NTreeNode.getOrder ??-order getter
+ * @property {function(): boolean} NTreeNode.isLeaf Leaf check
+ * @property {function(*, string): Nums} NTreeNode.find Look for a tree-node
+ * @property {function(...number): Nums} NTreeNode.dfs Depth First Search
+ * @property {function(...number): Nums} NTreeNode.bfs Breath First Search
+ * @property {function(): number} NTreeNode.sum Sum of the payloads
+ * @property {function(): number} NTreeNode.min Smallest payload
+ * @property {function(): number} NTreeNode.max Biggest payload
+ * @property {function(number): number} NTreeNode.nbOfBranches Branches counter
+ * @property {function(): number} NTreeNode.avg Average of the payloads
+ * @property {function(string)} NTreeNode.printBFS Print in the BFS order
+ * @property {function(): string} NTreeNode.toString String representation
+ * @property {function(): Array} NTreeNode.toArray Array representation
  */
 function NTreeNode (pl, ch) {
     this.payload = pl || 0;
@@ -657,25 +653,25 @@ function NTreeNode (pl, ch) {
  * @this Set
  * @since 1.0
  * @property {number[]} Set.value Values
- * @property {Function} Set.size Size of the set
- * @property {Function} Set.add Add an item to the set
- * @property {Function} Set.remove Remove an item from the set
- * @property {Function} Set.clear Clear the set or an item of it
- * @property {Function} Set.isEmpty Check the emptiness of the set
+ * @property {function(): number} Set.size Size of the set
+ * @property {function(*)} Set.add Add an item to the set
+ * @property {function(*)} Set.remove Remove an item from the set
+ * @property {function(number)} Set.clear Clear the set or an item of it
+ * @property {function(): boolean} Set.isEmpty Check the emptiness of the set
  * @property {Function} Set.contains Check if the set contains an item (or more)
- * @property {Function} Set.equals Check if two sets are identical
- * @property {Function} Set.isSame Check if two sets contains the same values
- * @property {Function} Set.toString String representation
- * @property {Function} Set.subset Subset of the set
- * @property {Function} Set.get Get an item of the set
- * @property {Function} Set.indexOf Index of an item in the set
- * @property {Function} Set.set Set an item's value
- * @property {Function} Set.first Get the first item of the set
- * @property {Function} Set.last Get the last item of the set
- * @property {Function} Set.min Smallest item of the set
- * @property {Function} Set.max Biggest item of the set
- * @property {Function} Set.median Median item of the set
- * @property {Function} Set.forEach Act on each items of the set
+ * @property {function(Set): boolean} Set.equals Check if two sets are identical
+ * @property {function(Set): boolean} Set.isSame Check if two sets contains the same values
+ * @property {function(): string} Set.toString String representation
+ * @property {function(...number): Array} Set.subset Subset of the set
+ * @property {function(number): *} Set.get Get an item of the set
+ * @property {function(*): number} Set.indexOf Index of an item in the set
+ * @property {function(number, *)} Set.set Set an item's value
+ * @property {function(): *} Set.first Get the first item of the set
+ * @property {function(): *} Set.last Get the last item of the set
+ * @property {function(...number): ?number} Set.min Smallest item of the set
+ * @property {function(...number): ?number} Set.max Biggest item of the set
+ * @property {function(): ?number} Set.median Median item of the set
+ * @property {function(function(*))} Set.forEach Act on each items of the set
  */
 function Set (arr) {
     this.value = (isType(arr, "Array")? rmDuplicates(arr): [arr]) || [];
@@ -767,8 +763,8 @@ function Set (arr) {
         return this.value.max(s, e)
     };
 
-    this.median = function (s, e) {
-        return this.value.median(s, e)
+    this.median = function () {
+        return this.value.median()
     };
 
     this.forEach = function (act) {
@@ -789,8 +785,8 @@ SortedSet.inheritsFrom(Set);
  * @inheritdoc
  * @since 1.0
  * @property {number[]} SortedSet.value Values
- * @property {Function} SortedSet.add Add an item to the set and sort it
- * @property {Function} SortedSet.toString String representation
+ * @property {function(*)} SortedSet.add Add an item to the set and sort it
+ * @property {function(): string} SortedSet.toString String representation
  */
 function SortedSet (arr) {
     this.value = arr || [];
@@ -813,21 +809,21 @@ function SortedSet (arr) {
 /**
  * @description Stack
  * @param {Array|*} [arr] Array
- * @param {number|null} [lim=null] Limit
+ * @param {?number} [lim=null] Limit
  * @returns {Stack} Stack
  * @this Stack
  * @constructor
  * @since 1.0
  * @property {number[]} Stack.value Values
- * @property {number|null} Stack.limit Limit
- * @property {Function} Stack.peek Returns the top value
- * @property {Function} Stack.ground Returns the bottom value
- * @property {Function} Stack.push Add items at the top
- * @property {Function} Stack.pop Remove the top item
- * @property {Function} Stack.isEmpty Emptiness check
- * @property {Function} Stack.isFull Fullness check
- * @property {Function} Stack.size Size
- * @property {Function} Stack.toString String representation
+ * @property {?number} Stack.limit Limit
+ * @property {function(): *} Stack.peek Returns the top value
+ * @property {function(): *} Stack.ground Returns the bottom value
+ * @property {function(*)} Stack.push Add items at the top
+ * @property {function(): *} Stack.pop Remove the top item
+ * @property {function(): boolean} Stack.isEmpty Emptiness check
+ * @property {function(): boolean} Stack.isFull Fullness check
+ * @property {function(): number} Stack.size Size
+ * @property {function(): string} Stack.toString String representation
  */
 function Stack (arr, lim) {
     this.value = isType(lim, "Number")? new Array(lim): [];
@@ -888,14 +884,14 @@ function Stack (arr, lim) {
  * @since 1.0
  * @property {number[]} StackArray.value Values
  * @property {number} StackArray.top Top index
- * @property {Function} StackArray.peek Returns the top value
- * @property {Function} StackArray.ground Returns the bottom value
- * @property {Function} StackArray.push Add items at the top
- * @property {Function} StackArray.pop Remove the top item
- * @property {Function} StackArray.isEmpty Emptiness check
- * @property {Function} StackArray.isFull Fullness check
- * @property {Function} StackArray.size Size
- * @property {Function} StackArray.toString String representation
+ * @property {function(): *} StackArray.peek Returns the top value
+ * @property {function(): *} StackArray.ground Returns the bottom value
+ * @property {function(*)} StackArray.push Add items at the top
+ * @property {function(): *} StackArray.pop Remove the top item
+ * @property {function(): boolean} StackArray.isEmpty Emptiness check
+ * @property {function(): boolean} StackArray.isFull Fullness check
+ * @property {function(): number} StackArray.size Size
+ * @property {function(): string} StackArray.toString String representation
  * @see Stack
  */
 function StackArray (sz) {
@@ -968,14 +964,14 @@ function StackArray (sz) {
  * @constructor
  * @since 1.0
  * @property {number[]} StackList.top Top node
- * @property {Function} StackList.peek Returns the top value
- * @property {Function} StackList.ground Returns the bottom value
- * @property {Function} StackList.push Add items at the top
- * @property {Function} StackList.pop Remove the top item
- * @property {Function} StackList.isEmpty Emptiness check
- * @property {Function} StackList.isFull Fullness check
- * @property {Function} StackList.size Size
- * @property {Function} StackList.toString String representation
+ * @property {function(): *} StackList.peek Returns the top value
+ * @property {function(): *} StackList.ground Returns the bottom value
+ * @property {function(*)} StackList.push Add items at the top
+ * @property {function(): *} StackList.pop Remove the top item
+ * @property {function(): boolean} StackList.isEmpty Emptiness check
+ * @property {function(): boolean} StackList.isFull Fullness check
+ * @property {function(): number} StackList.size Size
+ * @property {function(): string} StackList.toString String representation
  * @see Stack
  */
 function StackList (arr) {
@@ -1030,21 +1026,21 @@ function StackList (arr) {
 /**
  * @description Queue
  * @param {Array|*} [arr] Array or element
- * @param {number|null} [lim=null] Limit
+ * @param {?number} [lim=null] Limit
  * @returns {Queue} Queue
  * @this Queue
  * @constructor
  * @since 1.0
  * @property {number[]} Queue.value Values
- * @property {number|null} Queue.limit Limit
- * @property {Function} Queue.head Returns the first value
- * @property {Function} Queue.tail Returns the last value
- * @property {Function} Queue.enqueue Add items at the end
- * @property {Function} Queue.dequeue Remove the first item
- * @property {Function} Queue.isEmpty Emptiness check
- * @property {Function} Queue.isFull Fullness check
- * @property {Function} Queue.size Size
- * @property {Function} Queue.toString String representation
+ * @property {?number} Queue.limit Limit
+ * @property {function(): *} Queue.head Returns the first value
+ * @property {function(): *} Queue.tail Returns the last value
+ * @property {function(*)} Queue.enqueue Add items at the end
+ * @property {function(): *} Queue.dequeue Remove the first item
+ * @property {function(): boolean} Queue.isEmpty Emptiness check
+ * @property {function(): boolean} Queue.isFull Fullness check
+ * @property {function(): number} Queue.size Size
+ * @property {function(): string} Queue.toString String representation
  */
 function Queue (arr, lim) {
     this.value = isType(lim, "Number")? new Array(lim): [];
@@ -1109,14 +1105,14 @@ function Queue (arr, lim) {
  * @property {number[]} QueueArray.value Values
  * @property {number} QueueArray.front Front index
  * @property {number} QueueArray.back Back index
- * @property {Function} QueueArray.head Returns the first value
- * @property {Function} QueueArray.tail Returns the last value
- * @property {Function} QueueArray.enqueue Add items at the end
- * @property {Function} QueueArray.dequeue Remove the first item
- * @property {Function} QueueArray.isEmpty Emptiness check
- * @property {Function} QueueArray.isFull Fullness check
- * @property {Function} QueueArray.size Size
- * @property {Function} QueueArray.toString String representation
+ * @property {function(): *} QueueArray.head Returns the first value
+ * @property {function(): *} QueueArray.tail Returns the last value
+ * @property {function(*)} QueueArray.enqueue Add items at the end
+ * @property {function(): *} QueueArray.dequeue Remove the first item
+ * @property {function(): boolean} QueueArray.isEmpty Emptiness check
+ * @property {function(): boolean} QueueArray.isFull Fullness check
+ * @property {function(): number} QueueArray.size Size
+ * @property {function(): string} QueueArray.toString String representation
  */
 function QueueArray (arr) {
     /** @default */
@@ -1190,19 +1186,19 @@ function QueueArray (arr) {
  * @constructor
  * @since 1.0
  * @property {number[]} QueueList.value Values
- * @property {Node|null} QueueList.front Front node
- * @property {Node|null} QueueList.back Back node
+ * @property {?Node} QueueList.front Front node
+ * @property {?Node} QueueList.back Back node
  * @property {number} QueueList.len Length of the list
- * @property {Function} QueueList.head Returns the first value
- * @property {Function} QueueList.tail Returns the last value
- * @property {Function} QueueList.enqueue Add items at the end
- * @property {Function} QueueList.dequeue Remove the first item
- * @property {Function} QueueList.isEmpty Emptiness check
- * @property {Function} QueueList.isFull Fullness check
- * @property {Function} QueueList.size Size
- * @property {Function} QueueList.toString String representation
- * @property {Function} QueueList.remove Node removal
- * @property {Function} QueueList.insertAt Positional node insertion
+ * @property {function(): *} QueueList.head Returns the first value
+ * @property {function(): *} QueueList.tail Returns the last value
+ * @property {function(*)} QueueList.enqueue Add items at the end
+ * @property {function(): *} QueueList.dequeue Remove the first item
+ * @property {function(): boolean} QueueList.isEmpty Emptiness check
+ * @property {function(): boolean} QueueList.isFull Fullness check
+ * @property {function(): number} QueueList.size Size
+ * @property {function(): string} QueueList.toString String representation
+ * @property {function(*)} QueueList.remove Node removal
+ * @property {function(number, *)} QueueList.insertAt Positional node insertion
  */
 function QueueList () {
     this.front = null;
@@ -1223,7 +1219,7 @@ function QueueList () {
 
     /**
      * @throws {Error} Queue underflow
-     * @returns {null}
+     * @returns {?Node}
      */
     this.dequeue = function () {
         if (this.isEmpty()) throw new Error("I can't dequeue an empty queue list");
@@ -1467,7 +1463,7 @@ function binarySearch (list, x) {
  * @property {string} Archive.data Data to compress
  * @property {string[]} Archive.dictionary Dictionary (values formated as: letter=bitcode)
  * @property {Function} Archive.updateDict Update the dictionary
- * @property {Function} Archive.getResult Get the result
+ * @property {function(): Str} Archive.getResult Get the result
  */
 function Archive (name, data) {
     this.name = name || "Archive";
@@ -1520,12 +1516,12 @@ function Archive (name, data) {
  * @property {*} virtualHistory.DEFAULT_STATE Default state of the source
  * @property {number} virtualHistory.state State number
  * @property {Function} virtualHistory.reset Reset the current state
- * @property {Function} virtualHistory.update Update the current state if needed
- * @property {Function} virtualHistory.add Add the new state to the list
- * @property {Function} virtualHistory.get Get the i-th state
+ * @property {function(*)} virtualHistory.update Update the current state if needed
+ * @property {function(*)} virtualHistory.add Add the new state to the list
+ * @property {function(number): *} virtualHistory.get Get the i-th state
  * @property {Function} virtualHistory.undo Go the the previous state
  * @property {Function} virtualHistory.redo Go the following state
- * @property {Function} virtualHistory.getStates List the states
+ * @property {function(): string} virtualHistory.getStates List the states
  * @property {*} virtualHistory.isStateDefault Check if the current state is the default one
  */
 function virtualHistory (elm) {
@@ -1613,7 +1609,7 @@ function occurrenceList (list) {
  * @property {string} Stream.formula Formula
  * @property {number[]} Stream.data Data
  * @property {Function} Stream.next Add an other value to the data
- * @property {Function} Stream.toString String representation
+ * @property {function(): string} Stream.toString String representation
  */
 function Stream (initVal, formula, nbVals) {
     this.start = initVal || 0;
@@ -1656,8 +1652,8 @@ function Stream (initVal, formula, nbVals) {
  * @property {number[]} MultiStream.results Results
  * @property {number[]} MultiStream.data Data
  * @property {Function} MultiStream.next Add an other value to the data
- * @property {Function} MultiStream.toString String representation
- * @property {Function} MultiStream.compute Compute a value
+ * @property {function(): string} MultiStream.toString String representation
+ * @property {function(NumberLike): number} MultiStream.compute Compute a value
  */
 function MultiStream (initVal, formula, nbVals) {
     this.start = initVal || 0;
@@ -1714,7 +1710,7 @@ function MultiStream (initVal, formula, nbVals) {
  * @property {number[]} Graph.dimension Dimension
  * @property {Equation} Graph.equation Name
  * @property {number[]} Graph.data Data
- * @property {Function} Graph.toString String representation
+ * @property {function(): string} Graph.toString String representation
  */
 function Graph (formula, dims, lbls, name, precision) { //N-dimensional graph
     this.labels = lbls || ["x", "y"];
@@ -1759,10 +1755,10 @@ function Permutation(data) {
  * @property {string} EventTable.name Name
  * @property {string[]} EventTable.sources Sources
  * @property {Array[]} EventTable.table Event table
- * @property {Function} EventTable.make Make the table
- * @property {Function} EventTable.fill Fill in the table
- * @property {Function} EventTable.getCleanTable Get a clean empty-cell-less table
- * @property {Function} EventTable.loookAt Look at what happened at a particular time
+ * @property {function(number, number)} EventTable.make Make the table
+ * @property {function(string, string)} EventTable.fill Fill in the table
+ * @property {function(): Array[]} EventTable.getCleanTable Get a clean empty-cell-less table
+ * @property {function(Date): string} EventTable.loookAt Look at what happened at a particular time
  */
 function EventTable(name, srcs) {
     this.name = name ||"Event table";
@@ -1821,18 +1817,21 @@ function EventTable(name, srcs) {
  * @since 1.1
  * @property {SortedSet} Map.keys Keys
  * @property {Object} Map.values Mapped values
- * @property {Function} Map.add Add a key/value
- * @property {Function} Map.has Check if a map has a value
- * @property {Function} Map.hasKey Check if a map has a key
- * @property {Function} Map.size Size of the map
- * @property {Function} Map.isEmpty Emptiness check
- * @property {Function} Map.get Get the mapped values of a key
- * @property {Function} Map.remove Remove a key or a value
- * @property {Function} Map.toString String representation
- * @property {Function} Map.forEach Act on each "buckets"
- * @property {Function} Map.set Set a new value to a key
- * @property {Function} Map.replace Replace the value of a key with a new one
- * @property {Function} Map.replaceAll Replace all the value of all the keys with a new one
+ * @property {function(NumberLike, *)} Map.add Add a key/value
+ * @property {function(*): boolean} Map.has Check if a map has a value
+ * @property {function(NumberLike)} Map.clear Clear a bucket or all of them
+ * @property {function(NumberLike): boolean} Map.hasKey Check if a map has a key
+ * @property {function(): number} Map.size Size of the map
+ * @property {function(): boolean} Map.isEmpty Emptiness check
+ * @property {function(NumberLike): Array} Map.get Get the mapped values of a key
+ * @property {function(NumberLike, *)} Map.remove Remove a key or a value
+ * @property {function(): string} Map.toString String representation
+ * @property {function(function(*), boolean)} Map.forEach Act on each "buckets"
+ * @property {function(NumberLike, *)} Map.set Set a new value to a key
+ * @property {function(NumberLike, *, *)} Map.replace Replace the value of a key with a new one
+ * @property {function(*, *)} Map.replaceAll Replace all the value of all the keys with a new one
+ * @property {function(Map)} Map.merge Merge the two maps
+ * @property {function(boolean): string} Map.elements Elements of the map
  */
 function Map (keys) {
     this.keys = new SortedSet(keys || []);
@@ -1887,8 +1886,8 @@ function Map (keys) {
     this.forEach = function (act, valuesInstead) {
         for (var i = 0; i < this.keys.size(); i++) valuesInstead? act(this.values[this.keys.get(i)], i): act(this.keys.get(i), i);
     };
-    this.merge = function (table) {
-        this.keys.add(table.keys.value, table.values);
+    this.merge = function (map) {
+        this.keys.add(map.keys.value, map.values);
     };
     this.set = function (key, value) {
         this.keys.set(this.keys.indexOf(key), value);
