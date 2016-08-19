@@ -128,9 +128,10 @@ function load (url, cb) {
  * @property {Function} XHR.handleResponse Response listener
  * @property {function(?Array[])} XHR.init XHR initialiser
  * @property {function(...?string): *} XHR.header Header manager
- * @property {function(): string} XHR.toString() String representation
+ * @property {function(): string} XHR.toString String representation
  * @property {string} XHR.body Body of the request
- * @property {function(?string)} XHR.viewResponse() Interpret the (X)HTML response
+ * @property {function(?string)} XHR.viewResponse Interpret the (X)HTML response
+ * @this {XHR}
  */
 function XHR (url, method, async, success, fail, progress, body, creds, mime) {
     this.url = url || location.href;
@@ -150,6 +151,7 @@ function XHR (url, method, async, success, fail, progress, body, creds, mime) {
     this.req.onreadystatechange = function () {
         self.state = getXHRMsg(self.req.readyState);
         self.handleResponse();
+        /** @this {XMLHttpRequest} */
         if (self.status != this.status) self.status = this.status;
         if (this.readyState === 4 && (this.status === 200 || this.status === 204)) self.onSuccess(this);
         else if (this.readyState === 3) self.onLoad(this);
@@ -157,19 +159,23 @@ function XHR (url, method, async, success, fail, progress, body, creds, mime) {
     };
     this.onChange = this.req.onreadystatechange;
     this.onSuccess = success || function () {
+        /** @this {XHR} */
         this.handleResponse();
         console.log("%c[XHR] %s%c:\n%s", "color: #0f0", this.status + " " + getHTTPMsg(this.status), "color: #000;", this.response);
     };
     this.onFailure = fail || function () {
+        /** @this {XHR} */
         this.handleResponse();
         console.log("%c[XHR] %s%c:\n%s", "color: #f00", this.status + " " + getHTTPMsg(this.status), "color: #000;", this.response);
     };
     this.onLoad = progress || function () {
+        /** @this {XHR} */
         this.handleResponse();
         console.log("%c[XHR] %s%c:\n%s", "color: #666", this.state, "color: #000;", this.status + " " + getHTTPMsg(this.status));
     };
     this.req.onload = function () {
-        console.info("%c[XHR]%c Loading the %s request to %s", "color: #666;", "color: #000;", this.method, this.url);
+        /** @this {XMLHttpRequest} */
+        console.info("%c[XHR]%c Loading the %s request to %s", "color: #666;", "color: #000;", self.method, self.url);
     };
     this.req.onerror = function () {
         console.error("%c[XHR]%c There was an error in the request !", "color: #f00", "color: #000");
@@ -180,7 +186,7 @@ function XHR (url, method, async, success, fail, progress, body, creds, mime) {
     this.handleResponse = function () {
         switch (this.req.responseType) {
             case "":
-                case "text": this.response = this.req.responseText;
+            case "text": this.response = this.req.responseText;
                 break;
             case "json": this.response = this.req.responseXML; break;
             default: this.response = this.req.response; //arrayBuffer and document
@@ -214,7 +220,7 @@ function XHR (url, method, async, success, fail, progress, body, creds, mime) {
     };
 
     this.toString = function () {
-        return "XHR(url=" + this.url + ", method=" + this.method + ", response=" + this.response + ", credentials= " + this.credentials + ", async=" + this.async + ", state=" + this.state + ", status=" + this.status + ", forIE=" + this.forIE + ", body=" + this.body + ")";
+        return "XHR(url='" + this.url + "', method='" + this.method + "', response='" + this.response + "', credentials=" + this.credentials + ", async=" + this.async + ", state='" + this.state + "', status=" + this.status + ", forIE=" + this.forIE + ", body='" + this.body + "')";
     };
 
     this.viewResponse = function (id) {
@@ -247,35 +253,53 @@ function XHR (url, method, async, success, fail, progress, body, creds, mime) {
  * @property {XHR} CORS.xhr XH/AXO request
  * @property {boolean} CORS.forIE Is the request only for MS IE
  * @property {Function} CORS.init CORS initializer
- * @property {function(): string} CORS.toString() String representation
+ * @property {function(): string} CORS.toString String representation
+ * @property {Function} CORS.update Update the object's fields
+ * @this {CORS}
  */
 function CORS (url, method, async, success, fail, progress, body, creds, mime) {
+    var self = this;
     this.xhr = new XHR(url, method, async || true, success || function () {
-        this.handleResponse();
-        console.log("%c[CORS] %s%c:\n%s", "color: #0f0", this.status + " " + getHTTPMsg(this.status), "color: #000;", this.response);
-    }, fail || function () {
-        this.handleResponse();
-        console.log("%c[CORS] %s%c:\n%s", "color: #f00", this.status + " " + getHTTPMsg(this.status), "color: #000;", this.response);
-    }, progress || function () {
-        this.handleResponse();
-        console.log("%c[CORS] %s%c:\n%s", "color: #666", this.status + " " + getHTTPMsg(this.status), "color: #000;", this.response);
-    }, body, creds, mime);
+            /** @this {XHR} */
+            this.handleResponse();
+            self.update();
+            console.log("%c[CORS] %s%c:\n%s", "color: #0f0", this.status + " " + getHTTPMsg(this.status), "color: #000;", this.response);
+        }, fail || function () {
+            /** @this {XHR} */
+            this.handleResponse();
+            self.update();
+            console.log("%c[CORS] %s%c:\n%s", "color: #f00", this.status + " " + getHTTPMsg(this.status), "color: #000;", this.response);
+        }, progress || function () {
+            /** @this {XHR} */
+            this.handleResponse();
+            self.update();
+            console.log("%c[CORS] %s%c:\n%s", "color: #666", this.status + " " + getHTTPMsg(this.status), "color: #000;", this.response);
+        }, body, creds, mime);
     try {
-        if (!("withCredentials" in this.xhr.req) && typeof XDomainRequest != "undefined") xhr.req = new XDomainRequest();
+        if (!("withCredentials" in this.xhr.req) && typeof XDomainRequest != "undefined") this.xhr.req = new XDomainRequest();
     } catch (e) {}
     this.init = function () {
         this.xhr.init([["Access-Control-Request-Headers", "X-Custom-Header"],
             ["Access-Control-Allow-Headers", "Cache-Control, Content-Language, Content-Type, Expires, Last-Modified, Pragma, Body, Origin, X-Custom-Headers, X-PINGOTHER"],
             ["Access-Control-Expose-Headers", "X-Custom-Header"]
         ]);
+        this.update();
     };
     this.response = this.xhr.response;
     this.url = this.xhr.url;
     this.method = this.xhr.method;
     this.body = body || "";
+    //noinspection JSUnresolvedVariable
     this.forIE = typeof XDomainRequest != "undefined";
     this.toString = function () {
-        return "CORS(url="+ this.url + ", method=" + this.method + "body=" + this.body + "forIE=" + this.forIE + ", response=" + this.response + ", xhr=" + this.xhr.toString() + ")";
+        return "CORS(url="+ this.url + ", method=" + this.method + ", body=" + this.body + ", forIE=" + this.forIE + ", response=" + this.response + ", xhr=" + this.xhr.toString() + ")";
+    };
+    this.update = function () {
+        this.xhr.handleResponse();
+        this.response = this.xhr.response;
+        this.url = this.xhr.url;
+        this.method = this.xhr.method;
+        if (isNon(this.body)) this.body = this.xhr.body;
     };
 
     return this;
@@ -473,19 +497,19 @@ function setCORS (url, method, xml, withCreds, body) {
     //Access-Control-Max-Age (optional)
 
     /*req.setRequestHeader("Access-Control-Allow-Origin", url || getDirectoryPath());
-    req.setRequestHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS"); //Or ["POST", ...]
-    //req.setRequestHeader("Access-Control-Allow-Headers", "X-PINGOTHER"); //Or *
-    req.setRequestHeader("X-PING", "*");
-    req.setRequestHeader("Access-Control-Allow-Max-Age", "1728000");
-    if (req) {
-        req.onload = function() {
-            Essence.say("Setting a CORS request...");
-        };
-        req.onreadystatechange = function () {
-            if (req.readyState === 4 && req.status === 200) res = xml? req.responseXML: req.responseText;
-        };
-        req.send();
-    }*/
+     req.setRequestHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS"); //Or ["POST", ...]
+     //req.setRequestHeader("Access-Control-Allow-Headers", "X-PINGOTHER"); //Or *
+     req.setRequestHeader("X-PING", "*");
+     req.setRequestHeader("Access-Control-Allow-Max-Age", "1728000");
+     if (req) {
+     req.onload = function() {
+     Essence.say("Setting a CORS request...");
+     };
+     req.onreadystatechange = function () {
+     if (req.readyState === 4 && req.status === 200) res = xml? req.responseXML: req.responseText;
+     };
+     req.send();
+     }*/
 
     body? req.send(body): req.send();
 

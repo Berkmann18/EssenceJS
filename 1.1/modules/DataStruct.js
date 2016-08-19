@@ -424,7 +424,7 @@ function PathNode (g, h) { //Nodes for path finding algs
     };
 
     this.toString = function () {
-      return "PathNode(f=" + this.f + ", parent=" + this.parent.toString() + ")";
+        return "PathNode(f=" + this.f + ", parent=" + this.parent.toString() + ")";
     };
     return this;
 }
@@ -1425,7 +1425,7 @@ function occurrenceSort (arr) {
     });
     //lookup.forEach(function (x, i) { console.log(lookup.keys.get(i), x.toStr(true)); }, true)
     lookup.forEach(function (x) {
-       res.prepend(x);
+        res.prepend(x);
     }, true);
     return res;
 }
@@ -1735,13 +1735,19 @@ function Graph (formula, dims, lbls, name, precision) { //N-dimensional graph
  * @returns {string|Array} Permuation list
  * @since 1.0
  */
-function Permutation(data) {
+function Permutation (data) {
     console.log("data=" + data);
     console.log("->" + data.get(-1));
     var perm = [data];
     perm.append((data.length > 1)? Permutation(data.get(-1)): data);
     console.log("perm=" + perm);
     return perm;
+}
+
+function Perm (data) {
+    if (data.length <= 1) return data;
+    else if (data.length == 2) return data.reverse();
+    else return data[0] + Perm(data.get(1));
 }
 
 /**
@@ -1837,8 +1843,8 @@ function Map (keys) {
     this.keys = new SortedSet(keys || []);
     this.values = Tablify(this.keys.value);
     /*this.keys.forEach(function (k) {
-        this.values[k] = [];
-    });*/
+     this.values[k] = [];
+     });*/
     this.add = function (key, value) {
         if (isType(key, "Array")) {
             for (var i = 0; i < key; i++) this.add(key[i], isType(value, "Array")? value[i]: value);

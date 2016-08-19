@@ -193,8 +193,8 @@ function getFileContent (fname) {
     rawFile.open("GET", fname, false);
     rawFile.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
-                $G["fct"] = rawFile.responseText; //Because returning it won't allow the actual content to be returned
-                return rawFile.responseText
+            $G["fct"] = rawFile.responseText; //Because returning it won't allow the actual content to be returned
+            return rawFile.responseText
         }
     };
     rawFile.send(null);
@@ -230,12 +230,13 @@ function getFC (fname, crossOrigin) {
 /**
  * @description Evaluate a file (useful for getting JSON data and into JS objects)
  * @param {string} filename Filename
+ * @param {boolean} [crossOrigin=false] Is a CORS request needed ?
  * @returns {*} Object of the file
  * @since 1.1
  * @func
  */
-function evalFile (filename) {
-    return (new Function("return " + getFileContent(filename)))();
+function evalFile (filename, crossOrigin) {
+    return (new Function("return " + getFC(filename, crossOrigin)))();
 }
 
 /**
@@ -280,9 +281,9 @@ function Spider (filenames) {
     this.keywords = [];
     this.get = function (withSymbols, crossOrigin) { //Keywords infos
         /*
-        Words: getKeywords(...).map(x => x.split(":")[0])
-        Occurrences: getKeywords(...).map(x => parseInt(x.split(" ")[1]))
-        Frequency: getKeywords(...).map(x => parseFloat(x.split(" ")[2].replace(/^\((\d|\d\.\d{1,})\%\)$/, "$1")))
+         Words: getKeywords(...).map(x => x.split(":")[0])
+         Occurrences: getKeywords(...).map(x => parseInt(x.split(" ")[1]))
+         Frequency: getKeywords(...).map(x => parseFloat(x.split(" ")[2].replace(/^\((\d|\d\.\d{1,})\%\)$/, "$1")))
          */
         for (var i = 0; i < this.dir.length; i++) this.keywords[i] = getKeywords(getFC(this.dir[i], crossOrigin), !withSymbols);
         return this.keywords;
@@ -291,9 +292,9 @@ function Spider (filenames) {
         return this.get(withSymbols, crossOrigin).linearise();
     };
     this.getWords = function (withSymbols, crossOrigin) { //Occurring words
-      return this.getAll(withSymbols, crossOrigin).map(function (x) {
-          return x.split(":")[0]
-      })
+        return this.getAll(withSymbols, crossOrigin).map(function (x) {
+            return x.split(":")[0]
+        })
     };
     this.getOccurrences = function (withSymbols, crossOrigin) {
         return this.getAll(withSymbols, crossOrigin).map(function (x) {
@@ -311,7 +312,7 @@ function Spider (filenames) {
     };
     this.getGlobalKeywords = function (withSymbols, crossOrigin) {
         var fullDir = this.dir.map(function (file) {
-           return getFC(file, crossOrigin);
+            return getFC(file, crossOrigin);
         }).toStr();
         return getKeywords(fullDir, !withSymbols);
     };

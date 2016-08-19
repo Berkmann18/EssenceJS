@@ -13,7 +13,10 @@
  * @since 1.1
  * @exports Web
  */
-var Web = new Module("Web", "Web stuff", ["DataStruct"]);
+var Web = new Module("Web", "Web stuff", ["DataStruct"], 1, function () {
+    //if (!isValid($G["IP"], "ip")) getIP();
+    //if (!isValid($G["IP"], "ip")) getPrivateIP();
+});
 
 /* eslint no-undef: 0 */
 
@@ -993,43 +996,43 @@ function Parser (from, to, customParse) {
      * @returns {Code} Parsed code
      */
     this.run = customParse || function (code) {
-        var res = code;
-        res = res.replace(/<tab \/>/gm, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-        res = res.replace(/\{\{tab}}/gm, "\t");
-        res = res.replace(/<info>(.*?)<\/info>/gm, "<span class='block info'>$1</span>");
-        res = res.replace(/<question>(.*?)<\/question>/gm, "<span class='block question'>$1</span>");
-        res = res.replace(/<error>(.*?)<\/error>/gm, "<span class='block error'>$1</span>");
-        res = res.replace(/<warning>(.*?)<\/warning>/gm, "<span class='block warning'>$1</span>");
-        res = res.replace(/<success>(.*?)<\/success>/gm, "<span class='block success'>$1</span>");
-        res = res.replace(/(\{\{)LOREM(}})/ig, $G["lorem"]);
-        res = res.replace(/(?:\{\{)LOREM\x7c(\d+)-(\d+)(?:}})/ig, $G["lorem"].chunk("$1", "$2"));
-        res = res.replace(/(?:\{\{)HW(?:}})/ig, "Hello World !");
-        res = res.replace(/<icon \/>/gm, "<img src='img/icon.png' class='icon'/>");
-        res = res.replace(/<icon size=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/icon.png' class='icon' style='width: $1; height: $1;' />");
-        res = res.replace(/<icon name=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/$1.png' class='icon' />");
-        res = res.replace(/<(s|m|l|xs|xl):icon name=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<img src='img/$2.png' class='$1-icon' />");
-        res = res.replace(/<js>([\s\S]*?)<\/js>/gm,"<script type='text/javascript'>$1<\/script>");
-        res = res.replace(/<js src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"<script type='text/javascript' src='$1'><\/script>");
-        res = res.replace(/<vb>([\s\S]*?)<\/vb>/gm, "<script type='text/vbscript'>$1<\/script>");
-        res = res.replace(/<vb src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"<script type = 'text/vbscript' src='$1'><\/script>");
-        res = res.replace(/<css>([\s\S]*?)<\/css>/gm, "<style type='text/css'>$1</style>");
-        res = res.replace(/<css href=(?:\"|\')([A-Za-z_ -\.]+)(?:\"|\') \/>/gm, "<link rel='stylesheet' type='text/css' href='$1' />");
-        res = res.replace(/<charset=(?:\"|\')(\w + )(?:\"|\') \/>/gm, "<meta charset='$1' />");
-        res = res.replace(/<author name=(?:\"|\')(\w + )(?:\"|\') href=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<meta name='author' content='$1' /><link rel='author' href='$2' />");
-        res = res.replace(/<desc>(.*?)<\/desc>/gm, "<meta name='description' content='$1' />");
-        res = res.replace(/<copy>(.*?)<\/copy>/gm, "<meta name='copyrights' content='$1' />");
-        res = res.replace(/<lbl>(.*?)<\/lbl>/gm, "<label>$1</label>");
-        res = res.replace(/<submit \/>/gm, "<input type='submit' />");
-        res = res.replace(/<submit val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<input type='submit' value='$1' />");
-        res = res.replace(/<reset \/>/gm, "<input type='reset' />");
-        res = res.replace(/<reset val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<input type='reset' value = '$1' />");
-        res = res.replace(/<hdn name=(?:\"|\')(\w+)(?:\"|\')>(.*?)<\/hdn>/gm, "<input type='hidden' name='$1' value='$2' />");
-        res = res.replace(/<hdn name=(?:\"|\')(\w+)(?:\"|\') id=(?:\"|\')(\w+)(?:\"|\')>(.*?)<\/hdn>/gm, "<input type='hidden' name='$1' value='$3' id='$2' />");
-        res = res.replace(/<txt ((?:id|name|class)(\=(?:\"|\')(\w+)(?:\"|\'))(| ))\/>/gm, "<input type='text' />");
-        res = res.replace(/<sql query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\t$r = mysqli_query($$dbc, '$1');\n\t}else printMsg('error', 'No ping');\n\?>");
-        res = res.replace(/<sqlt table=(?:\"|\')(\w+)(?:\"|\') query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\techo 'Last updated at '._time().\"<br />\";selectTable($dbc, '$1', '$2');\n\t}else printMsg('error', 'No ping');\n\?>");
-        return res
-    };
+            var res = code;
+            res = res.replace(/<tab \/>/gm, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+            res = res.replace(/\{\{tab}}/gm, "\t");
+            res = res.replace(/<info>(.*?)<\/info>/gm, "<span class='block info'>$1</span>");
+            res = res.replace(/<question>(.*?)<\/question>/gm, "<span class='block question'>$1</span>");
+            res = res.replace(/<error>(.*?)<\/error>/gm, "<span class='block error'>$1</span>");
+            res = res.replace(/<warning>(.*?)<\/warning>/gm, "<span class='block warning'>$1</span>");
+            res = res.replace(/<success>(.*?)<\/success>/gm, "<span class='block success'>$1</span>");
+            res = res.replace(/(\{\{)LOREM(}})/ig, $G["lorem"]);
+            res = res.replace(/(?:\{\{)LOREM\x7c(\d+)-(\d+)(?:}})/ig, $G["lorem"].chunk("$1", "$2"));
+            res = res.replace(/(?:\{\{)HW(?:}})/ig, "Hello World !");
+            res = res.replace(/<icon \/>/gm, "<img src='img/icon.png' class='icon'/>");
+            res = res.replace(/<icon size=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/icon.png' class='icon' style='width: $1; height: $1;' />");
+            res = res.replace(/<icon name=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/$1.png' class='icon' />");
+            res = res.replace(/<(s|m|l|xs|xl):icon name=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<img src='img/$2.png' class='$1-icon' />");
+            res = res.replace(/<js>([\s\S]*?)<\/js>/gm,"<script type='text/javascript'>$1<\/script>");
+            res = res.replace(/<js src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"<script type='text/javascript' src='$1'><\/script>");
+            res = res.replace(/<vb>([\s\S]*?)<\/vb>/gm, "<script type='text/vbscript'>$1<\/script>");
+            res = res.replace(/<vb src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"<script type = 'text/vbscript' src='$1'><\/script>");
+            res = res.replace(/<css>([\s\S]*?)<\/css>/gm, "<style type='text/css'>$1</style>");
+            res = res.replace(/<css href=(?:\"|\')([A-Za-z_ -\.]+)(?:\"|\') \/>/gm, "<link rel='stylesheet' type='text/css' href='$1' />");
+            res = res.replace(/<charset=(?:\"|\')(\w + )(?:\"|\') \/>/gm, "<meta charset='$1' />");
+            res = res.replace(/<author name=(?:\"|\')(\w + )(?:\"|\') href=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<meta name='author' content='$1' /><link rel='author' href='$2' />");
+            res = res.replace(/<desc>(.*?)<\/desc>/gm, "<meta name='description' content='$1' />");
+            res = res.replace(/<copy>(.*?)<\/copy>/gm, "<meta name='copyrights' content='$1' />");
+            res = res.replace(/<lbl>(.*?)<\/lbl>/gm, "<label>$1</label>");
+            res = res.replace(/<submit \/>/gm, "<input type='submit' />");
+            res = res.replace(/<submit val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<input type='submit' value='$1' />");
+            res = res.replace(/<reset \/>/gm, "<input type='reset' />");
+            res = res.replace(/<reset val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<input type='reset' value = '$1' />");
+            res = res.replace(/<hdn name=(?:\"|\')(\w+)(?:\"|\')>(.*?)<\/hdn>/gm, "<input type='hidden' name='$1' value='$2' />");
+            res = res.replace(/<hdn name=(?:\"|\')(\w+)(?:\"|\') id=(?:\"|\')(\w+)(?:\"|\')>(.*?)<\/hdn>/gm, "<input type='hidden' name='$1' value='$3' id='$2' />");
+            res = res.replace(/<txt ((?:id|name|class)(\=(?:\"|\')(\w+)(?:\"|\'))(| ))\/>/gm, "<input type='text' />");
+            res = res.replace(/<sql query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\t$r = mysqli_query($$dbc, '$1');\n\t}else printMsg('error', 'No ping');\n\?>");
+            res = res.replace(/<sqlt table=(?:\"|\')(\w+)(?:\"|\') query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\techo 'Last updated at '._time().\"<br />\";selectTable($dbc, '$1', '$2');\n\t}else printMsg('error', 'No ping');\n\?>");
+            return res
+        };
 
     this.toString = function () {
         return "Parser(" + this.from + "->" + this.to + ")";
@@ -1096,9 +1099,9 @@ function Toolbar (id, tools, mdl) {
  * @property {Preview} IDE.editor.previewer Previewer
  * @property {Parser} IDE.editor.parser Parser
  * @property {Debugger} IDE.debugger Debugger
- * @property {function(string, string)} IDE.init Initialiser
+ * @property {function(string, string)} IDE.init Initializer
  * @property {Toolbar} IDE.toolbar Toolbar
- * @property {Function} IDE.update Update
+ * @property {function(?number)} IDE.update Update
  * @property {function(): string} IDE.toString String representation
  */
 function IDE (lang, edt, prev, ps, dbg, tb) {
@@ -1177,6 +1180,15 @@ function loadBar (dlb, cb, delay) {
  * @returns {Console} Console
  * @since 1.1
  * @todo Add more commands ?
+ * @property {string} Console.title Title of the console
+ * @property {Code} Console.val Entry of the console
+ * @property {virtualHistory} Console.history Command history
+ * @property {string} Console.user User
+ * @property {function(): string} Console.exec Execute a command
+ * @property {Code} Console.html HTML code
+ * @property {function(Code, ?Code)} Console.out Output something to the console
+ * @property {function(?string)} Console.place Place the console somewhere in the DOM
+ * @property {function(?string)} Console.init Initialize the console
  */
 function Console (title, entry, usr) {
     this.title = title || "Console";
@@ -1237,4 +1249,77 @@ function Console (title, entry, usr) {
     };
 
     return this;
+}
+
+/**
+ * @description Get the IP address of the client.
+ * Source: {@link http://stackoverflow.com/questions/391979/how-to-get-clients-ip-address-using-javascript-only}
+ * @param {number} [stackLayer=0] Stack layer
+ * @return {string} IP address
+ * @since 1.1
+ * @func
+ */
+function getIP (stackLayer) {
+    if (!stackLayer) stackLayer = 0;
+    var res = {}, cors = new CORS("http://api.ipify.org?format=jsonp&callback=_", "GET", false, function (data) {
+        res = JSON.parse(data.response.replace(/_\((.*?)\);/, "$1"));
+        /**
+         * @description IP address of the client
+         * @type {string}
+         * @external module:essence~$G
+         * @since 1.1
+         * @memberof external:essence~$G
+         */
+        $G["IP"] = res.ip;
+        return res;
+    }, function () {
+        Essence.say("IP gathering failed !", "warn");
+    }, $f);
+    cors.init();
+    //if (stackLayer < 1) return getIP(stackLayer + 1);
+    return res.ip || $G["IP"];
+}
+
+/**
+ * @description Get the private IP address of the client.
+ * Source: {@link http://stackoverflow.com/questions/391979/how-to-get-clients-ip-address-using-javascript-only}
+ * @author Mido (from SO)
+ * @since 1.1
+ * @func
+ * @return {string} Private IP address
+ */
+function getPrivateIP () {
+    var myPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection; //compatibility for firefox and chrome
+    var pc = new myPeerConnection({iceServers: []}),
+        localIPs = {},
+        ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g,
+        key;
+
+    function ipIterate (ip) {
+        if (!localIPs[ip]) {
+            /**
+             * @description Private IP address of the client
+             * @type {string}
+             * @external module:essence~$G
+             * @since 1.1
+             * @memberof external:essence~$G
+             */
+            $G["privateIP"] = ip;
+        }
+        localIPs[ip] = true;
+    }
+    pc.createDataChannel(""); //create a bogus data channel
+    pc.createOffer(function (sdp) {
+        sdp.sdp.split('\n').forEach(function (line) {
+            if (line.indexOf('candidate') < 0) return;
+            line.match(ipRegex).forEach(ipIterate);
+        });
+        pc.setLocalDescription(sdp, $f, $f);
+    }, $f); // create offer and set local description
+    pc.onicecandidate = function (ice) { //listen for candidate events
+        if (!ice || !ice.candidate || !ice.candidate.candidate || !ice.candidate.candidate.match(ipRegex)) return;
+        ice.candidate.candidate.match(ipRegex).forEach(ipIterate);
+    };
+
+    return $G["privateIP"];
 }

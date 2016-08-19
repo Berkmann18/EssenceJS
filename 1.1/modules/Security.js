@@ -360,7 +360,7 @@ function hash (word) {
  */
 function toFSHA (str) {
     return str.map(function (c) {
-       return /[A-Za-z]/.test(c)? c: c.charCodeAt(0);
+        return /[A-Za-z]/.test(c)? c: c.charCodeAt(0);
     });
 }
 
@@ -374,8 +374,8 @@ function toFSHA (str) {
  */
 function fromFSHA (fsha) {
     /*return fsha.map(function (c) {
-        return /[A-Za-z]/.test(c)? c: String.fromCharCode(c);
-    });*/
+     return /[A-Za-z]/.test(c)? c: String.fromCharCode(c);
+     });*/
     var res = "";
     for (var i = 0; i < fsha.length; i++) {
         if (/[A-Za-z]/.test(fsha[i])) res += fsha[i];

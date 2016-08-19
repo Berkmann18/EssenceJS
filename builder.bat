@@ -44,9 +44,8 @@ if %min% == 1 minify essence.js --no-comments & echo Minifying done -- (2/3)
 if %min% == 0 echo Minifying cancelled
 ping localhost -n 1 > nul
 echo Documenting ...
-if %doc% == 1 jsdoc --package package.json essence.js & echo Documenting done -- (3/3)
+if %doc% == 1 jsdoc --package package.json essence.js & echo Documenting done -- (3/3) & cd ../
 if %doc% == 0 echo Documenting cancelled
-ping localhost -n 1 > nul
 goto done
 
 rem EssenceJS 1.1
@@ -56,7 +55,7 @@ cd 1.1
 
 if %lint% == 1 (
     echo Linting ...
-    eslint essence.js modules & csshint essence.css & echo Linting done -- (1/3)
+    eslint essence.js modules & csshint essence.css & echo Linting done
     ping localhost -n 1 > nul
 )
 if %min% == 1 (
@@ -66,15 +65,19 @@ if %min% == 1 (
     cd ../
     minify essence.js --no-comments & echo Essence.js minified
     minify modules --no-comments & echo Modules minified
-    minify essence.css --no-comments & echo Minifying done -- (2/3)
+    minify essence.css --no-comments & echo Minifying done
     ping localhost -n 1 > nul
 )
 if %doc% == 1 (
     echo Documenting ...
-    jsdoc --package package.json essence.js modules & echo Documenting done -- (3/3)
-    ping localhost -n 1 > nul
+    jsdoc --package package.json essence.js modules & echo Documenting done & cd ../
 )
-goto done
+
+:done
+echo Building complete !!
+ping localhost -n 1 > nul
+cd ../
+exit /b
 
 rem EssenceJS 1.2
 :v12
@@ -100,7 +103,3 @@ echo Documenting done -- (3/3)
 ping localhost -n 1 > nul
 goto done
 
-:done
-echo Building complete !!
-cd ../
-exit /b

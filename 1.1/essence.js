@@ -189,7 +189,14 @@ var Essence = {
         var complete = true;
         this.loadedModules = [];
         for (var i = 0; i < modules.length; i++) {
-            complete &= window[modules[i]].loaded;
+            try {
+                eval(window[modules[i]].loaded);
+            } catch (e) {
+                Essence.say("The module " + modules[i] + " is not right !", "warn");
+                init(modules[i]);
+            } finally {
+                complete &= window[modules[i]].loaded;
+            }
             if (window[modules[i]].loaded) this.loadedModules.push(window[modules[i]]);
         }
         return Boolean(complete);
@@ -208,7 +215,15 @@ var Essence = {
      * @type {boolean}
      * @since 1.1
      */
-    debugging = false;
+    debugging = false,
+    /**
+     * @description Empty function
+     * @global
+     * @type {Function}
+     * @since 1.1
+     * @readonly
+     */
+    $f = function() {};
 
 /**
  * @description EssenceJS Module
@@ -238,7 +253,7 @@ function Module (name, desc, dpc, ver, rn, pathVer) {
     this.version = ver || 1;
     this.dependency = dpc || [];
     this.description = desc || "";
-    this.run = rn || function () {};
+    this.run = rn || $f;
     this.loaded = false;
     this.path = (pathVer? pathVer : Essence.version.substr(0, 3)) + "/modules/" + this.name + ".js";
 
@@ -281,6 +296,8 @@ function Module (name, desc, dpc, ver, rn, pathVer) {
  * require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js", "modules/moduleB.js" and "modules/moduleC.js"
  * @example <caption>Example 2:</caption>
  * require("myModule", 1.1); //It will import the script located at "1.1/modules/myModule.js"
+ * @see $require
+ * @deprecated
  */
 function require (mdl, ver, extpath) {
     if (isType(mdl, "Array")) {
@@ -292,6 +309,16 @@ function require (mdl, ver, extpath) {
     } else if (debugging) console.log("The module %c%s%c is already included into %c%s    " + getTimestamp(true), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFilename());
 }
 
+/**
+ * @description ES6-like module loader
+ * @func
+ * @param {Str} mdl Module
+ * @returns {undefined}
+ * @since 1.1
+ * @example <caption>Example 1:</caption>
+ * require("myModule"); //It will import the script located at "modules/myModule.js"
+ * require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js", "modules/moduleB.js" and "modules/moduleC.js"
+ */
 function $require (mdl) {
     if (isType(mdl, "Array")) {
         for (var i = 0; i < mdl.length; i++) $require(mdl[i]);
@@ -344,8 +371,9 @@ function run (module, ver) {
             Essence.say("The module %c" + module + "%c isn't available !    " + getTimestamp(true), "erro", "color: #c0f", "color: #000");
             if (debugging) Essence.say("Retrying to run %c" + module + "%c    " + getTimestamp(true), "info", "color: #c0f", "color: #000");
             if (window[module]) go();
-            else if (stackLayer <= 2) setTimeout(retry(stackLayer + 1), 2);
+            else if (stackLayer <= 2) setTimeout(retry(stackLayer + 1), 1);
             else Essence.say("It's not possible to run %c" + module + "%c :( !    " + getTimestamp(true) + "\nModule: " + window[module], "info", "color: #c0f", "color: #000");
+            init(module);
         };
         window[module]? go(): retry();
     } else Essence.say("The module %c" + module + "%c isn't in the list !!    " + getTimestamp(true), "erro", "color: #c0f", "color: #000");
@@ -354,8 +382,8 @@ function run (module, ver) {
 /**
  * @description Initiate a module
  * @param {Str} mdls Module(s)
- * @param {function(*)} [mid] Mid-execution function
- * @param {function(*)} [cb] Callback function
+ * @param {function(*)|boolean} [mid] Mid-execution function
+ * @param {function(*)|boolean} [cb] Callback function
  * @param {NumberLike} [ver] Version (if the modules are in a version based partionning (e.g: 1.0/modules/ModuleA.js, 1.1/modules/ModuleA.js, beta/modules/ModuleA.js)
  * @param {*} [argsMid] Arguments for the mid()
  * @param {*} [argsCB] Arguments for the cb()
@@ -387,7 +415,7 @@ function init (mdls, mid, cb, ver, argsMid, argsCB) {
             //if (!window[mdls].loaded) window[mdls].load();
             run(mdls);
             if (cb) cb(argsCB || mdls);
-        }, 2);
+        }, 1);
     }
 }
 
@@ -411,7 +439,7 @@ var getDirectoryPath = function (path) {
  */
 gatherScripts = function (asList) {
     var $s = $n("*script"), res = asList? []: {};
-    for(var i = 0; i<$s.length; i++) asList? res.push($s[i].src): res[$s[i].src.split("/")[$s[i].src.split("/").length - 1]] = $s[i].src;
+    for(var i = 0; i < $s.length; i++) asList? res.push($s[i].src): res[$s[i].src.split("/")[$s[i].src.split("/").length - 1]] = $s[i].src;
     return res
 }, /**
  * @ignore
@@ -470,7 +498,7 @@ getExtPath = function (path) {
     var parentPath = sF(cp, path);
     return "../".repeat(ct(getCurrentPath(cp, parentPath), "/")) + getCurrentPath(path, parentPath);
 };
-    
+
 /**
  * @summary Module Loading section
  * @since 1.1
@@ -487,16 +515,18 @@ getExtPath = function (path) {
         Essence.say(mdl + " is ready!", "succ");
     }, 1.1); */
     setTimeout(function () {
-        if (debugging) Essence.isComplete()? Essence.say("Essence is complete !", "succ"): Essence.time("List of loaded modules: " + Essence.loadedModules.map(function (m) {
-            return m.name; //split("'")[1];
-        }).toStr(true));
         run(modules, Essence.version.substr(0, 3));
+    }, 690);
+    setTimeout(function () {
+        if (debugging) Essence.isComplete()? Essence.say("Essence is complete !", "succ"): Essence.time("List of loaded modules: " + Essence.loadedModules.map(function (m) {
+            return m.name;
+        }).toStr(true));
         if (Essence.isComplete() && !filenameList(gatherExternalScripts(true)).has(Essence.source)) Essence.source = Essence.source.replace(".js", ".min.js");
         if (debugging && !Essence.loadedModules.map(function (m) {
-                return m.name; //split("'")[1]
+                return m.name;
             }).equals(modules)
         ) Essence.say("The following modules weren't loaded: " + complement(modules, Essence.loadedModules.map(function (m) {
-                return m.name; //split("'")[1]
+                return m.name;
             }))
         );
         if (Essence.source.has("essence.min")) { //If it's the minified version, change the modules to their minified version as well
@@ -505,7 +535,7 @@ getExtPath = function (path) {
                 if (!$s[i].src.has(".min.js")) $s[i].src.replace(".js", ".min.js");
             }
         }
-    }, 700);
+    }, 1e3);
 })();
 
 /**
@@ -807,7 +837,7 @@ function Element (selector) { //The element object
         this.node.scrollLeft += x || 0;
         this.node.scrollTop += y || 0;
     };
-    
+
     this.autoScroll = function (dir, speed) {
         if (!dir) dir = "d";
         var self = this, iv = setInterval(function () {
@@ -870,8 +900,7 @@ function include (file, type) {
 function include_once (file, type, parentPath) {
     if (!type) type = (file.indexOf(".js") > 0)? "script": "link";
     var r = type === "script"? gatherScripts(true): gatherStylesheets(true);
-    if (parentPath && (keyList(r, true).indexOf(parentPath + file) > -1 || valList(r, true).indexOf(parentPath + file) > -1)) return false;
-    else if (keyList(r, true).indexOf(file) > -1 || valList(r, true).indexOf(file) > -1) return false;
+    if ((parentPath && (keyList(r, true).indexOf(parentPath + file) > -1 || valList(r, true).indexOf(parentPath + file) > -1)) || keyList(r, true).indexOf(file) > -1 || valList(r, true).indexOf(file) > -1) return false;
     else include(file, type)
 }
 
@@ -3136,9 +3165,23 @@ String.prototype.sameLast = function (str) {
  * @param {string} [sep=""] Seperator/jointor
  * @return {string} Mapped string
  * @memberof String.prototype
+ * @since 1.1
+ * @method
  */
 String.prototype.map = function (cb, sep) {
     return this.split(sep || "").map(cb).join(sep || "");
+};
+
+/**
+ * @description Reverse a string
+ * @memberOf String.prototype
+ * @param {string} [splitter=""] Splitting/joining string
+ * @return {string} Reversed string
+ * @method
+ * @since 1.1
+ */
+String.prototype.reverse = function (splitter) {
+    return this.split(splitter || "").reverse().join(splitter || "");
 };
 
 /**
@@ -3255,7 +3298,7 @@ Number.prototype.toArr = function () {
  * @description Inheritance
  * Source: Somewhere
  * @param {*} parentClassOrObj Parent
- * @returns {Function} this Current function/constructor
+ * @returns {function(*)} this Current function/constructor
  * @since 1.0
  * @method
  * @memberof Function.prototype

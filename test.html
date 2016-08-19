@@ -8,7 +8,7 @@
 	/*init(["Misc"], false, function (x) {
 		Essence.say(x + " got initiated !\nModules: " + modules.toStr(true) + "   (" + getTime(true) + ")", "info");
 	}, 1.1);*/
-	var bodyBg, ba, r, g, b, csl, lr;
+	var bodyBg, ba, r, g, b, csl, lr, loremTxt = "file:///C:/Users/Administrator/Dropbox/Projects/lorem.txt";
 	function start () {
 		if (typeof(conv) != "function" || !isType(Colour, "Object") || !isType(Console, "Object") || !isType(virtualHistory, "Object")) setTimeout("start()", 100);
 		bodyBg = new Colour(255); ba = new Colour(0); r = new Colour(255, 0, 0); g = new Colour(0, 255, 0); b = new Colour(0, 0, 255);
@@ -16,7 +16,7 @@
 		csl.place("csl");
 		lr = $G["lorem"].replace(/(\.|!|\?|;|:|"|,|\t|\n|\f|\r|\v|\{|})+/gm, " ").split(" ").remove("");
 	}
-	setTimeout("start()", 180);
+	setTimeout("start()", 1e3);
 	function effect(){
 		$e("body").setCSS("background", bodyBg.hex);
 		$e("#ba").setCSS("color", ba.hex);

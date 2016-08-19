@@ -41,7 +41,10 @@
  * @since 1.1
  * @exports Web
  */
-var Web = new Module("Web", "Web stuff", ["DataStruct"]);
+var Web = new Module("Web", "Web stuff", ["DataStruct"], 1, function () {
+    //if (!isValid($G["IP"], "ip")) getIP();
+    //if (!isValid($G["IP"], "ip")) getPrivateIP();
+});
 
 /* eslint no-undef: 0 */
 
@@ -1021,43 +1024,43 @@ function Parser (from, to, customParse) {
      * @returns {Code} Parsed code
      */
     this.run = customParse || function (code) {
-        var res = code;
-        res = res.replace(/&lt;tab \/>/gm, "&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;");
-        res = res.replace(/\{\{tab}}/gm, "\t");
-        res = res.replace(/&lt;info>(.*?)&lt;\/info>/gm, "&lt;span class='block info'>$1&lt;/span>");
-        res = res.replace(/&lt;question>(.*?)&lt;\/question>/gm, "&lt;span class='block question'>$1&lt;/span>");
-        res = res.replace(/&lt;error>(.*?)&lt;\/error>/gm, "&lt;span class='block error'>$1&lt;/span>");
-        res = res.replace(/&lt;warning>(.*?)&lt;\/warning>/gm, "&lt;span class='block warning'>$1&lt;/span>");
-        res = res.replace(/&lt;success>(.*?)&lt;\/success>/gm, "&lt;span class='block success'>$1&lt;/span>");
-        res = res.replace(/(\{\{)LOREM(}})/ig, $G["lorem"]);
-        res = res.replace(/(?:\{\{)LOREM\x7c(\d+)-(\d+)(?:}})/ig, $G["lorem"].chunk("$1", "$2"));
-        res = res.replace(/(?:\{\{)HW(?:}})/ig, "Hello World !");
-        res = res.replace(/&lt;icon \/>/gm, "&lt;img src='img/icon.png' class='icon'/>");
-        res = res.replace(/&lt;icon size=(?:"|')(\w+)(?:"|') \/>/gm, "&lt;img src='img/icon.png' class='icon' style='width: $1; height: $1;' />");
-        res = res.replace(/&lt;icon name=(?:"|')(\w+)(?:"|') \/>/gm, "&lt;img src='img/$1.png' class='icon' />");
-        res = res.replace(/&lt;(s|m|l|xs|xl):icon name=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "&lt;img src='img/$2.png' class='$1-icon' />");
-        res = res.replace(/&lt;js>([\s\S]*?)&lt;\/js>/gm,"&lt;script type='text/javascript'>$1&lt;\/script>");
-        res = res.replace(/&lt;js src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"&lt;script type='text/javascript' src='$1'>&lt;\/script>");
-        res = res.replace(/&lt;vb>([\s\S]*?)&lt;\/vb>/gm, "&lt;script type='text/vbscript'>$1&lt;\/script>");
-        res = res.replace(/&lt;vb src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"&lt;script type = 'text/vbscript' src='$1'>&lt;\/script>");
-        res = res.replace(/&lt;css>([\s\S]*?)&lt;\/css>/gm, "&lt;style type='text/css'>$1&lt;/style>");
-        res = res.replace(/&lt;css href=(?:\"|\')([A-Za-z_ -\.]+)(?:\"|\') \/>/gm, "&lt;link rel='stylesheet' type='text/css' href='$1' />");
-        res = res.replace(/&lt;charset=(?:\"|\')(\w + )(?:\"|\') \/>/gm, "&lt;meta charset='$1' />");
-        res = res.replace(/&lt;author name=(?:\"|\')(\w + )(?:\"|\') href=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "&lt;meta name='author' content='$1' />&lt;link rel='author' href='$2' />");
-        res = res.replace(/&lt;desc>(.*?)&lt;\/desc>/gm, "&lt;meta name='description' content='$1' />");
-        res = res.replace(/&lt;copy>(.*?)&lt;\/copy>/gm, "&lt;meta name='copyrights' content='$1' />");
-        res = res.replace(/&lt;lbl>(.*?)&lt;\/lbl>/gm, "&lt;label>$1&lt;/label>");
-        res = res.replace(/&lt;submit \/>/gm, "&lt;input type='submit' />");
-        res = res.replace(/&lt;submit val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "&lt;input type='submit' value='$1' />");
-        res = res.replace(/&lt;reset \/>/gm, "&lt;input type='reset' />");
-        res = res.replace(/&lt;reset val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "&lt;input type='reset' value = '$1' />");
-        res = res.replace(/&lt;hdn name=(?:\"|\')(\w+)(?:\"|\')>(.*?)&lt;\/hdn>/gm, "&lt;input type='hidden' name='$1' value='$2' />");
-        res = res.replace(/&lt;hdn name=(?:\"|\')(\w+)(?:\"|\') id=(?:\"|\')(\w+)(?:\"|\')>(.*?)&lt;\/hdn>/gm, "&lt;input type='hidden' name='$1' value='$3' id='$2' />");
-        res = res.replace(/&lt;txt ((?:id|name|class)(\=(?:\"|\')(\w+)(?:\"|\'))(| ))\/>/gm, "&lt;input type='text' />");
-        res = res.replace(/&lt;sql query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "&lt;\?php\n\tif (mysqli_ping($$dbc)) {\n\t\t$r = mysqli_query($$dbc, '$1');\n\t}else printMsg('error', 'No ping');\n\?>");
-        res = res.replace(/&lt;sqlt table=(?:\"|\')(\w+)(?:\"|\') query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "&lt;\?php\n\tif (mysqli_ping($$dbc)) {\n\t\techo 'Last updated at '._time().\"&lt;br />\";selectTable($dbc, '$1', '$2');\n\t}else printMsg('error', 'No ping');\n\?>");
-        return res
-    };
+            var res = code;
+            res = res.replace(/&lt;tab \/>/gm, "&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;");
+            res = res.replace(/\{\{tab}}/gm, "\t");
+            res = res.replace(/&lt;info>(.*?)&lt;\/info>/gm, "&lt;span class='block info'>$1&lt;/span>");
+            res = res.replace(/&lt;question>(.*?)&lt;\/question>/gm, "&lt;span class='block question'>$1&lt;/span>");
+            res = res.replace(/&lt;error>(.*?)&lt;\/error>/gm, "&lt;span class='block error'>$1&lt;/span>");
+            res = res.replace(/&lt;warning>(.*?)&lt;\/warning>/gm, "&lt;span class='block warning'>$1&lt;/span>");
+            res = res.replace(/&lt;success>(.*?)&lt;\/success>/gm, "&lt;span class='block success'>$1&lt;/span>");
+            res = res.replace(/(\{\{)LOREM(}})/ig, $G["lorem"]);
+            res = res.replace(/(?:\{\{)LOREM\x7c(\d+)-(\d+)(?:}})/ig, $G["lorem"].chunk("$1", "$2"));
+            res = res.replace(/(?:\{\{)HW(?:}})/ig, "Hello World !");
+            res = res.replace(/&lt;icon \/>/gm, "&lt;img src='img/icon.png' class='icon'/>");
+            res = res.replace(/&lt;icon size=(?:"|')(\w+)(?:"|') \/>/gm, "&lt;img src='img/icon.png' class='icon' style='width: $1; height: $1;' />");
+            res = res.replace(/&lt;icon name=(?:"|')(\w+)(?:"|') \/>/gm, "&lt;img src='img/$1.png' class='icon' />");
+            res = res.replace(/&lt;(s|m|l|xs|xl):icon name=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "&lt;img src='img/$2.png' class='$1-icon' />");
+            res = res.replace(/&lt;js>([\s\S]*?)&lt;\/js>/gm,"&lt;script type='text/javascript'>$1&lt;\/script>");
+            res = res.replace(/&lt;js src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"&lt;script type='text/javascript' src='$1'>&lt;\/script>");
+            res = res.replace(/&lt;vb>([\s\S]*?)&lt;\/vb>/gm, "&lt;script type='text/vbscript'>$1&lt;\/script>");
+            res = res.replace(/&lt;vb src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"&lt;script type = 'text/vbscript' src='$1'>&lt;\/script>");
+            res = res.replace(/&lt;css>([\s\S]*?)&lt;\/css>/gm, "&lt;style type='text/css'>$1&lt;/style>");
+            res = res.replace(/&lt;css href=(?:\"|\')([A-Za-z_ -\.]+)(?:\"|\') \/>/gm, "&lt;link rel='stylesheet' type='text/css' href='$1' />");
+            res = res.replace(/&lt;charset=(?:\"|\')(\w + )(?:\"|\') \/>/gm, "&lt;meta charset='$1' />");
+            res = res.replace(/&lt;author name=(?:\"|\')(\w + )(?:\"|\') href=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "&lt;meta name='author' content='$1' />&lt;link rel='author' href='$2' />");
+            res = res.replace(/&lt;desc>(.*?)&lt;\/desc>/gm, "&lt;meta name='description' content='$1' />");
+            res = res.replace(/&lt;copy>(.*?)&lt;\/copy>/gm, "&lt;meta name='copyrights' content='$1' />");
+            res = res.replace(/&lt;lbl>(.*?)&lt;\/lbl>/gm, "&lt;label>$1&lt;/label>");
+            res = res.replace(/&lt;submit \/>/gm, "&lt;input type='submit' />");
+            res = res.replace(/&lt;submit val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "&lt;input type='submit' value='$1' />");
+            res = res.replace(/&lt;reset \/>/gm, "&lt;input type='reset' />");
+            res = res.replace(/&lt;reset val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "&lt;input type='reset' value = '$1' />");
+            res = res.replace(/&lt;hdn name=(?:\"|\')(\w+)(?:\"|\')>(.*?)&lt;\/hdn>/gm, "&lt;input type='hidden' name='$1' value='$2' />");
+            res = res.replace(/&lt;hdn name=(?:\"|\')(\w+)(?:\"|\') id=(?:\"|\')(\w+)(?:\"|\')>(.*?)&lt;\/hdn>/gm, "&lt;input type='hidden' name='$1' value='$3' id='$2' />");
+            res = res.replace(/&lt;txt ((?:id|name|class)(\=(?:\"|\')(\w+)(?:\"|\'))(| ))\/>/gm, "&lt;input type='text' />");
+            res = res.replace(/&lt;sql query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "&lt;\?php\n\tif (mysqli_ping($$dbc)) {\n\t\t$r = mysqli_query($$dbc, '$1');\n\t}else printMsg('error', 'No ping');\n\?>");
+            res = res.replace(/&lt;sqlt table=(?:\"|\')(\w+)(?:\"|\') query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "&lt;\?php\n\tif (mysqli_ping($$dbc)) {\n\t\techo 'Last updated at '._time().\"&lt;br />\";selectTable($dbc, '$1', '$2');\n\t}else printMsg('error', 'No ping');\n\?>");
+            return res
+        };
 
     this.toString = function () {
         return "Parser(" + this.from + "->" + this.to + ")";
@@ -1124,9 +1127,9 @@ function Toolbar (id, tools, mdl) {
  * @property {Preview} IDE.editor.previewer Previewer
  * @property {Parser} IDE.editor.parser Parser
  * @property {Debugger} IDE.debugger Debugger
- * @property {function(string, string)} IDE.init Initialiser
+ * @property {function(string, string)} IDE.init Initializer
  * @property {Toolbar} IDE.toolbar Toolbar
- * @property {Function} IDE.update Update
+ * @property {function(?number)} IDE.update Update
  * @property {function(): string} IDE.toString String representation
  */
 function IDE (lang, edt, prev, ps, dbg, tb) {
@@ -1205,6 +1208,15 @@ function loadBar (dlb, cb, delay) {
  * @returns {Console} Console
  * @since 1.1
  * @todo Add more commands ?
+ * @property {string} Console.title Title of the console
+ * @property {Code} Console.val Entry of the console
+ * @property {virtualHistory} Console.history Command history
+ * @property {string} Console.user User
+ * @property {function(): string} Console.exec Execute a command
+ * @property {Code} Console.html HTML code
+ * @property {function(Code, ?Code)} Console.out Output something to the console
+ * @property {function(?string)} Console.place Place the console somewhere in the DOM
+ * @property {function(?string)} Console.init Initialize the console
  */
 function Console (title, entry, usr) {
     this.title = title || "Console";
@@ -1265,7 +1277,81 @@ function Console (title, entry, usr) {
     };
 
     return this;
-}</code></pre>
+}
+
+/**
+ * @description Get the IP address of the client.
+ * Source: {@link http://stackoverflow.com/questions/391979/how-to-get-clients-ip-address-using-javascript-only}
+ * @param {number} [stackLayer=0] Stack layer
+ * @return {string} IP address
+ * @since 1.1
+ * @func
+ */
+function getIP (stackLayer) {
+    if (!stackLayer) stackLayer = 0;
+    var res = {}, cors = new CORS("http://api.ipify.org?format=jsonp&amp;callback=_", "GET", false, function (data) {
+        res = JSON.parse(data.response.replace(/_\((.*?)\);/, "$1"));
+        /**
+         * @description IP address of the client
+         * @type {string}
+         * @external module:essence~$G
+         * @since 1.1
+         * @memberof external:essence~$G
+         */
+        $G["IP"] = res.ip;
+        return res;
+    }, function () {
+        Essence.say("IP gathering failed !", "warn");
+    }, $f);
+    cors.init();
+    //if (stackLayer &lt; 1) return getIP(stackLayer + 1);
+    return res.ip || $G["IP"];
+}
+
+/**
+ * @description Get the private IP address of the client.
+ * Source: {@link http://stackoverflow.com/questions/391979/how-to-get-clients-ip-address-using-javascript-only}
+ * @author Mido (from SO)
+ * @since 1.1
+ * @func
+ * @return {string} Private IP address
+ */
+function getPrivateIP () {
+    var myPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection; //compatibility for firefox and chrome
+    var pc = new myPeerConnection({iceServers: []}),
+        localIPs = {},
+        ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g,
+        key;
+
+    function ipIterate (ip) {
+        if (!localIPs[ip]) {
+            /**
+             * @description Private IP address of the client
+             * @type {string}
+             * @external module:essence~$G
+             * @since 1.1
+             * @memberof external:essence~$G
+             */
+            $G["privateIP"] = ip;
+        }
+        localIPs[ip] = true;
+    }
+    pc.createDataChannel(""); //create a bogus data channel
+    pc.createOffer(function (sdp) {
+        sdp.sdp.split('\n').forEach(function (line) {
+            if (line.indexOf('candidate') &lt; 0) return;
+            line.match(ipRegex).forEach(ipIterate);
+        });
+        pc.setLocalDescription(sdp, $f, $f);
+    }, $f); // create offer and set local description
+    pc.onicecandidate = function (ice) { //listen for candidate events
+        if (!ice || !ice.candidate || !ice.candidate.candidate || !ice.candidate.candidate.match(ipRegex)) return;
+        ice.candidate.candidate.match(ipRegex).forEach(ipIterate);
+    };
+
+    return $G["privateIP"];
+}
+</code></pre>
         </article>
     </section>
 
@@ -1275,13 +1361,13 @@ function Console (title, entry, usr) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-File.html">File</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-File-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#getFileContent">getFileContent</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#UnitTest">UnitTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-File.html">File</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-File-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#getFileContent">getFileContent</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#UnitTest">UnitTest</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Aug 18 2016 22:33:13 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Aug 19 2016 21:57:46 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

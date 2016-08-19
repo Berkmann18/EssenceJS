@@ -1,35 +1,35 @@
 ## General
-^ Improved the documentation
+^ Improved the documentation, minor improvements
 
-## essence
-+ Module.getWeight(), moduleList()
-^ Working module bundling (with the 'minfied scripts only' support)
+## [essence](essence.js)
++ \+ String.reverse(), $f
++ \^ Reworked up the timings for the module loader
 
-## Ajax
-^ Changed the dependency list
+## [Ajax](modules/Ajax.js)
++ \^ CORS
 
-## DataStruct
-
-
-## DOM
+## [DataStruct](modules/DataStruct.js)
 
 
-## File
-^ Changed the dependency list, slightly improved Spider
-
-## Maths
-+ CI(), timeCI(), confidenceInterval(), InvNorm()
-
-## Misc
-^ Item.remove()
-
-## Security
+## [DOM](modules/DOM.js)
 
 
-## UI
+## [Files](modules/Files.js)
++ \^ evalFile can now support CORS
+
+## [Maths](modules/Maths.js)
 
 
-## Web
+## [Misc](modules/Misc.js)
 
 
-## QTest
+## [Security](modules/Security.js)
+
+
+## [UI](modules/UI.js)
+
+
+## [Web](modules/Web.js)
++ \+ getIP(), getPrivateIP()
+
+## [QTest](modules/QTest.js)

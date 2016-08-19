@@ -117,7 +117,7 @@ function Person (fname, sname, lname, title, nickname, num, country, city, sex, 
     };
 
     this.getAge = function () {
-            return (date2num(getDate()) - date2num(this.birthday)).toNDec(2);
+        return (date2num(getDate()) - date2num(this.birthday)).toNDec(2);
     };
 
     this.isMajor = function () {
