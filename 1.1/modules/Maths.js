@@ -1453,6 +1453,98 @@ function bitStr (a, b) {
 }
 
 /**
+ * @description Is a equivalent to b. a <=> b
+ * @param {number} a Number a
+ * @param {number} b Number b
+ * @return {boolean} Equivalence
+ * @since 1.1
+ * @func
+ */
+function equivalent (a, b) {
+    return Math.round(a) === Math.round(b) || Math.floor(a) === Math.floor(b) || Math.ceil(a) === Math.floor(b) || Math.floor(a) === Math.ceil(b);
+}
+
+/**
+ * @description Is a approximately equal to b. a ~= b
+ * @param {number} a Number a
+ * @param {number} b Number b
+ * @param {number} [precision=Essence.eps] Precision
+ * @return {boolean} Equality approximative
+ * @since 1.1
+ * @func
+ */
+function approxEqual (a, b, precision) {
+    if (!precision) precision = Essence.eps;
+    return a >= b - precision && a <= b + precision || b >= a - precision && b <= a + precision;
+}
+
+/**
+ * @description Truthness of the proposition among all elements of the array.
+ * @summary Propotional function P(arr)
+ * @param {number} arr Array
+ * @param {string} prop Proposition
+ * @return {boolean[]} P(arr)
+ * @since 1.1
+ * @func
+ */
+function P (arr, prop) {
+    arr.map(function (x) {
+        truth.push(Boolean(prop.replace(/x/gm, x)));
+    });
+    return truth;
+}
+
+/**
+ * @description Check if the proposition holds for all elements of the array.
+ * @summary Universal quantification of P(arr)
+ * @param {number} arr Array
+ * @param {string} prop Proposition
+ * @return {boolean} Quantification result
+ * @since 1.1
+ * @func
+ */
+function forAll (arr, prop) {
+    var truth = true;
+    for (var i = 0; i < arr.length; i++) {
+        truth &= prop.replace(/x/gm, arr[i]);
+        if (!truth) return false;
+    }
+    return !!truth; //P(arr, prop).count(true) === arr.length || !P(arr, prop).has(false)
+}
+
+/**
+ * @description Check if the proposition holds for some elements of the array.
+ * @summary Existensial quantification of P(arr)
+ * @param {number} arr Array
+ * @param {string} prop Proposition
+ * @return {boolean} Quantification result
+ * @since 1.1
+ * @func
+ */
+function forSome (arr, prop) {
+    var truth = prop.replace(/x/gm, arr[0]);
+    for (var i = 1; i < arr.length; i++) {
+        truth &= prop.replace(/x/gm, arr[i]);
+        if (truth) return true;
+    }
+    return false; //P(arr, prop).has(true)
+}
+
+/**
+ * @description Check if the proposition holds for only one element of the array.
+ * @summary Uniqueness quantification of P(arr)
+ * @param {number} arr Array
+ * @param {string} prop Proposition
+ * @return {boolean} Quantification result
+ * @see P
+ * @since 1.1
+ * @func
+ */
+function forOne (arr, prop) {
+   return P(arr, prop).count(true) === 1;
+}
+
+/**
  * @description Read and convert coordinates to code readable data
  * @param {string} str Coordinates
  * @param {boolean} isInt Convert the cells into integers

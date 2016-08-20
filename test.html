@@ -17,21 +17,21 @@
 		lr = $G["lorem"].replace(/(\.|!|\?|;|:|"|,|\t|\n|\f|\r|\v|\{|})+/gm, " ").split(" ").remove("");
 	}
 	setTimeout("start()", 1e3);
-	function effect(){
+	function effect () {
 		$e("body").setCSS("background", bodyBg.hex);
 		$e("#ba").setCSS("color", ba.hex);
 		$e("#r").setCSS("color", r.hex);
 		$e("#g").setCSS("color", g.hex);
 		$e("#b").setCSS("color", b.hex);
 	}
-	function effect3(){
+	function effect3 () {
 		$e("body").setCSS("background", "#fff");
 		$e("#ba").setCSS("color", "#000");
 		$e("#r").setCSS("color", "#000");
 		$e("#g").setCSS("color", "#000");
 		$e("#b").setCSS("color", "#000");
 	}
-	function effect2(){
+	function effect2 () {
 		bodyBg.negative();
 		ba.negative();
 		r.negative();
@@ -44,7 +44,7 @@
 		$e("#b").setCSS("color", b.hex);
 	}
 	var root, root0, root1, root2;
-	function simpleNodes(){
+	function simpleNodes () {
 		/*var base = null, tmp = new intNode(5, base);
 		base = tmp;
 		//head insert a new node
@@ -100,9 +100,8 @@
 		print("</fieldset>", true);
 	}
 	
-	function postHTMLinit(){
+	function postHTMLinit () {
 		Essence.init();
-		UI.run();
 		if(isNon($n("#btn"))){
 			Essence.say("I couldn't find the node #btn !\The element is the following:\n"+$e("#btn"));
 			Essence.say("$e('#btn').node= "+$e("#btn").node, "info");
@@ -110,7 +109,7 @@
 		simpleNodes();
 	}
 	
-	function testDL(){
+	function testDL () {
 		Essence.say($n("span#ceval"));
 		CECheck("span#ceval");
 	}

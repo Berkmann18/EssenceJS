@@ -276,6 +276,7 @@ function CORS (url, method, async, success, fail, progress, body, creds, mime) {
             console.log("%c[CORS] %s%c:\n%s", "color: #666", this.status + " " + getHTTPMsg(this.status), "color: #000;", this.response);
         }, body, creds, mime);
     try {
+        //noinspection JSUnresolvedVariable
         if (!("withCredentials" in this.xhr.req) && typeof XDomainRequest != "undefined") this.xhr.req = new XDomainRequest();
     } catch (e) {}
     this.init = function () {

@@ -296,7 +296,7 @@ function getResources (rmEmpty) {
  */
 function gatherScripts (asList) { //Sort of getResources() but dedicated to only scripts and easier to use
     var $s = $n("*script"), res = asList? []: {};
-    for(var i = 0; i<$s.length; i++) asList? res.push($s[i].src): res[$s[i].src.split("/")[$s[i].src.split("/").length - 1]] = $s[i].src;
+    for (var i = 0; i<$s.length; i++) asList? res.push($s[i].src): res[$s[i].src.split("/")[$s[i].src.split("/").length - 1]] = $s[i].src;
     return res
 }
 
@@ -339,13 +339,13 @@ function gatherExternalScripts (format) {
  * @param {boolean} [asList=false] Result should be a list or an object
  * @returns {*} List/dictionary of stylesheets
  * @see gatherScripts
- * @todo Perhaps use document.styleSheets[] instead ?
  * @since 1.0
  * @func
  */
 function gatherStylesheets (asList) {
-    var $l = $n("*link"), res = asList? []: {};
-    for(var i = 0; i<$l.length; i++) asList? res.push($l[i].href): res[$l[i].href.split("/")[$l[i].href.split("/").length - 1]] = $l[i].href;
+    var $l = $n("*link"), $s = $n("*style"), res = asList? []: {};
+    for (var i = 0; i<$l.length; i++) asList? res.push($l[i].href): res[$l[i].href.split("/")[$l[i].href.split("/").length - 1]] = $l[i].href;
+    for ( i = 0; i<$s.length; i++) asList? res.push($s[i].href): res[$s[i].href.split("/")[$s[i].href.split("/").length - 1]] = $s[i].href;
     return res
 }
 

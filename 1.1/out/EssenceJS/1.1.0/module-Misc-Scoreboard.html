@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Stream</title>
+    <title>JSDoc: Class: Scoreboard</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Stream</h1>
+    <h1 class="page-title">Class: Scoreboard</h1>
 
     
 
@@ -29,7 +29,7 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="module-DataStruct.html">DataStruct</a>~</span>Stream</h2>
+            <span class="ancestors"><a href="module-Misc.html">Misc</a>~</span>Scoreboard</h2>
         
     
 </header>
@@ -41,16 +41,16 @@
 
     
 
-    <h4 class="name" id="Stream"><span class="type-signature"></span>new Stream<span class="signature">(initVal<span class="signature-attributes">opt</span>, formula<span class="signature-attributes">opt</span>, nbVals<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Stream}</span></h4>
+    <h4 class="name" id="Scoreboard"><span class="type-signature"></span>new Scoreboard<span class="signature">(name<span class="signature-attributes">opt</span>, members, events, maxScore<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
-    <p class="summary"><p>Stream</p>.</p>
+    <p class="summary"><p>Scoreboard</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Stream</p>
+    <p>Scoreboard</p>
 </div>
 
 
@@ -60,7 +60,7 @@
 
 
     <h5>This:</h5>
-    <ul><li>{Stream}</li></ul>
+    <ul><li>{Scoreboard}</li></ul>
 
 
 
@@ -93,46 +93,7 @@
 
         <tr>
             
-                <td class="name"><code>initVal</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    0
-                
-                </td>
-            
-
-            <td class="description last"><p>Initial value</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>formula</code></td>
+                <td class="name"><code>name</code></td>
             
 
             <td class="type">
@@ -159,19 +120,89 @@
             
                 <td class="default">
                 
-                    "x + 1"
+                    "Scoreboard"
                 
                 </td>
             
 
-            <td class="description last"><p>Formula</p></td>
+            <td class="description last"><p>Name</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>nbVals</code></td>
+                <td class="name"><code>members</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;string></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Participants of whatever the scoreboard is logging/tracking</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>events</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;string></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Events/things in which participants are evaluated in.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>maxScore</code></td>
             
 
             <td class="type">
@@ -198,10 +229,12 @@
             
                 <td class="default">
                 
+                    10
+                
                 </td>
             
 
-            <td class="description last"><p>Number of values</p></td>
+            <td class="description last"><p>Maximum score</p></td>
         </tr>
 
     
@@ -239,30 +272,7 @@
 
         <tr>
             
-                <td class="name"><code>Stream.start</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Initial value</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>Stream.formula</code></td>
+                <td class="name"><code>Scoreboard.name</code></td>
             
 
             <td class="type">
@@ -278,20 +288,20 @@
 
             
 
-            <td class="description last"><p>Formula</p></td>
+            <td class="description last"><p>Name of the scoreboard</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>Stream.data</code></td>
+                <td class="name"><code>Scoreboard.participants</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;number></span>
+<span class="param-type">Array.&lt;string></span>
 
 
             
@@ -301,14 +311,37 @@
 
             
 
-            <td class="description last"><p>Data</p></td>
+            <td class="description last"><p>List of participants</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>Stream.next</code></td>
+                <td class="name"><code>Scoreboard.maxScore</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Maximum score</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Scoreboard.build</code></td>
             
 
             <td class="type">
@@ -324,14 +357,14 @@
 
             
 
-            <td class="description last"><p>Add an other value to the data</p></td>
+            <td class="description last"><p>Build the scoreboard (it's table)</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>Stream.toString</code></td>
+                <td class="name"><code>Scoreboard.addPoint</code></td>
             
 
             <td class="type">
@@ -347,7 +380,145 @@
 
             
 
-            <td class="description last"><p>String representation</p></td>
+            <td class="description last"><p>Change/add the point to a participant in a particular event</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Scoreboard.getPoint</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Get the point(s) of a participant in a particular event</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Scoreboard.getTotal</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Get the total score of the participant</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Scoreboard.podium</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Get the scoreboard's podium</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Scoreboard.avgScore</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Average total score of the &quot;game&quot;</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Scoreboard.getFormatted</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Get a percentage formatted scoreboard</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Scoreboard.toString</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>String representation of the Scoreboard</p></td>
         </tr>
 
     
@@ -363,7 +534,7 @@
 
     
     <dt class="tag-since">Since:</dt>
-    <dd class="tag-since"><ul class="dummy"><li>1.0</li></ul></dd>
+    <dd class="tag-since"><ul class="dummy"><li>1.1</li></ul></dd>
     
 
     
@@ -389,7 +560,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DataStruct.js.html">modules/DataStruct.js</a>, <a href="modules_DataStruct.js.html#line1614">line 1614</a>
+        <a href="modules_Misc.js.html">modules/Misc.js</a>, <a href="modules_Misc.js.html#line899">line 899</a>
     </li></ul></dd>
     
 
@@ -412,28 +583,6 @@
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>Stream</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Stream</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
@@ -473,7 +622,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sat Aug 20 2016 23:17:07 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sat Aug 20 2016 23:17:08 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

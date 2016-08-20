@@ -36,14 +36,15 @@
  * @copyright Maximilian Berkmann 2016
  * @requires essence
  * @requires DataStruct
+ * @requires Misc
  * @namespace
  * @type {Module}
  * @since 1.1
  * @exports Web
  */
-var Web = new Module("Web", "Web stuff", ["DataStruct"], 1, function () {
-    //if (!isValid($G["IP"], "ip")) getIP();
-    //if (!isValid($G["IP"], "ip")) getPrivateIP();
+var Web = new Module("Web", "Web stuff", ["DataStruct", "Misc"], 1, function () {
+    if (!isValid($G["IP"], "ip")) getIP();
+    if (!isValid($G["IP"], "ip")) getPrivateIP();
 });
 
 /* eslint no-undef: 0 */
@@ -200,14 +201,18 @@ function DB (name, headers, rows, headerRows) {
     this.css = "&lt;style>*{font-family:Consolas,Segoe UI,Tahoma,sans-serif;}table{background: #000;}table,td,th{border:1px solid #000;color:#000;background:#fff;}tr:nth-child(even) td,tr:nth-child(even) th{background:#eee;}&lt;/style>";
     this.html = "";
     this.rows = headerRows || false;
+    //this.events = Tablify(["build", "fill", "save", "update", "set", "get", "find", "see", "view", "add", "init"], {data: null, name: "", timeStamp: new Date().getTime()});
+    this.onBuild = this.onFill = this.onSave = this.onUpdate = this.onSet = this.onGet = this.onFind = this.onSee = this.onView = this.onAdd = this.onInit = $f;
     this.build = function () {
         this.html = isNon(this.rows)? complexTable("", this.val.line(), this.val.block(1), this.head, this.name, true, this.css): complexTable("", this.rows, this.val, this.head, this.name, true, this.css);
+        this.onBuild(this.html);
     };
     this.fill = function (len) {
         this.val = [];
         for (var i = 0; i &lt; len; i++) {
             this.val[i] = [i].append(new Array(range(len - 1 || 1).length).fill("..."));
         }
+        this.onFill(this.val, len);
         return this.val;
     };
     this.save = function () {
@@ -215,6 +220,7 @@ function DB (name, headers, rows, headerRows) {
         localStorage[this.name + "_head"] = JSON.stringify(this.head);
         localStorage[this.name + "_html"] = this.html;
         localStorage[this.name + "_rows"] = this.rows;
+        this.onSave(localStorage[this.name], localStorage[this.name + "_head"], localStorage[this.name + "_html"], localStorage[this.name + "_rows"]);
     };
     this.update = function () {
         if (localStorage[this.name]) {
@@ -223,31 +229,40 @@ function DB (name, headers, rows, headerRows) {
             this.html = localStorage[this.name + "_html"];
             this.rows = localStorage[this.name + "_rows"].split(","); //JSON.parse(localStorage[this.name + "_rows"]);
         } else this.save();
+        this.onUpdate(this);
     };
     this.set = function (nval, i, j) {
         if ( j === -1) {
             for (var k = 0; k &lt; nval.length; k++) this.val[i || 0][k] = nval[k];
         } else this.val[i || 0][j || 0] = nval || null;
+        this.onSet(nval, [i, j]);
     };
     this.get = function (i, j) {
+        this.onGet(i, j);
         return isNon(j)? this.val[i || 0]: this.val[i || 0][j];
     };
     this.find = function (val) {
-        return lookfor(val, this.val);
+        var p = lookfor(val, this.val);
+        this.onFind(val, p);
+        return p;
     };
     this.see = function () {
+        this.onSee(copy(this.val).prepend(copy(this.head).reverse()));
         return copy(this.val).prepend(copy(this.head).reverse());
     };
     this.view = function (id) {
         $e(id? "#" + id: "body").write(this.html + this.css, true);
+        this.onView($e(id? "#" + id: "body").val(true), id);
     };
     this.add = function (vals) {
         this.val.append(vals.unshift(parseInt(this.val.last()[0]) + 1));
+        this.onAdd(vals, this.val);
     };
     this.init = function () {
         this.build();
         this.update();
         console.table(this.see());
+        this.onInit(this);
     };
 
     this.toString = function () {
@@ -352,6 +367,7 @@ function server (name, admin, type, ver, mxsz) {
     else if (this.type === "location") this.data = new DB("db_" + this.name, ["Name", "Longitude", "Latitude"], this.slots, range(1, 1, this.maxsize));//database(this.name, range(1, 1, this.maxsize), this.slots, ["Name", "Longitude", "Latitude"], this.admin, this.version);
     else throw new Error(this.type + " is an invalid server type.");
     this.addProcess = function (pcs) {
+        this.event = new Event("processAdded");
         if (pcs.sig.last() === "-" || pcs.bitsize > this.maxsize/this.nb_slots) console.log("[Server:" + name + "] The process named " + pcs.name + " has been rejected");
         else {
             var pos;
@@ -368,8 +384,10 @@ function server (name, admin, type, ver, mxsz) {
                 this.slots[this.nb_slots] = [pcs.name, pcs.author, pcs.description, pcs.content, pcs.bitsize];
             }
         }
+        this.event = null;
     };
     this.add = function (data) {
+        this.event = new Event("added");
         var pos;
         for (var i = 0; i &lt; this.nb_slots; i++) {
             if (isNon(this.slots[i]) || this.slots[i].equals([])) {
@@ -383,14 +401,20 @@ function server (name, admin, type, ver, mxsz) {
             this.nb_slots += this.maxsize / this.nb_slots; //Extend by one slot
             this.slots[this.nb_slots] = JSON.stringify(data);
         }
+        this.event = null;
     };
     this.rm = function (n) {
-        this.slots[n] = null
+        this.event = new Event("remove");
+        this.slots[n] = null;
+        this.event = null;
     };
     this.store = function () {
-        localStorage["server_" + this.name] = JSON.stringify(this)
+        this.event = new Event("storage");
+        localStorage["server_" + this.name] = JSON.stringify(this);
+        this.event = null;
     };
     this.update = function () {
+        this.event = new Event("update");
         if (localStorage["server_" + this.name]) {
             var self = JSON.parse(localStorage["server_" + this.name]);
             this.name = self.name;
@@ -400,21 +424,33 @@ function server (name, admin, type, ver, mxsz) {
             this.nb_slots = self.nb_slots;
             this.slots = self.slots;
             this.data = new DB(self.data.name, self.data.head, self.data.val, self.data.rows) || self.data;
-        }else this.store()
+        }else this.store();
+        this.event = null;
     };
     this.fire = function (pcs) {
+        this.event = new Event("fire");
         for (var i in this.slots) {
             if (this.slots.hasOwnProperty(i) &amp;&amp; this.slots[i][0] === pcs.name &amp;&amp; this.slots[i][1] === pcs.author) this.rm(i);
         }
+        this.event = null;
     };
     this.reset = function () {
-        for(var i in this.slots) {
-            if(this.slots.hasOwnProperty(i)) this.rm(i)
+        this.event = new Event("reset");
+        for (var i in this.slots) {
+            if (this.slots.hasOwnProperty(i)) this.rm(i)
         }
+        this.event = null;
     };
 
     this.toString = function () {
         return "server(name=" + this.name + ", admin=" + this.admin + ", type=" + this.type + ", version=" + this.version + ", maxsize=" + this.maxsize +", slots=[" + this.slots.toStr(true) + "])";
+    };
+
+    //Events listeners
+    this.listeners = Tablify(["processAdded", "added", "remove", "update", "fire", "reset", "storage"], false);
+
+    this.on = function (evt, handler) {
+        if (this.event.type === evt) handler(this.event);
     };
 
     Essence.addServer(this);
@@ -1361,13 +1397,13 @@ function getPrivateIP () {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-File.html">File</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-File-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#getFileContent">getFileContent</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#UnitTest">UnitTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-File.html">File</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-File-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#getFileContent">getFileContent</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#UnitTest">UnitTest</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Aug 19 2016 21:57:46 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sat Aug 20 2016 23:17:06 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

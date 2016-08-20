@@ -169,7 +169,7 @@ var Essence = {
     }, init: function () {
         $G["t2"] = new Date();
         $G["t2"] = $G["t2"].getSeconds() * 1000 + $G["t2"].getMilliseconds();
-        $G["t"] = ($G["t2"] - $G["t1"] > 1000)? ($G["t2"] - $G["t1"])/1000 + "s": ($G["t2"] - $G["t1"]) + "ms";
+        $G["t"] = ($G["t2"] - $G["t1"] > 1000)? ($G["t2"] - $G["t1"]) / 1000 + "s": ($G["t2"] - $G["t1"]) + "ms";
         Essence.say("Page loaded in %c" + $G["t"] + "%c", "succ", "font-style: italic", "font-style: none");
     }, time: function(msg, style, style0) { //Like Essence.say(msg) but with the timestamp
         console.log("[%c" + getTimestamp(true) + "%c] "+msg, "color: #00f;", "color: #000;", style || "", style0 || "")
@@ -199,7 +199,7 @@ var Essence = {
             }
             if (window[modules[i]].loaded) this.loadedModules.push(window[modules[i]]);
         }
-        return Boolean(complete);
+        return !!complete;
     }, loadedModules: []
 },
     /**
@@ -320,13 +320,39 @@ function require (mdl, ver, extpath) {
  * require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js", "modules/moduleB.js" and "modules/moduleC.js"
  */
 function $require (mdl) {
+    var toND = function (x, n) {
+        var i = this + ""; //Because it won't work with other types than strings
+        n = n || 2;
+        if (parseFloat(i) < Math.pow(10, n - 1)) {
+            while (i.split(".")[0].length < n)  i = "0" + i;
+        }
+        return i
+    }, getT = function () {
+        var d = new Date();
+
+        return getDate() + " " + toND(d.getHours(), 2) + ":" + toND(d.getMinutes(), 2) + ":" + toND(d.getSeconds(), 2) + "." + toND(d.getMilliseconds(), 2)
+    }, stripP = function (p) {
+        return p.split("/")[p.split("/").length - 1]
+    }, _g = function (x, start, end) {
+        var res = "";
+        if (start < 0 && !end) {
+            end = start;
+            start = 0;
+        }
+        if (end < 0) end = x.length + end - 1;
+        for (var i = (start || 0); i <= (end || x.length - 1); i++) res += x[i];
+
+        return res
+    },getFn = function () {
+        return _g(stripP(location.pathname), (-stripP(location.pathname).lastIndexOf(".") - 1));
+    };
     if (isType(mdl, "Array")) {
         for (var i = 0; i < mdl.length; i++) $require(mdl[i]);
     } else if (modules.indexOf(mdl) === -1) {
         gatherScripts()["essence.min.js"]? include_once(getExtPath(getDirectoryPath(gatherScripts()["essence.min.js"])) + "modules/" + mdl + ".min.js", "script"): include_once(getExtPath(getDirectoryPath(gatherScripts()["essence.js"])) + "modules/" + mdl + ".js", "script");
         modules.push(mdl);
-        if (debugging) console.log("The module %c%s%c is now included into %c%s    " + getTimestamp(true), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFilename());
-    } else if (debugging) console.log("The module %c%s%c is already included into %c%s    " + getTimestamp(true), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFilename());
+        if (debugging) console.log("The module %c%s%c is now included into %c%s    " + getT(), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFn());
+    } else if (debugging) console.log("The module %c%s%c is already included into %c%s    " + getT(), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFn());
 }
 
 /**
@@ -442,6 +468,17 @@ gatherScripts = function (asList) {
     for(var i = 0; i < $s.length; i++) asList? res.push($s[i].src): res[$s[i].src.split("/")[$s[i].src.split("/").length - 1]] = $s[i].src;
     return res
 }, /**
+ * @ignore
+ * @external module/DOM~gatherStylesheets
+ * @inheritdoc
+ * @param {boolean} [asList=false] Result should be a list or an object
+ * @returns {*} List/dictionary of stylesheets
+ */
+gatherStylesheets = function (asList) {
+    var $l = $n("*link"), res = asList? []: {};
+    for(var i = 0; i<$l.length; i++) asList? res.push($l[i].href): res[$l[i].href.split("/")[$l[i].href.split("/").length - 1]] = $l[i].href;
+    return res
+},/**
  * @ignore
  * @inheritdoc
  * @external module/File~getCurrentPath
@@ -1087,6 +1124,19 @@ Object.prototype.compareTo = function(obj) {
  */
 Object.prototype.has = function (prop) {
   return this[prop] != undefined;
+};
+
+/**
+ * @description Emptiness check on the object.
+ * Source: {@link https://stackoverflow.com/a/679937/5893085|SO}
+ * @param obj
+ * @return {boolean}
+ */
+Object.prototype.isEmpty = function (obj) {
+    for (var prop in obj) {
+        if (obj.hasOwnProperty(prop)) return false;
+    }
+    return true;
 };
 
 /**
@@ -2854,6 +2904,38 @@ Array.prototype.portion = function (denominator, numerator) {
 };
 
 /**
+ * @description Remove the first element n of the array (so not all values equal to n).
+ * @param {*} n Element
+ * @return {Array.<*>} Array without that first element n
+ * @see Array.remove
+ * @since 1.1
+ * @method
+ * @memberof Array.prototype
+ */
+Array.prototype.removeFirst = function (n) {
+    var self = this;
+    return this.filter(function (x, i) {
+        return x != n || i != self.indexOf(n);
+    });
+};
+
+/**
+ * @description Remove the last element n of the array (so not all values equal to n).
+ * @param {*} n Element
+ * @return {Array.<*>} Array without that last element n
+ * @see Array.remove
+ * @since 1.1
+ * @method
+ * @memberof Array.prototype
+ */
+Array.prototype.removeLarst = function (n) {
+    var self = this;
+    return this.filter(function (x, i) {
+        return x != n || i != self.lastIndexOf(n);
+    });
+};
+
+/**
  * @description Check if the string has a character
  * @inheritdoc
  * @param {*} val Character
@@ -3395,6 +3477,31 @@ function isNon (val) {
 }
 
 /**
+ * @description Check if a variable/object exist or not.
+ * @param {*} obj Object/variable to check
+ * @return {boolean} Existance result
+ * @since 1.1
+ * @func
+ * @example
+ * var a = undefined, b, c = null;
+ * exist(a); //true because: a in window === true
+ * exist(b); //true because: b in window === true
+ * exist(c); //true because: (typeof c !== "undefined" && c !== undefined) === true
+ * exist(d); //false
+ */
+function exist (obj) {
+    var undefined, t;
+    try {
+        //noinspection JSUnusedAssignment
+        t = typeof obj !== "undefined" || obj !== undefined || obj in window;
+    } catch (e) {
+        alert("d");
+        t = false;
+    }
+    return t;
+}
+
+/**
  * @description Returns a copy of an element in order to do mutation-safe operations with it
  * @param {*} el Element
  * @returns {*} Copy of $el
@@ -3435,7 +3542,7 @@ function getKey (keyStroke, tLC) { //Get information about the key pressed
  */
 function getTime (ms) {
     var d = new Date();
-    return ms? d.getHours().toNDigits() + ":" + d.getMinutes().toNDigits() + ":" + d.getSeconds().toNDigits() + "." + d.getMilliseconds().toNDigits(): d.getHours().toNDigits() + ":" + d.getMinutes().toNDigits() + ":" + d.getSeconds().toNDigits()
+    return ms? d.getHours().toNDigits(2) + ":" + d.getMinutes().toNDigits(2) + ":" + d.getSeconds().toNDigits(2) + "." + d.getMilliseconds().toNDigits(2): d.getHours().toNDigits(2) + ":" + d.getMinutes().toNDigits(2) + ":" + d.getSeconds().toNDigits(2)
 }
 
 /**

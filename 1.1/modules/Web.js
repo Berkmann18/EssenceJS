@@ -8,14 +8,15 @@
  * @copyright Maximilian Berkmann 2016
  * @requires essence
  * @requires DataStruct
+ * @requires Misc
  * @namespace
  * @type {Module}
  * @since 1.1
  * @exports Web
  */
-var Web = new Module("Web", "Web stuff", ["DataStruct"], 1, function () {
-    //if (!isValid($G["IP"], "ip")) getIP();
-    //if (!isValid($G["IP"], "ip")) getPrivateIP();
+var Web = new Module("Web", "Web stuff", ["DataStruct", "Misc"], 1, function () {
+    if (!isValid($G["IP"], "ip")) getIP();
+    if (!isValid($G["IP"], "ip")) getPrivateIP();
 });
 
 /* eslint no-undef: 0 */
@@ -172,14 +173,18 @@ function DB (name, headers, rows, headerRows) {
     this.css = "<style>*{font-family:Consolas,Segoe UI,Tahoma,sans-serif;}table{background: #000;}table,td,th{border:1px solid #000;color:#000;background:#fff;}tr:nth-child(even) td,tr:nth-child(even) th{background:#eee;}</style>";
     this.html = "";
     this.rows = headerRows || false;
+    //this.events = Tablify(["build", "fill", "save", "update", "set", "get", "find", "see", "view", "add", "init"], {data: null, name: "", timeStamp: new Date().getTime()});
+    this.onBuild = this.onFill = this.onSave = this.onUpdate = this.onSet = this.onGet = this.onFind = this.onSee = this.onView = this.onAdd = this.onInit = $f;
     this.build = function () {
         this.html = isNon(this.rows)? complexTable("", this.val.line(), this.val.block(1), this.head, this.name, true, this.css): complexTable("", this.rows, this.val, this.head, this.name, true, this.css);
+        this.onBuild(this.html);
     };
     this.fill = function (len) {
         this.val = [];
         for (var i = 0; i < len; i++) {
             this.val[i] = [i].append(new Array(range(len - 1 || 1).length).fill("..."));
         }
+        this.onFill(this.val, len);
         return this.val;
     };
     this.save = function () {
@@ -187,6 +192,7 @@ function DB (name, headers, rows, headerRows) {
         localStorage[this.name + "_head"] = JSON.stringify(this.head);
         localStorage[this.name + "_html"] = this.html;
         localStorage[this.name + "_rows"] = this.rows;
+        this.onSave(localStorage[this.name], localStorage[this.name + "_head"], localStorage[this.name + "_html"], localStorage[this.name + "_rows"]);
     };
     this.update = function () {
         if (localStorage[this.name]) {
@@ -195,31 +201,40 @@ function DB (name, headers, rows, headerRows) {
             this.html = localStorage[this.name + "_html"];
             this.rows = localStorage[this.name + "_rows"].split(","); //JSON.parse(localStorage[this.name + "_rows"]);
         } else this.save();
+        this.onUpdate(this);
     };
     this.set = function (nval, i, j) {
         if ( j === -1) {
             for (var k = 0; k < nval.length; k++) this.val[i || 0][k] = nval[k];
         } else this.val[i || 0][j || 0] = nval || null;
+        this.onSet(nval, [i, j]);
     };
     this.get = function (i, j) {
+        this.onGet(i, j);
         return isNon(j)? this.val[i || 0]: this.val[i || 0][j];
     };
     this.find = function (val) {
-        return lookfor(val, this.val);
+        var p = lookfor(val, this.val);
+        this.onFind(val, p);
+        return p;
     };
     this.see = function () {
+        this.onSee(copy(this.val).prepend(copy(this.head).reverse()));
         return copy(this.val).prepend(copy(this.head).reverse());
     };
     this.view = function (id) {
         $e(id? "#" + id: "body").write(this.html + this.css, true);
+        this.onView($e(id? "#" + id: "body").val(true), id);
     };
     this.add = function (vals) {
         this.val.append(vals.unshift(parseInt(this.val.last()[0]) + 1));
+        this.onAdd(vals, this.val);
     };
     this.init = function () {
         this.build();
         this.update();
         console.table(this.see());
+        this.onInit(this);
     };
 
     this.toString = function () {
@@ -324,6 +339,7 @@ function server (name, admin, type, ver, mxsz) {
     else if (this.type === "location") this.data = new DB("db_" + this.name, ["Name", "Longitude", "Latitude"], this.slots, range(1, 1, this.maxsize));//database(this.name, range(1, 1, this.maxsize), this.slots, ["Name", "Longitude", "Latitude"], this.admin, this.version);
     else throw new Error(this.type + " is an invalid server type.");
     this.addProcess = function (pcs) {
+        this.event = new Event("processAdded");
         if (pcs.sig.last() === "-" || pcs.bitsize > this.maxsize/this.nb_slots) console.log("[Server:" + name + "] The process named " + pcs.name + " has been rejected");
         else {
             var pos;
@@ -340,8 +356,10 @@ function server (name, admin, type, ver, mxsz) {
                 this.slots[this.nb_slots] = [pcs.name, pcs.author, pcs.description, pcs.content, pcs.bitsize];
             }
         }
+        this.event = null;
     };
     this.add = function (data) {
+        this.event = new Event("added");
         var pos;
         for (var i = 0; i < this.nb_slots; i++) {
             if (isNon(this.slots[i]) || this.slots[i].equals([])) {
@@ -355,14 +373,20 @@ function server (name, admin, type, ver, mxsz) {
             this.nb_slots += this.maxsize / this.nb_slots; //Extend by one slot
             this.slots[this.nb_slots] = JSON.stringify(data);
         }
+        this.event = null;
     };
     this.rm = function (n) {
-        this.slots[n] = null
+        this.event = new Event("remove");
+        this.slots[n] = null;
+        this.event = null;
     };
     this.store = function () {
-        localStorage["server_" + this.name] = JSON.stringify(this)
+        this.event = new Event("storage");
+        localStorage["server_" + this.name] = JSON.stringify(this);
+        this.event = null;
     };
     this.update = function () {
+        this.event = new Event("update");
         if (localStorage["server_" + this.name]) {
             var self = JSON.parse(localStorage["server_" + this.name]);
             this.name = self.name;
@@ -372,21 +396,33 @@ function server (name, admin, type, ver, mxsz) {
             this.nb_slots = self.nb_slots;
             this.slots = self.slots;
             this.data = new DB(self.data.name, self.data.head, self.data.val, self.data.rows) || self.data;
-        }else this.store()
+        }else this.store();
+        this.event = null;
     };
     this.fire = function (pcs) {
+        this.event = new Event("fire");
         for (var i in this.slots) {
             if (this.slots.hasOwnProperty(i) && this.slots[i][0] === pcs.name && this.slots[i][1] === pcs.author) this.rm(i);
         }
+        this.event = null;
     };
     this.reset = function () {
-        for(var i in this.slots) {
-            if(this.slots.hasOwnProperty(i)) this.rm(i)
+        this.event = new Event("reset");
+        for (var i in this.slots) {
+            if (this.slots.hasOwnProperty(i)) this.rm(i)
         }
+        this.event = null;
     };
 
     this.toString = function () {
         return "server(name=" + this.name + ", admin=" + this.admin + ", type=" + this.type + ", version=" + this.version + ", maxsize=" + this.maxsize +", slots=[" + this.slots.toStr(true) + "])";
+    };
+
+    //Events listeners
+    this.listeners = Tablify(["processAdded", "added", "remove", "update", "fire", "reset", "storage"], false);
+
+    this.on = function (evt, handler) {
+        if (this.event.type === evt) handler(this.event);
     };
 
     Essence.addServer(this);

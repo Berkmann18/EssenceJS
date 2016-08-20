@@ -757,8 +757,8 @@ function Objectify (keyArr, valArr) {
  * @func
  */
 function Tablify (keyArr, val) {
-    return Objectify(keyArr, new Array(keyArr.length).fill(val || []).map(function () {
-        return val || [];
+    return Objectify(keyArr, new Array(keyArr.length).fill(arguments.toArray().length > 0? val: []).map(function () {
+        return arguments.toArray().length > 1? val: [];
     }));
 }
 
@@ -901,6 +901,80 @@ function moduleList (extended) {
         extended? table.push([m.name, m.version, m.description, m.dependency.toStr(true), m.getWeight()]): table.push([m.name, m.version, m.description, m.dependency.toStr(true)]);
     });
     return table;
+}
+
+/**
+ * @description Scoreboard
+ * @param {string} [name="Scoreboard"] Name
+ * @param {string[]} members Participants of whatever the scoreboard is logging/tracking
+ * @param {string[]} events Events/things in which participants are evaluated in.
+ * @param {number} [maxScore=10] Maximum score
+ * @this {Scoreboard}
+ * @since 1.1
+ * @constructor
+ * @property {string} Scoreboard.name Name of the scoreboard
+ * @property {string[]} Scoreboard.participants List of participants
+ * @property {number} Scoreboard.maxScore Maximum score
+ * @property {Function} Scoreboard.build Build the scoreboard (it's table)
+ * @property {function(string, string, number)} Scoreboard.addPoint Change/add the point to a participant in a particular event
+ * @property {function(string, string): number} Scoreboard.getPoint Get the point(s) of a participant in a particular event
+ * @property {function(string): number} Scoreboard.getTotal Get the total score of the participant
+ * @property {function(): string[]} Scoreboard.podium Get the scoreboard's podium
+ * @property {function(): number} Scoreboard.avgScore Average total score of the "game"
+ * @property {function(): Scoreboard} Scoreboard.getFormatted Get a percentage formatted scoreboard
+ * @property {function(): string} Scoreboard.toString String representation of the Scoreboard
+ */
+function Scoreboard (name, members, events, maxScore) {
+    this.name = name || "Scoreboard";
+    this.participants = members;
+    this.maxScore = maxScore || 10;
+    this.events = events;
+    this.build = function () {
+        this.table = [];
+        this.table.push([""].append(this.participants));
+        for (var i = 1; i &lt;= this.events.length; i++) this.table.push([this.events[i - 1]].append(new Array(this.participants.length).fill(0)));
+        this.table.push(["Total"].append(new Array(this.participants.length).fill(0)));
+    };
+    this.build();
+    this.addPoint = function (participant, event, score) {
+        this.table[lookfor(event, this.table)[0]][lookfor(participant, this.table)[1]] = score || 0;
+        this.table[lookfor("Total", this.table)[0]][lookfor(participant, this.table)[1]] = this.table.line(lookfor(participant, this.table)[1]).get(1, -1).sum();
+    };
+
+    this.getPoint = function (participant, event) {
+        return this.table[lookfor(event, this.table)[0]][lookfor(participant, this.table)[1]];
+    };
+    this.getTotal = function (participant) {
+        return this.table[lookfor("Total", this.table)[0]][lookfor(participant, this.table)[1]];
+    };
+
+    this.podium = function () {
+        var scores = this.table.last().get(1), first, second, third;
+        first = this.table[0][this.table.last().indexOf(scores.max())];
+        scores = scores.removeFirst(scores.max());
+        second = this.table[0][this.table.last().indexOf(scores.max())];
+        scores = scores.removeFirst(scores.max());
+        third = this.table[0][this.table.last().indexOf(scores.max())];
+        return [first, second, third];
+    };
+
+    this.avgScore = function () {
+        return this.table.last().mean(2, 1);
+    };
+
+    this.getFormatted = function (nbDec) {
+        if (!nbDec) nbDec = 2;
+        var sb = copy(this);
+        for (var p = 0; p &lt; this.participants.length; p++) {
+            for (var e = 0; e &lt; this.events.length; e++) sb.table[e + 1][p + 1] = (sb.table[e + 1][p + 1] / this.maxScore).toNDec(nbDec);//this.addPoint(this.participants[p], this.events[e], this.getFormated(this.participants[p], this.events[e]) / this.maxScore);
+            sb.table[sb.events.length + 1][p + 1] = sb.table.line(p + 1).get(1, -1).sum().toNDec(nbDec);
+        }
+        return sb;
+    };
+
+    this.toString = function () {
+        return "Scoreboard(name=" + this.name + ", participants=" + this.participants.toStr(true) + "; maxScore=" + this.maxScore + ", events=" + this.events.toStr(true) + ")";
+    }
 }</code></pre>
         </article>
     </section>
@@ -911,13 +985,13 @@ function moduleList (extended) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-File.html">File</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-File-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#getFileContent">getFileContent</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#UnitTest">UnitTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-File.html">File</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-File-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#getFileContent">getFileContent</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#UnitTest">UnitTest</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Aug 19 2016 21:57:46 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sat Aug 20 2016 23:17:06 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

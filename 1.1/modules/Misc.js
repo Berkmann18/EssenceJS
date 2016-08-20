@@ -729,8 +729,8 @@ function Objectify (keyArr, valArr) {
  * @func
  */
 function Tablify (keyArr, val) {
-    return Objectify(keyArr, new Array(keyArr.length).fill(val || []).map(function () {
-        return val || [];
+    return Objectify(keyArr, new Array(keyArr.length).fill(arguments.toArray().length > 0? val: []).map(function () {
+        return arguments.toArray().length > 1? val: [];
     }));
 }
 
@@ -873,4 +873,78 @@ function moduleList (extended) {
         extended? table.push([m.name, m.version, m.description, m.dependency.toStr(true), m.getWeight()]): table.push([m.name, m.version, m.description, m.dependency.toStr(true)]);
     });
     return table;
+}
+
+/**
+ * @description Scoreboard
+ * @param {string} [name="Scoreboard"] Name
+ * @param {string[]} members Participants of whatever the scoreboard is logging/tracking
+ * @param {string[]} events Events/things in which participants are evaluated in.
+ * @param {number} [maxScore=10] Maximum score
+ * @this {Scoreboard}
+ * @since 1.1
+ * @constructor
+ * @property {string} Scoreboard.name Name of the scoreboard
+ * @property {string[]} Scoreboard.participants List of participants
+ * @property {number} Scoreboard.maxScore Maximum score
+ * @property {Function} Scoreboard.build Build the scoreboard (it's table)
+ * @property {function(string, string, number)} Scoreboard.addPoint Change/add the point to a participant in a particular event
+ * @property {function(string, string): number} Scoreboard.getPoint Get the point(s) of a participant in a particular event
+ * @property {function(string): number} Scoreboard.getTotal Get the total score of the participant
+ * @property {function(): string[]} Scoreboard.podium Get the scoreboard's podium
+ * @property {function(): number} Scoreboard.avgScore Average total score of the "game"
+ * @property {function(): Scoreboard} Scoreboard.getFormatted Get a percentage formatted scoreboard
+ * @property {function(): string} Scoreboard.toString String representation of the Scoreboard
+ */
+function Scoreboard (name, members, events, maxScore) {
+    this.name = name || "Scoreboard";
+    this.participants = members;
+    this.maxScore = maxScore || 10;
+    this.events = events;
+    this.build = function () {
+        this.table = [];
+        this.table.push([""].append(this.participants));
+        for (var i = 1; i <= this.events.length; i++) this.table.push([this.events[i - 1]].append(new Array(this.participants.length).fill(0)));
+        this.table.push(["Total"].append(new Array(this.participants.length).fill(0)));
+    };
+    this.build();
+    this.addPoint = function (participant, event, score) {
+        this.table[lookfor(event, this.table)[0]][lookfor(participant, this.table)[1]] = score || 0;
+        this.table[lookfor("Total", this.table)[0]][lookfor(participant, this.table)[1]] = this.table.line(lookfor(participant, this.table)[1]).get(1, -1).sum();
+    };
+
+    this.getPoint = function (participant, event) {
+        return this.table[lookfor(event, this.table)[0]][lookfor(participant, this.table)[1]];
+    };
+    this.getTotal = function (participant) {
+        return this.table[lookfor("Total", this.table)[0]][lookfor(participant, this.table)[1]];
+    };
+
+    this.podium = function () {
+        var scores = this.table.last().get(1), first, second, third;
+        first = this.table[0][this.table.last().indexOf(scores.max())];
+        scores = scores.removeFirst(scores.max());
+        second = this.table[0][this.table.last().indexOf(scores.max())];
+        scores = scores.removeFirst(scores.max());
+        third = this.table[0][this.table.last().indexOf(scores.max())];
+        return [first, second, third];
+    };
+
+    this.avgScore = function () {
+        return this.table.last().mean(2, 1);
+    };
+
+    this.getFormatted = function (nbDec) {
+        if (!nbDec) nbDec = 2;
+        var sb = copy(this);
+        for (var p = 0; p < this.participants.length; p++) {
+            for (var e = 0; e < this.events.length; e++) sb.table[e + 1][p + 1] = (sb.table[e + 1][p + 1] / this.maxScore).toNDec(nbDec);//this.addPoint(this.participants[p], this.events[e], this.getFormated(this.participants[p], this.events[e]) / this.maxScore);
+            sb.table[sb.events.length + 1][p + 1] = sb.table.line(p + 1).get(1, -1).sum().toNDec(nbDec);
+        }
+        return sb;
+    };
+
+    this.toString = function () {
+        return "Scoreboard(name=" + this.name + ", participants=" + this.participants.toStr(true) + "; maxScore=" + this.maxScore + ", events=" + this.events.toStr(true) + ")";
+    }
 }

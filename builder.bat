@@ -1,5 +1,4 @@
 @echo off
-color 0A
 
 set lint=1
 set min=1
