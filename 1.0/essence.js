@@ -464,8 +464,8 @@ Object.prototype.isIterable = function () {
 
 /**
  * @description Self-destruction of the object
+ * Source: {@link https://Google.github.io/styleguide/javascriptguide.xml?showone=delete#delete}
  * @this Object
- * @source https://Google.github.io/styleguide/javascriptguide.xml?showone=delete#delete
  * @returns {undefined}
  */
 Object.prototype.delete = function () {
@@ -1187,7 +1187,7 @@ Array.prototype.cenSort = function (l, r) {
 			j++;
 		}
 	}
-	
+
 	if (l > i-1) this.cenSort(l, i - 1);
 	if (i > r) this.cenSort(i, r);
 	return res
@@ -1228,7 +1228,7 @@ Array.prototype.clean = function (noDuplic) { //Remove undesirable items
  * @returns {Array} Cleaned array
  */
 Array.prototype.xclean = function () {
-	return this.clean(true).remove([undefined, "undefined", null, "null"]) 
+	return this.clean(true).remove([undefined, "undefined", null, "null"])
 };
 
 /**
@@ -1346,7 +1346,7 @@ Array.prototype.rot = function (deg) {
 					if(j > 0) Essence.say(this[i][this.length - 1 - j] + "<-" +  tmp[i]);
 					this[i][this.length - 1 - j] = tmp[i];
 				}
-			}	
+			}
 		} else if (deg === -90) {
 			tmp = [this[0][0], this[0][1]];
 			this[0][0] = this[0].last();
@@ -2021,7 +2021,7 @@ String.prototype.get = function (start, end) {
 	}
 	if (end < 0) end = this.length + end - 1;
 	for(var i = (start || 0); i <= (end || this.length - 1); i++) res += this[i];
-	
+
 	return res
 };
 
@@ -2183,16 +2183,16 @@ Number.prototype.toArr = function () {
  * @param {*} parentClassOrObj Parent
  * @returns {Function} this Current function/constructor
  */
-Function.prototype.inheritsFrom = function (parentClassOrObj) { 
+Function.prototype.inheritsFrom = function (parentClassOrObj) {
 	if (parentClassOrObj.constructor === Function) { //Normal Inheritance
 		this.prototype = new parentClassOrObj;
 		this.prototype.constructor = this;
 		this.prototype.parent = parentClassOrObj.prototype;
-	} else { //Pure Virtual Inheritance 
+	} else { //Pure Virtual Inheritance
 		this.prototype = parentClassOrObj;
 		this.prototype.constructor = this;
 		this.prototype.parent = parentClassOrObj;
-	} 
+	}
 	return this
 };
 
@@ -2818,7 +2818,7 @@ function lenRand (len, if0) {
 
 /**
  * @description Random float in [0; 1] with 16-bits of randomness as Math.random() creates repetitive patterns when applied over larger space
- * @source Three.js
+ * Source: {@link Three.js}
  * @returns {number} Random float
  */
 function random16 () { //Random float from <0, 1> with 16 bits of randomness
@@ -2827,8 +2827,8 @@ function random16 () { //Random float from <0, 1> with 16 bits of randomness
 
 /**
  * @description Random float in [-range/2, range/2]
+ * Source: {@link Three.js}
  * @param {number} range Range length
- * @source Three.js
  * @returns {number} Random float
  */
 function randFloatSpread (range) {
@@ -2963,7 +2963,7 @@ function toS (i) {
 	if (!i) i = withH? "00:00:00.000": "00:00.000"; //Avoid having errors
 	if (!isType(i, "String")) i += "";
 	if (i.length >= 4 && i.indexOf(":") == 1) return toS("0" + i); //So times without the leading 0 or simply with a 1-digit first section could be read properly
-	
+
 	var t = i.split(":");
 
 	if (withH) {
@@ -3213,7 +3213,7 @@ function Po2Norm (l, x) { //Poisson to Normal
 
 /**
  * @description Gaussian Error
- * @source http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function
+ * Source: {@link http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function}
  * @param {number} z Number
  * @returns {number} Gaussian error
  */
@@ -3225,13 +3225,13 @@ function erf (z) {
 
 /**
  * @description Normal estimate
- * @source http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function
+ * Source: {@link http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function}
  * @param {number} n Total number of attempts
  * @param {number} p Success probability
  * @param {number} r Number of attempts
  * @returns {number} Normal estimate
  */
-function NormEstimate(n, p, r) {
+function NormEstimate (n, p, r) {
 	var u = n * p, o;
 	o = Math.pow(u * (1 - p), .5);
 	return .5 * (1 + erf((r - u) / (o * Math.pow(2, .5))));
@@ -3256,7 +3256,7 @@ function clamp (x, a, b) {
  * @returns {number} Clamped number
  */
 function revClamp(x, a, b) {
-	return (a <= x && x <= b)? getClosest(x, [a, b]): x; 
+	return (a <= x && x <= b)? getClosest(x, [a, b]): x;
 }
 
 /**
@@ -3368,7 +3368,7 @@ function primeCheck (a, b) {
 function getClosestRoot (x, n) {
 	if (!n) n = 2;
 	var rof = 0, er = 0;
-	
+
 	if ((x / 2 * x / 2) / 2 - 2 <= x) rof = x / 2;
 	else if (x / 3 * x / 3 <= x) rof = x / 3;
 	else rof = x / 4;
@@ -3432,10 +3432,10 @@ function non0 (x) {
 function toFrac (n, prec, up) {
 	var s = String(n), p = s.indexOf(".");
 	if (p == -1) return s;
-		
+
 	var i = Math.floor(n) || "", dec = s.substring(p),  m = prec || Math.pow(10, dec.length-1), num = up? Math.ceil(dec * m): Math.round(dec * m), den = m,
 	g = gcd(num, den);
-	
+
 	if (den/g === 1) return String(i + (num/g));
 	if (i) i += " and ";
 	return i + String(num/g) + "/" + String(den/g)
@@ -3575,8 +3575,8 @@ function getNumFromStr (x) { //Remove the text from the string to keep the numbe
 
 /**
  * @description X unit to y px
+ * Source: {@link http://www.endmemo.com/sconvert/centimeterpixel.php}
  * @param {string} x Number with a unit
- * @source http://www.endmemo.com/sconvert/centimeterpixel.php
  * @returns {number} Pixels
  * @see fromPixel
  */
@@ -3770,7 +3770,7 @@ function copyToClipboard (txt, type) { //Works only for IE
  */
 function save (txt, name, type) { //Save into a file of the corresponding type
 	var txtfile = new Blob([txt], {type: "text/" + (type || "plain")});
-	
+
 	var dlLink = document.createElement("a");
 	dlLink.download = name;
 	dlLink.innerHTML = "Download File";
@@ -4006,17 +4006,17 @@ function Colour (r, g, b, a) {
 		this.red = 255 - parseInt(this.red);
 		this.update();
 	};
-	
+
 	this.greenNegative = function () { //Invert the green
 		this.green = 255 - parseInt(this.green);
 		this.update();
 	};
-	
+
 	this.blueNegative = function () {
 		this.green = 255 - parseInt(this.green);
 		this.update();
 	};
-	
+
 	this.rand = function (hex) {
 		this.red = randTo(255);
 		this.green = randTo(255);
@@ -4024,19 +4024,19 @@ function Colour (r, g, b, a) {
 		this.update();
 		return hex? this.hex: this.rgba
 	};
-	
+
 	this.toLocaleString = function () {
 		return "Colour(r = " + this.red + ", g = " + this.green + ", b = " + this.blue + ", a = " + this.alpha + ")"
 	};
-	
+
 	this.toString = function () {
 		return "rgba(" + this.red + ", " + this.green + ", " + this.blue + ", " + this.alpha + ")"
 	};
-	
+
 	this.get = function () {
 		return [this.red, this.green, this.blue, this.alpha]
 	};
-	
+
 	this.increment = function (i) {
 		if (isNon(i)) i = 63.75;
 		this.blue += i;
@@ -4137,36 +4137,36 @@ function negateColour (elmt, attr, mod) {
  */
 function colourName2Hex (clr) { //Get the hexadecimal equivalent of the colour names
 	switch (clr.normal()) {
-		case "aqua": return "#00ffff"; 
-		case "cyan": return "#00ffff"; 
-		case "black": return "#000000"; 
-		case "blue": return "#0000ff"; 
-		case "fuchsia": return "#ff00ff"; 
-		case "magenta": return "#f800f8"; 
-		case "gray": return "#808080"; 
-		case "grey": return "#808080"; 
-		case "green": return "#008000"; 
-		case "lime": return "#00ff00"; 
-		case "brown": return "#800000"; 
-		case "maroon": return "#800000"; 
-		case "navy": return "#000080"; 
-		case "olive": return "#808000"; 
-		case "purple": return "#800080"; 
-		case "red": return "#ff0000"; 
-		case "silver": return "#c0c0c0"; 
-		case "teal": return "#008080"; 
-		case "white": return "#ffffff"; 
-		case "yellow": return "#ffff00"; 
-		case "gold": return "#ffd700"; 
-		case "seagreen": return "#2e8b57"; 
-		case "pink": return "#ffc0cb"; 
-		case "skyblue": return "#87ceeb"; 
-		case "coral": return "#ff7f50"; 
-		case "tan": return "#d2b48c"; 
-		case "orange": return "#ffa500"; 
-		case "cream": return "#feffff"; 
-		case "lightgray": return "#d3d3d3"; 
-		case "salmon": return "#fa8072"; 
+		case "aqua": return "#00ffff";
+		case "cyan": return "#00ffff";
+		case "black": return "#000000";
+		case "blue": return "#0000ff";
+		case "fuchsia": return "#ff00ff";
+		case "magenta": return "#f800f8";
+		case "gray": return "#808080";
+		case "grey": return "#808080";
+		case "green": return "#008000";
+		case "lime": return "#00ff00";
+		case "brown": return "#800000";
+		case "maroon": return "#800000";
+		case "navy": return "#000080";
+		case "olive": return "#808000";
+		case "purple": return "#800080";
+		case "red": return "#ff0000";
+		case "silver": return "#c0c0c0";
+		case "teal": return "#008080";
+		case "white": return "#ffffff";
+		case "yellow": return "#ffff00";
+		case "gold": return "#ffd700";
+		case "seagreen": return "#2e8b57";
+		case "pink": return "#ffc0cb";
+		case "skyblue": return "#87ceeb";
+		case "coral": return "#ff7f50";
+		case "tan": return "#d2b48c";
+		case "orange": return "#ffa500";
+		case "cream": return "#feffff";
+		case "lightgray": return "#d3d3d3";
+		case "salmon": return "#fa8072";
 		default: return null;
 	}
 }
@@ -4278,7 +4278,7 @@ function Item (name, cat, price, amr, nb) { //An item like the ones that can be 
 	this.ageMinRequired = amr || .25; //3 months old+
 	this.quantity = nb || 1;
 	this.firstMade = new Date().toLocaleString();
-	
+
 	this.dublicate = function (n, dest) {
 		for (var i = 0; i < n; i++) dest.push(new Item(this.name, this.category, this.price, this.ageMinRequired, this.quantity));
 	};
@@ -4790,7 +4790,7 @@ function h (mtx, solvedMtx, hrt) {
 		res[i] = new Array(mtx[i].length);
 		for (var j = 0; j < mtx[i].length; j++) {
 			res[i][j] = hrt([i, j], lookfor(mtx[i][j], solvedMtx)) || euclidianDist([i, j], lookfor(mtx[i][j], solvedMtx));
-		}	  
+		}
 	}
 	Essence.say(console.table(res));
 	return res.sum2d()
@@ -4881,7 +4881,7 @@ function LinkedList (pl, nx, name) {
 	this.show = function () {
 		return this.name + ":" + this.payload + "->" + this.next.show()
 	};
-	
+
 	this.toString = function () {
 		return "LinkedList(" + this.show() + ")"
 	};
@@ -4901,7 +4901,7 @@ function TreeNode (pl, l, r) { //Binary tree
 	this.left = l;
 	this.right = r;
 	this.payload = pl || 0;
-	
+
 	this.add = function (l, r) {
 		this.left = l;
 		this.right = r;
@@ -4952,7 +4952,7 @@ function TreeNode (pl, l, r) { //Binary tree
 		if (!s) s = "&nbsp;&nbsp;";
 		if (!d) d = 0;
 		if (!sym) sym = "|-";
-		
+
 		if (this.left) this.left.inOrder(t + s, s, d + 1, sym);
 		println(t + sym + this.payload + s+" (deepth = " + d+")");
 		if (this.right) this.right.inOrder(t + s, s, d + 1, sym);
@@ -4962,7 +4962,7 @@ function TreeNode (pl, l, r) { //Binary tree
 		if (!s) s = "&nbsp;&nbsp;";
 		if (!d) d = 0;
 		if (!sym) sym = "|-";
-		
+
 		println(t + sym + this.payload + s+" (deepth = " + d+")");
 		if (this.left) this.left.preOrder(t + s, s, d + 1, sym);
 		if (this.right) this.right.preOrder(t + s, s, d + 1, sym)
@@ -4972,7 +4972,7 @@ function TreeNode (pl, l, r) { //Binary tree
 		if (!s) s = "&nbsp;&nbsp;";
 		if (!d) d = 0;
 		if (!sym) sym = "|-";
-		
+
 		if (this.left) this.left.postOrder(t + s, s, d + 1, sym);
 		if (this.right) this.right.postOrder(t + s, s, d + 1, sym);
 		println(t + sym + this.payload + s+" (deepth = " + d+")")
@@ -4982,7 +4982,7 @@ function TreeNode (pl, l, r) { //Binary tree
 	this.getInOrder = function (sym) {
 		if (!sym) sym = "->";
 		var order = "";
-		
+
 		if (this.left) order += this.left.getInOrder(sym);
 		order += sym + this.payload;
 		if (this.right) order += this.right.getInOrder(sym);
@@ -4991,7 +4991,7 @@ function TreeNode (pl, l, r) { //Binary tree
 	this.getPreOrder = function (sym) {
 		if (!sym) sym = "->";
 		var order = "";
-		
+
 		order += sym + this.payload;
 		if (this.left) order += this.left.getPreOrder(sym);
 		if (this.right) order += this.right.getPreOrder(sym);
@@ -5000,7 +5000,7 @@ function TreeNode (pl, l, r) { //Binary tree
 	this.getPostOrder = function (sym) {
 		if (!sym) sym = "->";
 		var order = "";
-		
+
 		if (this.left) order += this.left.getPostOrder(sym);
 		if (this.right) order += this.right.getPostOrder(sym);
 		return order + sym + this.payload
@@ -5130,23 +5130,23 @@ function Node (pl, nx, pv) {
 		if (this.next) this.next.traverse();
 		Essence.say("payload: " + this.payload);
 	};
-	
+
 	this.print = function () {
 		if (this.next != null) this.next.print();
 		Essence.print(this.payload + "=>");
 	};
-	
+
 	this.printList = function () {
 		if (this.next === null) Essence.txt2print += "->" + this.v;
 		else this.next.printList();
 		Essence.print("");
 	};
-	
+
 	this.last = function () {
 		if (this.next === null) return this;
 		else return this.next.last()
 	};
-	
+
 	this.append = function (n) {
 		if (this.next === null) {
 			this.next = new Node(n); //If there is no next node, link the new one here
@@ -5171,15 +5171,15 @@ function Node (pl, nx, pv) {
 			return newHead
 		}
 	};
-		
+
 	this.toString = function () {
 		return "Node(payload = " + this.payload + ", previous = " + this.prev + ", next = " + this.next + ")"
 	};
-	
+
 	this.equals = function (node) {
 		return this.payload === node.payload && this.next.equals(node.next) && this.prev.equals(node.prev)
 	};
-	
+
 	this.find = function (n, d) {
 		if (!d) d = 0;
 		if (this.payload === n) return d;
@@ -5404,9 +5404,9 @@ function Set (arr) {
 	this.size = function () {
 		return this.value.length
 	};
-	
+
 	this.add = function (item) {
-		if (this.value.indexOf(item) === -1) {	
+		if (this.value.indexOf(item) === -1) {
 			if (isType(item, "array")) this.value = this.value.concat(item);
 			else this.value.push(item)
 		}
@@ -5452,35 +5452,35 @@ function Set (arr) {
 		}
 		return same
 	};
-	
+
 	this.toString = function () {
 		return "Set(" + this.value.toString() + ")"
 	};
-	
+
 	this.subset = function (s, e) {
 		return this.value.slice(s, e + 1)
 	};
-	
+
 	this.get = function (i) {
 		return this.value[i]
 	};
-	
+
 	this.first = function () {
 		return this.value[0]
 	};
-	
+
 	this.last = function () {
 		return this.value[this.value.lastIndex()]
 	};
-	
+
 	this.min = function (s, e) {
 		return this.value.min(s, e)
 	};
-	
+
 	this.max = function (s, e) {
 		return this.value.max(s, e)
 	};
-	
+
 	this.median = function (s, e) {
 		return this.value.max(s, e)
 	};
@@ -5522,43 +5522,43 @@ function Stack (arr, lim) {
 	this.value = isType(lim, "Number")? new Array(lim): [];
 	this.limit = lim || null;
 	if (arr) this.value.push(arr);
-	
+
 	this.peek = function () { //Returns the top value
 		return this.value.last()
 	};
-	
+
 	this.ground = function () { //Returns the bottom value
 		return this.value[0]
 	};
-	
+
 	this.push = function (item) {
 		if (this.isFull()) throw new Error("Stack overflow !");
 		isType(item, "array")? this.value.append(item): this.value.push(item);
 	};
-	
+
 	this.pop = function () {
 		if (this.isEmpty()) throw new Error("Stack underflow !");
 		var it = this.peek();
 		this.value.pop(it);
 		return it
 	};
-	
+
 	this.isEmpty = function () {
 		return this.value.length === 0
 	};
-	
+
 	this.isFull = function () {
 		return this.lim != null? this.value.length >= this.limit: false
 	};
-	
+
 	this.size = function () {
 		return this.value.length
 	};
-	
+
 	this.toString = function () {
 		return "Stack(" + this.value.toString() + ")"
 	};
-	
+
 	this.equals = function (s) {
 		return this.toString() === s.toString()
 	};
@@ -5577,11 +5577,11 @@ function Stack (arr, lim) {
 function StackArray (sz) {
 	this.value = new Array(sz);
 	this.top = -1;
-	
+
 	this.peek = function () { //Returns the top value
 		return this.value[this.top]
 	};
-	
+
 	this.push = function (item) {
 		if (this.isFull()) throw new Error("Stack overflow !");
 		if (isType(item, "array")) {
@@ -5591,7 +5591,7 @@ function StackArray (sz) {
 			this.value[this.top] = item;
 		}
 	};
-	
+
 	this.pop = function (item) {
 		if (this.isEmpty()) throw new Error("Stack underflow !");
 		if (isType(item, "array")) {
@@ -5602,23 +5602,23 @@ function StackArray (sz) {
 			return el
 		}
 	};
-		
+
 	this.isEmpty = function () {
 		return this.top<=-1
 	};
-	
+
 	this.isFull = function () {
 		return this.top >= this.value.length
 	};
-	
+
 	this.size = function () {
 		return this.top + 1
 	};
-	
+
 	this.toString = function () {
 		return "Stack(" + this.value.toString() + ")"
 	};
-	
+
 	this.equals = function (s) {
 		return this.toString() === s.toString()
 	};
@@ -5636,12 +5636,12 @@ function StackArray (sz) {
  */
 function StackList (arr) {
 	this.top = new Node();
-	
+
 	this.peek = function () { //Returns the top value
 		return (this.isEmpty() || this.top == null)? null: this.top.next.payload
 	};
-	
-	this.push = function (item) { 
+
+	this.push = function (item) {
 		if (isType(item, "array")) {
 			for(var i = 0; i < item.length; i++) this.push(item[i]);
 		} else {
@@ -5662,11 +5662,11 @@ function StackList (arr) {
 			return el
 		}
 	};
-	
+
 	this.isEmpty = function () {
 		return this.top == null
 	};
-	
+
 	this.size = function (n) {
 		return this.top != null? this.size(n + 1): n
 	};
@@ -5686,43 +5686,43 @@ function Queue (arr, lim) {
 	this.value = isType(lim, "Number")? new Array(lim): [];
 	this.limit = lim || null;
 	if (arr) this.value.push(arr);
-	
+
 	this.enqueue = function (item) {
 		if (this.isFull()) throw new Error("Queue overflow !");
 		isType(item, "array")? this.value.preppend(item): this.value.unshift(item);
 	};
-	
+
 	this.dequeue = function () {
 		if (this.isEmpty()) throw new Error("Queue underflow !");
 		var it = this.head();
 		this.value.pop();
 		return it
 	};
-	
+
 	this.head = function () { //Returns the first value
 		return this.value.last()
 	};
-	
+
 	this.tail = function () { //Returns the last value
 		return this.value[0]
 	};
-	
+
 	this.isEmpty = function () {
 		return this.value.length === 0
 	};
-	
+
 	this.isFull = function () {
 		return this.lim != null? this.value.length >= this.limit: false
 	};
-	
+
 	this.size = function () {
 		return this.value.length
 	};
-	
+
 	this.toString = function () {
 		return "Queue(head = " + this.head() + ", tail = " + this.tail() + ", value = " + this.value.toString() + ")"
 	};
-	
+
 	this.equals = function (queue) {
 		return this.toString() === queue.toString()
 	};
@@ -5742,7 +5742,7 @@ function QueueArray (arr) {
 	this.value = arr || [];
 	this.front = -1;
 	this.back = -1;
-	
+
 	this.enqueue = function (item) {
 		if (isType(item, "array")) {
 			for(var i = 0; i < item.length; i++) this.enqueue(item[i]);
@@ -5758,7 +5758,7 @@ function QueueArray (arr) {
 			}
 		}
 	};
-	
+
 	this.dequeue = function () {
 		var val;
 		if (this.isEmpty()) throw new Error("I can't dequeue from an empty queue");
@@ -5775,19 +5775,19 @@ function QueueArray (arr) {
 	this.isEmpty = function () {
 		return this.front === -1 && this.back === -1
 	};
-	
+
 	this.isFull = function () {
 		return this.back>(this.front + 1) % this.value.length
 	};
-	
+
 	this.size = function () {
 		return this.value.length
 	};
-	
+
 	this.toString = function () {
 		return "Queue(front = " + this.front + ", back = " + this.back + ", value = " + this.value.toString() + ")"
 	};
-	
+
 	this.equals = function (queue) {
 		return this.toString() === queue.toString()
 	};
@@ -5807,7 +5807,7 @@ function QueueList () {
 	this.front = null;
 	this.back = null;
 	this.len = 0;
-	
+
 	this.enqueue = function (item) {
 		if (isType(item, "array")) {
 			for(var i = 0; i < item.length; i++) this.enqueue(item[i]);
@@ -5819,7 +5819,7 @@ function QueueList () {
 		}
 		return this
 	};
-	
+
 	this.dequeue = function () {
 		if (this.isEmpty()) throw new Error("I can't dequeue an empty queue list");
 		this.front = this.front.prev;
@@ -5830,11 +5830,11 @@ function QueueList () {
 	this.isEmpty = function () {
 		return this.len === 0 || this.back === null
 	};
-	
+
 	this.size = function () {
 		return this.len
 	};
-	
+
 	this.toString = function () {
 		var str = "", crt = this.front;
 		while (crt != null) {
@@ -5843,11 +5843,11 @@ function QueueList () {
 		}
 		return str
 	};
-	
+
 	this.equals = function (queue) {
 		return this.toString() === queue.toString()
 	};
-	
+
 	this.remove = function (pl) {
 		var crt = this.front;
 		while (crt != null) {
@@ -5855,7 +5855,7 @@ function QueueList () {
 			crt = crt.next;
 		}
 	};
-	
+
 	this.insertAt = function (i, pl) {
 		this.back.next = new Node(pl);
 		if (i === 0) this.front = new Node(pl);
@@ -5970,7 +5970,7 @@ function reconPath(cameFrom, current, grid) {
  * @see Astar
  */
 function IDAstar () {
-	
+
 }
 
 /**
@@ -6010,7 +6010,7 @@ function rmConsecDuplicates (arr) {
  */
 function rmDuplicates (arr) {
 	var out = rmConsecDuplicates(arr), j = 0;
-	
+
 	for (var i = 0; i < arr.length; i++) { //Pre-filtering
 		if (i === 0 || arr[i] != arr[i-1] || (i >= 1 && arr[i] != arr[i-2]) || (i >= 2 && arr[i] != arr[i-3])) out[j++] = arr[i];
 	}
@@ -6037,61 +6037,61 @@ function Shape (x, y, b, v) {
 	this.border = b || 1;
 	this.vel = v || new Vector();
 	this.norm = this.vel.getNormal();
-	
+
 	this.update = function () {
 		this.x += this.vel.x;
 		this.y += this.vel.y;
 		this.norm = this.vel.getNormal();
 	};
-	
+
 	this.stop = function () {
 		this.vel = this.norm = new Vector();
 	};
-	
+
 	this.toString = function () {
 		return "Shape(x = " + this.x + ", y = " + this.y + ", border = " + this.border + ", velocity = " + this.vel + ")"
 	};
-	
+
 	this.offset = function (s) {
 		return (s === "l") ?  this.x - 1 - this.border: ((s === "r")? this.x + 1+ this.border: ((s === "u")? this.y - 1 - this.border: this.y + 1 + border))
 	};
-	
+
 	this.bounce = function (n) {
 		this.vel.reflect(n);
 	};
-	
+
 	this.copy = function () {
 		//return new Shape(this.x, this.y, this.b, this.vel)
 	};
-	
+
 	this.mult = function (k) {
 		this.x *= k;
 		this.y *= k;
 		return this
 	};
-	
+
 	this.div = function (k) {
 		this.x /= k;
 		this.y /= k;
 		return this
 	};
-	
+
 	this.add = function (v) {
 		this.x += v.x;
 		this.y += v.y;
 		return this
 	};
-	
+
 	this.sub = function (v) {
 		this.x -= v.x;
 		this.y -= v.y;
 		return this
 	};
-	
+
 	this.draw = function () {
-		
+
 	};
-	
+
 	this.getSpeed = function () {
 		return Math.sqrt(Math.pow(this.vel.x, 2) + Math.pow(this.vel.y, 2))
 	};
@@ -6129,16 +6129,16 @@ function Box (x, y, z, w, h, d, bsz, bclr, bgclr, brd) {
 	this.ratio = (this.height/this.width).toNDigits(4);
 	this.ratio3d = [this.ratio, this.height/non0(this.deepth), this.width/non0(this.deepth)].mean(4);
 	this.draw = function () {
-		
+
 	};
 	this.erase = function () {
-		
+
 	};
 	this.rot = function (alpha, beta, theta) { //Rotation
-		
+
 	};
 	this.translate = function (px, py, pz) {
-		
+
 	};
 	this.toString = function () {
 		return "Box(x = " + this.x + ", y = " + this.y + ", z = " + this.z + ", width = " + this.width + ", height = " + this.height + ", deepth = " + this.deepth + ", borderSize = " + this.borderSize + ", borderColor = " + this.borderColor + ", borderRadius = " + this.borderRadius + ", backgroundColor = " + this.backgroundColor + ")"
@@ -6170,27 +6170,27 @@ function AABB (x, y, w, h, b, v) {
 	this.vel = v || new Vector();
 	this.ratio = this.h / this.w;
 	this.norm = this.vel.getNormal();
-	
+
 	this.getPoints = function () {
 		return [new Pt(this.x, this.y), new Pt(this.x + this.w, this.y), new Pt(this.x + this.w, this.y + this.h), new Pt(this.x, this.y + this.h)]
 	};
-	
+
 	this.equals = function (a) {
 		return this.x == a.x && this.y == a.y && this.w == a.w && this.h == a.h && this.border == a.border && this.vel.equals(a.vel)
 	};
-	
+
 	this.toString = function () {
 		return "AABB(x = " + this.x + ", y = " + this.y + ", width = " + this.w + ", height = " + this.h + ", velocity = " + this.vel.toString() + ", border = " + this.border + ")"
 	};
-	
+
 	this.hit = function (obj, s) {
 		return (s === "l")?  obj.offset("l") <= this.offset("r"): ((s === "r")? obj.offset("r") >= this.offset("l"): ((s === "u")? obj.offset("u") <= this.offset("d"): ((s === "d")? obj.offset("d") >= this.offset("u"): (this.hit(obj, "l") || this.hit(obj, "r") || this.hit(obj, "u") || this.hit(obj, "d")))))
 	};
-	
+
 	this.copy = function () {
 		return new AABB(this.x, this.y, this.w, this.h, this.b, this.vel)
 	};
-	
+
 	this.concat = function (a) {
 		this.w = a.x - this.x - this.w; //Or w + a.x + a.w
 		this.h = a.y - this.y - this.h; //Or h + a.y + a.h
@@ -6202,7 +6202,7 @@ function AABB (x, y, w, h, b, v) {
 	};
 
 	this.draw = function () {
-		
+
 	};
 
 	this.getPerimeter = function () {
@@ -6240,19 +6240,19 @@ function Circ (x, y, r, b, v) {
 	this.border = b || 1;
 	this.vel = v || new Vector();
 	this.norm = this.vel.getNormal();
-	
+
 	this.offset = function (s) {
 		return (s === "l")?  this.x - this.r: ((s === "r")? this.x + this.r: ((s === "u")? this.y - this.r: this.y + this.r))
 	};
-	
+
 	this.equals = function (a) {
 		return this.x === a.x && this.y === a.y && this.r === a.r && this.border === a.border && this.vel.equals(a.vel)
 	};
-	
+
 	this.toString = function () {
 		return "Circ(x = " + this.x + ", y = " + this.y + ", radius = " + this.r + ", velocity = " + this.vel.toString() + ")"
 	};
-	
+
 	this.hit = function (obj, s) { //More like a getHit(obj) but for also circle/circle situations
 		if (obj.hit(this, "")) {
 			this.bounce(obj.norm);
@@ -6261,11 +6261,11 @@ function Circ (x, y, r, b, v) {
 		}
 		return false
 	};
-	
+
 	this.draw = function () {
-		
+
 	};
-	
+
 	this.getCircumference = function () {
 		return 2 * this.r * Math.PI
 	};
@@ -6288,11 +6288,11 @@ function Pt (x, y) {
 	this.x = x || 0;
 	this.y = y || 0;
 	this.vel = new Vector();
-	
+
 	this.equals = function (p) {
 		return this.x == p.x && this.y == p.y
 	};
-	
+
 	this.toString = function () {
 		return "Pt(x = " + this.x + ", y = " + this.y + ")"
 	};
@@ -6313,11 +6313,11 @@ Line.inheritsFrom(Shape);
 function Line (a, b) {
 	this.s = a;
 	this.e = b;
-	
+
 	this.equals = function (l) {
 		return this.s.equals(l.s) && this.e.equals(l.e)
 	};
-	
+
 	this.toString = function () {
 		return "Line(start = " + this.s.toString() + ", end = " + this.e.toString() + ")"
 	};
@@ -6339,63 +6339,63 @@ function Vector (x, y) {
 	this.prototype = Shape.prototype; //To avoid bugs
 	this.x = x || 0;
 	this.y = y || 0;
-	
+
 	this.toString = function () {
 		return "Vector(x = " + this.x + ", y = " + this.y + ")"
 	};
-	
+
 	this.equals = function (v) {
 		return this.x == v.x && this.y == v.y
 	};
-	
+
 	this.copy = function () {
 		return new Vector(this.x, this.y)
 	};
-	
+
 	this.normalise = function () {
 		var v = Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
 		this.x /= v;
 		this.y /= v;
 	};
-	
+
 	this.getNormal = function () {
 		return new Vector(this.x / Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2)), this.y / Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2)))
 	};
-	
+
 	this.zero = function () {
 		this.x = this.y = 0;
 		return this
 	};
-	
+
 	this.neg = function () {
 		this.x = -this.x;
 		this.y = -this.y;
 		return this
 	};
-	
+
 	this.dot = function (v) {
 		return this.x * v.x + this.y * v.y
 	};
-	
+
 	this.cross = function (v) {
 		return this.x * v.y-this.y * v.x
 	};
-	
+
 	this.lenSq = function () {
 		return Math.pow(this.x, 2) + Math.pow(this.y, 2)
 	};
-	
+
 	this.length = function () {
 		return Math.sqrt(this.lenSq())
 	};
-	
+
 	this.reflect = function (normal) { //.. on a normal
 		var n = normal.copy() || this.normal.copy();
 		n.mult(2 * this.dot(normal || this.normal));
 		this.sub(n);
 		return this
 	};
-	
+
 	this.angle = function (v) {
 		return Math.acos((this.x * v.x + this.y * v.y)/(this.length() * v.length()))
 	};
@@ -6419,7 +6419,7 @@ function Polygon (pts, b, v) {
 	this.border = b || 1;
 	this.vel = v || new Vector();
 	this.norm = this.vel.getNormal();
-	
+
 	this.equals = function (a) {
 		var eq = true;
 		for (var p in this.points) {
@@ -6427,7 +6427,7 @@ function Polygon (pts, b, v) {
 		}
 		return eq && this.border === a.border && this.vel.equals(a.vel)
 	};
-	
+
 	this.toString = function () {
 		var ptStr = "[";
 		for (var p in this.points) {
@@ -6436,17 +6436,17 @@ function Polygon (pts, b, v) {
 		ptStr += "]";
 		return "Polygon(points = " + ptStr + ", velocity = " + this.vel.toString() + ", border = " + this.border + ")"
 	};
-	
+
 	this.hit = function (obj, s) {
 		return (s === "l")?  obj.offset("l") <= this.offset("r"): ((s === "r")? obj.offset("r") >= this.offset("l"): ((s === "u")? obj.offset("u") <= this.offset("d"): ((s === "d")? obj.offset("d") >= this.offset("u"): (this.hit(obj, "l") || this.hit(obj, "r") || this.hit(obj, "u") || this.hit(obj, "d")))))
 	};
-	
+
 	this.copy = function () {
 		return new Polygon(this.points, this.b, this.vel)
 	};
-	
+
 	this.draw = function () {
-		
+
 	};
 
 	return this;
@@ -6841,19 +6841,19 @@ function encrypt (txt, key) {
 	if (!key) {
 		var len = txt.length, extra = 0;
 		var mid = Math.floor(len/2);
-		
+
 		mid = (len % 2 === 0)? txt.charCodeAt(mid): (txt.charCodeAt(txt[mid - 1]) + txt.charCodeAt(txt[mid])) / 2;
 		if (mid >= 97 && mid <= 122) extra = 2;
 		else if (mid >= 65 && mid <= 90) extra = 1;
 		else if (mid - Math.floor(mid/2) * 2 === 0) extra = -1;
 		else extra = 2;
-		
+
 		key = Math.round((Math.pow(2, 7) + txt.sum() - 48) / txt.prod()) + extra;
 	}
 	var res = "";
 	for(var i = 0; i < txt.length; i++) res += trans(txt[i], key);
 	len = mid = extra = undefined;
-	
+
 	return res
 }
 
@@ -7490,10 +7490,10 @@ ping (ms)
 	>200, 300>: poor
 	>300: bad
 latency is the client-server packet transmit when ping is the go and return of that
- 
+
 gigue (ms): connexion fluctuation
 	<5: synchronized connexion
- 
+
 download speed (kbps/Mbps):
 	<0, 56>: low debit
 	>56, 8M>: ADSL debit
@@ -7501,7 +7501,7 @@ download speed (kbps/Mbps):
 	>20M, 50M>: wire
 	>50M, 100M>: optical fibre
 	>100M: Ethernet
- 
+
 upload speed:
 	<0, 56>: low debit
 	>56, 1M>: ADSL+
@@ -7559,8 +7559,8 @@ function evalPing (ms) {
 
 /**
  * @description Base64
+ * Source: {@link Somewhere}
  * @type {{PADCHAR: string, ALPHA: string, getbyte64: base64.getbyte64, decode: base64.decode, getbyte: base64.getbyte, encode: base64.encode}}
- * @source Somewhere
  */
 var base64 = {
 	PADCHAR: "=",
@@ -7580,7 +7580,7 @@ var base64 = {
 		var imax = s.length;
 		if (imax === 0) return s;
 		if (imax % 4 != 0) throw "Cannot decode base64";
-		
+
 		pads = 0;
 		if (s.charAt(imax-1) === base64.PADCHAR) {
 			pads = 1;
@@ -7588,19 +7588,19 @@ var base64 = {
 			// either way, we want to ignore this last block
 			imax -= 4;
 		}
-	
+
 		var x = [];
 		for (i = 0; i < imax; i += 4) {
 			b10 = (gb64(s, i) << 18) | (gb64(s, i + 1) << 12) | (gb64(s, i + 2) << 6) | gb64(s, i + 3);
 			x.push(String.fromCharCode(b10 >> 16, (b10 >> 8) & 0xff, b10 & 0xff));
 		}
-		
+
 		switch (pads) {
-			case 1: 
+			case 1:
 				b10 = (gb64(s, i) << 18) | (gb64(s, i + 1) << 12) | (gb64(s, i + 2) << 6);
 				x.push(String.fromCharCode(b10 >> 16, (b10 >> 8) & 0xff));
 				break;
-			case 2: 
+			case 2:
 				b10 = (gb64(s, i) << 18) | (gb64(s, i + 1) << 12);
 				x.push(String.fromCharCode(b10 >> 16));
 				break;
@@ -7617,13 +7617,13 @@ var base64 = {
 		var pc = this.PADCHAR;
 		var alpha = this.ALPHA;
 		var gb = this.gb;
-		
+
 		var i, b10, x = [];
 
 		s += "";
-		
+
 		var imax = s.length - s.length % 3;
-		
+
 		if (s.length === 0) return s;
 		for (i = 0; i < imax; i += 3) {
 			b10 = (gb(s, i) << 16) || (gb(s, i + 1) << 8) || gb(s, i + 2);
@@ -7633,11 +7633,11 @@ var base64 = {
 			x.push(alpha.charAt(b10 & 0x3f));
 		}
 		switch (s.length - imax) {
-			case 1: 
+			case 1:
 				b10 = gb(s, i) << 16;
 				x.push(alpha.charAt(b10 >> 18) + alpha.charAt((b10 >> 12) & 0x3F) + pc + pc);
 				break;
-			case 2: 
+			case 2:
 				b10 = (gb(s, i) << 16) || (gb(s, i + 1) << 8);
 				x.push(alpha.charAt(b10 >> 18) + alpha.charAt((b10 >> 12) & 0x3F) + alpha.charAt((b10 >> 6) & 0x3f) + pc);
 				break;
@@ -7734,7 +7734,7 @@ function msgBox (type, title, text, isHTML, style, customIcon) {
 		console.log("[Essence.js] " + title + ": " + text);
 	} else icon = false;
 	var msg = document.createElement("div"), header = document.createElement("span"), ctt = document.createElement("p"), btn = document.createElement("input"), img = "<img src = " + icon + " alt = '" + alt + "' />";
-	
+
 	msg.id = "overlay";
 	header.id = "msgBoxHeader";
 	ctt.id = "msg";
@@ -7742,7 +7742,7 @@ function msgBox (type, title, text, isHTML, style, customIcon) {
 	btn.type = "button";
 	btn.value = dS.buttonText;
 	img.id = "msgImg";
-	
+
 	if (isHTML) {
 		header.innerHTML = title;
 		ctt.innerHTML = text;
@@ -7908,16 +7908,16 @@ function GET (name) { //HTTP GET request, method <=> parseURL(name, function (x)
 
 /**
  * @description HTTP POST request
+ * Source: {@link StackOverflow}
  * @param {string} path Path of the file to post to
  * @param {Object} params Parameters
- * @source StackOverflow
  * @returns {undefined}
  */
 function POST (path, params) {
 	var form = document.createElement("form");
 	form.setAttribute("method", "post");
 	form.setAttribute("action", path);
-	
+
 	for (var key in params) {
 		if (params.hasOwnProperty(key)) {
 			var hiddenField = document.createElement("input");
@@ -7937,7 +7937,7 @@ function POST (path, params) {
  * @todo Fill it
  */
 function PUT () {
-	
+
 }
 
 /**
@@ -7946,7 +7946,7 @@ function PUT () {
  * @todo Fill it
  */
 function DELETE () {
-	
+
 }
 
 /**
@@ -8059,7 +8059,7 @@ function binarySearch (list, x) {
 			term = term < x? list[Math.floor(list.length / i)]: list[3 * Math.floor(list.length / i)];
 		}
 	}
-	return term === x	
+	return term === x
 }
 
 /**
@@ -8583,7 +8583,7 @@ function WebPage (title, name, path, author, ver, stct, type, subtitle) {
 		| : at the right (content|aside means that the aside section is placed on the right of the content section)
 		*/
 	//Templating /(\{\{)\w * (\}\}) */g
-	
+
 	this.word2code = function (word) {
 		switch (word.normal()) {
 			case "header": return "<header><img src='img/icon.png' /><hgroup><h1>{{title}}</h1><h3>{{subtitle}}</h3></hgroup></header>";
@@ -8597,7 +8597,7 @@ function WebPage (title, name, path, author, ver, stct, type, subtitle) {
 			default: return word
 		}
 	};
-	
+
 	this.genTemplate = function () { //Transform the structure into a template
 		var cpnt = this.structure.split("!");
 		this.template = "<table class='none'>";
@@ -8608,10 +8608,10 @@ function WebPage (title, name, path, author, ver, stct, type, subtitle) {
 			this.template += "</tr>";
 		}
 		this.template += "</table>";
-		
+
 		return this.template
 	};
-	
+
 	this.genPage = function (params) { //Transform the template into a page
 		this.page = new Template(this.title, this.name, this.template, ["title", "subtitle", "content", "aside", "footer", "0", "1", "2", "article_title", "article_content", "article_footer"]);
 		return this.page.gen({
@@ -8628,7 +8628,7 @@ function WebPage (title, name, path, author, ver, stct, type, subtitle) {
 			2: "Contact us"
 		});
 	};
-	
+
 	return this;
 }
 
@@ -8671,15 +8671,15 @@ function virtualHistory (elm) {
 	this.DEFAULT_STATE = elm;
 	this.states = new Set(this.src);
 	this.state = 0;
-	
+
 	this.reset = function () { //Go back to the default state
 		this.src = this.DEFAULT_STATE;
 	};
-	
+
 	this.update = function (elm) { //Update the current state if needed
 		if (this.src != elm) this.add(elm);
 	};
-	
+
 	this.add = function (val) { //Add a state
 		if (isType(val, "array")) {
 			for (var i = 0; i < val.length; i++) this.add(val[i]);
@@ -8699,21 +8699,21 @@ function virtualHistory (elm) {
 		this.state--;
 		this.src = this.get(this.state);
 	};
-	
+
 	this.redo = function () {
 		if (this.state ==(this.states.size()-1)) throw new Error("Set overflow, it's not possible to redo to a non-existent state.");
 		this.state++;
 		this.src = this.get(this.state);
 	};
-	
+
 	this.getStates = function () {
 		return this.states.toString()
 	};
-	
+
 	this.isStateDefault = function () { //Check if the current state is the default
 		return this.src == this.DEFAULT_STATE
 	};
-	
+
 	return this;
 }
 
@@ -8748,7 +8748,7 @@ function Editor (id, lang, prev, parser, tb) {
 		if (this.node != $n(this.id)) this.node = $n(this.id);
 		if (this.linesNode != $n(this.linesId)) this.linesNode = $n(this.linesId);
 		if (this.code != $e(this.id).val()) this.code = $e(this.id).val();
-		
+
 		n = n || (toPixel($e(this.id).css("height"))/(toPixel($e(this.id).css("fontSize")) * 1.12));
 		$e(this.linesId).write("", true);
 		this.nbLines = Math.round(n);
@@ -8802,40 +8802,40 @@ function Editor (id, lang, prev, parser, tb) {
 	};
 	this.highlightSynthax = function (code, lang) { //Highlight in the corresponding language and return an HTML result
 		switch (lang.normal()) {
-			case "html": 
+			case "html":
 				//HTML synthax highlighting rules
 				break;
-			case "javascript": 
+			case "javascript":
 				//JavaScript synthax highlighting rules
 				break;
-			case "css": 
+			case "css":
 				//CSS synthax highlighting rules
 				break;
-			case "php": 
+			case "php":
 				//PHP synthax highlighting rules
 				break;
-			case "mips": 
+			case "mips":
 				//MIPS synthax highlighting rules
 				break;
-			case "batch": 
+			case "batch":
 				//Batch synthax highlighting rules
 				break;
-			case "bash": 
+			case "bash":
 				//Bash synthax highlighting rules
 				break;
-			case "java": 
+			case "java":
 				//Java synthax highlighting rules
 				break;
-			case "c++": 
+			case "c++":
 				//C/C++ synthax highlighting rules
 				break;
-			case "python": 
+			case "python":
 				//Python synthax highlighting rules
 				break;
-			case "xml": 
+			case "xml":
 				//XML synthax highlighting rules
 				break;
-			case "webscript": 
+			case "webscript":
 				code = code.replace(/(\<|\>|\/\>)([A-Za-z]*|)(\<|\>|\/\>)/g, "<span class = 'code-tag'>$1</span>");
 				code = code.replace(/(\"|\')(.*)(\"|\')/g, "<span class = 'code-str'>$1</span>");
 				code = code.replace(/(?!\"|\')(\d+)(?!\"|\')/g, "<span class = 'code-num'>$1</span>");
@@ -8845,7 +8845,7 @@ function Editor (id, lang, prev, parser, tb) {
 				code = code.replace(/=[A-Za-z0-9\.]+(| )/g, "<span class = 'code-val'>$1</span>");
 				code = code.replace(/[=\{\}\[\]\(\)\;]/g, "<span class = 'code-op'>$1</span>");
 				break;
-			case "markdown": 
+			case "markdown":
 				//Markdown synthax highlighting rules
 				break;
 			default: //Normal text
@@ -8857,7 +8857,7 @@ function Editor (id, lang, prev, parser, tb) {
 }
 
 /**
- * @descrition Previewer for IDEs.
+ * @description Previewer for IDEs.
  * @param {string} [id="#preview"] ID of the container
  * @param {string} [lang="none"] Language
  * @param {Parser} [parser=new Parser()"] Parser
@@ -8993,7 +8993,7 @@ function Toolbar (id, tools, mdl) {
 			$e(this.id).after("<img src = 'img/" + this.tools[i] + ".png' title = '" + this.tools[i].capitalize() + "' alt = '" + this.tools[i] + "' onClick = '" + this[this.tools[i]] + "' class = 'tbicon' id = 'tool" + i+"' />", true);
 		} */
 	};
-	
+
 	return this;
 }
 
@@ -9067,8 +9067,8 @@ function AJAXpost (data, to, xml) {
 		/* readyStates
 		0: request not initialized
 		1: server connection established
-		2: request received 
-		3: processing request 
+		2: request received
+		3: processing request
 		4: request finished and response is ready
 		*/
 		if (xhr.readyState === 4 && xhr.status === 200) res = xml? xhr.responseXML: xhr.responseText;
@@ -9171,7 +9171,7 @@ function getHTTPMsg (status) {
 
 /**
  * @description Cross Origin Resource Sharing request maker
- * @source {@link https://stackoverflow.com/questions/3076414/ways-to-circumvent-the-same-origin-policy}
+ * Source: {@link {@link https://stackoverflow.com/questions/3076414/ways-to-circumvent-the-same-origin-policy}}
  * @param {string} [method="get"] Method
  * @param {string} url URL
  * @returns {XMLHttpRequest} CORS request

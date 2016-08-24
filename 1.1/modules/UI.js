@@ -1247,3 +1247,21 @@ function htmlPassword (id, lbl) {
     if (!lbl) lbl = id;
     return "<label for='" + id + "' id='lbl_" + id + "'>&ensp;</label><br /><input type='text' id='" + id + "' value='" + lbl + "' onFocus='labelPwSwap(\"" + id + "\", \"" + lbl + "\")' onBlur='labelPwSwap(\"" + id + "\", \"" + lbl + "\")' />"
 }
+
+/**
+ * @description Generate an HTML date selector
+ * @param {string} [id] ID
+ * @param {number} [minYear=(new Date()).getFullYear()-80] Minimum (oldest) year
+ * @param {number} [maxYear=(new Date()).getFullYear()-2] Maximum (youngest) year
+ * @return {string} HTML date
+ * @since 1.1
+ * @func
+ */
+function htmlDate (id, minYear, maxYear) {
+    var day = "<select name='"+ (id? id + "_": "")  + " day'>", month = "<select name='"+ (id? id + "_": "")  + " month'>", year = "<select name='"+ (id? id + "_": "")  + " year'>", months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], y = (new Date()).getFullYear();
+
+    for (var i = 1; i < 32; i++) day += "<option value=" + i + ">" + i + "</option>";
+    for (i = 0; i < months.length; i++) month += "<option value=" + (i + 1) + ">" + months[i] + "</option>";
+    for (i = (minYear || y - 80); i < (maxYear || y - 2); i++) day += "<option value=" + i + ">" + i + "</option>";
+    return day + "</select>" + month + "</select>" + year + "</select>";
+}

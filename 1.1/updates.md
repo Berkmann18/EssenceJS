@@ -25,7 +25,7 @@
 
 
 ## [UI](modules/UI.js)
-
++ \+ htmlDate()
 
 ## [Web](modules/Web.js)
 

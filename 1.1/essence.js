@@ -1563,11 +1563,11 @@ Array.prototype.mean = function (nbDec, start, end) {
     if (!start) start = 0;
     if (!end) end = this.lastIndex();
     var sum = this.sum(start, end);
-    return (sum / (this.get(start, end).length)).toNDec(nbDec); //To avoid getting the Number object representation rather than the actual result
+    return (sum / (this.get(start, end).length)).toNDec(nbDec);
 };
 
 /**
- * @description Mean of each elements
+ * @description Mean of each elements.
  * @param {number} [nbDec=2] Number of decimals
  * @param {number} [start=0] Starting position
  * @param {number} [n=this.length-start-1] Number of values to take into account
@@ -1581,7 +1581,7 @@ Array.prototype.meanOf = function (nbDec, start, n) {
     if (!n) n = this.length - start - 1;
     var sum = 0;
     for (var i = 0; i < n; i++) sum += this[start + i];
-    return (sum / n).toNDec(nbDec); //To avoid getting the Number object representation rather than the actual result
+    return (sum / n).toNDec(nbDec);
 };
 
 /**
@@ -1598,7 +1598,7 @@ Array.prototype.minMean = function (n, nbDec) {
     if (!n) n = this.length - 1;
     if (this.length - (n - 1) < 0) throw new Error("You're expecting a minimum mean with more values than the are.");
     var means = [];
-    for (var i = 0; i < n; i++) means.push(this.meanOf(nbDec, i, n));
+    for (var i = 0; i < n; i++) means.push(this.mean(nbDec, i, i + n - 1));
     return means.min();
 };
 
@@ -1616,7 +1616,7 @@ Array.prototype.maxMean = function (n, nbDec) {
     if (!n) n = this.length - 1;
     if (this.length - (n - 1) < 0) throw  new Error("You're expecting a maximum mean with more values than the are.");
     var means = [];
-    for (var i = 0; i < n; i++) means.push(this.meanOf(nbDec, i, n));
+    for (var i = 0; i < n; i++) means.push(this.mean(nbDec, i, n + i - 1));
     return means.max();
 };
 
@@ -1652,7 +1652,7 @@ Array.prototype.avgOf = function (nbDec, start, n) {
     if (!n) n = this.length - start - 1;
     var sum = 0;
     for (var i = 0; i < n; i++) {
-        if (this[start + i] != this.maxOf(start, n) || this[start + i] != this.minOf(start, n)) sum += this[start + i];
+        if (this[start + i] != this.maxOf(start, n) || this[start + i] != this.minOf(start, n + 1)) sum += this[start + i];
     }
     return (sum / (n - 2)).toNDec(nbDec)
 };
@@ -1671,7 +1671,7 @@ Array.prototype.minAvg = function (n, nbDec) {
     if (!n) n = this.length - 1;
     if (this.length - (n - 1) < 0) throw  new Error("You're expecting a minimum average with more values than the are.");
     var avgs = [];
-    for (var i = 0; i < n; i++) avgs.push(this.avgOf(nbDec, i, n));
+    for (var i = 0; i < n; i++) avgs.push(this.avg(nbDec, i, i + n - 1));
     return avgs.min();
 };
 
@@ -1689,7 +1689,7 @@ Array.prototype.maxAvg = function (n, nbDec) {
     if (!n) n = this.length - 1;
     if (this.length - (n - 1) < 0) throw  new Error("You're expecting a maximum average with more values than the are.");
     var avgs = [];
-    for (var i = 0; i < n; i++) avgs.push(this.avgOf(nbDec, i, n));
+    for (var i = 0; i < n; i++) avgs.push(this.avg(nbDec, i, n + i - 1));
     return avgs.max();
 };
 

@@ -43,7 +43,8 @@ if %min% == 1 minify essence.js --no-comments & echo Minifying done -- (2/3)
 if %min% == 0 echo Minifying cancelled
 ping localhost -n 1 > nul
 echo Documenting ...
-if %doc% == 1 jsdoc --package package.json essence.js & echo Documenting done -- (3/3) & cd ../
+cd ../
+if %doc% == 1 jsdoc -d ./docs/1.0/ 1.0/essence.js & echo Documenting done -- (3/3)
 if %doc% == 0 echo Documenting cancelled
 goto done
 
@@ -69,7 +70,8 @@ if %min% == 1 (
 )
 if %doc% == 1 (
     echo Documenting ...
-    jsdoc --package package.json essence.js modules & echo Documenting done & cd ../
+    cd ../
+    jsdoc -d ./docs/1.1/ 1.1/essence.js 1.1/modules & echo Documenting done
 )
 
 :done
