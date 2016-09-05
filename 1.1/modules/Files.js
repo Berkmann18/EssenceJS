@@ -1,5 +1,5 @@
 /**
- * @module File
+ * @module Files
  * @description File management and control
  * @version 1.0
  * @since 1.1
@@ -8,12 +8,13 @@
  * @copyright Maximilian Berkmann 2016
  * @requires essence
  * @requires Ajax
+ * @requires Misc
  * @namespace
  * @type {Module}
  * @since 1.1
  * @exports File
  */
-var Files = new Module("Files", "File management and control", ["Ajax"]);
+var Files = new Module("Files", "File management and control", ["Ajax", "Misc"]);
 
 /* eslint no-undef: 0 */
 /**
@@ -96,13 +97,13 @@ function filenameList (list) {
  * @since 1.0
  * @func
  */
-function getDirectoryPath (path) { //Get the directory's path of the file (so it's the opposite of of stripPath)
+function getDirectoryPath (path) {
     if (!path) path = location.href;
     return path.get(0, path.indexOf(stripPath(path)) - 1)
 }
 
 /**
- * @description ActiveX manipulation
+ * @description ActiveX file manipulation
  * @param {string} filename Filename
  * @param {string} text2write Text to write to the file
  * @param {boolean} [close=false] Closing flag
@@ -111,7 +112,7 @@ function getDirectoryPath (path) { //Get the directory's path of the file (so it
  * @since 1.0
  * @func
  */
-function AX (filename, text2write, close, remove) { //Manipulate a file with ActiveX
+function AX (filename, text2write, close, remove) {
     var fso = new ActiveXObject("Scripting.FileSystemObject");
     //Bool: flat the file of the same name if it's already present
     fso.CreateTextFile(filename,true);
@@ -184,8 +185,9 @@ function save (txt, name, type) { //Save into a file of the corresponding type
  * @param {string} fname File name
  * @returns {string} File's content
  * @since 1.0
- * @see getFC
+ * @see module:Files~getFC
  * @func
+ * @deprecated
  */
 function getFileContent (fname) {
     $G["fct"] = ""; //File content
@@ -207,7 +209,7 @@ function getFileContent (fname) {
  * @param {boolean} [crossOrigin=false] Cross Origin flag (for accessing resources outside of the same origin)
  * @returns {string} File's content
  * @since 1.0
- * @alias getFileContent
+ * @inheritdoc
  * @func
  */
 function getFC (fname, crossOrigin) {
@@ -250,7 +252,7 @@ function evalFile (filename, crossOrigin) {
 function getKeywords (text, noSymbols) {
     var txt = (isType(text, "Array") ? text.join(" ") : text).replace(/(\.|!|\?|;|:|"|,|\t|\n|\f|\r|\v|\{|})+/gm, " ").split(" ").remove(""); //The \b would treat a-b as "a - b"
     var kw = occurrenceSort(txt).filter(function (x) { //Filter out non-keywords words
-        return noSymbols ? (["=", "+", "-", "*", "/", "\\", "%", "#", "'", "@", "^", "$", "£", "µ", "~", "&", "[", "]", "(", ")", "|", "`"].has(x)? false: txt.count(x) > 3) : txt.count(x) > 3;
+        return noSymbols? (["=", "+", "-", "*", "/", "\\", "%", "#", "'", "@", "^", "$", "£", "µ", "~", "&", "[", "]", "(", ")", "|", "`"].has(x)? false: txt.count(x) > 3): txt.count(x) > 3;
     });
 
     return kw.map(function (w) {
@@ -320,5 +322,56 @@ function Spider (filenames) {
     this.toString = function () {
         return "Spider(dir=" + this.dir + ", keywords= " + this.keywords.toStr(true) + ")";
     };
+    return this;
+}
+
+//1. Get the file (if it exists) then get the content saved in an history accessible to the code.
+//2. When the the code changes/updates the content, it's saved in the file (which is created if it didn't exist)
+/**
+ * @description A mediator between data of the code and files to keep both interfaces up-to-date
+ * @param {string} [filename="data.json"] Filename
+ * @param {*} [data=null] Data to write to the file (if needed).
+ * @return {$Data} Mediator object (sort of an API)
+ * @todo Make sure that save() would save at the right place (since it would get it to be downloaded by the user)
+ */
+function $Data (filename, data) {
+    this.name = filename || "data.json";
+    this.data = null || data;
+    var self = this;
+    this.req = new CORS(this.name, "GET", false, function (xhr) {
+       self.data = xhr.response;
+    }, function () {
+        Essence.say("The file %c" + self.name + "%c isn't available !", "warn", "text-decoration: italic;", "text-decoration: none;");
+    }, function () {
+        anim("Loading", 0, 5e3, 500, false, !isNon(self.req.data));
+    }, this.data);
+    this.req.init();
+    this.req.update();
+    this.history = new virtualHistory(this.data);
+    this.save = function () {
+        save(this.data, this.name, this.data.split(".").last());
+    };
+    this.undo = function () {
+        this.history.undo();
+        this.data = this.history.src;
+    };
+    this.redo = function () {
+        this.history.redo();
+        this.data = this.history.src;
+    };
+    this.update = function (newData) {
+        this.history.update(newData || this.data);
+        if (newData) this.data = newData;
+        this.save();
+    };
+    this.get = function () {
+        this.req.init();
+        this.req.update();
+        return this.data;
+    };
+    this.toString = function () {
+        return "$Data(name=" + this.name + ", data=" + this.data + ", history=" + this.history.getStates() + ", req=" + this.req + ")";
+    };
+
     return this;
 }

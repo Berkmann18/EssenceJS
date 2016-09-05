@@ -438,7 +438,7 @@
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type"><a href="Object.html">Object</a></span>
 
 
             
@@ -925,7 +925,7 @@
 
     
 
-    <h4 class="name" id="~$e"><span class="type-signature">(inner) </span>$e<span class="signature">(selector)</span><span class="type-signature"> &rarr; {Element}</span></h4>
+    <h4 class="name" id="~$e"><span class="type-signature">(inner) </span>$e<span class="signature">(selector, silence<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; (nullable) {Element}</span></h4>
 
     
     <p class="summary"><p>Element selector</p>.</p>
@@ -958,7 +958,11 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
+        
+        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -983,10 +987,61 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>A CSS selector</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>silence</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Flag to use when <code>selector</code> doesn't exist yet (e.g: a particular selector used by a JS object/function which may not be in the page yet).</p></td>
         </tr>
 
     
@@ -1030,7 +1085,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line602">line 602</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line661">line 661</a>
     </li></ul></dd>
     
 
@@ -1083,7 +1138,7 @@
 
     
 
-    <h4 class="name" id="~$n"><span class="type-signature">(inner) </span>$n<span class="signature">(selector)</span><span class="type-signature"> &rarr; {HTMLElement}</span></h4>
+    <h4 class="name" id="~$n"><span class="type-signature">(inner) </span>$n<span class="signature">(selector, silence<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {HTMLElement}</span></h4>
 
     
     <p class="summary"><p>Element's node</p>.</p>
@@ -1116,7 +1171,11 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
+        
+        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -1141,10 +1200,61 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>A CSS selector</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>silence</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Flag to use when <code>selector</code> doesn't exist yet (e.g: a particular selector used by a JS object/function which may not be in the page yet).</p></td>
         </tr>
 
     
@@ -1188,7 +1298,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line613">line 613</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line680">line 680</a>
     </li></ul></dd>
     
 
@@ -1346,7 +1456,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line322">line 322</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line329">line 329</a>
     </li></ul></dd>
     
 
@@ -1508,7 +1618,7 @@ require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4041">line 4041</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4337">line 4337</a>
     </li></ul></dd>
     
 
@@ -1666,7 +1776,7 @@ require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4030">line 4030</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4326">line 4326</a>
     </li></ul></dd>
     
 
@@ -1824,7 +1934,7 @@ require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4008">line 4008</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4304">line 4304</a>
     </li></ul></dd>
     
 
@@ -1877,7 +1987,7 @@ require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js
 
     
 
-    <h4 class="name" id="~copy"><span class="type-signature">(inner) </span>copy<span class="signature">(el)</span><span class="type-signature"> &rarr; {*}</span></h4>
+    <h4 class="name" id="~Copy"><span class="type-signature">(inner) </span>Copy<span class="signature">(el)</span><span class="type-signature"> &rarr; {*}</span></h4>
 
     
     <p class="summary"><p>Returns a copy of an element in order to do mutation-safe operations with it</p>.</p>
@@ -1982,7 +2092,7 @@ require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3511">line 3511</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3808">line 3808</a>
     </li></ul></dd>
     
 
@@ -2009,7 +2119,7 @@ require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js
 
         
 <div class="param-desc">
-    <p>Copy of $el</p>
+    <p>Copy of <code>el</code></p>
 </div>
 
 
@@ -2160,7 +2270,7 @@ require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3672">line 3672</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3969">line 3969</a>
     </li></ul></dd>
     
 
@@ -2170,9 +2280,7 @@ require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>num2date</li>
-        
-            <li>num2date</li>
+            <li><a href="module-essence.html#~num2date">module:essence~num2date</a></li>
         </ul>
     </dd>
     
@@ -2464,7 +2572,7 @@ require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3730">line 3730</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4026">line 4026</a>
     </li></ul></dd>
     
 
@@ -2474,7 +2582,7 @@ require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>s2date</li>
+            <li><a href="module-essence.html#~s2date">module:essence~s2date</a></li>
         </ul>
     </dd>
     
@@ -2602,6 +2710,9 @@ require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js
     
 
     
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.1</li></ul></dd>
+    
 
     
 
@@ -2626,7 +2737,7 @@ require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3581">line 3581</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3879">line 3879</a>
     </li></ul></dd>
     
 
@@ -2636,9 +2747,7 @@ require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>txt2date</li>
-        
-            <li>1.1</li>
+            <li><a href="module-essence.html#~txt2date">module:essence~txt2date</a></li>
         </ul>
     </dd>
     
@@ -2726,7 +2835,7 @@ require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js
 
 
 <div class="description">
-    <p>Date difference calculator.
+    <p>Date difference calculator.<br />
 Source: <a href="http://www.htmlgoodies.com/html5/javascript/calculating-the-difference-between-two-dates-in-javascript.html">http://www.htmlgoodies.com/html5/javascript/calculating-the-difference-between-two-dates-in-javascript.html</a></p>
 </div>
 
@@ -2956,7 +3065,7 @@ Source: <a href="http://www.htmlgoodies.com/html5/javascript/calculating-the-dif
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3703">line 3703</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3999">line 3999</a>
     </li></ul></dd>
     
 
@@ -3126,7 +3235,7 @@ Source: <a href="http://www.htmlgoodies.com/html5/javascript/calculating-the-dif
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3607">line 3607</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3905">line 3905</a>
     </li></ul></dd>
     
 
@@ -3287,7 +3396,7 @@ Source: <a href="http://www.htmlgoodies.com/html5/javascript/calculating-the-dif
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3653">line 3653</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3951">line 3951</a>
     </li></ul></dd>
     
 
@@ -3500,7 +3609,7 @@ Source: <a href="http://www.htmlgoodies.com/html5/javascript/calculating-the-dif
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line954">line 954</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line1022">line 1022</a>
     </li></ul></dd>
     
 
@@ -3659,7 +3768,7 @@ Source: <a href="http://www.htmlgoodies.com/html5/javascript/calculating-the-dif
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3492">line 3492</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3789">line 3789</a>
     </li></ul></dd>
     
 
@@ -3795,7 +3904,7 @@ exist(d); //false</code></pre>
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type"><a href="Object.html">Object</a></span>
 
 
             
@@ -3853,7 +3962,7 @@ exist(d); //false</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3765">line 3765</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4061">line 4061</a>
     </li></ul></dd>
     
 
@@ -4066,7 +4175,7 @@ exist(d); //false</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3447">line 3447</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3744">line 3744</a>
     </li></ul></dd>
     
 
@@ -4244,7 +4353,7 @@ exist(d); //false</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3555">line 3555</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3852">line 3852</a>
     </li></ul></dd>
     
 
@@ -4457,7 +4566,7 @@ exist(d); //false</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3530">line 3530</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3827">line 3827</a>
     </li></ul></dd>
     
 
@@ -4635,7 +4744,7 @@ exist(d); //false</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3543">line 3543</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3840">line 3840</a>
     </li></ul></dd>
     
 
@@ -4813,7 +4922,7 @@ exist(d); //false</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3568">line 3568</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3866">line 3866</a>
     </li></ul></dd>
     
 
@@ -4823,7 +4932,9 @@ exist(d); //false</code></pre>
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>getDate, getTime</li>
+            <li><a href="module-essence.html#~getDate">module:essence~getDate</a></li>
+        
+            <li><a href="module-essence.html#~getTime">module:essence~getTime</a></li>
         </ul>
     </dd>
     
@@ -5033,7 +5144,7 @@ exist(d); //false</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3434">line 3434</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3731">line 3731</a>
     </li></ul></dd>
     
 
@@ -5191,7 +5302,7 @@ exist(d); //false</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4019">line 4019</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4315">line 4315</a>
     </li></ul></dd>
     
 
@@ -5404,7 +5515,7 @@ exist(d); //false</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line915">line 915</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line983">line 983</a>
     </li></ul></dd>
     
 
@@ -5658,7 +5769,7 @@ include("style.css"); //same as include("style.css", "link") and include("style.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line937">line 937</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line1005">line 1005</a>
     </li></ul></dd>
     
 
@@ -5668,7 +5779,7 @@ include("style.css"); //same as include("style.css", "link") and include("style.
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>include</li>
+            <li><a href="module-essence.html#~include">module:essence~include</a></li>
         </ul>
     </dd>
     
@@ -6007,7 +6118,7 @@ include("style.css"); //same as include("style.css", "link") and include("style.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line432">line 432</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line439">line 439</a>
     </li></ul></dd>
     
 
@@ -6180,7 +6291,7 @@ init(["moduleA", "moduleB"], function (mdl) {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3460">line 3460</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3757">line 3757</a>
     </li></ul></dd>
     
 
@@ -6361,7 +6472,7 @@ init(["moduleA", "moduleB"], function (mdl) {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3422">line 3422</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3719">line 3719</a>
     </li></ul></dd>
     
 
@@ -6519,7 +6630,7 @@ init(["moduleA", "moduleB"], function (mdl) {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3475">line 3475</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3772">line 3772</a>
     </li></ul></dd>
     
 
@@ -6700,7 +6811,7 @@ init(["moduleA", "moduleB"], function (mdl) {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3409">line 3409</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3706">line 3706</a>
     </li></ul></dd>
     
 
@@ -6913,7 +7024,7 @@ init(["moduleA", "moduleB"], function (mdl) {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3955">line 3955</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4251">line 4251</a>
     </li></ul></dd>
     
 
@@ -7126,7 +7237,7 @@ init(["moduleA", "moduleB"], function (mdl) {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3993">line 3993</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4289">line 4289</a>
     </li></ul></dd>
     
 
@@ -7374,7 +7485,7 @@ init(["moduleA", "moduleB"], function (mdl) {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3938">line 3938</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4234">line 4234</a>
     </li></ul></dd>
     
 
@@ -7622,7 +7733,7 @@ init(["moduleA", "moduleB"], function (mdl) {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3806">line 3806</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4102">line 4102</a>
     </li></ul></dd>
     
 
@@ -7809,7 +7920,7 @@ init(["moduleA", "moduleB"], function (mdl) {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3687">line 3687</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3983">line 3983</a>
     </li></ul></dd>
     
 
@@ -7819,9 +7930,7 @@ init(["moduleA", "moduleB"], function (mdl) {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>date2num</li>
-        
-            <li>date2num</li>
+            <li><a href="module-essence.html#~date2num">module:essence~date2num</a></li>
         </ul>
     </dd>
     
@@ -8031,7 +8140,7 @@ init(["moduleA", "moduleB"], function (mdl) {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4067">line 4067</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4363">line 4363</a>
     </li></ul></dd>
     
 
@@ -8244,7 +8353,7 @@ init(["moduleA", "moduleB"], function (mdl) {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3875">line 3875</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4171">line 4171</a>
     </li></ul></dd>
     
 
@@ -8480,7 +8589,7 @@ init(["moduleA", "moduleB"], function (mdl) {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line302">line 302</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line309">line 309</a>
     </li></ul></dd>
     
 
@@ -8490,7 +8599,7 @@ init(["moduleA", "moduleB"], function (mdl) {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>$require</li>
+            <li><a href="module-essence.html#~$require">module:essence~$require</a></li>
         </ul>
     </dd>
     
@@ -8696,7 +8805,7 @@ require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line369">line 369</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line376">line 376</a>
     </li></ul></dd>
     
 
@@ -8911,7 +9020,7 @@ run(["moduleA", "moduleB"]); //will run moduleA.run() then moduleB.run() (unless
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3743">line 3743</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4039">line 4039</a>
     </li></ul></dd>
     
 
@@ -8921,7 +9030,7 @@ run(["moduleA", "moduleB"]); //will run moduleA.run() then moduleB.run() (unless
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>date2s</li>
+            <li><a href="module-essence.html#~date2s">module:essence~date2s</a></li>
         </ul>
     </dd>
     
@@ -9150,7 +9259,7 @@ run(["moduleA", "moduleB"]); //will run moduleA.run() then moduleB.run() (unless
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3893">line 3893</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4189">line 4189</a>
     </li></ul></dd>
     
 
@@ -9400,7 +9509,7 @@ run(["moduleA", "moduleB"]); //will run moduleA.run() then moduleB.run() (unless
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4082">line 4082</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4378">line 4378</a>
     </li></ul></dd>
     
 
@@ -9654,7 +9763,7 @@ run(["moduleA", "moduleB"]); //will run moduleA.run() then moduleB.run() (unless
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3918">line 3918</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4214">line 4214</a>
     </li></ul></dd>
     
 
@@ -9841,7 +9950,7 @@ run(["moduleA", "moduleB"]); //will run moduleA.run() then moduleB.run() (unless
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3595">line 3595</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3893">line 3893</a>
     </li></ul></dd>
     
 
@@ -9851,7 +9960,7 @@ run(["moduleA", "moduleB"]); //will run moduleA.run() then moduleB.run() (unless
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>date2txt</li>
+            <li><a href="module-essence.html#~date2txt">module:essence~date2txt</a></li>
         </ul>
     </dd>
     
@@ -10061,7 +10170,7 @@ run(["moduleA", "moduleB"]); //will run moduleA.run() then moduleB.run() (unless
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4053">line 4053</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4349">line 4349</a>
     </li></ul></dd>
     
 
@@ -10274,7 +10383,7 @@ run(["moduleA", "moduleB"]); //will run moduleA.run() then moduleB.run() (unless
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3974">line 3974</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line4270">line 4270</a>
     </li></ul></dd>
     
 
@@ -10432,7 +10541,7 @@ run(["moduleA", "moduleB"]); //will run moduleA.run() then moduleB.run() (unless
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3638">line 3638</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line3936">line 3936</a>
     </li></ul></dd>
     
 
@@ -10442,7 +10551,7 @@ run(["moduleA", "moduleB"]); //will run moduleA.run() then moduleB.run() (unless
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>dayOfWeek</li>
+            <li><a href="module-essence.html#~dayOfWeek">module:essence~dayOfWeek</a></li>
         </ul>
     </dd>
     
@@ -10510,13 +10619,13 @@ run(["moduleA", "moduleB"]); //will run moduleA.run() then moduleB.run() (unless
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-File.html">File</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-File-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#getFileContent">getFileContent</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#UnitTest">UnitTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Aug 24 2016 18:14:42 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Sep 05 2016 19:03:55 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

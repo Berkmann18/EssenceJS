@@ -156,7 +156,7 @@
             <dd><p>Single parametric equation</p>.</dd>
         
             <dt><a href="module-Maths-InvNorm.html">InvNorm</a></dt>
-            <dd><p>Inverse of Norm(x) (Inverse Normal CDF)</p>.</dd>
+            <dd><p>Inverse of Norm(r)=<code>x</code> (Inverse Normal CDF)</p>.</dd>
         </dl>
     
 
@@ -279,7 +279,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line711">line 711</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line730">line 730</a>
     </li></ul></dd>
     
 
@@ -437,7 +437,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1581">line 1581</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1849">line 1849</a>
     </li></ul></dd>
     
 
@@ -493,13 +493,13 @@
     <h4 class="name" id="~approxEqual"><span class="type-signature">(inner) </span>approxEqual<span class="signature">(a, b, precision<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
 
     
-    <p class="summary">Is a approximately equal to b.</p>
+    <p class="summary"><p>Is a approximately equal to b, a &approx; b</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Is a approximately equal to b. a ~= b</p>
+    <p>Is a approximately equal to b, a &approx; b</p>
 </div>
 
 
@@ -685,7 +685,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1476">line 1476</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1744">line 1744</a>
     </li></ul></dd>
     
 
@@ -712,7 +712,7 @@
 
         
 <div class="param-desc">
-    <p>Equality approximative</p>
+    <p>Approximative equality</p>
 </div>
 
 
@@ -738,7 +738,7 @@
 
     
 
-    <h4 class="name" id="~baseRand"><span class="type-signature">(inner) </span>baseRand<span class="signature">(min, max, base<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {number|string}</span></h4>
+    <h4 class="name" id="~baseRand"><span class="type-signature">(inner) </span>baseRand<span class="signature">(min, max, base<span class="signature-attributes">opt</span>, integer<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {NumberLike}</span></h4>
 
     
     <p class="summary"><p>Random number generator in a specific base</p>.</p>
@@ -893,6 +893,45 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>integer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Integer or float/double</p></td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -943,7 +982,7 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>rand</li>
+            <li><a href="module-Maths.html#~rand">module:Maths~rand</a></li>
         </ul>
     </dd>
     
@@ -967,7 +1006,7 @@
 
         
 <div class="param-desc">
-    <p>Random number</p>
+    <p>Random number r<sub><code>base</code></sub>&in;[<code>min</code><sub>10</sub>, <code>max</code><sub>10</sub>]</p>
 </div>
 
 
@@ -978,10 +1017,7 @@
     </dt>
     <dd>
         
-<span class="param-type">number</span>
-|
-
-<span class="param-type">string</span>
+<span class="param-type">NumberLike</span>
 
 
     </dd>
@@ -999,13 +1035,13 @@
     <h4 class="name" id="~Bin"><span class="type-signature">(inner) </span>Bin<span class="signature">(n, p, r)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
-    <p class="summary"><p>Binomial distribution X~Bin(n, p)</p>.</p>
+    <p class="summary"><p>Binomial distribution X~Bin(<code>n</code>, <code>p</code>)</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Binomial distribution X~Bin(n, p)</p>
+    <p>Binomial distribution X~Bin(<code>n</code>, <code>p</code>)</p>
 </div>
 
 
@@ -1147,7 +1183,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line439">line 439</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line451">line 451</a>
     </li></ul></dd>
     
 
@@ -1174,7 +1210,7 @@
 
         
 <div class="param-desc">
-    <p>Binomial distribution</p>
+    <p>Binomial distribution P(x=<code>r</code>)</p>
 </div>
 
 
@@ -1203,13 +1239,13 @@
     <h4 class="name" id="~Bin2Norm"><span class="type-signature">(inner) </span>Bin2Norm<span class="signature">(n, p, r, sign)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
-    <p class="summary"><p>Binomial to Normal</p>.</p>
+    <p class="summary"><p>Binomial to Normal distribution</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Binomial to Normal</p>
+    <p>Binomial to Normal distribution</p>
 </div>
 
 
@@ -1374,7 +1410,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line587">line 587</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line601">line 601</a>
     </li></ul></dd>
     
 
@@ -1384,7 +1420,9 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>Bin</li>
+            <li><a href="module-Maths.html#~Bin">module:Maths~Bin</a></li>
+        
+            <li><a href="module-Maths.html#~Norm">module:Maths~Norm</a></li>
         </ul>
     </dd>
     
@@ -1437,13 +1475,13 @@
     <h4 class="name" id="~Bin2Po"><span class="type-signature">(inner) </span>Bin2Po<span class="signature">(n, p, r)</span><span class="type-signature"> &rarr; {Bool}</span></h4>
 
     
-    <p class="summary"><p>Binomial to Poisson</p>.</p>
+    <p class="summary"><p>Binomial to Poisson distribution</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Binomial to Poisson</p>
+    <p>Binomial to Poisson distribution</p>
 </div>
 
 
@@ -1585,7 +1623,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line604">line 604</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line619">line 619</a>
     </li></ul></dd>
     
 
@@ -1595,7 +1633,9 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>Bin</li>
+            <li><a href="module-Maths.html#~Bin">module:Maths~Bin</a></li>
+        
+            <li><a href="module-Maths.html#~Po">module:Maths~Po</a></li>
         </ul>
     </dd>
     
@@ -1648,13 +1688,13 @@
     <h4 class="name" id="~binaryCases"><span class="type-signature">(inner) </span>binaryCases<span class="signature">(x)</span><span class="type-signature"> &rarr; {Array}</span></h4>
 
     
-    <p class="summary"><p>Generate an array of all possible binary numbers with x digits or less</p>.</p>
+    <p class="summary"><p>Generate an array of all possible binary numbers with <code>x</code> digits or less</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Generate an array of all possible binary numbers with x digits or less</p>
+    <p>Generate an array of all possible binary numbers with <code>x</code> digits or less</p>
 </div>
 
 
@@ -1750,7 +1790,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1672">line 1672</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1940">line 1940</a>
     </li></ul></dd>
     
 
@@ -1954,7 +1994,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line453">line 453</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line465">line 465</a>
     </li></ul></dd>
     
 
@@ -1964,7 +2004,7 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>Bin</li>
+            <li><a href="module-Maths.html#~Bin">module:Maths~Bin</a></li>
         </ul>
     </dd>
     
@@ -2017,13 +2057,13 @@
     <h4 class="name" id="~BinCumulLT"><span class="type-signature">(inner) </span>BinCumulLT<span class="signature">(n, p, r)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
-    <p class="summary"><p>Cumultative binomial distribution (P(X&lt;=r))</p>.</p>
+    <p class="summary"><p>Cumulative binomial distribution (P(X&le;r))</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Cumultative binomial distribution (P(X&lt;=r))</p>
+    <p>Cumulative binomial distribution (P(X&le;r))</p>
 </div>
 
 
@@ -2165,7 +2205,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line469">line 469</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line481">line 481</a>
     </li></ul></dd>
     
 
@@ -2175,7 +2215,7 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>Bin</li>
+            <li><a href="module-Maths.html#~Bin">module:Maths~Bin</a></li>
         </ul>
     </dd>
     
@@ -2199,7 +2239,7 @@
 
         
 <div class="param-desc">
-    <p>Cumultative binomial distribution</p>
+    <p>Cumulative binomial distribution</p>
 </div>
 
 
@@ -2353,7 +2393,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1447">line 1447</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1715">line 1715</a>
     </li></ul></dd>
     
 
@@ -2380,7 +2420,7 @@
 
         
 <div class="param-desc">
-    <p>Bit string</p>
+    <p>Bit string B<sub>a</sub> of <i>b</i></p>
 </div>
 
 
@@ -2409,13 +2449,13 @@
     <h4 class="name" id="~bruteForceNum"><span class="type-signature">(inner) </span>bruteForceNum<span class="signature">(min, cond, max)</span><span class="type-signature"> &rarr; {Bool}</span></h4>
 
     
-    <p class="summary"><p>Brute force through R to find an x such that min &lt;= x &lt;= max and the condition is true for x</p>.</p>
+    <p class="summary"><p>Brute force through &real; to find an x such that <code>min</code> &le; x &le; <code>max</code> and the condition is true for x</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Brute force through R to find an x such that min &lt;= x &lt;= max and the condition is true for x</p>
+    <p>Brute force through &real; to find an x such that <code>min</code> &le; x &le; <code>max</code> and the condition is true for x</p>
 </div>
 
 
@@ -2557,7 +2597,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1596">line 1596</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1864">line 1864</a>
     </li></ul></dd>
     
 
@@ -2613,13 +2653,13 @@
     <h4 class="name" id="~C"><span class="type-signature">(inner) </span>C<span class="signature">(n, r)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
-    <p class="summary"><p>Combination/choose</p>.</p>
+    <p class="summary"><p>Combination/choose (&complement;)</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Combination/choose</p>
+    <p>Combination/choose (&complement;)</p>
 </div>
 
 
@@ -2738,7 +2778,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line572">line 572</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line585">line 585</a>
     </li></ul></dd>
     
 
@@ -2748,7 +2788,7 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>factorial</li>
+            <li><a href="module-Maths.html#~factorial">module:Maths~factorial</a></li>
         </ul>
     </dd>
     
@@ -2772,7 +2812,7 @@
 
         
 <div class="param-desc">
-    <p>nCr</p>
+    <p>n&complement;r</p>
 </div>
 
 
@@ -2859,7 +2899,7 @@
 
             
 
-            <td class="description last"><p>Celsius</p></td>
+            <td class="description last"><p>Celsius (°C)</p></td>
         </tr>
 
     
@@ -2903,7 +2943,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line762">line 762</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line781">line 781</a>
     </li></ul></dd>
     
 
@@ -2913,7 +2953,7 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>fahr2cels</li>
+            <li><a href="module-Maths.html#~fahr2cels">module:Maths~fahr2cels</a></li>
         </ul>
     </dd>
     
@@ -2937,7 +2977,7 @@
 
         
 <div class="param-desc">
-    <p>Fahrenheit</p>
+    <p>Fahrenheit (°F)</p>
 </div>
 
 
@@ -2963,174 +3003,16 @@
 
     
 
-    <h4 class="name" id="~CI"><span class="type-signature">(inner) </span>CI<span class="signature">(data)</span><span class="type-signature"> &rarr; {Array.&lt;number>}</span></h4>
-
-    
-    <p class="summary"><p>Confidence interval with data known</p>.</p>
-    
-
-
-
-<div class="description">
-    <p>Confidence interval with data known</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;number></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Data</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-    <dt class="tag-since">Since:</dt>
-    <dd class="tag-since"><ul class="dummy"><li>1.1</li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1781">line 1781</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>Confidence interval</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
     <h4 class="name" id="~clamp"><span class="type-signature">(inner) </span>clamp<span class="signature">(x, a, b)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
-    <p class="summary"><p>Clamp values to keep them within a range [a; b]</p>.</p>
+    <p class="summary"><p>Clamp values to keep them within a range [<code>a</code>; <code>b</code>]</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Clamp values to keep them within a range [a; b]</p>
+    <p>Clamp values to keep them within a range [<code>a</code>; <code>b</code>]</p>
 </div>
 
 
@@ -3272,12 +3154,19 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line661">line 661</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line678">line 678</a>
     </li></ul></dd>
     
 
     
 
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="module-Maths.html#~revClamp">module:Maths~revClamp</a></li>
+        </ul>
+    </dd>
     
 
     
@@ -3453,7 +3342,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line687">line 687</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line706">line 706</a>
     </li></ul></dd>
     
 
@@ -3463,7 +3352,9 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>clamp</li>
+            <li><a href="module-Maths.html#~clamp">module:Maths~clamp</a></li>
+        
+            <li><a href="module-Maths.html#~clampTop">module:Maths~clampTop</a></li>
         </ul>
     </dd>
     
@@ -3641,7 +3532,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line700">line 700</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line719">line 719</a>
     </li></ul></dd>
     
 
@@ -3651,7 +3542,7 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>clamp</li>
+            <li><a href="module-Maths.html#~clamp">module:Maths~clamp</a></li>
         </ul>
     </dd>
     
@@ -3900,7 +3791,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line914">line 914</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line945">line 945</a>
     </li></ul></dd>
     
 
@@ -3956,13 +3847,13 @@
     <h4 class="name" id="~complement"><span class="type-signature">(inner) </span>complement<span class="signature">(a, b, c<span class="signature-attributes">opt</span>, toSort<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
 
     
-    <p class="summary"><p>Complement</p>.</p>
+    <p class="summary"><p>Complement (\)</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Complement</p>
+    <p>Complement (\)</p>
 </div>
 
 
@@ -4185,7 +4076,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1389">line 1389</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1657">line 1657</a>
     </li></ul></dd>
     
 
@@ -4212,7 +4103,7 @@
 
         
 <div class="param-desc">
-    <p>a\b(\c) =&gt; a xor b (xor c)</p>
+    <p>a\b(\c) &rArr; a xor b (xor c)</p>
 </div>
 
 
@@ -4238,7 +4129,7 @@
 
     
 
-    <h4 class="name" id="~compoundInterest"><span class="type-signature">(inner) </span>compoundInterest<span class="signature">(po, i, t, n)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id="~compoundInterest"><span class="type-signature">(inner) </span>compoundInterest<span class="signature">(po, i, t<span class="signature-attributes">opt</span>, n)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
     <p class="summary"><p>Compound interest</p>.</p>
@@ -4271,7 +4162,11 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
+        
+        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -4296,7 +4191,19 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>Balance</p></td>
@@ -4319,7 +4226,19 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>Interest</p></td>
@@ -4342,7 +4261,23 @@
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    1
+                
+                </td>
             
 
             <td class="description last"><p>Time (in years)</p></td>
@@ -4365,7 +4300,19 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>Time divisions</p></td>
@@ -4412,7 +4359,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line867">line 867</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line898">line 898</a>
     </li></ul></dd>
     
 
@@ -4422,7 +4369,7 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>simpleInterest</li>
+            <li><a href="module-Maths.html#~simpleInterest">module:Maths~simpleInterest</a></li>
         </ul>
     </dd>
     
@@ -4472,7 +4419,7 @@
 
     
 
-    <h4 class="name" id="~confidenceInterval"><span class="type-signature">(inner) </span>confidenceInterval<span class="signature">(avg, n, c<span class="signature-attributes">opt</span>, sd)</span><span class="type-signature"> &rarr; {Array.&lt;number>}</span></h4>
+    <h4 class="name" id="~confidenceInterval"><span class="type-signature">(inner) </span>confidenceInterval<span class="signature">(avg, c<span class="signature-attributes">opt</span>, n<span class="signature-attributes">opt</span>, sd<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array.&lt;number>}</span></h4>
 
     
     <p class="summary"><p>Confidence interval with stats known</p>.</p>
@@ -4527,7 +4474,7 @@
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">Nums</span>
 
 
             
@@ -4549,42 +4496,7 @@
                 </td>
             
 
-            <td class="description last"><p>Average/mean</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>n</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>Number of data</p></td>
+            <td class="description last"><p>Sample average/mean or population (array of numbers)</p></td>
         </tr>
 
     
@@ -4630,6 +4542,43 @@
 
         <tr>
             
+                <td class="name"><code>n</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Number of data</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
                 <td class="name"><code>sd</code></td>
             
 
@@ -4644,6 +4593,8 @@
 
             
                 <td class="attributes">
+                
+                    &lt;optional><br>
                 
 
                 
@@ -4702,7 +4653,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1768">line 1768</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line2040">line 2040</a>
     </li></ul></dd>
     
 
@@ -4714,7 +4665,7 @@
     <dt class="tag-todo">To Do:</dt>
     <dd class="tag-todo">
         <ul>
-            <li>Make $sd optional after having a t-Distribution table calculator</li>
+            <li>Make <code>sd</code> optional after having a t-Distribution table calculator</li>
         </ul>
     </dd>
     
@@ -4754,6 +4705,14 @@
 </dl>
 
     
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>//If the first parameter is a number (hence the sample mean), than the rest of the parameters are necessary
+var ci = confidenceInterval(6.34, .75, 5, .74);
+//Otherwise if the first parameter is an array (of numbers), than the rest of the parameters are useless (except the second one)
+ci = confidenceInterval([5.7, 6.63, 6.57, 7.7, 7.51], .75);</code></pre>
 
 
 
@@ -5000,7 +4959,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line199">line 199</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line211">line 211</a>
     </li></ul></dd>
     
 
@@ -5027,7 +4986,7 @@
 
         
 <div class="param-desc">
-    <p>Conversion</p>
+    <p>Conversion: n<sub>from</sub>&rArr;r<sub>to</sub></p>
 </div>
 
 
@@ -5039,6 +4998,196 @@
     <dd>
         
 <span class="param-type">NumberLike</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="~convSize"><span class="type-signature">(inner) </span>convSize<span class="signature">(x, unit)</span><span class="type-signature"> &rarr; {string}</span></h4>
+
+    
+    <p class="summary"><p>Size converter</p>.</p>
+    
+
+
+
+<div class="description">
+    <p>Size converter</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Size with unit</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>unit</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Final unit</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.0</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1471">line 1471</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="module-Maths.html#~fromBit">module:Maths~fromBit</a></li>
+        
+            <li><a href="module-Maths.html#~toBit">module:Maths~toBit</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p><code>x</code> &rArr; <code>y</code> <code>unit</code></p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
 
 
     </dd>
@@ -5181,7 +5330,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1194">line 1194</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1226">line 1226</a>
     </li></ul></dd>
     
 
@@ -5191,7 +5340,9 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>fromPixel toPixel</li>
+            <li><a href="module-Maths.html#~fromPixel">module:Maths~fromPixel</a></li>
+        
+            <li><a href="module-Maths.html#~toPixel">module:Maths~toPixel</a></li>
         </ul>
     </dd>
     
@@ -5215,7 +5366,7 @@
 
         
 <div class="param-desc">
-    <p>Result</p>
+    <p><code>x</code> &rArr; <code>y</code> <code>unit</code></p>
 </div>
 
 
@@ -5346,7 +5497,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line298">line 298</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line310">line 310</a>
     </li></ul></dd>
     
 
@@ -5356,7 +5507,7 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>min2dec</li>
+            <li><a href="module-Maths.html#~min2dec">module:Maths~min2dec</a></li>
         </ul>
     </dd>
     
@@ -5467,7 +5618,7 @@
 
             
 
-            <td class="description last"><p>Degrees</p></td>
+            <td class="description last"><p>Degrees (°)</p></td>
         </tr>
 
     
@@ -5511,7 +5662,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line738">line 738</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line757">line 757</a>
     </li></ul></dd>
     
 
@@ -5521,7 +5672,7 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>rad2deg</li>
+            <li><a href="module-Maths.html#~rad2deg">module:Maths~rad2deg</a></li>
         </ul>
     </dd>
     
@@ -5545,7 +5696,7 @@
 
         
 <div class="param-desc">
-    <p>Radiant</p>
+    <p>Radiant (rad)</p>
 </div>
 
 
@@ -5574,13 +5725,13 @@
     <h4 class="name" id="~eqSolver"><span class="type-signature">(inner) </span>eqSolver<span class="signature">(formula, res, a, b)</span><span class="type-signature"> &rarr; {Array}</span></h4>
 
     
-    <p class="summary"><p>Solve equations with a given formula and the result (e.g: x + y + x = res) and the range [a, b]</p>.</p>
+    <p class="summary"><p>Solve equations with a given formula and the result (e.g: x + y + x = res) and the range [<code>a</code>, <code>b</code>]</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Solve equations with a given formula and the result (e.g: x + y + x = res) and the range [a, b]</p>
+    <p>Solve equations with a given formula and the result (e.g: x + y + x = res) and the range [<code>a</code>, <code>b</code>]</p>
 </div>
 
 
@@ -5745,7 +5896,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line963">line 963</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line994">line 994</a>
     </li></ul></dd>
     
 
@@ -5801,13 +5952,13 @@
     <h4 class="name" id="~equivalent"><span class="type-signature">(inner) </span>equivalent<span class="signature">(a, b)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
 
     
-    <p class="summary">Is a equivalent to b.</p>
+    <p class="summary"><p>Is a equivalent to b, a &hArr; b</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Is a equivalent to b. a &lt;=&gt; b</p>
+    <p>Is a equivalent to b, a &hArr; b</p>
 </div>
 
 
@@ -5926,7 +6077,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1463">line 1463</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1731">line 1731</a>
     </li></ul></dd>
     
 
@@ -5982,14 +6133,13 @@
     <h4 class="name" id="~erf"><span class="type-signature">(inner) </span>erf<span class="signature">(z)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
-    <p class="summary"><p>Gaussian Error
-Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function">http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function</a></p>.</p>
+    <p class="summary">Gaussian Error.</p>
     
 
 
 
 <div class="description">
-    <p>Gaussian Error
+    <p>Gaussian Error.<br />
 Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function">http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function</a></p>
 </div>
 
@@ -6086,7 +6236,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line629">line 629</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line645">line 645</a>
     </li></ul></dd>
     
 
@@ -6244,7 +6394,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line557">line 557</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line572">line 572</a>
     </li></ul></dd>
     
 
@@ -6358,7 +6508,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
 
             
 
-            <td class="description last"><p>Fahrenheit</p></td>
+            <td class="description last"><p>Fahrenheit (°F)</p></td>
         </tr>
 
     
@@ -6402,7 +6552,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line774">line 774</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line793">line 793</a>
     </li></ul></dd>
     
 
@@ -6412,7 +6562,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>fahr2cels</li>
+            <li><a href="module-Maths.html#~fahr2cels">module:Maths~fahr2cels</a></li>
         </ul>
     </dd>
     
@@ -6436,7 +6586,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
 
         
 <div class="param-desc">
-    <p>Celsius</p>
+    <p>Celsius (°C)</p>
 </div>
 
 
@@ -6567,7 +6717,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1275">line 1275</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1543">line 1543</a>
     </li></ul></dd>
     
 
@@ -6725,7 +6875,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line227">line 227</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line239">line 239</a>
     </li></ul></dd>
     
 
@@ -6810,7 +6960,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <h4 class="name" id="~forAll"><span class="type-signature">(inner) </span>forAll<span class="signature">(arr, prop)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
 
     
-    <p class="summary">Universal quantification of P(arr)</p>
+    <p class="summary">Universal quantification of P(arr): &forall;P(arr)</p>
     
 
 
@@ -6935,7 +7085,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1506">line 1506</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1774">line 1774</a>
     </li></ul></dd>
     
 
@@ -7116,7 +7266,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1543">line 1543</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1811">line 1811</a>
     </li></ul></dd>
     
 
@@ -7126,7 +7276,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>P</li>
+            <li><a href="module-Maths.html#~P">module:Maths~P</a></li>
         </ul>
     </dd>
     
@@ -7179,7 +7329,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <h4 class="name" id="~forSome"><span class="type-signature">(inner) </span>forSome<span class="signature">(arr, prop)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
 
     
-    <p class="summary">Existensial quantification of P(arr)</p>
+    <p class="summary">Existensial quantification of P(arr): &exist;P(arr)</p>
     
 
 
@@ -7304,7 +7454,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1524">line 1524</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1792">line 1792</a>
     </li></ul></dd>
     
 
@@ -7343,6 +7493,194 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <dd>
         
 <span class="param-type">boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="~fromBit"><span class="type-signature">(inner) </span>fromBit<span class="signature">(x, unit)</span><span class="type-signature"> &rarr; {string}</span></h4>
+
+    
+    <p class="summary"><p>X bit to y unit</p>.</p>
+    
+
+
+
+<div class="description">
+    <p>X bit to y unit</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Bits</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>unit</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Unit</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.1</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1354">line 1354</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="module-Maths.html#~toBit">module:Maths~toBit</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Conversion</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
 
 
     </dd>
@@ -7485,7 +7823,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1126">line 1126</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1157">line 1157</a>
     </li></ul></dd>
     
 
@@ -7495,7 +7833,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>toPixel</li>
+            <li><a href="module-Maths.html#~toPixel">module:Maths~toPixel</a></li>
         </ul>
     </dd>
     
@@ -7673,7 +8011,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line426">line 426</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line438">line 438</a>
     </li></ul></dd>
     
 
@@ -7877,7 +8215,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line162">line 162</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line174">line 174</a>
     </li></ul></dd>
     
 
@@ -7933,13 +8271,13 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <h4 class="name" id="~getClosest"><span class="type-signature">(inner) </span>getClosest<span class="signature">(x, opt)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
-    <p class="summary"><p>Get the closest option from the options to $x</p>.</p>
+    <p class="summary"><p>Get the closest option from the options to <code>x</code></p>.</p>
     
 
 
 
 <div class="description">
-    <p>Get the closest option from the options to $x</p>
+    <p>Get the closest option from the options to <code>x</code></p>
 </div>
 
 
@@ -8058,7 +8396,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1624">line 1624</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1892">line 1892</a>
     </li></ul></dd>
     
 
@@ -8114,13 +8452,13 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <h4 class="name" id="~getClosestRoot"><span class="type-signature">(inner) </span>getClosestRoot<span class="signature">(x, n)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
-    <p class="summary"><p>Get the closest whole nth-root of x</p>.</p>
+    <p class="summary"><p>Get the closest whole <code>n</code>th-root of <code>x</code></p>.</p>
     
 
 
 
 <div class="description">
-    <p>Get the closest whole nth-root of x</p>
+    <p>Get the closest whole <code>n</code>th-root of <code>x</code></p>
 </div>
 
 
@@ -8239,7 +8577,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line817">line 817</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line848">line 848</a>
     </li></ul></dd>
     
 
@@ -8397,7 +8735,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1727">line 1727</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1995">line 1995</a>
     </li></ul></dd>
     
 
@@ -8562,7 +8900,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1713">line 1713</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1981">line 1981</a>
     </li></ul></dd>
     
 
@@ -8727,7 +9065,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1045">line 1045</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1076">line 1076</a>
     </li></ul></dd>
     
 
@@ -8959,7 +9297,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line934">line 934</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line965">line 965</a>
     </li></ul></dd>
     
 
@@ -8969,7 +9307,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>Essence~Array.getIncrement</li>
+            <li>external:Array.getIncrement</li>
         </ul>
     </dd>
     
@@ -9022,13 +9360,13 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <h4 class="name" id="~intersection"><span class="type-signature">(inner) </span>intersection<span class="signature">(a, b, c<span class="signature-attributes">opt</span>, toSort<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
 
     
-    <p class="summary"><p>Intersection</p>.</p>
+    <p class="summary"><p>Intersection (&Intersection;)</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Intersection</p>
+    <p>Intersection (&Intersection;)</p>
 </div>
 
 
@@ -9251,7 +9589,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1364">line 1364</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1632">line 1632</a>
     </li></ul></dd>
     
 
@@ -9278,7 +9616,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
 
         
 <div class="param-desc">
-    <p>a intersection b (intersection c)</p>
+    <p>a &Intersection; b (&Intersection; c)</p>
 </div>
 
 
@@ -9307,13 +9645,13 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <h4 class="name" id="~isCloser"><span class="type-signature">(inner) </span>isCloser<span class="signature">(x, a, b)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
 
     
-    <p class="summary"><p>Is $a closer to $x than $b</p>.</p>
+    <p class="summary"><p>Is <code>a</code> closer to <code>x</code> than <code>b</code></p>.</p>
     
 
 
 
 <div class="description">
-    <p>Is $a closer to $x than $b</p>
+    <p>Is <code>a</code> closer to <code>x</code> than <code>b</code></p>
 </div>
 
 
@@ -9455,7 +9793,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1612">line 1612</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1880">line 1880</a>
     </li></ul></dd>
     
 
@@ -9485,6 +9823,160 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <p>Truth</p>
 </div>
 
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="~isPrime"><span class="type-signature">(inner) </span>isPrime<span class="signature">(x)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+
+    
+    <p class="summary"><p>Check if <code>x</code> is a prime number</p>.</p>
+    
+
+
+
+<div class="description">
+    <p>Check if <code>x</code> is a prime number</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Number</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.1</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line804">line 804</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
 
 
 <dl>
@@ -9668,7 +10160,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line110">line 110</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line109">line 109</a>
     </li></ul></dd>
     
 
@@ -9695,7 +10187,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
 
         
 <div class="param-desc">
-    <p>Random number</p>
+    <p>Random number r&in;[0||1, <code>len</code>(-1)]</p>
 </div>
 
 
@@ -9826,7 +10318,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line414">line 414</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line426">line 426</a>
     </li></ul></dd>
     
 
@@ -9836,7 +10328,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>log</li>
+            <li><a href="module-Maths.html#~log">module:Maths~log</a></li>
         </ul>
     </dd>
     
@@ -9889,13 +10381,13 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <h4 class="name" id="~log"><span class="type-signature">(inner) </span>log<span class="signature">(x, y<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
-    <p class="summary"><p>Logarithm (LOGy(x))</p>.</p>
+    <p class="summary"><p>Logarithm (log<sub><code>y</code></sub>(<code>x</code>))</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Logarithm (LOGy(x))</p>
+    <p>Logarithm (log<sub><code>y</code></sub>(<code>x</code>))</p>
 </div>
 
 
@@ -10046,7 +10538,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line402">line 402</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line414">line 414</a>
     </li></ul></dd>
     
 
@@ -10273,7 +10765,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1015">line 1015</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1046">line 1046</a>
     </li></ul></dd>
     
 
@@ -10329,13 +10821,13 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <h4 class="name" id="~mapLinear"><span class="type-signature">(inner) </span>mapLinear<span class="signature">(x, a1, a2, b1, b2)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
-    <p class="summary"><p>Linear mapping from range [a1; a2] to range [b1; b2]d</p>.</p>
+    <p class="summary">Linear mapping from range [<code>a1</code>; <code>a2</code>] to range [<code>b1</code>; <code>b2</code>].</p>
     
 
 
 
 <div class="description">
-    <p>Linear mapping from range [a1; a2] to range [b1; b2]d</p>
+    <p>Linear mapping from range [<code>a1</code>; <code>a2</code>] to range [<code>b1</code>; <code>b2</code>].</p>
 </div>
 
 
@@ -10523,7 +11015,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line726">line 726</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line745">line 745</a>
     </li></ul></dd>
     
 
@@ -10579,13 +11071,13 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <h4 class="name" id="~markConv"><span class="type-signature">(inner) </span>markConv<span class="signature">(mark, initTotal, endTotal<span class="signature-attributes">opt</span>, nbDec<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
-    <p class="summary"><p>Convert a mark (out of $initTotal) to an other (out of $endTotal)</p>.</p>
+    <p class="summary"><p>Convert a mark (out of <code>initTotal</code>) to an other (out of <code>endTotal</code>)</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Convert a mark (out of $initTotal) to an other (out of $endTotal)</p>
+    <p>Convert a mark (out of <code>initTotal</code>) to an other (out of <code>endTotal</code>)</p>
 </div>
 
 
@@ -10810,7 +11302,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line375">line 375</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line387">line 387</a>
     </li></ul></dd>
     
 
@@ -10837,7 +11329,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
 
         
 <div class="param-desc">
-    <p>Converted mark</p>
+    <p>Converted mark: <code>mark</code>/<code>initTotal</code> &rArr; r/<code>endTotal</code></p>
 </div>
 
 
@@ -10968,7 +11460,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line286">line 286</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line298">line 298</a>
     </li></ul></dd>
     
 
@@ -10978,7 +11470,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>dec2min</li>
+            <li><a href="module-Maths.html#~dec2min">module:Maths~dec2min</a></li>
         </ul>
     </dd>
     
@@ -11270,7 +11762,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1255">line 1255</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1531">line 1531</a>
     </li></ul></dd>
     
 
@@ -11278,13 +11770,6 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
 
     
 
-    
-    <dt class="tag-todo">To Do:</dt>
-    <dd class="tag-todo">
-        <ul>
-            <li>fix the error where undefined values are in the resulting array when min=1</li>
-        </ul>
-    </dd>
     
 </dl>
 
@@ -11481,7 +11966,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1569">line 1569</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1837">line 1837</a>
     </li></ul></dd>
     
 
@@ -11694,7 +12179,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line211">line 211</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line223">line 223</a>
     </li></ul></dd>
     
 
@@ -11855,7 +12340,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line879">line 879</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line910">line 910</a>
     </li></ul></dd>
     
 
@@ -11865,7 +12350,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>Essence~Essence.eps</li>
+            <li>module:essence~Essence.eps</li>
         </ul>
     </dd>
     
@@ -11918,13 +12403,13 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <h4 class="name" id="~Norm"><span class="type-signature">(inner) </span>Norm<span class="signature">(x)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
-    <p class="summary"><p>Normal distribution</p>.</p>
+    <p class="summary">normalcdf(x)</p>
     
 
 
 
 <div class="description">
-    <p>Normal distribution</p>
+    <p>Normal distribution Z~N(0, 1)</p>
 </div>
 
 
@@ -12020,7 +12505,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line483">line 483</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line496">line 496</a>
     </li></ul></dd>
     
 
@@ -12030,7 +12515,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>StdNorm</li>
+            <li><a href="module-Maths.html#~StdNorm">module:Maths~StdNorm</a></li>
         </ul>
     </dd>
     
@@ -12054,7 +12539,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
 
         
 <div class="param-desc">
-    <p>Normal distribution</p>
+    <p>Normal distribution P(z&lt;-abs(<code>x</code>))</p>
 </div>
 
 
@@ -12083,14 +12568,13 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <h4 class="name" id="~NormEstimate"><span class="type-signature">(inner) </span>NormEstimate<span class="signature">(n, p, r)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
-    <p class="summary"><p>Normal estimate
-Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function">http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function</a></p>.</p>
+    <p class="summary">Normal estimate.</p>
     
 
 
 
 <div class="description">
-    <p>Normal estimate
+    <p>Normal estimate.<br />
 Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function">http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function</a></p>
 </div>
 
@@ -12233,7 +12717,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line646">line 646</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line662">line 662</a>
     </li></ul></dd>
     
 
@@ -12243,7 +12727,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>erf</li>
+            <li><a href="module-Maths.html#~erf">module:Maths~erf</a></li>
         </ul>
     </dd>
     
@@ -12488,7 +12972,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line388">line 388</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line400">line 400</a>
     </li></ul></dd>
     
 
@@ -12669,7 +13153,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1490">line 1490</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1758">line 1758</a>
     </li></ul></dd>
     
 
@@ -12725,13 +13209,13 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <h4 class="name" id="~Po"><span class="type-signature">(inner) </span>Po<span class="signature">(l, x)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
-    <p class="summary"><p>Poisson distribution</p>.</p>
+    <p class="summary"><p>Poisson distribution X~Po(<code>l</code>, <code>x</code>)</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Poisson distribution</p>
+    <p>Poisson distribution X~Po(<code>l</code>, <code>x</code>)</p>
 </div>
 
 
@@ -12850,7 +13334,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line531">line 531</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line544">line 544</a>
     </li></ul></dd>
     
 
@@ -12906,13 +13390,13 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <h4 class="name" id="~Po2Norm"><span class="type-signature">(inner) </span>Po2Norm<span class="signature">(l, x)</span><span class="type-signature"> &rarr; {Bool}</span></h4>
 
     
-    <p class="summary"><p>Poisson to Normal</p>.</p>
+    <p class="summary"><p>Poisson to Normal distribution</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Poisson to Normal</p>
+    <p>Poisson to Normal distribution</p>
 </div>
 
 
@@ -13031,7 +13515,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line617">line 617</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line633">line 633</a>
     </li></ul></dd>
     
 
@@ -13041,7 +13525,9 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>Po</li>
+            <li><a href="module-Maths.html#~Po">module:Maths~Po</a></li>
+        
+            <li><a href="module-Maths.html#~Norm">module:Maths~Norm</a></li>
         </ul>
     </dd>
     
@@ -13219,7 +13705,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line544">line 544</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line558">line 558</a>
     </li></ul></dd>
     
 
@@ -13229,11 +13715,18 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>PoCumul</li>
+            <li><a href="module-Maths.html#~PoCumul">module:Maths~PoCumul</a></li>
         </ul>
     </dd>
     
 
+    
+    <dt class="tag-todo">To Do:</dt>
+    <dd class="tag-todo">
+        <ul>
+            <li>To revisit</li>
+        </ul>
+    </dd>
     
 </dl>
 
@@ -13253,7 +13746,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
 
         
 <div class="param-desc">
-    <p>Cumultative poisson distribution</p>
+    <p>Cumulative poisson distribution</p>
 </div>
 
 
@@ -13282,13 +13775,13 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <h4 class="name" id="~primeCheck"><span class="type-signature">(inner) </span>primeCheck<span class="signature">(a, b)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
 
     
-    <p class="summary"><p>Primeness check of $a toward $b</p>.</p>
+    <p class="summary"><p>Primeness check of <code>a</code> toward <code>b</code></p>.</p>
     
 
 
 
 <div class="description">
-    <p>Primeness check of $a toward $b</p>
+    <p>Primeness check of <code>a</code> toward <code>b</code></p>
 </div>
 
 
@@ -13407,7 +13900,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line805">line 805</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line836">line 836</a>
     </li></ul></dd>
     
 
@@ -13417,7 +13910,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>primeN</li>
+            <li><a href="module-Maths.html#~primeN">module:Maths~primeN</a></li>
         </ul>
     </dd>
     
@@ -13470,13 +13963,13 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <h4 class="name" id="~primeN"><span class="type-signature">(inner) </span>primeN<span class="signature">(arr)</span><span class="type-signature"> &rarr; {Array}</span></h4>
 
     
-    <p class="summary"><p>Return the prime numbers of arr where non prime numbers that doesn't have divisors in the array are considered prime</p>.</p>
+    <p class="summary"><p>Return the prime numbers of <code>arr</code> where non prime numbers that doesn't have divisors in the array are considered prime numbers</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Return the prime numbers of arr where non prime numbers that doesn't have divisors in the array are considered prime</p>
+    <p>Return the prime numbers of <code>arr</code> where non prime numbers that doesn't have divisors in the array are considered prime numbers</p>
 </div>
 
 
@@ -13572,12 +14065,19 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line785">line 785</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line816">line 816</a>
     </li></ul></dd>
     
 
     
 
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="module-Maths.html#~primeCheck">module:Maths~primeCheck</a></li>
+        </ul>
+    </dd>
     
 
     
@@ -13835,7 +14335,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line948">line 948</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line979">line 979</a>
     </li></ul></dd>
     
 
@@ -13952,7 +14452,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
 
             
 
-            <td class="description last"><p>Radiant</p></td>
+            <td class="description last"><p>Radiant (rad)</p></td>
         </tr>
 
     
@@ -13996,7 +14496,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line750">line 750</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line769">line 769</a>
     </li></ul></dd>
     
 
@@ -14006,7 +14506,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>deg2rad</li>
+            <li><a href="module-Maths.html#~deg2rad">module:Maths~deg2rad</a></li>
         </ul>
     </dd>
     
@@ -14030,7 +14530,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
 
         
 <div class="param-desc">
-    <p>Degree</p>
+    <p>Degree (°)</p>
 </div>
 
 
@@ -14278,7 +14778,7 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
 
         
 <div class="param-desc">
-    <p>Random number</p>
+    <p>Random number r&in;[<code>min</code>, <code>max</code>]</p>
 </div>
 
 
@@ -14307,14 +14807,13 @@ Source: <a href="http://stackoverflow.com/questions/1095650/how-can-i-efficientl
     <h4 class="name" id="~randFloatSpread"><span class="type-signature">(inner) </span>randFloatSpread<span class="signature">(range)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
-    <p class="summary"><p>Random float in [-range / 2, range / 2]
-Source: Three.js</p>.</p>
+    <p class="summary">Random float in [-<code>range</code>/2, <code>range</code>/2].</p>
     
 
 
 
 <div class="description">
-    <p>Random float in [-range / 2, range / 2]
+    <p>Random float in [-<code>range</code>/2, <code>range</code>/2].<br />
 Source: Three.js</p>
 </div>
 
@@ -14411,7 +14910,7 @@ Source: Three.js</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line134">line 134</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line146">line 146</a>
     </li></ul></dd>
     
 
@@ -14623,7 +15122,7 @@ Source: Three.js</p>
                 </td>
             
 
-            <td class="description last"><p>Maximimum</p></td>
+            <td class="description last"><p>Maximum</p></td>
         </tr>
 
     
@@ -14742,7 +15241,7 @@ Source: Three.js</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line147">line 147</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line159">line 159</a>
     </li></ul></dd>
     
 
@@ -14769,7 +15268,7 @@ Source: Three.js</p>
 
         
 <div class="param-desc">
-    <p>Random number array</p>
+    <p>Random number array where &forall;i&in;r, i&in;[<code>min</code>, <code>max</code>]<sub>(base)</sub></p>
 </div>
 
 
@@ -14795,17 +15294,176 @@ Source: Three.js</p>
 
     
 
-    <h4 class="name" id="~random16"><span class="type-signature">(inner) </span>random16<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id="~random"><span class="type-signature">(inner) </span>random<span class="signature">(bits)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
-    <p class="summary"><p>Random float in [0; 1] with 16-bits of randomness as Math.random() creates repetitive patterns when applied over larger space
-Source: Three.js</p>.</p>
+    <p class="summary">Generate a random double in [0, 1] with <code>bits</code>-bits of randomness to avoid repetitive patterns when using Math.random() on a large spaces.</p>
     
 
 
 
 <div class="description">
-    <p>Random float in [0; 1] with 16-bits of randomness as Math.random() creates repetitive patterns when applied over larger space
+    <p>Generate a random double in [0, 1] with <code>bits</code>-bits of randomness to avoid repetitive patterns when using Math.random() on a large spaces.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bits</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.1</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line133">line 133</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>modume:Maths~random16</li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Random double</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="~random16"><span class="type-signature">(inner) </span>random16<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+
+    
+    <p class="summary">Random float in [0, 1] with 16-bits of randomness as Math.random() creates repetitive patterns when applied over larger space.</p>
+    
+
+
+
+<div class="description">
+    <p>Random float in [0, 1] with 16-bits of randomness as Math.random() creates repetitive patterns when applied over larger space.<br />
 Source: Three.js</p>
 </div>
 
@@ -14853,12 +15511,19 @@ Source: Three.js</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line122">line 122</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line121">line 121</a>
     </li></ul></dd>
     
 
     
 
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>modume:Maths~random</li>
+        </ul>
+    </dd>
     
 
     
@@ -15011,7 +15676,7 @@ Source: Three.js</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line69">line 69</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line68">line 68</a>
     </li></ul></dd>
     
 
@@ -15021,7 +15686,7 @@ Source: Three.js</p>
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>rand</li>
+            <li><a href="module-Maths.html#~rand">module:Maths~rand</a></li>
         </ul>
     </dd>
     
@@ -15045,7 +15710,7 @@ Source: Three.js</p>
 
         
 <div class="param-desc">
-    <p>Random number</p>
+    <p>Random number r&in;[0, <code>max</code>]</p>
 </div>
 
 
@@ -15276,7 +15941,7 @@ Source: Three.js</p>
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>rand</li>
+            <li><a href="module-Maths.html#~rand">module:Maths~rand</a></li>
         </ul>
     </dd>
     
@@ -15300,7 +15965,7 @@ Source: Three.js</p>
 
         
 <div class="param-desc">
-    <p>Random number</p>
+    <p>Random number r&in;[min(<code>var1</code>, <code>var2</code>), max(<code>var1</code>, <code>var2</code>)]</p>
 </div>
 
 
@@ -15568,7 +16233,7 @@ Source: Three.js</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1208">line 1208</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1485">line 1485</a>
     </li></ul></dd>
     
 
@@ -15624,13 +16289,13 @@ Source: Three.js</p>
     <h4 class="name" id="~range2base"><span class="type-signature">(inner) </span>range2base<span class="signature">(min<span class="signature-attributes">opt</span>, inc<span class="signature-attributes">opt</span>, max<span class="signature-attributes">opt</span>, b<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
 
     
-    <p class="summary"><p>Same as range() but to the base $b</p>.</p>
+    <p class="summary"><p>Same as range() but to the base <code>b</code></p>.</p>
     
 
 
 
 <div class="description">
-    <p>Same as range() but to the base $b</p>
+    <p>Same as range() but to the base <code>b</code></p>
 </div>
 
 
@@ -15863,7 +16528,7 @@ Source: Three.js</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1234">line 1234</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1511">line 1511</a>
     </li></ul></dd>
     
 
@@ -15873,7 +16538,7 @@ Source: Three.js</p>
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>range</li>
+            <li><a href="module-Maths.html#~range">module:Maths~range</a></li>
         </ul>
     </dd>
     
@@ -16051,7 +16716,7 @@ Source: Three.js</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1555">line 1555</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1823">line 1823</a>
     </li></ul></dd>
     
 
@@ -16107,13 +16772,13 @@ Source: Three.js</p>
     <h4 class="name" id="~revClamp"><span class="type-signature">(inner) </span>revClamp<span class="signature">(x, a, b)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
-    <p class="summary"><p>Clamp values to keep them within a range ]-Inf; a]U[b; Inf[</p>.</p>
+    <p class="summary"><p>Clamp values to keep them within a range ]-Inf; a]&Union;[b; Inf[</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Clamp values to keep them within a range ]-Inf; a]U[b; Inf[</p>
+    <p>Clamp values to keep them within a range ]-Inf; a]&Union;[b; Inf[</p>
 </div>
 
 
@@ -16255,12 +16920,19 @@ Source: Three.js</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line674">line 674</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line692">line 692</a>
     </li></ul></dd>
     
 
     
 
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="module-Maths.html#~clamp">module:Maths~clamp</a></li>
+        </ul>
+    </dd>
     
 
     
@@ -16410,7 +17082,7 @@ Source: Three.js</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1753">line 1753</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line2020">line 2020</a>
     </li></ul></dd>
     
 
@@ -16437,7 +17109,7 @@ Source: Three.js</p>
 
         
 <div class="param-desc">
-    <p>Sample mean</p>
+    <p>Sample mean <span style='text-decoration: overline'>x</span></p>
 </div>
 
 
@@ -16591,7 +17263,7 @@ Source: Three.js</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1336">line 1336</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1604">line 1604</a>
     </li></ul></dd>
     
 
@@ -16601,7 +17273,7 @@ Source: Three.js</p>
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>vectorProd</li>
+            <li><a href="module-Maths.html#~vectorProd">module:Maths~vectorProd</a></li>
         </ul>
     </dd>
     
@@ -16654,13 +17326,13 @@ Source: Three.js</p>
     <h4 class="name" id="~sec2time"><span class="type-signature">(inner) </span>sec2time<span class="signature">(i, withH<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {string}</span></h4>
 
     
-    <p class="summary"><p>Second to time</p>.</p>
+    <p class="summary"><p>Seconds to time</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Second to time</p>
+    <p>Seconds to time</p>
 </div>
 
 
@@ -16811,7 +17483,7 @@ Source: Three.js</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line341">line 341</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line353">line 353</a>
     </li></ul></dd>
     
 
@@ -16821,7 +17493,7 @@ Source: Three.js</p>
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>toS</li>
+            <li><a href="module-Maths.html#~toS">module:Maths~toS</a></li>
         </ul>
     </dd>
     
@@ -16871,7 +17543,7 @@ Source: Three.js</p>
 
     
 
-    <h4 class="name" id="~simpleInterest"><span class="type-signature">(inner) </span>simpleInterest<span class="signature">(po, i, t)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id="~simpleInterest"><span class="type-signature">(inner) </span>simpleInterest<span class="signature">(po, i, t<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
     <p class="summary"><p>Simple interest</p>.</p>
@@ -16904,7 +17576,11 @@ Source: Three.js</p>
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
+        
+        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -16929,7 +17605,19 @@ Source: Three.js</p>
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>Balance</p></td>
@@ -16952,7 +17640,19 @@ Source: Three.js</p>
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>Interest</p></td>
@@ -16975,7 +17675,23 @@ Source: Three.js</p>
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    1
+                
+                </td>
             
 
             <td class="description last"><p>Time (in years)</p></td>
@@ -17022,7 +17738,7 @@ Source: Three.js</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line852">line 852</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line883">line 883</a>
     </li></ul></dd>
     
 
@@ -17032,7 +17748,7 @@ Source: Three.js</p>
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>compoundInterest</li>
+            <li><a href="module-Maths.html#~compoundInterest">module:Maths~compoundInterest</a></li>
         </ul>
     </dd>
     
@@ -17085,13 +17801,13 @@ Source: Three.js</p>
     <h4 class="name" id="~StdNorm"><span class="type-signature">(inner) </span>StdNorm<span class="signature">(m, sd, x)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
-    <p class="summary"><p>Standard normal distribution</p>.</p>
+    <p class="summary"><p>Standard normal distribution Z~N(<code>m</code>, <code>sd</code>)</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Standard normal distribution</p>
+    <p>Standard normal distribution Z~N(<code>m</code>, <code>sd</code>)</p>
 </div>
 
 
@@ -17233,7 +17949,7 @@ Source: Three.js</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line500">line 500</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line513">line 513</a>
     </li></ul></dd>
     
 
@@ -17243,7 +17959,7 @@ Source: Three.js</p>
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>Norm</li>
+            <li><a href="module-Maths.html#~Norm">module:Maths~Norm</a></li>
         </ul>
     </dd>
     
@@ -17453,7 +18169,7 @@ Source: Three.js</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line182">line 182</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line194">line 194</a>
     </li></ul></dd>
     
 
@@ -17738,7 +18454,7 @@ Source: Three.js</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1414">line 1414</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1682">line 1682</a>
     </li></ul></dd>
     
 
@@ -17765,7 +18481,7 @@ Source: Three.js</p>
 
         
 <div class="param-desc">
-    <p>a union b - a intersection b =&gt; a only &amp; b only</p>
+    <p>a &Union; b - a &Intersection; b &rArr; a only &amp; b only</p>
 </div>
 
 
@@ -17942,7 +18658,7 @@ Source: Three.js</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1743">line 1743</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line2011">line 2011</a>
     </li></ul></dd>
     
 
@@ -17998,13 +18714,13 @@ Source: Three.js</p>
     <h4 class="name" id="~timesLiteral"><span class="type-signature">(inner) </span>timesLiteral<span class="signature">(n)</span><span class="type-signature"> &rarr; {string}</span></h4>
 
     
-    <p class="summary"><p>Converts $n &quot;times&quot; to an appropriate formulation</p>.</p>
+    <p class="summary"><p>Converts <code>n</code> &quot;times&quot; to an appropriate formulation (if necessary)</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Converts $n &quot;times&quot; to an appropriate formulation</p>
+    <p>Converts <code>n</code> &quot;times&quot; to an appropriate formulation (if necessary)</p>
 </div>
 
 
@@ -18153,6 +18869,171 @@ Source: Three.js</p>
 
     
 
+    <h4 class="name" id="~toBit"><span class="type-signature">(inner) </span>toBit<span class="signature">(x)</span><span class="type-signature"> &rarr; {number}</span></h4>
+
+    
+    <p class="summary"><p>X size to y bits</p>.</p>
+    
+
+
+
+<div class="description">
+    <p>X size to y bits</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Number with a size unit</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.1</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1238">line 1238</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="module-Maths.html#~fromBit">module:Maths~fromBit</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Bits</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id="~toFrac"><span class="type-signature">(inner) </span>toFrac<span class="signature">(n, prec, up<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {string}</span></h4>
 
     
@@ -18162,7 +19043,7 @@ Source: Three.js</p>
 
 
 <div class="description">
-    <p>Fraction form of n.
+    <p>Fraction form of n.<br />
 Source: somewhere</p>
 </div>
 
@@ -18349,7 +19230,7 @@ Source: somewhere</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line893">line 893</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line924">line 924</a>
     </li></ul></dd>
     
 
@@ -18405,14 +19286,13 @@ Source: somewhere</p>
     <h4 class="name" id="~toPixel"><span class="type-signature">(inner) </span>toPixel<span class="signature">(x)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
-    <p class="summary"><p>X unit to y px
-Reference/help: <a href="http://www.endmemo.com/sconvert/centimeterpixel.php">http://www.endmemo.com/sconvert/centimeterpixel.php</a></p>.</p>
+    <p class="summary"><code>x</code> unit to <code>y</code> px.</p>
     
 
 
 
 <div class="description">
-    <p>X unit to y px
+    <p><code>x</code> unit to <code>y</code> px.<br />
 Reference/help: <a href="http://www.endmemo.com/sconvert/centimeterpixel.php">http://www.endmemo.com/sconvert/centimeterpixel.php</a></p>
 </div>
 
@@ -18509,7 +19389,7 @@ Reference/help: <a href="http://www.endmemo.com/sconvert/centimeterpixel.php">ht
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1058">line 1058</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1089">line 1089</a>
     </li></ul></dd>
     
 
@@ -18519,7 +19399,7 @@ Reference/help: <a href="http://www.endmemo.com/sconvert/centimeterpixel.php">ht
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>fromPixel</li>
+            <li><a href="module-Maths.html#~fromPixel">module:Maths~fromPixel</a></li>
         </ul>
     </dd>
     
@@ -18674,7 +19554,7 @@ Reference/help: <a href="http://www.endmemo.com/sconvert/centimeterpixel.php">ht
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line310">line 310</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line322">line 322</a>
     </li></ul></dd>
     
 
@@ -18684,7 +19564,7 @@ Reference/help: <a href="http://www.endmemo.com/sconvert/centimeterpixel.php">ht
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><a href="global.html#sec2time">sec2time</a></li>
+            <li><a href="module-Maths.html#~sec2time">module:Maths~sec2time</a></li>
         </ul>
     </dd>
     
@@ -18839,7 +19719,7 @@ Reference/help: <a href="http://www.endmemo.com/sconvert/centimeterpixel.php">ht
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1687">line 1687</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1955">line 1955</a>
     </li></ul></dd>
     
 
@@ -18895,13 +19775,13 @@ Reference/help: <a href="http://www.endmemo.com/sconvert/centimeterpixel.php">ht
     <h4 class="name" id="~union"><span class="type-signature">(inner) </span>union<span class="signature">(a, b, c<span class="signature-attributes">opt</span>, toSort<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
 
     
-    <p class="summary"><p>Union</p>.</p>
+    <p class="summary"><p>Union (&Union;)</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Union</p>
+    <p>Union (&Union;)</p>
 </div>
 
 
@@ -19124,7 +20004,7 @@ Reference/help: <a href="http://www.endmemo.com/sconvert/centimeterpixel.php">ht
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1350">line 1350</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1618">line 1618</a>
     </li></ul></dd>
     
 
@@ -19151,7 +20031,7 @@ Reference/help: <a href="http://www.endmemo.com/sconvert/centimeterpixel.php">ht
 
         
 <div class="param-desc">
-    <p>a union b (union c)</p>
+    <p>a &Union; b (&Union; c)</p>
 </div>
 
 
@@ -19282,7 +20162,7 @@ Reference/help: <a href="http://www.endmemo.com/sconvert/centimeterpixel.php">ht
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1311">line 1311</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1579">line 1579</a>
     </li></ul></dd>
     
 
@@ -19292,7 +20172,7 @@ Reference/help: <a href="http://www.endmemo.com/sconvert/centimeterpixel.php">ht
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>Pt</li>
+            <li><a href="module-UI-Pt.html">module:UI~Pt</a></li>
         </ul>
     </dd>
     
@@ -19345,13 +20225,13 @@ Reference/help: <a href="http://www.endmemo.com/sconvert/centimeterpixel.php">ht
     <h4 class="name" id="~vector2PointForm"><span class="type-signature">(inner) </span>vector2PointForm<span class="signature">(r)</span><span class="type-signature"> &rarr; {string}</span></h4>
 
     
-    <p class="summary"><p>Convert a vector to a point form (R = xi + yj + zk-&gt;(x, y, z))</p>.</p>
+    <p class="summary"><p>Convert a vector to a point form (R = xi + yj + zk&rarr;(x, y, z))</p>.</p>
     
 
 
 
 <div class="description">
-    <p>Convert a vector to a point form (R = xi + yj + zk-&gt;(x, y, z))</p>
+    <p>Convert a vector to a point form (R = xi + yj + zk&rarr;(x, y, z))</p>
 </div>
 
 
@@ -19447,7 +20327,7 @@ Reference/help: <a href="http://www.endmemo.com/sconvert/centimeterpixel.php">ht
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1323">line 1323</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1591">line 1591</a>
     </li></ul></dd>
     
 
@@ -19457,7 +20337,7 @@ Reference/help: <a href="http://www.endmemo.com/sconvert/centimeterpixel.php">ht
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>vector2Point</li>
+            <li><a href="module-Maths.html#~vector2Point">module:Maths~vector2Point</a></li>
         </ul>
     </dd>
     
@@ -19635,7 +20515,7 @@ Reference/help: <a href="http://www.endmemo.com/sconvert/centimeterpixel.php">ht
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1292">line 1292</a>
+        <a href="modules_Maths.js.html">modules/Maths.js</a>, <a href="modules_Maths.js.html#line1560">line 1560</a>
     </li></ul></dd>
     
 
@@ -19645,7 +20525,7 @@ Reference/help: <a href="http://www.endmemo.com/sconvert/centimeterpixel.php">ht
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>scalarProd</li>
+            <li>module:Math~scalarProd</li>
         </ul>
     </dd>
     
@@ -19850,7 +20730,7 @@ Reference/help: <a href="http://www.endmemo.com/sconvert/centimeterpixel.php">ht
 
         
 <div class="param-desc">
-    <p>Result</p>
+    <p>a xor b</p>
 </div>
 
 
@@ -19887,13 +20767,13 @@ Reference/help: <a href="http://www.endmemo.com/sconvert/centimeterpixel.php">ht
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-File.html">File</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-File-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#getFileContent">getFileContent</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#UnitTest">UnitTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Aug 24 2016 18:14:42 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Sep 05 2016 19:03:56 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

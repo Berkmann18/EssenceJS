@@ -36,7 +36,7 @@ var DataStruct = new Module("DataStruct", "Data structures", ["DOM", "Maths", "F
  * @property {LinkedList|Object} LinkedList.next Next element
  * @property {string} LinkedList.name Name
  * @property {function(this:LinkedList): string} LinkedList.show Show the linked list
- * @property {function(this:linkedList): string} LinkedList.next.show Show the linked list
+ * @property {function(this:LinkedList): string} LinkedList.next.show Show the linked list
  * @property {function(): string} LinkedList.toString String representation
  */
 function LinkedList (pl, nx, name) {
@@ -94,7 +94,7 @@ function LinkedList (pl, nx, name) {
  * @property {function(): number} TreeNode.avg Average of the payloads
  * @property {function(): string} TreeNode.printBFS Print in the BFS order
  * @property {function(): string} TreeNode.toString String representation
- * @property {Function(): Array} TreeNode.toArray Array representation
+ * @property {function(): Array} TreeNode.toArray Array representation
  */
 function TreeNode (pl, l, r) { //Binary tree
     this.left = l;
@@ -359,7 +359,7 @@ function Node (pl, nx, pv) {
         if (this.next === null) {
             this.next = new Node(n); //If there is no next node, link the new one here
             this.next.prev = this;
-        }else this.next.append(n); //Else, append to next node
+        } else this.next.append(n); //Else, append to next node
     };
 
     this.remove = function () {
@@ -405,7 +405,7 @@ function Node (pl, nx, pv) {
  * @this PathNode
  * @constructor
  * @since 1.0
- * @property {number} PathNode.f Cost of the path (g) + heuristical estimate
+ * @property {number} PathNode.f Cost of the path (g) + heuristic estimate
  * @property {?PathNode} PathNode.parent Parent of the path-node
  * @property {function(number): PathNode} PathNode.back Go n path-nodes back
  * @property {function(PathNode): boolean} PathNode.isCloser Check if the current path-node is closer than the other one
@@ -432,7 +432,7 @@ function PathNode (g, h) { //Nodes for path finding algs
 NTreeNode.inheritsFrom(TreeNode);
 /**
  * @description N-ary tree node
- * @see TreeNode
+ * @see module:DataStruct~TreeNode
  * @param {*} pl Payload
  * @param {TreeNode[]} ch Childs
  * @returns {NTreeNode} NTreeNode
@@ -554,9 +554,9 @@ function NTreeNode (pl, ch) {
     this.find = function (n, method) {
         return (method.normal() === "bfs")? this.bfs(n): this.dfs(n)
     };
-    this.dfs = function (n, d, td) { //Deepth First Search
-        if (!d) d = 0; //Deepth
-        if (!td) td = 0; //Total deepth
+    this.dfs = function (n, d, td) { //Depth First Search
+        if (!d) d = 0; //Depth
+        if (!td) td = 0; //Total depth
         for (var c in this.childs) {
             if (this.childs.hasOwnProperty(c)) c.dfs(n, d + 1, td++);
         }
@@ -644,7 +644,7 @@ function NTreeNode (pl, ch) {
 }
 
 /**
- * @description Mathematical set.
+ * @description Mathematical set.<br />
  * It's depreciated in the next version (in favour of ES6) and will have the following methods instead:
  *   add(*), has(*), delete(*), size()->size, values(), clear()
  * @param {Array} [arr=[]] Array or element
@@ -687,7 +687,7 @@ function Set (arr) {
     };
 
     this.remove = function (item) {
-        if (this.value.indexOf(item) !== -1) {
+        if (this.value.has(item)) {
             if (isType(item, "array")) {
                 for(var i = 0; i < item.length; i++) this.remove(item[i]);
             } else this.value = this.value.remove(item)
@@ -778,7 +778,7 @@ SortedSet.inheritsFrom(Set);
 /**
  * @description Sorted mathematical set
  * @this SortedSet
- * @see Set
+ * @see module:DataStruct~Set
  * @param {Array} arr Array
  * @returns {SortedSet} Sorted set
  * @constructor
@@ -789,14 +789,10 @@ SortedSet.inheritsFrom(Set);
  * @property {function(): string} SortedSet.toString String representation
  */
 function SortedSet (arr) {
-    this.value = arr || [];
+    this.value = Copy(arr).quickSort() || [];
     this.add = function (item) {
-        if (this.value.indexOf(item) === -1) {
-            if (isType(item, "array")) this.value = this.value.concat(rmDuplicates(item));
-            else this.value.push(item);
-        }
+        isType(item, "array")? this.value.multiPlace(item): this.value.place(item);
         this.value = rmDuplicates(this.value);
-        this.value.quickSort();
     };
 
     this.toString = function () {
@@ -892,7 +888,7 @@ function Stack (arr, lim) {
  * @property {function(): boolean} StackArray.isFull Fullness check
  * @property {function(): number} StackArray.size Size
  * @property {function(): string} StackArray.toString String representation
- * @see Stack
+ * @see module:DataStruct~Stack
  */
 function StackArray (sz) {
     this.value = new Array(sz);
@@ -972,7 +968,7 @@ function StackArray (sz) {
  * @property {function(): boolean} StackList.isFull Fullness check
  * @property {function(): number} StackList.size Size
  * @property {function(): string} StackList.toString String representation
- * @see Stack
+ * @see module:DataStruct~Stack
  */
 function StackList (arr) {
     this.top = new Node();
@@ -1101,7 +1097,7 @@ function Queue (arr, lim) {
  * @this QueueArray
  * @constructor
  * @since 1.1
- * @see Queue
+ * @see module:DataStruct~Queue
  * @property {number[]} QueueArray.value Values
  * @property {number} QueueArray.front Front index
  * @property {number} QueueArray.back Back index
@@ -1264,7 +1260,7 @@ function QueueList () {
 }
 
 /**
- * @description A* path finding algorithm
+ * @description A* path finding algorithm inspired from {@link http://Heyes-jones.com/pseudocode.php|this pseudo-code}
  * @todo Make sure it works properly
  * @param {PathNode} start Starting node
  * @param {PathNode} goal Ending node
@@ -1273,7 +1269,6 @@ function QueueList () {
  * @func
  */
 function Astar (start, goal) {
-    //Inspired from http://Heyes-jones.com/pseudocode.php
     //PathNode.f (score) = g (sum of all cost to get at this point) + h (heuristic: estimate of what it will take to get the goal)
     var nodeGoal = goal, nodeCurrent, nodeSuccessor, _h;
     var openList = [start], closedList = [];
@@ -1316,15 +1311,16 @@ function Astar (start, goal) {
 }
 
 /**
- * @description A* algorithm v2
+ * @description A* algorithm v2.<br />
+ * JS version of: {@link https://en.wikipedia.org/wiki/A*_search_algorithm}
  * @param {number[]} start Starting node
  * @param {number[]} goal Ending node
  * @param {Array} grid Grid
- * @returns {undefined}
+ * @returns {?Array}
  * @since 1.0
  * @func
  */
-function A(start, goal, grid) { //JS version of https://en.wikipedia.org/wiki/A*_search_algorithm
+function A(start, goal, grid) {
     var closedSet = [], openSet = [start], cameFrom = [], gScore = [0], fScore = [euclidianDist(start, goal)];
 
     while (openSet.length > 0) {
@@ -1370,7 +1366,7 @@ function reconPath(cameFrom, current, grid) {
  * @returns {undefined}
  * @since 1.0
  * @func
- * @see Astar
+ * @see module:DataStruct~Astar
  * @todo Do it !
  */
 function IDAstar () {
@@ -1379,7 +1375,7 @@ function IDAstar () {
 
 /**
  * @description Sort alphabetically an string|array
- * @param {string|Array} x String/array to alphabetically sort
+ * @param {string|Array} x String|array to alphabetically sort
  * @returns {string|Array} Sorted string|array
  * @since 1.0
  * @func
@@ -1411,7 +1407,7 @@ function alphabetSort (x) {
 /**
  * @description Sort the array from the most occurring items to the least occurring ones
  * @param {Array} arr Array to sort
- * @returns {Array} Sorted array (by occurrence obviously)
+ * @returns {Array} Sorted array <i>(by occurrence obviously)</i>
  * @func
  * @since 1.1
  */
@@ -1436,19 +1432,39 @@ function occurrenceSort (arr) {
  * @param {*} x Element/term to find
  * @returns {boolean} Found or not
  * @since 1.0
+ * @todo Make it right
  * @func
  */
 function binarySearch (list, x) {
     list.quickSort();
-    var i = 2, term = list[Math.floor(list.length / i)];
-    while (term != x && i > 0) {
+    var i = 2, term = list[Math.floor(list.length / i)], l = 0;
+    while (term != x && i < list.length) {
         if (term === x) return true;
         else {
             i *= 2;
             term = term < x? list[Math.floor(list.length / i)]: list[3 * Math.floor(list.length / i)];
         }
+        if (debugging) Essence.say("i=" + i + "\nterm=" + term + "\nloops=" + l);
+        l++;
     }
     return term === x
+}
+
+/**
+ * @description Binary search.<br />
+ * Source: {@link https://www.khanacademy.org/computing/computer-science/algorithms/binary-search/a/implementing-binary-search-of-an-array|KhanAcademy}
+ * @param {number[]} arr Array
+ * @param {NumberLike} target Target of the search
+ * @return {number}
+ */
+function search (arr, target) {
+    var min = 0, max = arr.length - 1, guess = Math.floor((max - min) / 2);
+    if (arr[guess] === target) return guess;
+    while (arr[guess] != target) {
+        if (max < min) return -1;
+        (arr[guess] < target)? min = guess + 1: max = guess - 1;
+        guess = Math.floor((max - min) / 2);
+    }
 }
 
 /**
@@ -1461,7 +1477,7 @@ function binarySearch (list, x) {
  * @since 1.0
  * @property {string} Archive.name Name of the archive
  * @property {string} Archive.data Data to compress
- * @property {string[]} Archive.dictionary Dictionary (values formated as: letter=bitcode)
+ * @property {string[]} Archive.dictionary Dictionary (values formatted as: letter=bitcode)
  * @property {Function} Archive.updateDict Update the dictionary
  * @property {function(): Str} Archive.getResult Get the result
  */
@@ -1472,7 +1488,7 @@ function Archive (name, data) {
     this.result = [];
     this.updateDict = function () {
         var lexiq = [], count, tmp = alphabetSort(data);
-        for (var i = 0; i < this.data.length - 1; i++) { //Fill lexiq
+        for (var i = 0; i < this.data.length - 1; i++) {
             if (tmp[i] != tmp[i+ 1]) lexiq.push(tmp[i]);
         }
         lexiq = rmDuplicates(lexiq);
@@ -1582,9 +1598,9 @@ function virtualHistory (elm) {
 }
 
 /**
- * @description Get the occurence list
+ * @description Get the occurrence list
  * @param {string} list String
- * @returns {{}} Occurent object list
+ * @returns {{}} Occurring object list
  * @since 1.0
  * @throws {TypeError} list must be iterable
  */
@@ -1623,7 +1639,7 @@ function Stream (initVal, formula, nbVals) {
             [/(pow|max|min)\((.*?),(| )(.*?)\)/, "Math.$1($2, $3)"],
             [/(sqrt|cbrt|cos|sin|tan|acos|asin|cosh|sinh|tanh|acosh|asinh|atanh|exp|abs)\((.*?)\)/, "Math.$1($2)"],
             [/(ln|log|nthroot|clampTop|clampBottom)\((.*?),(| )(.*?)\)/, "$1($2, $3)"],
-            [/(clamp)\((.*?),(| )(.*?),(| )(.*?)\)/, "$1($2, $3, $)"]
+            [/(clamp)\((.*?),(?:| )(.*?),(?:| )(.*?)\)/, "$1($2, $3, $4)"]
         ])));
     };
 
@@ -1688,7 +1704,7 @@ function MultiStream (initVal, formula, nbVals) {
     }
 
     this.toString = function () {
-        return "Stream(start=" + this.start.toStr(true) + ", formula=" + this.formula + ", data=" + this.data.toStr(true) + ", results=" + this.results.toStr(true) + ")";
+        return "MultiStream(start=" + this.start.toStr(true) + ", formula=" + this.formula + ", data=" + this.data.toStr(true) + ", results=" + this.results.toStr(true) + ")";
     };
 
     return this;
@@ -1729,25 +1745,54 @@ function Graph (formula, dims, lbls, name, precision) { //N-dimensional graph
 }
 
 /**
- * @description Permutation
- * @param {string|Array} data Data
- * @todo Make it work well
- * @returns {string|Array} Permuation list
- * @since 1.0
+ * @description Generate an array with all permutations of <code>data</code> in a 1x(<code>data</code>.length!) array.
+ * @param {Str} data Data
+ * @return {Array} Permutations
+ * @since 1.1
+ * @func
  */
-function Permutation (data) {
-    console.log("data=" + data);
-    console.log("->" + data.get(-1));
-    var perm = [data];
-    perm.append((data.length > 1)? Permutation(data.get(-1)): data);
-    console.log("perm=" + perm);
-    return perm;
-}
-
 function Perm (data) {
     if (data.length <= 1) return data;
-    else if (data.length == 2) return data.reverse();
-    else return data[0] + Perm(data.get(1));
+    else if (data.length === 2) return [data, Copy(data).reverse()];
+    else if (data.length === 3) return Perm(data.get(1)).map(function (x) {
+            return data[0] + x;
+        }).append(Perm(data.get(-1)).map(function (x) {
+            return data.last() + x;
+        })).append(Perm(data.remove(data[1])).map(function (x) {
+            return data[1] + x;
+        }));
+    else {
+        var perm = Perm(data.get(1)).map(function (x) {
+            return data[0] + x;
+        });
+        for (var i = 1; i < data.length; i++) {
+            perm.append(Perm(data.remove(data[i])).map(function (x) {
+                return data[i] + x;
+            }));
+        }
+        return rmDuplicates(perm);
+    }
+}
+
+/**
+ * @description Get the combinations of the <code>n*<code>set</code>
+ * @param {number} n Length of each terms
+ * @param {string[]} set Set of words
+ * @return {Str} Combinations
+ * @since 1.1
+ * @func
+ * @todo Make it work right
+ */
+function Comb (n, set) {
+    var res = new Array(n * factorial(set.length)), p = Perm(set.join("")), lIdx = set.lastIndex();
+    for (var i = 0; i < set.length * 2; i += 2) {
+        if (i > lIdx + 1) break;
+        set.splice(i + 1, set.binaryIndexOf(set[i]), set[i].repeat(n));
+    }
+    p.append(complement(set, p));
+    console.log(res.length, p, "\nset=" + set);
+
+    return alphabetSort(p);
 }
 
 /**
@@ -1766,7 +1811,7 @@ function Perm (data) {
  * @property {function(): Array[]} EventTable.getCleanTable Get a clean empty-cell-less table
  * @property {function(Date): string} EventTable.loookAt Look at what happened at a particular time
  */
-function EventTable(name, srcs) {
+function EventTable (name, srcs) {
     this.name = name ||"Event table";
     this.sources = srcs || [getFilename(true)];
     this.table = [["Source", "Event", "Timestamp"]];
@@ -1813,7 +1858,7 @@ function EventTable(name, srcs) {
 }
 
 /**
- * @description Map (Hashless Hashmap).
+ * @description Map (Hashless Hashmap).<br />
  * It's depreciated in the next version (in favour of ES6) and will have the following methods instead:
  * size(), clear(), delete(key), entries(), forEach(cb, args), get(key), has(key), keys(), values()
  * @param {*} [keys=[]] Keys

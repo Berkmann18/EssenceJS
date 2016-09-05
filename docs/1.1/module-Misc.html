@@ -144,7 +144,7 @@
         <ul>
             <li><a href="module-essence.html">module:essence</a></li>
         
-            <li>module:Files</li>
+            <li><a href="module-Files.html">module:Files</a></li>
         </ul>
     
 
@@ -171,6 +171,386 @@
 
     
         <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="~anim"><span class="type-signature">(inner) </span>anim<span class="signature">(msg<span class="signature-attributes">opt</span>, startTime<span class="signature-attributes">opt</span>, max<span class="signature-attributes">opt</span>, step<span class="signature-attributes">opt</span>, tuxStyle<span class="signature-attributes">opt</span>, stop<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; (nullable) {boolean}</span></h4>
+
+    
+    <p class="summary"><p>Console text animation</p>.</p>
+    
+
+
+
+<div class="description">
+    <p>Console text animation</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>msg</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    "Loading"
+                
+                </td>
+            
+
+            <td class="description last"><p>Text</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>startTime</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>Starting time of the animation (in ms).</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>max</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    10e3
+                
+                </td>
+            
+
+            <td class="description last"><p>End time of the animation (in ms).</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>step</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    1e3
+                
+                </td>
+            
+
+            <td class="description last"><p>Transition delay</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>tuxStyle</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Animate the animation the Linux style</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>stop</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    startTime>max
+                
+                </td>
+            
+
+            <td class="description last"><p>Forced stop</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.1</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modules_Misc.js.html">modules/Misc.js</a>, <a href="modules_Misc.js.html#line961">line 961</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+    <dt class="tag-todo">To Do:</dt>
+    <dd class="tag-todo">
+        <ul>
+            <li>Improve/fix the ending</li>
+        </ul>
+    </dd>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Animation done ?</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
 
         
             
@@ -337,7 +717,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Misc.js.html">modules/Misc.js</a>, <a href="modules_Misc.js.html#line859">line 859</a>
+        <a href="modules_Misc.js.html">modules/Misc.js</a>, <a href="modules_Misc.js.html#line855">line 855</a>
     </li></ul></dd>
     
 
@@ -712,7 +1092,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Misc.js.html">modules/Misc.js</a>, <a href="modules_Misc.js.html#line839">line 839</a>
+        <a href="modules_Misc.js.html">modules/Misc.js</a>, <a href="modules_Misc.js.html#line835">line 835</a>
     </li></ul></dd>
     
 
@@ -880,7 +1260,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Misc.js.html">modules/Misc.js</a>, <a href="modules_Misc.js.html#line824">line 824</a>
+        <a href="modules_Misc.js.html">modules/Misc.js</a>, <a href="modules_Misc.js.html#line820">line 820</a>
     </li></ul></dd>
     
 
@@ -1784,7 +2164,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Misc.js.html">modules/Misc.js</a>, <a href="modules_Misc.js.html#line869">line 869</a>
+        <a href="modules_Misc.js.html">modules/Misc.js</a>, <a href="modules_Misc.js.html#line865">line 865</a>
     </li></ul></dd>
     
 
@@ -1985,7 +2365,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Misc.js.html">modules/Misc.js</a>, <a href="modules_Misc.js.html#line746">line 746</a>
+        <a href="modules_Misc.js.html">modules/Misc.js</a>, <a href="modules_Misc.js.html#line742">line 742</a>
     </li></ul></dd>
     
 
@@ -2038,7 +2418,7 @@
 
     
 
-    <h4 class="name" id="~Objectify"><span class="type-signature">(inner) </span>Objectify<span class="signature">(keyArr, valArr)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id="~Objectify"><span class="type-signature">(inner) </span>Objectify<span class="signature">(keyArr, valArr)</span><span class="type-signature"> &rarr; {<a href="Object.html">Object</a>}</span></h4>
 
     
     <p class="summary"><p>Join two arrays into an object</p>.</p>
@@ -2166,7 +2546,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Misc.js.html">modules/Misc.js</a>, <a href="modules_Misc.js.html#line716">line 716</a>
+        <a href="modules_Misc.js.html">modules/Misc.js</a>, <a href="modules_Misc.js.html#line712">line 712</a>
     </li></ul></dd>
     
 
@@ -2176,7 +2556,7 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>Tablify</li>
+            <li><a href="module-Misc.html#~Tablify">module:Misc~Tablify</a></li>
         </ul>
     </dd>
     
@@ -2211,7 +2591,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Object</span>
+<span class="param-type"><a href="Object.html">Object</a></span>
 
 
     </dd>
@@ -2226,7 +2606,7 @@
 
     
 
-    <h4 class="name" id="~Person"><span class="type-signature">(inner) </span>Person<span class="signature">(fname, sname, lname, title, nickname, num<span class="signature-attributes">opt</span>, country, city, sex<span class="signature-attributes">opt</span>, bday, jobs<span class="signature-attributes">opt</span>, activities<span class="signature-attributes">opt</span>, websites<span class="signature-attributes">opt</span>, quote<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Person}</span></h4>
+    <h4 class="name" id="~Person"><span class="type-signature">(inner) </span>Person<span class="signature">(fname, sname, lname, title, nickname, num<span class="signature-attributes">opt</span>, country, city, sex, bday, jobs<span class="signature-attributes">opt</span>, activities<span class="signature-attributes">opt</span>, websites<span class="signature-attributes">opt</span>, quote<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Person}</span></h4>
 
     
     <p class="summary"><p>A person</p>.</p>
@@ -2576,8 +2956,6 @@
 
             
                 <td class="attributes">
-                
-                    &lt;optional><br>
                 
 
                 
@@ -3602,7 +3980,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Misc.js.html">modules/Misc.js</a>, <a href="modules_Misc.js.html#line691">line 691</a>
+        <a href="modules_Misc.js.html">modules/Misc.js</a>, <a href="modules_Misc.js.html#line687">line 687</a>
     </li></ul></dd>
     
 
@@ -3612,7 +3990,7 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>unRegExpify</li>
+            <li><a href="module-Misc.html#~unRegExpify">module:Misc~unRegExpify</a></li>
         </ul>
     </dd>
     
@@ -3777,7 +4155,7 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>rmDuplicates</li>
+            <li><a href="module-Misc.html#~rmDuplicates">module:Misc~rmDuplicates</a></li>
         </ul>
     </dd>
     
@@ -3827,7 +4205,7 @@
 
     
 
-    <h4 class="name" id="~rmDuplicates"><span class="type-signature">(inner) </span>rmDuplicates<span class="signature">(arr)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    <h4 class="name" id="~rmDuplicates"><span class="type-signature">(inner) </span>rmDuplicates<span class="signature">(arr)</span><span class="type-signature"> &rarr; {Array|string}</span></h4>
 
     
     <p class="summary"><p>Remove the duplicates of an array</p>.</p>
@@ -3879,6 +4257,9 @@
             
                 
 <span class="param-type">Array</span>
+|
+
+<span class="param-type">string</span>
 
 
             
@@ -3942,7 +4323,7 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>rmConsecDuplicates</li>
+            <li><a href="module-Misc.html#~rmConsecDuplicates">module:Misc~rmConsecDuplicates</a></li>
         </ul>
     </dd>
     
@@ -3978,6 +4359,9 @@
     <dd>
         
 <span class="param-type">Array</span>
+|
+
+<span class="param-type">string</span>
 
 
     </dd>
@@ -3992,7 +4376,7 @@
 
     
 
-    <h4 class="name" id="~Tablify"><span class="type-signature">(inner) </span>Tablify<span class="signature">(keyArr, val<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id="~Tablify"><span class="type-signature">(inner) </span>Tablify<span class="signature">(keyArr, val<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="Object.html">Object</a>}</span></h4>
 
     
     <p class="summary"><p>Join two arrays into an de-linked object</p>.</p>
@@ -4152,7 +4536,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Misc.js.html">modules/Misc.js</a>, <a href="modules_Misc.js.html#line731">line 731</a>
+        <a href="modules_Misc.js.html">modules/Misc.js</a>, <a href="modules_Misc.js.html#line727">line 727</a>
     </li></ul></dd>
     
 
@@ -4162,7 +4546,7 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>Objectify</li>
+            <li><a href="module-Misc.html#~Objectify">module:Misc~Objectify</a></li>
         </ul>
     </dd>
     
@@ -4197,7 +4581,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Object</span>
+<span class="param-type"><a href="Object.html">Object</a></span>
 
 
     </dd>
@@ -4317,7 +4701,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Misc.js.html">modules/Misc.js</a>, <a href="modules_Misc.js.html#line703">line 703</a>
+        <a href="modules_Misc.js.html">modules/Misc.js</a>, <a href="modules_Misc.js.html#line699">line 699</a>
     </li></ul></dd>
     
 
@@ -4327,7 +4711,7 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>RegExpify</li>
+            <li><a href="module-Misc.html#~RegExpify">module:Misc~RegExpify</a></li>
         </ul>
     </dd>
     
@@ -4391,13 +4775,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-File.html">File</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-File-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#getFileContent">getFileContent</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#UnitTest">UnitTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Aug 24 2016 18:14:42 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Sep 05 2016 19:03:56 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

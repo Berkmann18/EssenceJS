@@ -60,7 +60,7 @@ function evtLog (event) {
 InvalidParamError.inheritsFrom(Error);
 /**
  * @description Invalid parameter error
- * @param {string} [msg="The parameter used at $lineNum is invalid"]  Message
+ * @param {string} [msg="The parameter used at <code>lineNum</code> is invalid"]  Message
  * @param {string} fname Filename
  * @param {number} lineNum Line number
  * @constructor
@@ -120,7 +120,7 @@ function getLineNum (noCols) {
  * @func
  * @throws {Error}
  */
-function testErr(err) {
+function testErr (err) {
     try {
         throw err;
     } catch (e) {
@@ -129,7 +129,7 @@ function testErr(err) {
 }
 
 /**
- * @description Error testing for beginner's.
+ * @description Error testing for beginner's.<br />
  * Source: {@link https://scontent-lhr3-1.xx.fbcdn.net/hphotos-xfl1/v/t1.0-9/12705609_1071795346206130_3757520485028328706_n.jpg?oh=cb99a4624d9732414b787f7eb8437c73&oe=57383223}
  * @param {Function} fx Function
  * @param {*} [param] Parameter
@@ -147,7 +147,7 @@ function noobTest (fx, param) {
 
 /**
  * @description Test a function/expression
- * @param {function(*)|String} fx Function/expression
+ * @param {function(*)|string} fx Function/expression
  * @returns {undefined}
  * @since 1.1
  * @func
@@ -170,22 +170,23 @@ function test (fx) {
  * @property {number} UnitTest.bad Total number of failed tests
  * @property {number} UnitTest.failRate Failure rate
  * @property {number} UnitTest.coverage Coverage
- * @property {function(*, *, boolean)} UnitTest.test Assertion tester
+ * @property {function(*, *, string, boolean)} UnitTest.test Assertion tester
  * @property {Function} UnitTest.reset Reset
  * @property {function(Array[], boolean)} UnitTest.multiTest Multi assertion tester
  * @property {Function} UnitTest.report Report loger
+ * @property {Array[]} UnitTest.libTests Intern tests to EssenceJS
  */
 var UnitTest = {
     total: 0,
     bad: 0,
     failRate: 0,
     coverage: 0,
-    test: function (then, expected, noisy) {
+    test: function (then, expected, cmt, noisy) {
         this.total++;
         var res = then; //to avoid random changes while calling the same function/method with the same parameter(s)
-        if (!res.equals(expected) || res !== expected) {
+        if (!res.equals(expected)/* || res !== expected*/) {
             this.bad++;
-            console.log("%c[Unit]%C Expected " + expected + " but was " + res, "color: #c0c", "color: #000");
+            console.log("%c[Unit]%c " + (cmt || "Test #b" + this.bad) + ": Expected \"" + expected + "\" but was \"" + res + "\"", "color: #c0c", "color: #000");
         } else if(noisy && res.equals(expected)) console.log("%c[Unit]%c The expectation on " + expected + " was satisfied !", "color: #c0c", "color: #000"); //in case someone wants to not just see what failed
     },
     reset: function () {
@@ -197,13 +198,13 @@ var UnitTest = {
     multiTest: function (pairs, noisy) {
         this.reset();
         console.time("Unit test");
-        for (var i = 0; i < pairs.length - 1; i += 1) this.test(pairs[i], pairs[i + 1], noisy);
+        for (var i = 0; i < pairs.length - 1; i++) this.test(pairs[i][0], pairs[i][1], (pairs[i].length === 3)? pairs[i][2]: "", noisy);
         console.timeEnd("Unit test");
         this.report();
     },
     report: function () {
         this.failRate = markConv(this.bad, this.total);
-        console.info("%c[Unit]%c Pass/Fail: %c" + (this.total - this.bad) + "%c/%c" + this.bad + "%c (%c" + this.failRate + "%%c); on " + BrowserDetect.info(), "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000", "font-weight: bold", "font-weight: normal");
+        console.info("%c[Unit]%c Pass/Fail: %c" + (this.total - this.bad) + "%c/%c" + this.bad + "%c (" + this.failRate + "% fail); on " + BrowserDetect.info(), "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
     },
     basicTests: function () {
         this.reset();
@@ -212,6 +213,6 @@ var UnitTest = {
             ["Hello World".split(" "), [["H", "e", "l", "l", "o"].join(""), ["W", "o", "r", "l", "d"].join("")]], //Diving and joining
             [nthroot(5, 2, 4), Math.pow(5, 1/2).toNDec(4)]
         ]);
-        this.report();
-    }
+    },
+    libTests: []
 };

@@ -1,3 +1,4 @@
+/* General */
 @charset "UTF-8";
 
 * {
@@ -10,6 +11,7 @@ body {
     padding: 0;
 }
 
+/* Tables */
 table {
     background: #000;
 }
@@ -35,6 +37,7 @@ tr:hover td {
     background: #888;
 }
 
+/* Log boxes/text */
 .inf {
     color: #008;
 }
@@ -104,6 +107,7 @@ tr:hover td {
        -moz-border-radius: 7px;
 }
 
+/* Web styling */
 .icon {
     width: 64px;
     height: 64px;
@@ -245,4 +249,42 @@ h3 {
     font-weight: bold;
     text-decoration: none;
     border: none;
+}
+
+/* Layout */
+menu {
+    text-align: center;
+}
+
+menu li {
+    display: inline-block;
+    cursor: pointer;
+    background: #fff;
+    color: #000;
+    padding: 5px;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+}
+menu li:hover {
+    cursor: pointer;
+    background: #ccc;
+}
+
+.tabOn {
+    background: #303D74;
+    color: #fff;
+}
+
+.tabOff {
+    background: transparent;
+    color: #000;
+}
+
+div#content {
+    padding-left: 40%;
+}
+
+.contentTab {
+    display: none;
 }

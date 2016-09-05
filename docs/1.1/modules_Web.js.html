@@ -53,7 +53,7 @@ var Web = new Module("Web", "Web stuff", ["DataStruct", "Misc"], 1, function () 
  * @description Gather the cookie named $c_name
  * @param {string} c_name Cookie name
  * @returns {undefined|string} Cookie
- * @see setCookie
+ * @see module:Web~setCookie
  * @since 1.0
  * @func
  */
@@ -73,7 +73,7 @@ function getCookie (c_name) {
  * @param {*} value Cookie value
  * @param {number} exdays Expiration days
  * @returns {undefined}
- * @see getCookie
+ * @see module:Web~getCookie
  * @since 1.0
  * @func
  */
@@ -132,7 +132,7 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
         localStorage[this.name] = JSON.stringify(this.val)
     };
     this.html = complexTable(this.name, this.headerRow, this.content, this.headerCol, name);
-    this.css = "&lt;style>*{font-family:Consolas,Segoe UI,Tahoma;}table{background: #000;}table,td,th{border:1px solid #000;color:#000;background:#fff;}tr:nth-child(even) td,tr:nth-child(even) th{background:#eee;}&lt;/style>";
+    this.css = "&lt;style>*{font-family:Consolas,Segoe UI,Tahoma,sans-serif;}table{background: #000;}table,td,th{border:1px solid #000;color:#000;background:#fff;}tr:nth-child(even) td,tr:nth-child(even) th{background:#eee;}&lt;/style>";
     this.disp = function (elmId) {
         $e(elmId? "#" + elmId: "body").write(this.html + this.css, true);
         this.setStorage();
@@ -177,7 +177,7 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
  * @constructor
  * @property {string} DB.name Name
  * @property {NumberLike[]} DB.rows Row headers
- * @property {NumberLike[]} DB.headers Column headers
+ * @property {NumberLike[]} DB.headers Column headers (which should use the first column for indexes/ranks)
  * @property {Array} DB.val Content of the database
  * @property {Code} DB.html HTML code
  * @property {string} DB.css CSS code
@@ -190,8 +190,8 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
  * @property {function(*): number} DB.find Look for an item
  * @property {function(): Array} DB.see Get a viewable copy of the database
  * @property {function(?string)} DB.view Display the database
- * @property {function(Array)} database.add Add a cell to the database
- * @property {Function} DB.init Initialise the database
+ * @property {function(Array)} database.add Add a cell (without the index/rank) to the database
+ * @property {function(boolean)} DB.init Initialise the database
  * @property {function(): string} database.toString String representation
  */
 function DB (name, headers, rows, headerRows) {
@@ -204,7 +204,7 @@ function DB (name, headers, rows, headerRows) {
     //this.events = Tablify(["build", "fill", "save", "update", "set", "get", "find", "see", "view", "add", "init"], {data: null, name: "", timeStamp: new Date().getTime()});
     this.onBuild = this.onFill = this.onSave = this.onUpdate = this.onSet = this.onGet = this.onFind = this.onSee = this.onView = this.onAdd = this.onInit = $f;
     this.build = function () {
-        this.html = isNon(this.rows)? complexTable("", this.val.line(), this.val.block(1), this.head, this.name, true, this.css): complexTable("", this.rows, this.val, this.head, this.name, true, this.css);
+        this.html = isNon(this.rows)? colTable("", this.head, this.val, this.name, true, this.css)/*complexTable("", this.val.line(), this.val.block(1), this.head, this.name, true, this.css)*/: complexTable("", this.rows, this.val, this.head, this.name, true, this.css);
         this.onBuild(this.html);
     };
     this.fill = function (len) {
@@ -232,7 +232,7 @@ function DB (name, headers, rows, headerRows) {
         this.onUpdate(this);
     };
     this.set = function (nval, i, j) {
-        if ( j === -1) {
+        if (j === -1) {
             for (var k = 0; k &lt; nval.length; k++) this.val[i || 0][k] = nval[k];
         } else this.val[i || 0][j || 0] = nval || null;
         this.onSet(nval, [i, j]);
@@ -247,10 +247,11 @@ function DB (name, headers, rows, headerRows) {
         return p;
     };
     this.see = function () {
-        this.onSee(copy(this.val).prepend(copy(this.head).reverse()));
-        return copy(this.val).prepend(copy(this.head).reverse());
+        this.onSee(Copy(this.val).prepend(Copy(this.head).reverse()));
+        return isNon(this.rows)? Copy(this.val).prepend([Copy(this.head)]): Copy(this.val).prepend(Copy(this.head).reverse());
     };
     this.view = function (id) {
+        this.build();
         $e(id? "#" + id: "body").write(this.html + this.css, true);
         this.onView($e(id? "#" + id: "body").val(true), id);
     };
@@ -258,10 +259,10 @@ function DB (name, headers, rows, headerRows) {
         this.val.append(vals.unshift(parseInt(this.val.last()[0]) + 1));
         this.onAdd(vals, this.val);
     };
-    this.init = function () {
+    this.init = function (seeTable) {
         this.build();
         this.update();
-        console.table(this.see());
+        if (seeTable) console.table(this.see());
         this.onInit(this);
     };
 
@@ -331,7 +332,7 @@ function process (name, auth, summup, ctt) {
  * @param {number} [ver=1.0] Version
  * @param {number} [mxsz=2⁶] Maximum size of the server's database
  * @returns {server} Server
- * @see DB
+ * @see module:Web~DB
  * @since 1.0
  * @throws {Error} Invalid server type
  * @property {string} server.name Name
@@ -459,27 +460,47 @@ function server (name, admin, type, ver, mxsz) {
 }
 
 /**
+ * @description Data to temporally place in a semi-global scope
+ * @type {*}
+ * @default
+ * @since 1.1
+ * @external module:essence~$G
+ * @memberof external:essence~$G
+ */
+$G["data"] = null;
+/**
+ * @description WiFi speed(s)
+ * @type {NumberLike[]}
+ * @default
+ * @since 1.1
+ * @external module:essence~$G
+ * @memberof external:essence~$G
+ */
+$G["wifi"] = [];
+
+/**
  * @description Launch the verification of the connection
  * @param {string} id ID of the element to be used
  * @param {string} [src="../img/random2000x2000.jpg"] Source of the image to use for the test
- * @param {number} [sz=61784] Size of the image (in kb)
+ * @param {number} [sz=610320] Size of the image (in Kb)
  * @param {number} [delay=100] Delay (in ms)
  * @param {number} [maxDelay=2e4] Maximum delay
  * @returns {undefined}
- * @see CETimer
+ * @see module:Web~CETimer
  * @since 1.0
  * @func
  */
 function CECheck (id, src, sz, delay, maxDelay) {
     window.defaultStatus = "Evalue the connexion and see the downloading speed";
     if (!src) src = "../img/random2000x2000.jpg";
-    if (!sz) sz = 61784; //7.723kB -> kb
+    if (!sz) sz = 60320; //7.54MB -> Kb
     if (!delay) delay = 100; //ms
     if (!maxDelay) maxDelay = 2e4;
     var img = new Image();
     $G["t1"] = new Date().getTime();
     $G["t2"] = 0;
     img.src = src + "?t1=" + $G["t1"]; //To prevent the browser to load a cached version of the image
+    $G["data"] = img;
 
     $e("#" + id).write("Verification in progress...");
     setTimeout("CETimer('" + id + "', '" + img + "', 0, " + delay + ", " + maxDelay + ", " + sz + ")", delay); //Uncaught SyntaxError: Unexpected identifier
@@ -488,25 +509,28 @@ function CECheck (id, src, sz, delay, maxDelay) {
 /**
  * @description Connection evaluation timer
  * @param {string} id ID of the element to be used
- * @param {string} img Image to use for the test
+ * @param {HTMLImageElement} img Image to use for the test
  * @param {number} nb Number of attempts done
  * @param {number} [delay=100] Delay (in ms)
  * @param {number} [maxDelay=2e4] Maximum delay
  * @param {number} size Size of the image (in kb)
  * @returns {undefined}
- * @see CECheck
+ * @see module:Web~CECheck
  * @since 1.0
  * @func
  */
 function CETimer (id, img, nb, delay, maxDelay, size) {
     nb++;
+    if (!isType(img, "HTMLImageElement")) img = $G["data"]; //Assuming CECheck() was called before
     $e("#" + id).write("Verification in progress...");
-    if (nb * delay >= maxDelay) $e("#" + id).write(evalDownload(0)); //End of the maximimun delay
+    if (nb * delay >= maxDelay) $e("#" + id).write(evalDownload(0)); //End of the maximum delay
     else {
         if (img.complete) {
             $G["t2"] = new Date().getTime();
+            $G["wifi"].push((size / ($G["t2"] - $G["t1"])).toNDec(3) + "kbps");
             $e("#" + id).write(evalDownload(size / ($G["t2"] - $G["t1"])));
             Essence.time("Connexion: " + (size / ($G["t2"] - $G["t1"]).toNDigits(3) + " kbps"));
+            window.defaultStatus = "normal";
         } else setTimeout("CETimer(" + id + ", " + img + ", " + nb + ", " + delay + ", " + maxDelay + ", " + size + ")", delay);
     }
 }
@@ -592,6 +616,120 @@ function evalPing (ms) {
 }
 
 /**
+ * @description Evaluate the gigue (for either upload or download speed)
+ * @param {NumberLike[]} [vals=$G["wifi"]] WiFi test's values
+ * @func
+ * @since 1.1
+ * @return {string} Gigue
+ */
+function evalGigue (vals) {
+    var sd = (vals || $G["wifi"]).map(function (v) {
+        return getNumFromStr(v)
+    }).stddev(), res;
+
+    if (sd >= 0 &amp;&amp; sd &lt; 5) res = "Synchronized connexion";
+    else if (sd >= 5 &amp;&amp; sd &lt; 10) res = "Slightly synchronized connexion";
+    else if (sd >= 10) res = "Asynchronized connexion";
+    return res + " (" + sd + ")"
+}
+
+/**
+ * @description WiFi tester.
+ * @global
+ * @since 1.1
+ * @type {{down: number, up: number, ping: number, gigues: number[], type: string, vals: Array, imgs: Object[], elm: Element, test: WifiTest.test, testUp: WifiTest.testUp, testDown: WifiTest.testDown, testPing: WifiTest.testPing}}
+ * @this WifiTest
+ * @property {number} WifiTest.down Download speed
+ * @property {number} WifiTest.up Upload speed
+ * @property {number} WifiTest.ping Ping
+ * @property {number[]} WifiTest.gigue Gigue for respectively uploads and downloads
+ * @property {string} WifiTest.type WiFi type
+ * @property {NumberLike[]} WifiTest.vals Buffered wifi test values
+ * @property {Object[]} WifiTest.imgs Images for the tests
+ * @property {Element} WifiTest.elm HTML element for outputs
+ * @property {function(): string} WifiTest.test Global test
+ * @property {function(): string} WifiTest.testUp Upload speed test
+ * @property {function(): string} WifiTest.testDown Download speed test
+ * @property {function(): string} WifiTest.testPing Ping test
+ */
+var WifiTest = {
+    down: 0,
+    up: 0,
+    ping: 0,
+    gigues: [0, 0], //Up, Down
+    type: "",
+    vals: [],
+    imgs: [{ //images with the name "randomSxS.jpg"
+        dim: 350, //px
+        size: 1912 //239KB -> Kb
+    }, {
+        dim: 500,
+        size: 3944 //493KB
+    }, {
+        dim: 750,
+        size: 8480 //1.06MB
+    }, {
+        dim: 1e3,
+        size: 15120 //1.89MB
+    }, {
+        dim: 1500,
+        size: 34080 //4.26MB
+    }, {
+        dim: 2e3,
+        size: 60320 //7.54MB
+    }, {
+        dim: 2500,
+        size: 94400 //11.8MB
+    }, {
+        dim: 3e3,
+        size: 135200 //16.9MB
+    }, {
+        dim: 3500,
+        size: 184800 //23.1MB
+    }, {
+        dim: 4e3,
+        size: 240800 //30.1MB
+    }],
+    elm: $e("#wifi", true) || $e("#wifitest", true) || $e("#test", true),
+    test: function () {
+        this.testUp();
+        this.testDown();
+        this.testPing();
+        return "Ping/Up/Down/Gigue up/Gigue down: " + [this.ping, this.up, this.down, this.gigues[0], this.gigues[1]].join("/");
+    },
+    testUp: function () {
+        //...
+        this.vals = $G["wifi"];
+        $G["wifi"] = [];
+        //this.up = ...
+        this.type = evalUpload(this.up).split(" ")[0];
+        this.gigues[0] = parseFloat(evalGigue(this.vals).split(" ")[0]);
+        return this.up + " Ko/s";
+    },
+    testDown: function () {
+        var iState = this.elm.val();
+        for (var i = 0; i &lt; this.imgs;) {
+            CECheck(this.elm.node.id, "../img/random" + this.imgs[i].dim + "x" + this.imgs[i].dim + ".jpg", this.imgs[i].size);
+            while (this.elm.val() === iState || window.defaultStatus != "normal") {}
+            if (this.elm.val() != iState || window.defaultStatus === "normal") i++;
+        }
+        this.vals = $G["wifi"];
+        $G["wifi"] = [];
+        this.down = (this.vals.map(function (x) {
+            return getNumFromStr(x);
+        }).mean(2) / 8).toNDec(2);
+        this.type = evalDownload(this.down).split(" ")[0];
+        this.gigues[1] = parseFloat(evalGigue(this.vals).split(" ")[0]);
+        return this.down + " Ko/s";
+    },
+    testPing: function () {
+        //...
+        this.type = evalPing(this.ping).split(" ")[0];
+        return this.ping + "ms";
+    }
+};
+
+/**
  * @description Getting the URL parameters just like in PHP.
  * @param {Str} p Parameter(s)
  * @param {function(...string)} action Action to be done with the value(s) of the parameter(s)
@@ -647,7 +785,7 @@ function parseURL (p, action) { //Doing some PHP without PHP :) !!
  * @constructor
  * @this {WebPage}
  * @returns {WebPage} Web page
- * @see WebApp
+ * @see module:Web~WebApp
  * @since 1.0
  * @property {string} WebPage.title Title
  * @property {string} WebPage.subtitle Subtitle
@@ -751,7 +889,7 @@ function WebPage (title, name, path, author, ver, stct, type, subtitle) {
  * @returns {WebApp} Web app
  * @this {WebApp}
  * @constructor
- * @see WebPage
+ * @see module:Web~WebPage
  * @since 1.0
  * @property {string} WebApp.name Name of the app
  * @property {string} WebPage.path Path of the file
@@ -785,7 +923,7 @@ function WebApp (name, path, author, ver, stct) {
  * @param {Toolbar} [tb=new Toolbar()] Toolbar
  * @this {Editor}
  * @returns {Editor} Editor
- * @todo Fill up the synthax highlighting list
+ * @todo Fill up the syntax highlighting list
  * @constructor
  * @since 1.0
  * @property {string} Editor.id ID of the element
@@ -812,8 +950,9 @@ function WebApp (name, path, author, ver, stct) {
  * @property {Function} Editor.load Load a file into the editor
  * @property {Function} Editor.generate Save the parsed code
  * @property {Function} Editor.view See the result
- * @property {function((Code), string): (Code)} Editor.highlightSynthax Highlight the synthax
+ * @property {function((Code), string): (Code)} Editor.highlightSyntax Highlight the syntax
  * @property {function(): string} Editor.toString String representation
+ * @see module:Web~Toolbar
  */
 function Editor (id, lang, prev, parser, tb) {
     this.id = id || "#editor";
@@ -880,13 +1019,13 @@ function Editor (id, lang, prev, parser, tb) {
         $e(this.id).write(getFileContent(file));
     };
     this.generate = function () { //Save the parsed code
-        if (this.previewer) /&lt;\?php([\s\S] * ?)\?>/.test($e(this.id).val())? save($e(this.previewer.id).val(true), "script" + getTimestamp() + ".php", "php"): save($e(this.previewer.id).val(true), "script" + getTimestamp() + ".html", "html");
-        else /&lt;\?php([\s\S] * ?)\?>$/g.test($e(this.id).val())? save($e("#preview").val(true), "script" + getTimestamp() + ".php", "php"): save($e(prev.id).val(true), "script" + getTimestamp() + ".html", "html")
+        if (this.previewer) /&lt;\?php([\s\S]*?)\?>/.test($e(this.id).val())? save($e(this.previewer.id).val(true), "script" + getTimestamp() + ".php", "php"): save($e(this.previewer.id).val(true), "script" + getTimestamp() + ".html", "html");
+        else /&lt;\?php([\s\S]*?)\?>$/g.test($e(this.id).val())? save($e("#preview").val(true), "script" + getTimestamp() + ".php", "php"): save($e(prev.id).val(true), "script" + getTimestamp() + ".html", "html")
     };
     this.view = function () {
         this.previewer.run($e(this.id).val(), true)
     };
-    this.highlightSynthax = function (code, lang) { //Highlight in the corresponding language and return an HTML result
+    this.highlightSyntax = function (code, lang) { //Highlight in the corresponding language and return an HTML result
         switch (lang.normal()) {
             case "html":
                 //HTML synthax highlighting rules
@@ -962,9 +1101,11 @@ function Editor (id, lang, prev, parser, tb) {
  * @property {Parser} Preview.associatedParser Associated parser
  * @property {Editor} Preview.associatedEditor Associated editor
  * @property {Function} Preview.update Update
- * @property {function(string, boolan)} Preview.run Run the code
+ * @property {function(string, boolean)} Preview.run Run the code
  * @property {Function} Preview.viewCode See the code
  * @property {function(): string} Preview.toString String representation
+ * @see module:Web~Parser
+ * @see module:Web~Editor
  */
 function Preview (id, lang, parser, editor) {
     this.id = id || "#preview";
@@ -1026,19 +1167,6 @@ function Debugger (id, lang) {
 }
 
 /**
- * @description Dummy text
- * @type {string}
- * @returns {undefined}
- * @external module:essence~$G
- * @since 1.0
- * @memberof external:essence~$G
- * @default
- * @readonly
- */
-$G["lorem"] = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,";
-
-
-/**
  * @description Language parser
  * @param {string} [from="WebScript"] Parsed language
  * @param {string} [to="DHTML"] Resulting language
@@ -1060,43 +1188,43 @@ function Parser (from, to, customParse) {
      * @returns {Code} Parsed code
      */
     this.run = customParse || function (code) {
-            var res = code;
-            res = res.replace(/&lt;tab \/>/gm, "&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;");
-            res = res.replace(/\{\{tab}}/gm, "\t");
-            res = res.replace(/&lt;info>(.*?)&lt;\/info>/gm, "&lt;span class='block info'>$1&lt;/span>");
-            res = res.replace(/&lt;question>(.*?)&lt;\/question>/gm, "&lt;span class='block question'>$1&lt;/span>");
-            res = res.replace(/&lt;error>(.*?)&lt;\/error>/gm, "&lt;span class='block error'>$1&lt;/span>");
-            res = res.replace(/&lt;warning>(.*?)&lt;\/warning>/gm, "&lt;span class='block warning'>$1&lt;/span>");
-            res = res.replace(/&lt;success>(.*?)&lt;\/success>/gm, "&lt;span class='block success'>$1&lt;/span>");
-            res = res.replace(/(\{\{)LOREM(}})/ig, $G["lorem"]);
-            res = res.replace(/(?:\{\{)LOREM\x7c(\d+)-(\d+)(?:}})/ig, $G["lorem"].chunk("$1", "$2"));
-            res = res.replace(/(?:\{\{)HW(?:}})/ig, "Hello World !");
-            res = res.replace(/&lt;icon \/>/gm, "&lt;img src='img/icon.png' class='icon'/>");
-            res = res.replace(/&lt;icon size=(?:"|')(\w+)(?:"|') \/>/gm, "&lt;img src='img/icon.png' class='icon' style='width: $1; height: $1;' />");
-            res = res.replace(/&lt;icon name=(?:"|')(\w+)(?:"|') \/>/gm, "&lt;img src='img/$1.png' class='icon' />");
-            res = res.replace(/&lt;(s|m|l|xs|xl):icon name=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "&lt;img src='img/$2.png' class='$1-icon' />");
-            res = res.replace(/&lt;js>([\s\S]*?)&lt;\/js>/gm,"&lt;script type='text/javascript'>$1&lt;\/script>");
-            res = res.replace(/&lt;js src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"&lt;script type='text/javascript' src='$1'>&lt;\/script>");
-            res = res.replace(/&lt;vb>([\s\S]*?)&lt;\/vb>/gm, "&lt;script type='text/vbscript'>$1&lt;\/script>");
-            res = res.replace(/&lt;vb src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"&lt;script type = 'text/vbscript' src='$1'>&lt;\/script>");
-            res = res.replace(/&lt;css>([\s\S]*?)&lt;\/css>/gm, "&lt;style type='text/css'>$1&lt;/style>");
-            res = res.replace(/&lt;css href=(?:\"|\')([A-Za-z_ -\.]+)(?:\"|\') \/>/gm, "&lt;link rel='stylesheet' type='text/css' href='$1' />");
-            res = res.replace(/&lt;charset=(?:\"|\')(\w + )(?:\"|\') \/>/gm, "&lt;meta charset='$1' />");
-            res = res.replace(/&lt;author name=(?:\"|\')(\w + )(?:\"|\') href=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "&lt;meta name='author' content='$1' />&lt;link rel='author' href='$2' />");
-            res = res.replace(/&lt;desc>(.*?)&lt;\/desc>/gm, "&lt;meta name='description' content='$1' />");
-            res = res.replace(/&lt;copy>(.*?)&lt;\/copy>/gm, "&lt;meta name='copyrights' content='$1' />");
-            res = res.replace(/&lt;lbl>(.*?)&lt;\/lbl>/gm, "&lt;label>$1&lt;/label>");
-            res = res.replace(/&lt;submit \/>/gm, "&lt;input type='submit' />");
-            res = res.replace(/&lt;submit val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "&lt;input type='submit' value='$1' />");
-            res = res.replace(/&lt;reset \/>/gm, "&lt;input type='reset' />");
-            res = res.replace(/&lt;reset val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "&lt;input type='reset' value = '$1' />");
-            res = res.replace(/&lt;hdn name=(?:\"|\')(\w+)(?:\"|\')>(.*?)&lt;\/hdn>/gm, "&lt;input type='hidden' name='$1' value='$2' />");
-            res = res.replace(/&lt;hdn name=(?:\"|\')(\w+)(?:\"|\') id=(?:\"|\')(\w+)(?:\"|\')>(.*?)&lt;\/hdn>/gm, "&lt;input type='hidden' name='$1' value='$3' id='$2' />");
-            res = res.replace(/&lt;txt ((?:id|name|class)(\=(?:\"|\')(\w+)(?:\"|\'))(| ))\/>/gm, "&lt;input type='text' />");
-            res = res.replace(/&lt;sql query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "&lt;\?php\n\tif (mysqli_ping($$dbc)) {\n\t\t$r = mysqli_query($$dbc, '$1');\n\t}else printMsg('error', 'No ping');\n\?>");
-            res = res.replace(/&lt;sqlt table=(?:\"|\')(\w+)(?:\"|\') query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "&lt;\?php\n\tif (mysqli_ping($$dbc)) {\n\t\techo 'Last updated at '._time().\"&lt;br />\";selectTable($dbc, '$1', '$2');\n\t}else printMsg('error', 'No ping');\n\?>");
-            return res
-        };
+        var res = code;
+        res = res.replace(/&lt;tab \/>/gm, "&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;");
+        res = res.replace(/\{\{tab}}/gm, "\t");
+        res = res.replace(/&lt;info>(.*?)&lt;\/info>/gm, "&lt;span class='block info'>$1&lt;/span>");
+        res = res.replace(/&lt;question>(.*?)&lt;\/question>/gm, "&lt;span class='block question'>$1&lt;/span>");
+        res = res.replace(/&lt;error>(.*?)&lt;\/error>/gm, "&lt;span class='block error'>$1&lt;/span>");
+        res = res.replace(/&lt;warning>(.*?)&lt;\/warning>/gm, "&lt;span class='block warning'>$1&lt;/span>");
+        res = res.replace(/&lt;success>(.*?)&lt;\/success>/gm, "&lt;span class='block success'>$1&lt;/span>");
+        res = res.replace(/(\{\{)LOREM(}})/ig, $G["lorem"]);
+        res = res.replace(/(?:\{\{)LOREM\x7c(\d+)-(\d+)(?:}})/ig, $G["lorem"].chunk("$1", "$2"));
+        res = res.replace(/(?:\{\{)HW(?:}})/ig, "Hello World !");
+        res = res.replace(/&lt;icon \/>/gm, "&lt;img src='img/icon.png' class='icon'/>");
+        res = res.replace(/&lt;icon size=(?:"|')(\w+)(?:"|') \/>/gm, "&lt;img src='img/icon.png' class='icon' style='width: $1; height: $1;' />");
+        res = res.replace(/&lt;icon name=(?:"|')(\w+)(?:"|') \/>/gm, "&lt;img src='img/$1.png' class='icon' />");
+        res = res.replace(/&lt;(s|m|l|xs|xl):icon name=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "&lt;img src='img/$2.png' class='$1-icon' />");
+        res = res.replace(/&lt;js>([\s\S]*?)&lt;\/js>/gm,"&lt;script type='text/javascript'>$1&lt;\/script>");
+        res = res.replace(/&lt;js src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"&lt;script type='text/javascript' src='$1'>&lt;\/script>");
+        res = res.replace(/&lt;vb>([\s\S]*?)&lt;\/vb>/gm, "&lt;script type='text/vbscript'>$1&lt;\/script>");
+        res = res.replace(/&lt;vb src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"&lt;script type = 'text/vbscript' src='$1'>&lt;\/script>");
+        res = res.replace(/&lt;css>([\s\S]*?)&lt;\/css>/gm, "&lt;style type='text/css'>$1&lt;/style>");
+        res = res.replace(/&lt;css href=(?:\"|\')([A-Za-z_ -\.]+)(?:\"|\') \/>/gm, "&lt;link rel='stylesheet' type='text/css' href='$1' />");
+        res = res.replace(/&lt;charset=(?:\"|\')(\w + )(?:\"|\') \/>/gm, "&lt;meta charset='$1' />");
+        res = res.replace(/&lt;author name=(?:\"|\')(\w + )(?:\"|\') href=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "&lt;meta name='author' content='$1' />&lt;link rel='author' href='$2' />");
+        res = res.replace(/&lt;desc>(.*?)&lt;\/desc>/gm, "&lt;meta name='description' content='$1' />");
+        res = res.replace(/&lt;copy>(.*?)&lt;\/copy>/gm, "&lt;meta name='copyrights' content='$1' />");
+        res = res.replace(/&lt;lbl>(.*?)&lt;\/lbl>/gm, "&lt;label>$1&lt;/label>");
+        res = res.replace(/&lt;submit \/>/gm, "&lt;input type='submit' />");
+        res = res.replace(/&lt;submit val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "&lt;input type='submit' value='$1' />");
+        res = res.replace(/&lt;reset \/>/gm, "&lt;input type='reset' />");
+        res = res.replace(/&lt;reset val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "&lt;input type='reset' value = '$1' />");
+        res = res.replace(/&lt;hdn name=(?:\"|\')(\w+)(?:\"|\')>(.*?)&lt;\/hdn>/gm, "&lt;input type='hidden' name='$1' value='$2' />");
+        res = res.replace(/&lt;hdn name=(?:\"|\')(\w+)(?:\"|\') id=(?:\"|\')(\w+)(?:\"|\')>(.*?)&lt;\/hdn>/gm, "&lt;input type='hidden' name='$1' value='$3' id='$2' />");
+        res = res.replace(/&lt;txt ((?:id|name|class)(\=(?:\"|\')(\w+)(?:\"|\'))(| ))\/>/gm, "&lt;input type='text' />");
+        res = res.replace(/&lt;sql query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "&lt;\?php\n\tif (mysqli_ping($$dbc)) {\n\t\t$r = mysqli_query($$dbc, '$1');\n\t}else printMsg('error', 'No ping');\n\?>");
+        res = res.replace(/&lt;sqlt table=(?:\"|\')(\w+)(?:\"|\') query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "&lt;\?php\n\tif (mysqli_ping($$dbc)) {\n\t\techo 'Last updated at '._time().\"&lt;br />\";selectTable($dbc, '$1', '$2');\n\t}else printMsg('error', 'No ping');\n\?>");
+        return res
+    };
 
     this.toString = function () {
         return "Parser(" + this.from + "->" + this.to + ")";
@@ -1153,7 +1281,10 @@ function Toolbar (id, tools, mdl) {
  * @this {IDE}
  * @returns {IDE} IDE
  * @constructor
- * @see Editor Preview Parser Debugger
+ * @see module:Web~Editor
+ * @see module:Web~Preview
+ * @see module:Web~Parser
+ * @see module:Web~Debugger
  * @since 1.0
  * @property {string} IDE.language Language
  * @property {Editor} IDE.editor Editor
@@ -1316,8 +1447,8 @@ function Console (title, entry, usr) {
 }
 
 /**
- * @description Get the IP address of the client.
- * Source: {@link http://stackoverflow.com/questions/391979/how-to-get-clients-ip-address-using-javascript-only}
+ * @description Get the IP address of the client.&lt;br />
+ * Source: {@link http://stackoverflow.com/questions/391979/how-to-get-clients-ip-address-using-javascript-only|[SO] JS: How to get clients IP address}
  * @param {number} [stackLayer=0] Stack layer
  * @return {string} IP address
  * @since 1.1
@@ -1345,8 +1476,8 @@ function getIP (stackLayer) {
 }
 
 /**
- * @description Get the private IP address of the client.
- * Source: {@link http://stackoverflow.com/questions/391979/how-to-get-clients-ip-address-using-javascript-only}
+ * @description Get the private IP address of the client.&lt;br />
+ * Source: {@link http://stackoverflow.com/questions/391979/how-to-get-clients-ip-address-using-javascript-only|[SO] JS: How to get clients IP address}
  * @author Mido (from SO)
  * @since 1.1
  * @func
@@ -1386,8 +1517,7 @@ function getPrivateIP () {
     };
 
     return $G["privateIP"];
-}
-</code></pre>
+}</code></pre>
         </article>
     </section>
 
@@ -1397,13 +1527,13 @@ function getPrivateIP () {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-File.html">File</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-File-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#getFileContent">getFileContent</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#UnitTest">UnitTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Aug 24 2016 18:14:41 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Sep 05 2016 19:03:54 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

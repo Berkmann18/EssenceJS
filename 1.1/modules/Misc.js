@@ -56,7 +56,7 @@ function asciiTable (start, end) {
  * @param {NumberLike} [num="none"] Phone number
  * @param {string} country Country
  * @param {string} city City
- * @param {string} [sex="other"] Sex
+ * @param {string} sex="other" Sex
  * @param {string} bday="01/01/2000" Birth date
  * @param {Str} [jobs="unemployed"] Job(s)
  * @param {Str} [activities="none"] Activitie(s)
@@ -204,7 +204,7 @@ function letterArray (first, last) { //A letter pair array
  * @description Remove the consecutive duplicated values in an array
  * @param {Array} arr Array
  * @returns {Array} Filtered array
- * @see rmDuplicates
+ * @see module:Misc~rmDuplicates
  * @since 1.0
  * @func
  */
@@ -223,9 +223,9 @@ function rmConsecDuplicates (arr) {
 
 /**
  * @description Remove the duplicates of an array
- * @param {Array} arr Array
- * @returns {Array} Filtered array
- * @see rmConsecDuplicates
+ * @param {Array|string} arr Array
+ * @returns {Array|string} Filtered array
+ * @see module:Misc~rmConsecDuplicates
  * @since 1.0
  * @func
  */
@@ -240,11 +240,11 @@ function rmDuplicates (arr) {
             if (i != j && out[i] === out[j]) out[j] = undefined;
         }
     }
-    return out.remove(undefined)
+    return isType(arr, "String")? out.remove().join(""): out.remove()
 }
 
 /**
- * @description Base64
+ * @description Base64.<br />
  * Source: somewhere
  * @type {{PADCHAR: string, ALPHA: string, getbyte64: base64.getbyte64, decode: base64.decode, getbyte: base64.getbyte, encode: base64.encode}}
  * @global
@@ -256,17 +256,21 @@ function rmDuplicates (arr) {
  * @property {function(string): string} base64.decoder Base64 decoder
  * @property {function(string, number): string} base64.getbyte Byte getter
  * @property {function(string): string} base64.encoder Base64 encoder
- * @todo Make it look more like it wasn't from somewhere
  */
 var base64 = {
     /**
      * @readonly
+     * @instance
      */
     PADCHAR: "=",
     /**
      * @readonly
+     * @instance
      */
-    ALPHA: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 + /",
+    ALPHA: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
+    /**
+     * @throws Invalid character error: DOM Exception 5
+     */
     getbyte64: function (s, i) {
         /* "This is oddly fast, except on Chrome/V8.
          Minimal or no improvement in performance by using an
@@ -275,35 +279,37 @@ var base64 = {
         if (i === -1) throw "Cannot decode base64";
         return i
     },
+    /**
+     * @throws Cannot decode base64
+     */
     decode: function (s) { //Convert to string
         s += "";
-        var gb64 = this.getbyte64;
         var pads, i, b10;
         var imax = s.length;
         if (imax === 0) return s;
         else if (imax % 4 != 0) throw "Cannot decode base64";
 
         pads = 0;
-        if (s.charAt(imax - 1) === base64.PADCHAR) {
+        if (s.charAt(imax - 1) === this.PADCHAR) {
             pads = 1;
-            if (s.charAt(imax - 2) === base64.PADCHAR) pads = 2;
+            if (s.charAt(imax - 2) === this.PADCHAR) pads = 2;
             //Either way, we want to ignore this last block
             imax -= 4;
         }
 
         var x = [];
         for (i = 0; i < imax; i += 4) {
-            b10 = (gb64(s, i) << 18) | (gb64(s, i + 1) << 12) | (gb64(s, i + 2) << 6) | gb64(s, i + 3);
+            b10 = (this.getbyte64(s, i) << 18) | (this.getbyte64(s, i + 1) << 12) | (this.getbyte64(s, i + 2) << 6) | this.getbyte64(s, i + 3);
             x.push(String.fromCharCode(b10 >> 16, (b10 >> 8) & 0xff, b10 & 0xff));
         }
 
         switch (pads) {
             case 1:
-                b10 = (gb64(s, i) << 18) | (gb64(s, i + 1) << 12) | (gb64(s, i + 2) << 6);
+                b10 = (this.getbyte64(s, i) << 18) | (this.getbyte64(s, i + 1) << 12) | (this.getbyte64(s, i + 2) << 6);
                 x.push(String.fromCharCode(b10 >> 16, (b10 >> 8) & 0xff));
                 break;
             case 2:
-                b10 = (gb64(s, i) << 18) | (gb64(s, i + 1) << 12);
+                b10 = (this.getbyte64(s, i) << 18) | (this.getbyte64(s, i + 1) << 12);
                 x.push(String.fromCharCode(b10 >> 16));
                 break;
         }
@@ -311,9 +317,6 @@ var base64 = {
     },
     /**
      * @throws Invalid character error: DOM Exception 5
-     * @param s
-     * @param i
-     * @return {Number}
      */
     getbyte: function (s, i) {
         var x = s.charCodeAt(i || 0);
@@ -321,38 +324,31 @@ var base64 = {
         return x
     },
     /**
-     * @throws {SynthaxError} Only one argument needed
-     * @param s
-     * @returns {*}
+     * @throws {SyntaxError} Only one argument needed
      */
     encode: function (s) {
         if (arguments.length != 1) throw new SyntaxError("Only one argument please !");
-        var pc = base64.PADCHAR;
-        var alpha = base64.ALPHA;
-        var gb = base64.getbyte;
 
         var i, b10, x = [];
-
         s += "";
-
         var imax = s.length - s.length % 3;
 
         if (s.length === 0) return s;
         for (i = 0; i < imax; i += 3) {
-            b10 = (gb(s, i) << 16) || (gb(s, i + 1) << 8) || gb(s, i + 2);
-            x.push(alpha.charAt(b10 >> 18));
-            x.push(alpha.charAt((b10 >> 12) & 0x3F));
-            x.push(alpha.charAt((b10 >> 6) & 0x3f));
-            x.push(alpha.charAt(b10 & 0x3f));
+            b10 = (this.getbyte(s, i) << 16) || (this.getbyte(s, i + 1) << 8) || this.getbyte(s, i + 2);
+            x.push(this.ALPHA.charAt(b10 >> 18));
+            x.push(this.ALPHA.charAt((b10 >> 12) & 0x3F));
+            x.push(this.ALPHA.charAt((b10 >> 6) & 0x3f));
+            x.push(this.ALPHA.charAt(b10 & 0x3f));
         }
         switch (s.length - imax) {
             case 1:
-                b10 = gb(s, i) << 16;
-                x.push(alpha.charAt(b10 >> 18) + alpha.charAt((b10 >> 12) & 0x3F) + pc + pc);
+                b10 = this.getbyte(s, i) << 16;
+                x.push(this.ALPHA.charAt(b10 >> 18) + this.ALPHA.charAt((b10 >> 12) & 0x3F) + this.PADCHAR.repeat(2));
                 break;
             case 2:
-                b10 = (gb(s, i) << 16) || (gb(s, i + 1) << 8);
-                x.push(alpha.charAt(b10 >> 18) + alpha.charAt((b10 >> 12) & 0x3F) + alpha.charAt((b10 >> 6) & 0x3f) + pc);
+                b10 = (this.getbyte(s, i) << 16) || (this.getbyte(s, i + 1) << 8);
+                x.push(this.ALPHA.charAt(b10 >> 18) + this.ALPHA.charAt((b10 >> 12) & 0x3F) + this.ALPHA.charAt((b10 >> 6) & 0x3f) + this.PADCHAR);
                 break;
         }
         return x.join("")
@@ -368,7 +364,7 @@ var base64 = {
  * @constructor
  * @this {Machine}
  * @returns {Machine} VWM
- * @see Memory
+ * @see module:Misc~Memory
  * @since 1.0
  * @property {number} Machine.capacity Capacity (in bits)
  * @property {number} Machine.version Version (1-6)
@@ -660,11 +656,11 @@ window.onkeypress = function (keyStroke) {
  * @param {function(function(string))} [cb] Callback
  * @returns {string} Recorded keystrokes
  * @ignore
- * @see Sys
+ * @see module:Misc~Sys
  * @since 1.0
  * @func
  */
-function stup(cb) {
+function stup (cb) {
     alert("You have 10s to type something !");
     Sys.in.recording = true;
     Sys.in.data = [];
@@ -684,7 +680,7 @@ function stup(cb) {
  * @description Turn a string into a RegExp
  * @param {string} str String
  * @returns {RegExp} Resulting regular expression
- * @see unRegExpify
+ * @see module:Misc~unRegExpify
  * @since 1.0
  * @func
  */
@@ -696,11 +692,11 @@ function RegExpify (str) {
  * @description Turn a RegExp into a string
  * @param {RegExp} re RegExp
  * @returns {string|Array} Resulting string
- * @see RegExpify
+ * @see module:Misc~RegExpify
  * @since 1.0
  * @func
  */
-function unRegExpify (re) { //Turn a regular expression into a string
+function unRegExpify (re) {
     return re.toString().get(1, re.toString().lastIndexOf("/") - 1).remove("\\");
 }
 
@@ -710,7 +706,7 @@ function unRegExpify (re) { //Turn a regular expression into a string
  * @param {Array} valArr Value array
  * @returns {{}} Resulting object
  * @since 1.0
- * @see Tablify
+ * @see module:Misc~Tablify
  * @func
  */
 function Objectify (keyArr, valArr) {
@@ -725,7 +721,7 @@ function Objectify (keyArr, valArr) {
  * @param {*} [val=[]] Value of all the keys
  * @returns {{}} Resulting semi-empty reference independent object
  * @since 1.1
- * @see Objectify
+ * @see module:Misc~Objectify
  * @func
  */
 function Tablify (keyArr, val) {
@@ -750,9 +746,9 @@ function name2type (name, param) {
         case "Boolean": return Boolean(param);
         case "Function": return Function(param, arguments.toArray().get(2));
         case "Object": return Object(param, arguments.toArray().get(2));
-        case "Date": return Date(param, arguments.toArray().get(2));
-        case "Array": return Array(param, arguments.toArray().get(2));
-        case "RegExp": return RegExp(param, arguments.toArray().get(2).toString());
+        case "Date": return new Date(param, arguments.toArray().get(2));
+        case "Array": return [param, arguments.toArray().get(2)];
+        case "RegExp": return new RegExp(param, arguments.toArray().get(2).toString());
         case "Error": return Error(param, arguments.toArray().get(2));
         case "File": return File(param, arguments.toArray().get(2));
         case "URL": return URL(param, arguments.toArray().get(2));
@@ -789,7 +785,7 @@ function name2type (name, param) {
         case "server": return server(param, arguments.toArray().get(2));
         case "Archive": return Archive(param, arguments.toArray().get(2));
         case "Machine": return Machine(param, arguments.toArray().get(2).toString());
-        case "Memory": return Memory(param, arguments.toArray().get(2));
+        case "Memory": return Memory(param, arguments.toArray()[2], arguments.toArray()[3]);
         case "WebPage": return WebPage(param, arguments.toArray().get(2));
         case "WebApp": return WebApp(param, arguments.toArray().get(2));
         case "virtualHistory": return virtualHistory(param, arguments.toArray().get(2));
@@ -936,7 +932,7 @@ function Scoreboard (name, members, events, maxScore) {
 
     this.getFormatted = function (nbDec) {
         if (!nbDec) nbDec = 2;
-        var sb = copy(this);
+        var sb = Copy(this);
         for (var p = 0; p < this.participants.length; p++) {
             for (var e = 0; e < this.events.length; e++) sb.table[e + 1][p + 1] = (sb.table[e + 1][p + 1] / this.maxScore).toNDec(nbDec);//this.addPoint(this.participants[p], this.events[e], this.getFormated(this.participants[p], this.events[e]) / this.maxScore);
             sb.table[sb.events.length + 1][p + 1] = sb.table.line(p + 1).get(1, -1).sum().toNDec(nbDec);
@@ -947,4 +943,58 @@ function Scoreboard (name, members, events, maxScore) {
     this.toString = function () {
         return "Scoreboard(name=" + this.name + ", participants=" + this.participants.toStr(true) + "; maxScore=" + this.maxScore + ", events=" + this.events.toStr(true) + ")";
     }
+}
+
+/**
+ * @description Console text animation
+ * @param {string} [msg="Loading"] Text
+ * @param {number} [startTime=0] Starting time of the animation (in ms).
+ * @param {number} [max=10e3] End time of the animation (in ms).
+ * @param {number} [step=1e3] Transition delay
+ * @param {boolean} [tuxStyle=false] Animate the animation the Linux style
+ * @param {boolean} [stop=startTime>max] Forced stop
+ * @return {?boolean} Animation done ?
+ * @func
+ * @since 1.1
+ * @todo Improve/fix the ending
+ */
+function anim (msg, startTime, max, step, tuxStyle, stop) {
+    if (!msg) msg = "Loading";
+    if (!startTime) startTime = 0;
+    if (!max) max = 10e3;
+    if (!step) step = 800;
+    var waits = tuxStyle? ["-", "\\", "|", "/"]: ["", ".", "..", "..."], j = 0, tw = [], done = function () {
+        tw.map(function (t) {
+            clearTimeout(t);
+        });
+        console.clear();
+        console.log("Done !");
+        return true;
+    };
+
+    if (!stop) waits.map(function (c) {
+        tw.push(setTimeout(function () {
+            console.clear();
+            console.log(msg + " " + c);
+        }, startTime + j * step));
+        j++;
+    });
+    else return done();
+    startTime += 2 * step;
+    if (startTime <= max || !stop) setTimeout(function () {
+        anim(msg, startTime, max, step, tuxStyle, startTime > max);
+    }, 2 * step);
+    else return done();
+}
+
+//AI system that stores it's rules in a database and update it after learning
+function AI (rules) {
+    this.rules = rules || [];
+    this.db = new DB("AI rules", ["Index", "Rules", "Precision"]);
+    this.updateRule = function (rule, val) {
+        var pos = this.db.find(rule);
+        this.db.set(val, this.db.get(pos[0], pos[1]))
+    };
+
+    return this;
 }

@@ -38,7 +38,6 @@
  * @requires Misc
  * @namespace
  * @type {Module}
- * @requires Misc
  * @since 1.1
  * @exports DOM
  */
@@ -51,9 +50,9 @@ var DOM = new Module("DOM", "DOM stuff", ["Misc"], 1, function () {
  * @description Print onto something
  * @param {*} st Data to be printed
  * @param {boolean} [isHTML=false] Has to be formatted as an HTML code or not
- * @param {string} [sw="body"] Place to print $st
+ * @param {string} [sw="body"] Place to print &lt;code>st&lt;/code>
  * @returns {undefined}
- * @see println
+ * @see module:DOM~println
  * @since 1.0
  * @func
  */
@@ -64,9 +63,9 @@ function print (st, isHTML, sw) {
 /**
  * @description Print-line onto something
  * @param {*} st Data to be printed
- * @param {string} [sw="body"] Place to print $st
+ * @param {string} [sw="body"] Place to print &lt;code>st&lt;/code>
  * @returns {undefined}
- * @see print
+ * @see module:DOM~print
  * @since 1.0
  * @func
  */
@@ -80,14 +79,14 @@ function println (st, sw) {
  * @param {NumberLike} ctt Content
  * @param {boolean} [httpe=false] HTTP Equiv specified ?
  * @returns {undefined}
- * @see getMetaData
+ * @see module:DOM~getMetaData
  * @since 1.0
  * @func
  */
 function addMetaData (n, ctt, httpe) {
     /* exported addMetaData */
     var el = document.createElement("meta");
-    httpe? el.httpEquiv = httpe: el.name = n;
+    httpe? el.httpEquiv = n: el.name = n;
     el.content = ctt;
     document.head.appendChild(el)
 }
@@ -95,7 +94,7 @@ function addMetaData (n, ctt, httpe) {
 /**
  * @description Get the meta-data of the current page
  * @returns {string[]} Name and content results
- * @see addMetaData
+ * @see module:DOM~addMetaData
  * @since 1.0
  * @func
  */
@@ -133,7 +132,7 @@ function reloadPage (lvl) { //Reload the page with 2 different level of reload
 /**
  * @description Redirect to somewhere
  * @param {string} to Place to be redirected to
- * @param {number} [dt=3e3] Time delay
+ * @param {number} [dt=3e3] Time delay (in ms)
  * @param {string} divId Id of the element to be used to inform the user about what's going on
  * @returns {undefined}
  * @since 1.0
@@ -153,7 +152,7 @@ function redirect (to, dt, divId) { //Redirect to #to in #dt ms
  * @param {string} txt Text
  * @param {string} type Type
  * @returns {boolean} Validity check result
- * @see validate
+ * @see module:DOM~validate
  * @since 1.0
  * @func
  */
@@ -222,7 +221,7 @@ function isValid (txt, type) {
  * @param {node} fm Form
  * @param {boolean} [ignoreRequired=false] Ignored the required attribute
  * @returns {boolean} Validation check
- * @see isValid
+ * @see module:DOM~isValid
  * @since 1.0
  * @func
  */
@@ -247,7 +246,7 @@ function validate (fm, ignoreRequired) { //Check if a form is valid
  * @description Get the HTML equivalent of the string
  * @param {string} str String
  * @returns {Code} HTML equivalent
- * @see unescapeHTML
+ * @see module:DOM~unescapeHTML
  * @since 1.0
  * @func
  */
@@ -261,7 +260,7 @@ function escapeHTML (str) {
  * @description Get the string equivalent of the HTML code
  * @param {string} code HTML code
  * @returns {string} String equivalent
- * @see escapeHTML
+ * @see module:DOM~escapeHTML
  * @since 1.0
  * @func
  */
@@ -317,7 +316,7 @@ function getResources (rmEmpty) {
  * @description Get the list of scripts
  * @param {boolean} [asList=false] Result should be a list or an object
  * @returns {*} List/dictionary of scripts
- * @see gatherStylesheets
+ * @see module:DOM~gatherStylesheets
  * @todo Perhaps use document.scripts.toArray() instead ?
  * @since 1.0
  * @func
@@ -330,7 +329,7 @@ function gatherScripts (asList) { //Sort of getResources() but dedicated to only
 
 /**
  * @description Gather internal scripts.
- * @param {boolean} [format=false] Format to easy-to-use array
+ * @param {boolean} [format=false] Format to an easy-to-use array
  * @returns {Array} Internal scripts
  * @since 1.1
  * @func
@@ -347,7 +346,7 @@ function gatherInternalScripts (format) {
 
 /**
  * @description Gather external scripts.
- * @param {boolean} [format=false] Format to easy-to-use array
+ * @param {boolean} [format=false] Format to an easy-to-use array
  * @returns {Array} External scripts
  * @since 1.1
  * @func
@@ -366,7 +365,7 @@ function gatherExternalScripts (format) {
  * @description Get the list of stylesheets
  * @param {boolean} [asList=false] Result should be a list or an object
  * @returns {*} List/dictionary of stylesheets
- * @see gatherScripts
+ * @see module:DOM~gatherScripts
  * @since 1.0
  * @func
  */
@@ -439,7 +438,7 @@ function simpleTable (caption, rows, id, style, split, cellIds) {
 
 /**
  * @description Row HTML table
- * @param {string|number} caption Caption
+ * @param {NumberLike} caption Caption
  * @param {Array} headerRows Row headers
  * @param {Array} rows Rows of the table
  * @param {string} id ID of the table
@@ -468,7 +467,7 @@ function rowTable (caption, headerRows, rows, id, split, style, cellIds) {
 
 /**
  * @description Column HTML table
- * @param {string|number} caption Caption
+ * @param {NumberLike} caption Caption
  * @param {Array} headerCols Row headers
  * @param {Array} cols Cols of the table
  * @param {string} id ID of the table
@@ -493,7 +492,7 @@ function colTable (caption, headerCols, cols, id, split, style, cellIds) {
         tab +="&lt;tr>";
         if (split) {
             for (var j = 0; j &lt; cols[i].length; j++) {
-                tab += "&lt;td id='" + (id || "t") + (isNon(cellIds)? i+"_"+j: cellIds[i][j]) + "'>" + cols[j][i] + "&lt;/td>";
+                tab += "&lt;td id='" + (id || "t") + (isNon(cellIds)? i+"_"+j: cellIds[i][j]) + "'>" + cols[i][j] + "&lt;/td>";
             }
         } else tab += "&lt;td id='" + (id || "t") + (isNon(cellIds)? i: cellIds[i]) + "'>" + cols[i] + "&lt;/td>";
         tab += "&lt;/tr>"
@@ -504,7 +503,7 @@ function colTable (caption, headerCols, cols, id, split, style, cellIds) {
 
 /**
  * @description Complex HTML table
- * @param {string|number} caption Caption
+ * @param {NumberLike} caption Caption
  * @param {Array} headerRows Row headers
  * @param {Array} rows Rows of the table
  * @param {Array} headerCols Columns Headers
@@ -564,17 +563,17 @@ function colourTable (caption, cols, clrs, id, split, style) {
 
 /**
  * @description Compare two matrices and display a table with all the different elements of $b in regards to $a
- * @param {Array} a Matrice a
- * @param {Array} b Matrice b
+ * @param {Array} a Matrix a
+ * @param {Array} b Matrix b
  * @param {boolean} [toHTML=false] HTML output
  * @returns {*} Comparison table result
  * @since 1.0
  * @func
  * @throws {Error} Uncomparable matrices
  */
-function tableCompare(a, b, toHTML) { //Compare two matrices and display a table with all the different elements
+function tableCompare (a, b, toHTML) { //Compare two matrices and display a table with all the different elements
     if(a.size(true) != b.size(true)) throw new Error("You can't compare two matrices of different sizes");
-    var res = copy(a);
+    var res = Copy(a);
     for (var i = 0; i &lt; res.length; i++) {
         for (var j = 0; j &lt; res[i].length; j++) res[i][j] = (a[i][j] === b[i][j])? "": b[i][j];
     }
@@ -591,14 +590,15 @@ function tableCompare(a, b, toHTML) { //Compare two matrices and display a table
  * @since 1.0
  * @func
  */
-function addFav (url, title, elmId) { //Url = http://Www...." title = "My Website"
+function addFav (url, title, elmId) {
     var place = elmId? "#" + elmId: "body";
     if (navigator.appName.substring(0, 3) === "Mic" &amp;&amp; navigator.appVersion.substring(0, 1) >= 4) $e(place).write("&lt;a href=\"#\" onClick=\"window.external.AddFavorite(" + url + ", " + title + ");return false;\">Bookmark this webpage&lt;/a>&lt;br />", true);
     else $e(place).write("Press CTRL + D to add this webpage to your bookmarks!", true)
 }
 
 /**
- * @description Browser check
+ * @description Browser check.&lt;br />
+ * Source: somewhere
  * @returns {checkBrowser} Browser check
  * @this checkBrowser
  * @since 1.0
@@ -616,7 +616,7 @@ function checkBrowser () {
 }
 
 /**
- * @description Browser detection system.
+ * @description Browser detection system.&lt;br />
  * Source: somewhere
  * @type {{init: BrowserDetect.init, searchString: BrowserDetect.searchString, searchVersion: BrowserDetect.searchVersion, dataBrowser: Array, dataOS: Array, info: BrowserDetect.info}}
  * @since 1.0
@@ -697,7 +697,7 @@ var BrowserDetect = { //Browser detection system
  * @param {Element|string} where Place to type the message
  * @param {boolean} [HTML=false] HTML flag
  * @returns {undefined}
- * @see writeMsg2
+ * @see module:DOM~writeMsg2
  * @since 1.0
  * @func
  */
@@ -719,7 +719,7 @@ function writeMsg (msg, where, HTML) {
  * @param {string} [txt=""] Text
  * @param {number} [pos=0] Position
  * @returns {undefined}
- * @see writeMsg
+ * @see module:DOM~writeMsg
  * @since 1.0
  * @func
  */
@@ -740,7 +740,7 @@ function writeMsg2 (msg, slc, HTML, speed, txt, pos) {
  * @param {string} [path="Template.jst"] Path
  * @param {string} [txt=""] Text/code containing the {{params}}
  * @param {string[]} [params=["tab", "date", "time", "timestamp", "br"]] Parameters
- * @param {boolean} [consoleSpecial=false] Resulting text formated to the console
+ * @param {boolean} [consoleSpecial=false] Resulting text formatted to the console
  * @constructor
  * @this {Template}
  * @returns {Template} Template
@@ -759,7 +759,7 @@ function Template (name, path, txt, params, consoleSpecial) {
     this.name = name || "Template";
     this.path = path || this.name + ".jst";
     this.params = params || ["name", "description", "version", "title", "path"]; //{{params}}
-    this.special = ["tab", "date", "time", "timestamp", "br"]; // %special%
+    this.special = ["tab", "date", "time", "timestamp", "br"]; //%special%
     this.specialEq = ["&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;", getDate(), getTime(), getTimestamp(), "&lt;br />"];
     if (consoleSpecial) {
         this.specialEq[0] = "\t";
@@ -811,13 +811,13 @@ function tabs (n) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-File.html">File</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-File-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#getFileContent">getFileContent</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#UnitTest">UnitTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Aug 24 2016 18:14:41 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Sep 05 2016 19:03:54 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

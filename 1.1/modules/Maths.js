@@ -21,7 +21,7 @@ var Maths = new Module("Maths", "Maths stuff", ["Misc"]);
  * @description Exclusive or
  * @param {*} a Expression a
  * @param {*} b Expression b
- * @returns {boolean} Result
+ * @returns {boolean} a xor b
  * @since 1.0
  * @func
  */
@@ -30,7 +30,7 @@ function xor (a, b) {
 }
 
 /**
- * @description Converts $n "times" to an appropriate formulation
+ * @description Converts <code>n</code> "times" to an appropriate formulation (if necessary)
  * @param {number} n Number
  * @returns {string} Literal
  * @since 1.0
@@ -49,20 +49,19 @@ function timesLiteral (n) {
  * @param {number} min Minimum (inclusive)
  * @param {number} max Maximum (inclusive)
  * @param {boolean} [integer=false] Integer or float/double
- * @returns {number} Random number
+ * @returns {number} Random number r&in;[<code>min</code>, <code>max</code>]
  * @since 1.0
  * @func
  */
 function rand (min, max, integer) {
-    if (!integer) return Math.random() * (max - min + 1) + min; //Math.random() * (max - min) / min doesn't works for min = 0
-    else return Math.floor(Math.random() * (max - min + 1) + min);
+    return integer? Math.floor(Math.random() * (max - min + 1) + min): Math.random() * (max - min + 1) + min; //Math.random() * (max - min) / min doesn't works for min = 0
 }
 
 /**
  * @description Random number generator with 0 as the minimum
  * @param {number} max Maximum (inclusive)
- * @returns {number} Random number
- * @see rand
+ * @returns {number} Random number r&in;[0, <code>max</code>]
+ * @see module:Maths~rand
  * @since 1.0
  * @func
  */
@@ -75,13 +74,14 @@ function randTo (max) {
  * @param {number} min Minimum (inclusive)
  * @param {number} max Maximum (inclusive)
  * @param {number} [base=10] Base
- * @returns {number|string} Random number
- * @see rand
+ * @param {boolean} [integer=false] Integer or float/double
+ * @returns {NumberLike} Random number r<sub><code>base</code></sub>&in;[<code>min</code><sub>10</sub>, <code>max</code><sub>10</sub>]
+ * @see module:Maths~rand
  * @since 1.0
  * @func
  */
-function baseRand (min, max, base) { //Randomise a number in the selected base
-    return parseInt(rand(min, max)).toString(base || 10)
+function baseRand (min, max, base, integer) { //Randomise a number in the selected base
+    return parseFloat(rand(min, max, integer)).toString(base || 10)
 }
 
 /**
@@ -89,42 +89,54 @@ function baseRand (min, max, base) { //Randomise a number in the selected base
  * @param {number} var1 Variable #1
  * @param {number} var2 Variable #2
  * @param {boolean} [integer=false] Integer or float/double
- * @returns {number} Random number
- * @see rand
+ * @returns {number} Random number r&in;[min(<code>var1</code>, <code>var2</code>), max(<code>var1</code>, <code>var2</code>)]
+ * @see module:Maths~rand
  * @since 1.0
  * @func
  */
 function randVar (var1, var2, integer) {
-    var mx = Math.max(var1, var2), mn = Math.min(var1, var2); //Setting the max and min for the rand() call
-    return rand(mn, mx, integer)
+    return rand(Math.min(var1, var2), Math.max(var1, var2), integer); //Setting the max and min for the rand() call
 }
 
 /**
  * @description Range random number generator
  * @param {number} len Length of the range
  * @param {boolean} [if0=false] If 0 is in the range or not
- * @returns {number} Random number
+ * @returns {number} Random number r&in;[0||1, <code>len</code>(-1)]
  * @since 1.0
  * @func
  */
 function lenRand (len, if0) {
-    if (if0) return Math.floor(Math.random() * (len + 1)); //If the first term is 0
-    else return Math.floor(Math.random() * len); //Otherwise if it's 1
+    return Math.floor(Math.random() * (if0? len + 1: len)); //If the first term is 0 or 1
 }
 
 /**
- * @description Random float in [0; 1] with 16-bits of randomness as Math.random() creates repetitive patterns when applied over larger space
+ * @description Random float in [0, 1] with 16-bits of randomness as Math.random() creates repetitive patterns when applied over larger space.<br />
  * Source: Three.js
  * @returns {number} Random float
  * @since 1.0
  * @func
+ * @see modume:Maths~random
  */
-function random16 () { //Random float from <0, 1> with 16 bits of randomness
+function random16 () {
     return (65280 * Math.random() + 255 * Math.random()) / 65535
 }
 
 /**
- * @description Random float in [-range / 2, range / 2]
+ * @description Generate a random double in [0, 1] with <code>bits</code>-bits of randomness to avoid repetitive patterns when using Math.random() on a large spaces.
+ * @param bits
+ * @return {number} Random double
+ * @since 1.1
+ * @func
+ * @see modume:Maths~random16
+ */
+function random (bits) {
+    if (!bits) bits = 32;
+    return ((Math.pow(2, bits) - Math.pow(2, bits / 2)) * Math.random() + (Math.pow(2, bits / 2 - 1)) * Math.random()) / (Math.pow(2, bits) - 1)
+}
+
+/**
+ * @description Random float in [-<code>range</code>/2, <code>range</code>/2].<br />
  * Source: Three.js
  * @param {number} range Range length
  * @returns {number} Random float
@@ -139,10 +151,10 @@ function randFloatSpread (range) {
  * @description Generate an array of random numbers
  * @param {number} [n=10] Number of numbers
  * @param {number} [min=0] Minimum
- * @param {number} [max=100] Maximimum
+ * @param {number} [max=100] Maximum
  * @param {boolean} [float=true] Floating point
  * @param {Bool} [base=false] Base
- * @returns {Array} Random number array
+ * @returns {Array} Random number array where &forall;i&in;r, i&in;[<code>min</code>, <code>max</code>]<sub>(base)</sub>
  */
 function randNum (n, min, max, float, base) {
     var r = [];
@@ -181,9 +193,9 @@ function genNearlySortedArr (n, min, max) {
  */
 function sumPow2 (arr, nbDec) {
     if (!isType(arr, "Array")) return false;
-    var sum = 0;
-    for(var i = 0; i < arr.length;i++) sum += Math.pow(arr[i], 2);
-    return sum.toNDec(nbDec)
+    return arr.map(function (x) {
+        return x * x;
+    }).sum().toNDec(nbDec)
 }
 
 /**
@@ -192,7 +204,7 @@ function sumPow2 (arr, nbDec) {
  * @param {number} [from=2] Initial base
  * @param {number} [to=10] Final base
  * @param {boolean} [float=false] FPR or not
- * @returns {NumberLike} Conversion
+ * @returns {NumberLike} Conversion: n<sub>from</sub>&rArr;r<sub>to</sub>
  * @since 1.0
  * @func
  */
@@ -279,7 +291,7 @@ function floatingPtBin (bin) {
  * @description Minute to decimal
  * @param {number} min Minutes
  * @returns {number} Decimals
- * @see dec2min
+ * @see module:Maths~dec2min
  * @since 1.0
  * @func
  */
@@ -291,7 +303,7 @@ function min2dec (min) { //Minute to decimal
  * @description Decimal to minute
  * @param {number} dec Decimals
  * @returns {number} Minutes
- * @see min2dec
+ * @see module:Maths~min2dec
  * @since 1.0
  * @func
  */
@@ -303,7 +315,7 @@ function dec2min (dec) {
  * @description Time to second
  * @param {string} i Time ([hh:]mm:ss.xx[x])
  * @returns {number} Seconds
- * @see sec2time
+ * @see module:Maths~sec2time
  * @since 1.0
  * @func
  */
@@ -330,11 +342,11 @@ function toS (i) {
 }
 
 /**
- * @description Second to time
+ * @description Seconds to time
  * @param {string} i Seconds
  * @param {boolean} [withH=false] Include hours
  * @returns {string} Time
- * @see toS
+ * @see module:Maths~toS
  * @since 1.0
  * @func
  */
@@ -346,11 +358,11 @@ function sec2time (i, withH) {
         m = Math.floor((i - s - 3600 * h) / 60);
         m = (m <= 0)? "00": m.toNDigits();
         h = (h <= 0)? "00": h.toNDigits();
-        return h + ":" + m+":" + s.get(0, Math.min(4, s.length - 1))
+        return h + ":" + m + ":" + s.toNDec().toNDigits(); ////Return the result as h:min:s.ms
     } else {
         s = (i % 60).toNDigits();
         m = Math.floor(i / 60).toNDigits();
-        return (m <= 0)? s: m + ":" + s.get(0, Math.min(4, s.length - 1)); //Return the result as min:s.ms
+        return (m <= 0)? s: m + ":" + s.toNDec().toNDigits(); //Return the result as min:s.ms
     }
 }
 
@@ -363,12 +375,12 @@ function sec2time (i, withH) {
 var s2t = sec2time;
 
 /**
- * @description Convert a mark (out of $initTotal) to an other (out of $endTotal)
+ * @description Convert a mark (out of <code>initTotal</code>) to an other (out of <code>endTotal</code>)
  * @param {number} mark Mark
  * @param {number} initTotal Initial total
  * @param {number} [endTotal=100] Final total
  * @param {number} [nbDec=2] Number of decimals
- * @returns {number} Converted mark
+ * @returns {number} Converted mark: <code>mark</code>/<code>initTotal</code> &rArr; r/<code>endTotal</code>
  * @since 1.0
  * @func
  */
@@ -386,13 +398,13 @@ function markConv (mark, initTotal, endTotal, nbDec) {
  * @func
  */
 function nthroot (x, n, nbDec) {
-    var r = x / 2;
+    var r = getClosestRoot(x, n);
     for(var i = 0; i < 60; i++) r += (x - Math.pow(r, n)) / (Math.pow(r + 1, n) - Math.pow(r, n));
     return r.toNDec(nbDec || 20)
 }
 
 /**
- * @description Logarithm (LOGy(x))
+ * @description Logarithm (log<sub><code>y</code></sub>(<code>x</code>))
  * @param {number} x Number
  * @param {number} [y=10] Base
  * @returns {number} Result
@@ -407,7 +419,7 @@ function log (x, y) {
  * @description Neperian Logarithm
  * @param {number} x Number
  * @returns {number} Neperian logarithm
- * @see log
+ * @see module:Maths~log
  * @since 1.0
  * @func
  */
@@ -428,11 +440,11 @@ function gcd (a, b) {
 }
 
 /**
- * @description Binomial distribution X~Bin(n, p)
+ * @description Binomial distribution X~Bin(<code>n</code>, <code>p</code>)
  * @param {number} n Total number of attempts
  * @param {number} p Success probability
  * @param {number} r Number of attempts
- * @returns {number} Binomial distribution
+ * @returns {number} Binomial distribution P(x=<code>r</code>)
  * @since 1.0
  * @func
  */
@@ -446,7 +458,7 @@ function Bin (n, p, r) { //Binomial distrib. where X~Bin(n, p) and it returns P(
  * @param {number} p Success probability
  * @param {number} r Number of attempts
  * @returns {number} Cumultative binomial distribution
- * @see Bin
+ * @see module:Maths~Bin
  * @since 1.0
  * @func
  */
@@ -457,12 +469,12 @@ function BinCumul (n, p, r) { //P(X < r) ?
 }
 
 /**
- * @description Cumultative binomial distribution (P(X<=r))
+ * @description Cumulative binomial distribution (P(X&le;r))
  * @param {number} n Total number of attempts
  * @param {number} p Success probability
  * @param {number} r Number of attempts
- * @returns {number} Cumultative binomial distribution
- * @see Bin
+ * @returns {number} Cumulative binomial distribution
+ * @see module:Maths~Bin
  * @since 1.0
  * @func
  */
@@ -473,27 +485,28 @@ function BinCumulLT (n, p, r) { //P(X <= r) (adapted from http://stackoverflow.c
 }
 
 /**
- * @description Normal distribution
+ * @description Normal distribution Z~N(0, 1)
+ * @summary normalcdf(x)
  * @param {number} x Number
- * @returns {number} Normal distribution
- * @see StdNorm
+ * @returns {number} Normal distribution P(z<-abs(<code>x</code>))
+ * @see module:Maths~StdNorm
  * @since 1.0
  * @func
  */
 function Norm (x) { //P(z < x) where Z~N(0, 1) (or P(z>-x) if x is positive) === normalcdf(x)
     var t = 1 / (1 + .2316419 * Math.abs(x));
-    var d = .3989423 * Math.exp(-x * x/2);
+    var d = .3989423 * Math.exp(-x * x / 2);
     var p = d * t * (.3193815 + t * (-.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
     return p.toNDec(4)
 }
 
 /**
- * @description Standard normal distribution
+ * @description Standard normal distribution Z~N(<code>m</code>, <code>sd</code>)
  * @param {number} m Mean
  * @param {number} sd Standard deviation
  * @param {number} x Number
  * @returns {number} Standard normal distribution
- * @see Norm
+ * @see module:Maths~Norm
  * @since 1.0
  * @func
  */
@@ -502,9 +515,9 @@ function StdNorm (m, sd, x) {
 }
 
 /**
- * @description Inverse of Norm(x) (Inverse Normal CDF)
- * @param x
- * @return {*}
+ * @description Inverse of Norm(r)=<code>x</code> (Inverse Normal CDF)
+ * @param {number} x Normal distribution
+ * @return {number} r of <code>x</code>=Norm(r)
  * @constructor
  */
 function InvNorm (x) {
@@ -521,7 +534,7 @@ function InvNorm (x) {
 }
 
 /**
- * @description Poisson distribution
+ * @description Poisson distribution X~Po(<code>l</code>, <code>x</code>)
  * @param {number} l Lambda
  * @param {number} x Number
  * @returns {number} Poisson distribution
@@ -536,15 +549,17 @@ function Po (l, x) {
  * @description Cumultative poisson distribution
  * @param {number} l Lambda
  * @param {number} x Number
- * @returns {number} Cumultative poisson distribution
- * @see PoCumul
+ * @returns {number} Cumulative poisson distribution
+ * @see module:Maths~PoCumul
+ * @todo To revisit
  * @since 1.0
  * @func
  */
 function PoCumul (l, x) {
-    var res = [];
-    for (var i = 0; i < r; i++) res.push(Po(l, x));
-    return res.sum();
+    /*var res = [];
+    for (var i = 0; i < l; i++) res.push(Po(l, x));
+    return res.sum();*/
+    return Po(l, x) * l;
 }
 
 /**
@@ -555,17 +570,15 @@ function PoCumul (l, x) {
  * @func
  */
 function factorial (x) {
-    var f = x;
-    for(var i = 1; i < x; i++) f *= i;
-    return f; //Recursive way: (x === 1)? 1: n * factorial(x - 1)
+    return (x <= 1)? x: x * factorial(x - 1)
 }
 
 /**
- * @description Combination/choose
+ * @description Combination/choose (&complement;)
  * @param {number} n Total
  * @param {number} r Number
- * @returns {number} nCr
- * @see factorial
+ * @returns {number} n&complement;r
+ * @see module:Maths~factorial
  * @since 1.0
  * @func
  */
@@ -574,17 +587,18 @@ function C (n, r) {
 }
 
 /**
- * @description Binomial to Normal
+ * @description Binomial to Normal distribution
  * @param {number} n Total number of attempts
  * @param {number} p Success probability
  * @param {number} r Number of attempts
  * @param {string} sign Sign used in the expression
  * @returns {number} Normal distribution
- * @see Bin
+ * @see module:Maths~Bin
+ * @see module:Maths~Norm
  * @since 1.0
  * @func
  */
-function Bin2Norm (n, p, r, sign) { //Binomial to Normal
+function Bin2Norm (n, p, r, sign) {
     if (n * p > 5 && n * (1 - p) > 5) {
         r += (sign === ">=")? -.5: .5; //Continuity correction
         return StdNorm(n * p, Math.sqrt(n * p * (1 - p)), r)
@@ -592,34 +606,36 @@ function Bin2Norm (n, p, r, sign) { //Binomial to Normal
 }
 
 /**
- * @description Binomial to Poisson
+ * @description Binomial to Poisson distribution
  * @param {number} n Total number of attempts
  * @param {number} p Success probability
  * @param {number} r Number of attempts
  * @returns {Bool} Poisson distribution
- * @see Bin
+ * @see module:Maths~Bin
+ * @see module:Maths~Po
  * @since 1.0
  * @func
  */
-function Bin2Po (n, p, r) { //Binomial to Poisson
+function Bin2Po (n, p, r) {
     return (n > 50 && p < .1)? Po(n * p, r): false;
 }
 
 /**
- * @description Poisson to Normal
+ * @description Poisson to Normal distribution
  * @param {number} l Lambda
  * @param {number} x Number
  * @returns {Bool} Normal distribution
- * @see Po
+ * @see module:Maths~Po
+ * @see module:Maths~Norm
  * @since 1.0
  * @func
  */
-function Po2Norm (l, x) { //Poisson to Normal
-    return (l > 10)? StdNorm(x, Math.sqrt(x)): false;
+function Po2Norm (l, x) {
+    return (l > 10)? StdNorm(l, Math.sqrt(x), x): false;
 }
 
 /**
- * @description Gaussian Error
+ * @description Gaussian Error.<br />
  * Source: {@link http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function}
  * @param {number} z Number
  * @returns {number} Gaussian error
@@ -633,29 +649,30 @@ function erf (z) {
 }
 
 /**
- * @description Normal estimate
+ * @description Normal estimate.<br />
  * Source: {@link http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function}
  * @param {number} n Total number of attempts
  * @param {number} p Success probability
  * @param {number} r Number of attempts
  * @returns {number} Normal estimate
- * @see erf
+ * @see module:Maths~erf
  * @since 1.0
  * @func
  */
-function NormEstimate(n, p, r) {
+function NormEstimate (n, p, r) {
     var u = n * p, o;
     o = Math.pow(u * (1 - p), .5);
     return .5 * (1 + erf((r - u) / (o * Math.pow(2, .5))));
 }
 
 /**
- * @description Clamp values to keep them within a range [a; b]
+ * @description Clamp values to keep them within a range [<code>a</code>; <code>b</code>]
  * @param {number} x Number
  * @param {number} a Lowest bound
  * @param {number} b Highest bound
  * @returns {number} Clamped number
  * @since 1.0
+ * @see module:Maths~revClamp
  * @func
  */
 function clamp (x, a, b) {
@@ -663,12 +680,13 @@ function clamp (x, a, b) {
 }
 
 /**
- * @description Clamp values to keep them within a range ]-Inf; a]U[b; Inf[
+ * @description Clamp values to keep them within a range ]-Inf; a]&Union;[b; Inf[
  * @param {number} x Number
  * @param {number} a Lowest inner bound
  * @param {number} b Highest inner bound
  * @returns {number} Clamped number
  * @since 1.0
+ * @see module:Maths~clamp
  * @func
  */
 function revClamp(x, a, b) {
@@ -680,7 +698,8 @@ function revClamp(x, a, b) {
  * @param {number} x Number
  * @param {number} a Lowest bound
  * @returns {number} Clamped value
- * @see clamp
+ * @see module:Maths~clamp
+ * @see module:Maths~clampTop
  * @since 1.0
  * @func
  */
@@ -693,7 +712,7 @@ function clampBottom (x, a) {
  * @param {number} x Number
  * @param {number} b Highest bound
  * @returns {number} Clamped valued
- * @see clamp
+ * @see module:Maths~clamp
  * @since 1.0
  * @func
  */
@@ -713,7 +732,7 @@ function abcClamp(code) {
 }
 
 /**
- * @description Linear mapping from range [a1; a2] to range [b1; b2]d
+ * @description Linear mapping from range [<code>a1</code>; <code>a2</code>] to range [<code>b1</code>; <code>b2</code>].
  * @param {number} x Number
  * @param {number} a1 Lowest initial bound
  * @param {number} a2 Highest initial bound
@@ -729,9 +748,9 @@ function mapLinear (x, a1, a2, b1, b2) {
 
 /**
  * @description Degree to radiant
- * @param {number} deg Degrees
- * @returns {number} Radiant
- * @see rad2deg
+ * @param {number} deg Degrees (°)
+ * @returns {number} Radiant (rad)
+ * @see module:Maths~rad2deg
  * @since 1.0
  * @func
  */
@@ -741,9 +760,9 @@ function deg2rad (deg) {
 
 /**
  * @description Radiant to degree
- * @param {number} rad Radiant
- * @returns {number} Degree
- * @see deg2rad
+ * @param {number} rad Radiant (rad)
+ * @returns {number} Degree (°)
+ * @see module:Maths~deg2rad
  * @since 1.0
  * @func
  */
@@ -753,9 +772,9 @@ function rad2deg (rad) {
 
 /**
  * @description Celsius to fahrenheit
- * @param {number} cel Celsius
- * @returns {number} Fahrenheit
- * @see fahr2cels
+ * @param {number} cel Celsius (°C)
+ * @returns {number} Fahrenheit (°F)
+ * @see module:Maths~fahr2cels
  * @since 1.0
  * @func
  */
@@ -765,9 +784,9 @@ function cels2fahr (cel) {
 
 /**
  * @description Fahrenheit to celsius
- * @param {number} fahr Fahrenheit
- * @returns {number} Celsius
- * @see fahr2cels
+ * @param {number} fahr Fahrenheit (°F)
+ * @returns {number} Celsius (°C)
+ * @see module:Maths~fahr2cels
  * @since 1.0
  * @func
  */
@@ -776,9 +795,21 @@ function fahr2cels (fahr) {
 }
 
 /**
- * @description Return the prime numbers of arr where non prime numbers that doesn't have divisors in the array are considered prime
+ * @description Check if <code>x</code> is a prime number
+ * @param {number} x Number
+ * @return {boolean}
+ * @since 1.1
+ * @func
+ */
+function isPrime (x) {
+    return primeN(range(1, 1, x)).has(x);
+}
+
+/**
+ * @description Return the prime numbers of <code>arr</code> where non prime numbers that doesn't have divisors in the array are considered prime numbers
  * @param {number[]} arr Array
  * @returns {Array} Prime numbers
+ * @see module:Maths~primeCheck
  * @since 1.0
  * @func
  */
@@ -794,11 +825,11 @@ function primeN (arr) {
 }
 
 /**
- * @description Primeness check of $a toward $b
+ * @description Primeness check of <code>a</code> toward <code>b</code>
  * @param {number} a Number a
  * @param {number} b Number b
  * @returns {boolean} Primeness
- * @see primeN
+ * @see module:Maths~primeN
  * @since 1.0
  * @func
  */
@@ -807,7 +838,7 @@ function primeCheck (a, b) {
 }
 
 /**
- * @description Get the closest whole nth-root of x
+ * @description Get the closest whole <code>n</code>th-root of <code>x</code>
  * @param {number} x Number
  * @param {number} n Nth-root
  * @returns {number} Closest root
@@ -843,9 +874,9 @@ function getClosestRoot (x, n) {
  * @description Simple interest
  * @param {number} po Balance
  * @param {number} i Interest
- * @param {number} t Time (in years)
+ * @param {number} [t=1] Time (in years)
  * @returns {number} Resulting balance
- * @see compoundInterest
+ * @see module:Maths~compoundInterest
  * @since 1.0
  * @func
  */
@@ -857,22 +888,22 @@ function simpleInterest (po, i, t) {
  * @description Compound interest
  * @param {number} po Balance
  * @param {number} i Interest
- * @param {number} t Time (in years)
+ * @param {number} [t=1] Time (in years)
  * @param {number} n Time divisions
  * @returns {number} Resulting balance
- * @see simpleInterest
+ * @see module:Maths~simpleInterest
  * @since 1.0
  * @func
  */
 function compoundInterest (po, i, t, n) {
-    return n > 1? po * Math.pow(1 + i/n, (t || 1) * n): po * Math.pow(1 + i, (t || 1))
+    return n > 1? po * Math.pow(1 + i / n, (t || 1) * n): po * Math.pow(1 + i, (t || 1))
 }
 
 /**
  * @description Everything but not 0
  * @param {number} x Number
  * @returns {!number} Non-null number
- * @see Essence~Essence.eps
+ * @see module:essence~Essence.eps
  * @since 1.0
  * @func
  */
@@ -881,7 +912,7 @@ function non0 (x) {
 }
 
 /**
- * @description Fraction form of n.
+ * @description Fraction form of n.<br />
  * Source: somewhere
  * @param {number} n Number
  * @param {number} prec Precision
@@ -891,15 +922,15 @@ function non0 (x) {
  * @func
  */
 function toFrac (n, prec, up) {
-    var s = String(n), p = s.indexOf(".");
-    if (p == -1) return s;
+    var s = n.toString(), p = s.indexOf(".");
+    if (p === -1) return s;
 
     var i = Math.floor(n) || "", dec = s.substring(p),  m = prec || Math.pow(10, dec.length - 1), num = up? Math.ceil(dec * m): Math.round(dec * m), den = m,
         g = gcd(num, den);
 
-    if (den/g === 1) return String(i + (num / g));
+    if (den / g === 1) return String(i + (num / g));
     if (i) i += " and ";
-    return i + String(num / g) + "/" + String(den / g)
+    return i + String(num / g) + "/" + (den / g)
 }
 
 /**
@@ -927,7 +958,7 @@ function clearNum (n, nDec, usFormat) {
  * @param {number} b Maximum
  * @param {number} [nbDec] Number of decimals
  * @returns {number} Step
- * @see Essence~Array.getIncrement
+ * @see external:Array.getIncrement
  * @since 1.0
  * @func
  */
@@ -951,7 +982,7 @@ function quadraticSolver (a, b, c, nDec) {
 }
 
 /**
- * @description Solve equations with a given formula and the result (e.g: x + y + x = res) and the range [a, b]
+ * @description Solve equations with a given formula and the result (e.g: x + y + x = res) and the range [<code>a</code>, <code>b</code>]
  * @param {string} formula Formula
  * @param {Array} res Result(s)
  * @param {number} a Lowest bound
@@ -1042,22 +1073,22 @@ function manuEqSolver (eq, max, dim, r) {
  * @since 1.0
  * @func
  */
-function getNumFromStr (x) { //Remove the text from the string to keep the numbers
-    return parseFloat(x.replace(/[A-Za-z_ ]+/g, ""))
+function getNumFromStr (x) {
+    return isNon(x)? NaN: parseFloat(x.replace(/[A-Za-z_ ]+/g, ""))
 }
 
 /**
- * @description X unit to y px
+ * @description <code>x</code> unit to <code>y</code> px.<br />
  * Reference/help: {@link http://www.endmemo.com/sconvert/centimeterpixel.php}
  * @param {string} x Number with a unit
  * @returns {number} Pixels
- * @see fromPixel
+ * @see module:Maths~fromPixel
  * @since 1.0
  * @func
  */
 function toPixel (x) {
     var m = 1;
-    switch (x.substring(String(getNumFromStr(x)).length, x.length)) {
+    switch (x.substring(String(getNumFromStr(x)).length, x.length).remove(" ")) {
         case "em":
             m = 16;
             break;
@@ -1119,7 +1150,7 @@ function toPixel (x) {
  * @param {number} x Pixels
  * @param {string} unit Unit
  * @returns {string} Conversion
- * @see toPixel
+ * @see module:Maths~toPixel
  * @since 1.0
  * @func
  */
@@ -1179,20 +1210,266 @@ function fromPixel (x, unit) {
             break;
         default: break;
     }
-    return (x * m) + unit
+    return x * m + unit
 }
 
 /**
  * @description Unit converter
  * @param {string} x Number with unit
  * @param {string} unit Final unit
- * @returns {string} Result
- * @see fromPixel toPixel
+ * @returns {string} <code>x</code> &rArr; <code>y</code> <code>unit</code>
+ * @see module:Maths~fromPixel
+ * @see module:Maths~toPixel
  * @since 1.0
  * @func
  */
-function convUnit (x, unit) { //x => y unit
-    return fromPixel(toPixel(x), unit); //demux(. * , px)->mux(px, . * )
+function convUnit (x, unit) {
+    return fromPixel(toPixel(x), unit); //demux(.* , px)->mux(px, .* )
+}
+
+/**
+ * @description X size to y bits
+ * @param {string} x Number with a size unit
+ * @returns {number} Bits
+ * @see module:Maths~fromBit
+ * @since 1.1
+ * @func
+ */
+function toBit (x) {
+    var m = 1;
+    switch (x.substring(String(getNumFromStr(x)).length, x.length).remove(" ")) {
+        case "Kb":
+            m = 1e-3;
+            break;
+        case "Mb":
+            m = 1e-6;
+            break;
+        case "Gb":
+            m = 1e-9;
+            break;
+        case "Tb":
+            m = 1e-12;
+            break;
+        case "Pb":
+            m = 1e-15;
+            break;
+        case "Eb":
+            m = 1e-18;
+            break;
+        case "Zb":
+            m = 1e-21;
+            break;
+        case "Yb":
+            m = 1e-24;
+            break;
+        case "o":
+            m = 8;
+            break;
+        case "Ko":
+            m = 8e-3;
+            break;
+        case "Mo":
+            m = 8e-6;
+            break;
+        case "Go":
+            m = 8e-9;
+            break;
+        case "To":
+            m = 8e-12;
+            break;
+        case "Po":
+            m = 8e-15;
+            break;
+        case "Eo":
+            m = 8e-18;
+            break;
+        case "Zo":
+            m = 8e-21;
+            break;
+        case "Yo":
+            m = 8e-24;
+            break;
+        case "Kio":
+            m = 8 * Math.pow(2, -10);
+            break;
+        case "Mio":
+            m = 8* Math.pow(2, -20);
+            break;
+        case "Gio":
+            m = 8 * Math.pow(2, -30);
+            break;
+        case "Tio":
+            m = 8 * Math.pow(2, -40);
+            break;
+        case "Pio":
+            m = 8 * Math.pow(2, -50);
+            break;
+        case "Eio":
+            m = 8 * Math.pow(2, -60);
+            break;
+        case "Zio":
+            m = 8 * Math.pow(2, -70);
+            break;
+        case "Yio":
+            m = 8 * Math.pow(2, -80);
+            break;
+        case "Kib":
+            m = Math.pow(2, -10);
+            break;
+        case "Mib":
+            m = Math.pow(2, -20);
+            break;
+        case "Gib":
+            m = Math.pow(2, -30);
+            break;
+        case "Tib":
+            m = Math.pow(2, -40);
+            break;
+        case "Pib":
+            m = Math.pow(2, -50);
+            break;
+        case "Eib":
+            m = Math.pow(2, -60);
+            break;
+        case "Zib":
+            m = Math.pow(2, -70);
+            break;
+        case "Yib":
+            m = Math.pow(2, -80);
+            break;
+        default: m = 1;
+    }
+    return getNumFromStr(x) * m
+}
+
+/**
+ * @description X bit to y unit
+ * @param {number} x Bits
+ * @param {string} unit Unit
+ * @returns {string} Conversion
+ * @see module:Maths~toBit
+ * @since 1.1
+ * @func
+ */
+function fromBit (x, unit) {
+    var m = 1;
+    switch (unit) {
+        case "Kb":
+            m = 1e3;
+            break;
+        case "Mb":
+            m = 1e6;
+            break;
+        case "Gb":
+            m = 1e9;
+            break;
+        case "Tb":
+            m = 1e12;
+            break;
+        case "Pb":
+            m = 1e15;
+            break;
+        case "Eb":
+            m = 1e18;
+            break;
+        case "Zb":
+            m = 1e21;
+            break;
+        case "Yb":
+            m = 1e24;
+            break;
+        case "o":
+            m = 1 / 8;
+            break;
+        case "Ko":
+            m = 1e3 / 8;
+            break;
+        case "Mo":
+            m = 1e6 / 8;
+            break;
+        case "Go":
+            m = 1e9 / 8;
+            break;
+        case "To":
+            m = 1e12 / 8;
+            break;
+        case "Po":
+            m = 1e15 / 8;
+            break;
+        case "Eo":
+            m = 1e18 / 8;
+            break;
+        case "Zo":
+            m = 1e21 / 8;
+            break;
+        case "Yo":
+            m = 1e24 / 8;
+            break;
+        case "Kio":
+            m = Math.pow(2, 10) / 8;
+            break;
+        case "Mio":
+            m = Math.pow(2, 20) / 8;
+            break;
+        case "Gio":
+            m = Math.pow(2, 30) / 8;
+            break;
+        case "Tio":
+            m = Math.pow(2, 40) / 8;
+            break;
+        case "Pio":
+            m = Math.pow(2, 50) / 8;
+            break;
+        case "Eio":
+            m = Math.pow(2, 60) / 8;
+            break;
+        case "Zio":
+            m = Math.pow(2, 70) / 8;
+            break;
+        case "Yio":
+            m = Math.pow(2, 80) / 8;
+            break;
+        case "Kib":
+            m = Math.pow(2, 10);
+            break;
+        case "Mib":
+            m = Math.pow(2, 20);
+            break;
+        case "Gib":
+            m = Math.pow(2, 30);
+            break;
+        case "Tib":
+            m = Math.pow(2, 40);
+            break;
+        case "Pib":
+            m = Math.pow(2, 50);
+            break;
+        case "Eib":
+            m = Math.pow(2, 60);
+            break;
+        case "Zib":
+            m = Math.pow(2, 70);
+            break;
+        case "Yib":
+            m = Math.pow(2, 80);
+            break;
+        default: m = 1;
+    }
+    return x * m + unit
+}
+
+/**
+ * @description Size converter
+ * @param {string} x Size with unit
+ * @param {string} unit Final unit
+ * @returns {string} <code>x</code> &rArr; <code>y</code> <code>unit</code>
+ * @see module:Maths~fromBit
+ * @see module:Maths~toBit
+ * @since 1.0
+ * @func
+ */
+function convSize (x, unit) {
+    return fromBit(toBit(x), unit); //demux(.* , bit)->mux(px, .* )
 }
 
 /**
@@ -1221,17 +1498,17 @@ function range (min, inc, max, nbDec) {
 }
 
 /**
- * @description Same as range() but to the base $b
+ * @description Same as range() but to the base <code>b</code>
  * @param {number} [min=0] Minimum
  * @param {number} [inc=1] Increment
  * @param {number} [max=100] Maximum
  * @param {number} [b=2] Base
  * @returns {Array} Range
- * @see range
+ * @see module:Maths~range
  * @since 1.0
  * @func
  */
-function range2base (min, inc, max, b) { //Same as range(...) but to the base b
+function range2base (min, inc, max, b) {
     var val = [], n = 0;
     if (inc > 0) {
         for (var i = min; i <= max; i += inc) val[n++] = conv(i, 10, b);
@@ -1248,21 +1525,12 @@ function range2base (min, inc, max, b) { //Same as range(...) but to the base b
  * @param {number} [max=100] Maximum
  * @param {boolean} [noRepeat=false] No repeated numbers
  * @returns {Array} Mixed range
- * @todo fix the error where undefined values are in the resulting array when min=1
  * @since 1.0
  * @func
  */
 function mixedRange (min, inc, max, noRepeat) {
-    var val = [], available = range(min, inc, max);
-    if (noRepeat) {
-        while (available.length > 0) {
-            val.push(available.rand());
-            available = available.remove(val.last());
-        }
-    } else {
-        for(var i = min; i <= max; i++) val[i] = available.rand();
-    }
-    return val.remove(undefined)
+    var r = range(min, inc, max);
+    return noRepeat? r.shuffle(): r.rand(r.length);
 }
 
 /**
@@ -1285,7 +1553,7 @@ function fisherYatesShuffle (obj) { //Inspired by https://Github.com/duereg/js-a
  * @param {object} v1 Vector #1
  * @param {object} v2 Vector #2
  * @returns {string} Vector product
- * @see scalarProd
+ * @see module:Math~scalarProd
  * @since 1.0
  * @func
  */
@@ -1304,7 +1572,7 @@ function vectorProd (v1, v2) { //V1 x v2
  * @description Convert  a vector to a point
  * @param {object} v Vector
  * @returns {Pt} Point
- * @see Pt
+ * @see module:UI~Pt
  * @since 1.0
  * @func
  */
@@ -1313,10 +1581,10 @@ function vector2Point (v) { //Get the conversion of the vector to a point
 }
 
 /**
- * @description Convert a vector to a point form (R = xi + yj + zk->(x, y, z))
+ * @description Convert a vector to a point form (R = xi + yj + zk&rarr;(x, y, z))
  * @param {object} r Vector
  * @returns {string} Point form
- * @see vector2Point
+ * @see module:Maths~vector2Point
  * @since 1.0
  * @func
  */
@@ -1329,7 +1597,7 @@ function vector2PointForm (r) {
  * @param {object} v1 Vector #1
  * @param {object} v2 Vector #2
  * @returns {number} Scalar product
- * @see vectorProd
+ * @see module:Maths~vectorProd
  * @since 1.0
  * @func
  */
@@ -1338,12 +1606,12 @@ function scalarProd (v1, v2) {
 }
 
 /**
- * @description Union
+ * @description Union (&Union;)
  * @param {Array} a Array a
  * @param {Array} b Array b
  * @param {Array} [c] Array c
  * @param {boolean} [toSort=false] Sort the elements
- * @returns {Array} a union b (union c)
+ * @returns {Array} a &Union; b (&Union; c)
  * @since 1.0
  * @func
  */
@@ -1352,12 +1620,12 @@ function union (a, b, c, toSort) {
 }
 
 /**
- * @description Intersection
+ * @description Intersection (&Intersection;)
  * @param {Array} a Array a
  * @param {Array} b Array b
  * @param {Array} [c] Array c
  * @param {boolean} [toSort=false] Sort the elements
- * @returns {Array} a intersection b (intersection c)
+ * @returns {Array} a &Intersection; b (&Intersection; c)
  * @since 1.0
  * @func
  */
@@ -1377,12 +1645,12 @@ function intersection (a, b, c, toSort) {
 }
 
 /**
- * @description Complement
+ * @description Complement (\\)
  * @param {Array} a Array a
  * @param {Array} b Array b
  * @param {Array} [c] Array c
  * @param {boolean} [toSort=false] Sort the elements
- * @returns {Array} a\b(\c) => a xor b (xor c)
+ * @returns {Array} a\b(\c) &rArr; a xor b (xor c)
  * @since 1.0
  * @func
  */
@@ -1407,7 +1675,7 @@ function complement (a, b, c, toSort) {
  * @param {Array} b Array b
  * @param {Array} [c] Array c
  * @param {boolean} [toSort=false] Sort the elements
- * @returns {Array} a union b - a intersection b => a only & b only
+ * @returns {Array} a &Union; b - a &Intersection; b &rArr; a only & b only
  * @since 1.0
  * @func
  */
@@ -1440,7 +1708,7 @@ function symDif (a, b, c, toSort) {
  * @description Bit string of a set in relation to an other
  * @param {Array} a Array a
  * @param {Array} b Array b
- * @returns {Array} Bit string
+ * @returns {Array} Bit string B<sub>a</sub> of <i>b</i>
  * @since 1.0
  * @func
  */
@@ -1453,7 +1721,7 @@ function bitStr (a, b) {
 }
 
 /**
- * @description Is a equivalent to b. a <=> b
+ * @description Is a equivalent to b, a &hArr; b
  * @param {number} a Number a
  * @param {number} b Number b
  * @return {boolean} Equivalence
@@ -1465,11 +1733,11 @@ function equivalent (a, b) {
 }
 
 /**
- * @description Is a approximately equal to b. a ~= b
+ * @description Is a approximately equal to b, a &approx; b
  * @param {number} a Number a
  * @param {number} b Number b
  * @param {number} [precision=Essence.eps] Precision
- * @return {boolean} Equality approximative
+ * @return {boolean} Approximative equality
  * @since 1.1
  * @func
  */
@@ -1496,7 +1764,7 @@ function P (arr, prop) {
 
 /**
  * @description Check if the proposition holds for all elements of the array.
- * @summary Universal quantification of P(arr)
+ * @summary Universal quantification of P(arr): &forall;P(arr)
  * @param {number} arr Array
  * @param {string} prop Proposition
  * @return {boolean} Quantification result
@@ -1514,7 +1782,7 @@ function forAll (arr, prop) {
 
 /**
  * @description Check if the proposition holds for some elements of the array.
- * @summary Existensial quantification of P(arr)
+ * @summary Existensial quantification of P(arr): &exist;P(arr)
  * @param {number} arr Array
  * @param {string} prop Proposition
  * @return {boolean} Quantification result
@@ -1536,7 +1804,7 @@ function forSome (arr, prop) {
  * @param {number} arr Array
  * @param {string} prop Proposition
  * @return {boolean} Quantification result
- * @see P
+ * @see module:Maths~P
  * @since 1.1
  * @func
  */
@@ -1566,7 +1834,7 @@ function readCoord (str, isInt) {
  * @since 1.0
  * @func
  */
-function modRange(x, a, b) {
+function modRange (x, a, b) {
     var r = x % (b + 1);
     return r + (r < a)? a + r: 0;
 }
@@ -1578,14 +1846,14 @@ function modRange(x, a, b) {
  * @since 1.0
  * @func
  */
-function abcModulus(code) {
+function abcModulus (code) {
     var m = code % 123;
     if (90 < m && m < 97) return m + abcModulus(Math.abs(getClosest(m, [90, 97]) - m));
     return m + ((m < 65 && m != 32)? 65 + m: 0);
 }
 
 /**
- * @description Brute force through R to find an x such that min <= x <= max and the condition is true for x
+ * @description Brute force through &real; to find an x such that <code>min</code> &le; x &le; <code>max</code> and the condition is true for x
  * @param {number} min Minimum
  * @param {string} cond Condition
  * @param {number} max Maximum
@@ -1593,15 +1861,15 @@ function abcModulus(code) {
  * @since 1.0
  * @func
  */
-function bruteForceNum(min, cond, max) { //Brute force through R to find a x such that min <= x <= max and cond is true for x
-    for (var x = min; x < max; x++) {
-        if(eval(cond.replace(RegExpify("x"), x+""))) return x;
+function bruteForceNum (min, cond, max) { //Brute force through R to find a x such that min <= x <= max and cond is true for x
+    for (var x = min; x <= max; x++) {
+        if(eval(cond.replace(RegExpify("x"), x + ""))) return x;
     }
     return false;
 }
 
 /**
- * @description Is $a closer to $x than $b
+ * @description Is <code>a</code> closer to <code>x</code> than <code>b</code>
  * @param {number} x Number x
  * @param {number} a Number a
  * @param {number} b Number b
@@ -1614,7 +1882,7 @@ function isCloser (x, a, b) {
 }
 
 /**
- * @description Get the closest option from the options to $x
+ * @description Get the closest option from the options to <code>x</code>
  * @param {number} x Number
  * @param {number[]} opt Options
  * @returns {number} Closest number
@@ -1663,13 +1931,13 @@ function Equation (formula) {
 }
 
 /**
- * @description Generate an array of all possible binary numbers with x digits or less
+ * @description Generate an array of all possible binary numbers with <code>x</code> digits or less
  * @param {number} x Number of digits
  * @returns {Array} Array of possible binary numbers
  * @since 1.0
  * @func
  */
-function binaryCases(x) {
+function binaryCases (x) {
     var end = parseInt("1".repeat(x)), res = [], i = 0;
     do {
         res.push(conv(i++, 10, 2));
@@ -1684,7 +1952,7 @@ function binaryCases(x) {
  * @since 1.0
  * @func
  */
-function truthTable(exp) { //Get the truth table of an expression
+function truthTable (exp) { //Get the truth table of an expression
     // /(([a-z])(\+|\x2a))+/g
     var ascii = asciiTable("a-z"), vars = [], rows, res = [];
     for (var i = 0; i < ascii.length; i++) {
@@ -1710,7 +1978,7 @@ function truthTable(exp) { //Get the truth table of an expression
  * @todo Work on it
  * @func
  */
-function getDNF(exp) {
+function getDNF (exp) {
     var tt = truthTable(exp), dnf = "";
     //code here
     return dnf;
@@ -1741,14 +2009,13 @@ function getCNF(exp) {
  * @func
  */
 function timeCI (avg, n, sd) {
-    //avg needs to be the sample need bar(x) with the sum^2 thingy
-    return [avg + InvNorm(n / 200)/*normsinv(n/200)*/ * sd/Math.sqrt(n), avg - InvNorm(n / 200)/*normsinv(n/200)*/ * sd/Math.sqrt(n)];
+    return [avg + InvNorm(n / 200) * sd / Math.sqrt(n), avg - InvNorm(n / 200) * sd / Math.sqrt(n)];
 }
 
 /**
  * @description Sample mean of a population/array
  * @param {number[]} arr Population
- * @return {number} Sample mean
+ * @return {number} Sample mean <span style='text-decoration: overline'>x</span>
  */
 function sampleMean (arr) { //bar(x)
     return Math.sqrt(sumPow2(arr) / arr.length - arr.mean());
@@ -1756,28 +2023,26 @@ function sampleMean (arr) { //bar(x)
 
 /**
  * @description Confidence interval with stats known
- * @param {number} avg Average/mean
- * @param {number} n Number of data
+ * @param {Nums} avg Sample average/mean or population (array of numbers)
  * @param {number} [c=.95] Confidence (eg.: 95%)
- * @param {number} sd Standard Deviation
+ * @param {number} [n] Number of data
+ * @param {number} [sd] Standard Deviation
  * @return {number[]} Confidence interval
- * @todo Make $sd optional after having a t-Distribution table calculator
+ * @todo Make <code>sd</code> optional after having a t-Distribution table calculator
  * @since 1.1
  * @func
+ * @example
+ * //If the first parameter is a number (hence the sample mean), than the rest of the parameters are necessary
+ * var ci = confidenceInterval(6.34, .75, 5, .74);
+ * //Otherwise if the first parameter is an array (of numbers), than the rest of the parameters are useless (except the second one)
+ * ci = confidenceInterval([5.7, 6.63, 6.57, 7.7, 7.51], .75);
  */
-function confidenceInterval (avg, n, c, sd) {
-    //avg needs to be the sample need bar(x) with the sum^2 thingy
+function confidenceInterval (avg, c, n, sd) {
     var z = InvNorm(c || .95); //sd? InvNorm(c): TDistrib((1 - c) / 2, n - 1);
+    if (isType(avg, "Array")) {
+        sd = avg.stddev();
+        n = avg.length;
+        avg = sampleMean(avg);
+    }
     return [avg - z * sd / Math.sqrt(n), avg + z * sd / Math.sqrt(n)];
-}
-
-/**
- * @description Confidence interval with data known
- * @param {number[]} data Data
- * @return {number[]} Confidence interval
- * @since 1.1
- * @func
- */
-function CI (data) {
-    return timeCI(data.mean(), data.length, data.stddev());
 }

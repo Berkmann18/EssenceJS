@@ -25,7 +25,7 @@ var Web = new Module("Web", "Web stuff", ["DataStruct", "Misc"], 1, function () 
  * @description Gather the cookie named $c_name
  * @param {string} c_name Cookie name
  * @returns {undefined|string} Cookie
- * @see setCookie
+ * @see module:Web~setCookie
  * @since 1.0
  * @func
  */
@@ -45,7 +45,7 @@ function getCookie (c_name) {
  * @param {*} value Cookie value
  * @param {number} exdays Expiration days
  * @returns {undefined}
- * @see getCookie
+ * @see module:Web~getCookie
  * @since 1.0
  * @func
  */
@@ -104,7 +104,7 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
         localStorage[this.name] = JSON.stringify(this.val)
     };
     this.html = complexTable(this.name, this.headerRow, this.content, this.headerCol, name);
-    this.css = "<style>*{font-family:Consolas,Segoe UI,Tahoma;}table{background: #000;}table,td,th{border:1px solid #000;color:#000;background:#fff;}tr:nth-child(even) td,tr:nth-child(even) th{background:#eee;}</style>";
+    this.css = "<style>*{font-family:Consolas,Segoe UI,Tahoma,sans-serif;}table{background: #000;}table,td,th{border:1px solid #000;color:#000;background:#fff;}tr:nth-child(even) td,tr:nth-child(even) th{background:#eee;}</style>";
     this.disp = function (elmId) {
         $e(elmId? "#" + elmId: "body").write(this.html + this.css, true);
         this.setStorage();
@@ -149,7 +149,7 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
  * @constructor
  * @property {string} DB.name Name
  * @property {NumberLike[]} DB.rows Row headers
- * @property {NumberLike[]} DB.headers Column headers
+ * @property {NumberLike[]} DB.headers Column headers (which should use the first column for indexes/ranks)
  * @property {Array} DB.val Content of the database
  * @property {Code} DB.html HTML code
  * @property {string} DB.css CSS code
@@ -162,8 +162,8 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
  * @property {function(*): number} DB.find Look for an item
  * @property {function(): Array} DB.see Get a viewable copy of the database
  * @property {function(?string)} DB.view Display the database
- * @property {function(Array)} database.add Add a cell to the database
- * @property {Function} DB.init Initialise the database
+ * @property {function(Array)} database.add Add a cell (without the index/rank) to the database
+ * @property {function(boolean)} DB.init Initialise the database
  * @property {function(): string} database.toString String representation
  */
 function DB (name, headers, rows, headerRows) {
@@ -176,7 +176,7 @@ function DB (name, headers, rows, headerRows) {
     //this.events = Tablify(["build", "fill", "save", "update", "set", "get", "find", "see", "view", "add", "init"], {data: null, name: "", timeStamp: new Date().getTime()});
     this.onBuild = this.onFill = this.onSave = this.onUpdate = this.onSet = this.onGet = this.onFind = this.onSee = this.onView = this.onAdd = this.onInit = $f;
     this.build = function () {
-        this.html = isNon(this.rows)? complexTable("", this.val.line(), this.val.block(1), this.head, this.name, true, this.css): complexTable("", this.rows, this.val, this.head, this.name, true, this.css);
+        this.html = isNon(this.rows)? colTable("", this.head, this.val, this.name, true, this.css)/*complexTable("", this.val.line(), this.val.block(1), this.head, this.name, true, this.css)*/: complexTable("", this.rows, this.val, this.head, this.name, true, this.css);
         this.onBuild(this.html);
     };
     this.fill = function (len) {
@@ -204,7 +204,7 @@ function DB (name, headers, rows, headerRows) {
         this.onUpdate(this);
     };
     this.set = function (nval, i, j) {
-        if ( j === -1) {
+        if (j === -1) {
             for (var k = 0; k < nval.length; k++) this.val[i || 0][k] = nval[k];
         } else this.val[i || 0][j || 0] = nval || null;
         this.onSet(nval, [i, j]);
@@ -219,10 +219,11 @@ function DB (name, headers, rows, headerRows) {
         return p;
     };
     this.see = function () {
-        this.onSee(copy(this.val).prepend(copy(this.head).reverse()));
-        return copy(this.val).prepend(copy(this.head).reverse());
+        this.onSee(Copy(this.val).prepend(Copy(this.head).reverse()));
+        return isNon(this.rows)? Copy(this.val).prepend([Copy(this.head)]): Copy(this.val).prepend(Copy(this.head).reverse());
     };
     this.view = function (id) {
+        this.build();
         $e(id? "#" + id: "body").write(this.html + this.css, true);
         this.onView($e(id? "#" + id: "body").val(true), id);
     };
@@ -230,10 +231,10 @@ function DB (name, headers, rows, headerRows) {
         this.val.append(vals.unshift(parseInt(this.val.last()[0]) + 1));
         this.onAdd(vals, this.val);
     };
-    this.init = function () {
+    this.init = function (seeTable) {
         this.build();
         this.update();
-        console.table(this.see());
+        if (seeTable) console.table(this.see());
         this.onInit(this);
     };
 
@@ -303,7 +304,7 @@ function process (name, auth, summup, ctt) {
  * @param {number} [ver=1.0] Version
  * @param {number} [mxsz=2⁶] Maximum size of the server's database
  * @returns {server} Server
- * @see DB
+ * @see module:Web~DB
  * @since 1.0
  * @throws {Error} Invalid server type
  * @property {string} server.name Name
@@ -431,27 +432,47 @@ function server (name, admin, type, ver, mxsz) {
 }
 
 /**
+ * @description Data to temporally place in a semi-global scope
+ * @type {*}
+ * @default
+ * @since 1.1
+ * @external module:essence~$G
+ * @memberof external:essence~$G
+ */
+$G["data"] = null;
+/**
+ * @description WiFi speed(s)
+ * @type {NumberLike[]}
+ * @default
+ * @since 1.1
+ * @external module:essence~$G
+ * @memberof external:essence~$G
+ */
+$G["wifi"] = [];
+
+/**
  * @description Launch the verification of the connection
  * @param {string} id ID of the element to be used
  * @param {string} [src="../img/random2000x2000.jpg"] Source of the image to use for the test
- * @param {number} [sz=61784] Size of the image (in kb)
+ * @param {number} [sz=610320] Size of the image (in Kb)
  * @param {number} [delay=100] Delay (in ms)
  * @param {number} [maxDelay=2e4] Maximum delay
  * @returns {undefined}
- * @see CETimer
+ * @see module:Web~CETimer
  * @since 1.0
  * @func
  */
 function CECheck (id, src, sz, delay, maxDelay) {
     window.defaultStatus = "Evalue the connexion and see the downloading speed";
     if (!src) src = "../img/random2000x2000.jpg";
-    if (!sz) sz = 61784; //7.723kB -> kb
+    if (!sz) sz = 60320; //7.54MB -> Kb
     if (!delay) delay = 100; //ms
     if (!maxDelay) maxDelay = 2e4;
     var img = new Image();
     $G["t1"] = new Date().getTime();
     $G["t2"] = 0;
     img.src = src + "?t1=" + $G["t1"]; //To prevent the browser to load a cached version of the image
+    $G["data"] = img;
 
     $e("#" + id).write("Verification in progress...");
     setTimeout("CETimer('" + id + "', '" + img + "', 0, " + delay + ", " + maxDelay + ", " + sz + ")", delay); //Uncaught SyntaxError: Unexpected identifier
@@ -460,25 +481,28 @@ function CECheck (id, src, sz, delay, maxDelay) {
 /**
  * @description Connection evaluation timer
  * @param {string} id ID of the element to be used
- * @param {string} img Image to use for the test
+ * @param {HTMLImageElement} img Image to use for the test
  * @param {number} nb Number of attempts done
  * @param {number} [delay=100] Delay (in ms)
  * @param {number} [maxDelay=2e4] Maximum delay
  * @param {number} size Size of the image (in kb)
  * @returns {undefined}
- * @see CECheck
+ * @see module:Web~CECheck
  * @since 1.0
  * @func
  */
 function CETimer (id, img, nb, delay, maxDelay, size) {
     nb++;
+    if (!isType(img, "HTMLImageElement")) img = $G["data"]; //Assuming CECheck() was called before
     $e("#" + id).write("Verification in progress...");
-    if (nb * delay >= maxDelay) $e("#" + id).write(evalDownload(0)); //End of the maximimun delay
+    if (nb * delay >= maxDelay) $e("#" + id).write(evalDownload(0)); //End of the maximum delay
     else {
         if (img.complete) {
             $G["t2"] = new Date().getTime();
+            $G["wifi"].push((size / ($G["t2"] - $G["t1"])).toNDec(3) + "kbps");
             $e("#" + id).write(evalDownload(size / ($G["t2"] - $G["t1"])));
             Essence.time("Connexion: " + (size / ($G["t2"] - $G["t1"]).toNDigits(3) + " kbps"));
+            window.defaultStatus = "normal";
         } else setTimeout("CETimer(" + id + ", " + img + ", " + nb + ", " + delay + ", " + maxDelay + ", " + size + ")", delay);
     }
 }
@@ -564,6 +588,120 @@ function evalPing (ms) {
 }
 
 /**
+ * @description Evaluate the gigue (for either upload or download speed)
+ * @param {NumberLike[]} [vals=$G["wifi"]] WiFi test's values
+ * @func
+ * @since 1.1
+ * @return {string} Gigue
+ */
+function evalGigue (vals) {
+    var sd = (vals || $G["wifi"]).map(function (v) {
+        return getNumFromStr(v)
+    }).stddev(), res;
+
+    if (sd >= 0 && sd < 5) res = "Synchronized connexion";
+    else if (sd >= 5 && sd < 10) res = "Slightly synchronized connexion";
+    else if (sd >= 10) res = "Asynchronized connexion";
+    return res + " (" + sd + ")"
+}
+
+/**
+ * @description WiFi tester.
+ * @global
+ * @since 1.1
+ * @type {{down: number, up: number, ping: number, gigues: number[], type: string, vals: Array, imgs: Object[], elm: Element, test: WifiTest.test, testUp: WifiTest.testUp, testDown: WifiTest.testDown, testPing: WifiTest.testPing}}
+ * @this WifiTest
+ * @property {number} WifiTest.down Download speed
+ * @property {number} WifiTest.up Upload speed
+ * @property {number} WifiTest.ping Ping
+ * @property {number[]} WifiTest.gigue Gigue for respectively uploads and downloads
+ * @property {string} WifiTest.type WiFi type
+ * @property {NumberLike[]} WifiTest.vals Buffered wifi test values
+ * @property {Object[]} WifiTest.imgs Images for the tests
+ * @property {Element} WifiTest.elm HTML element for outputs
+ * @property {function(): string} WifiTest.test Global test
+ * @property {function(): string} WifiTest.testUp Upload speed test
+ * @property {function(): string} WifiTest.testDown Download speed test
+ * @property {function(): string} WifiTest.testPing Ping test
+ */
+var WifiTest = {
+    down: 0,
+    up: 0,
+    ping: 0,
+    gigues: [0, 0], //Up, Down
+    type: "",
+    vals: [],
+    imgs: [{ //images with the name "randomSxS.jpg"
+        dim: 350, //px
+        size: 1912 //239KB -> Kb
+    }, {
+        dim: 500,
+        size: 3944 //493KB
+    }, {
+        dim: 750,
+        size: 8480 //1.06MB
+    }, {
+        dim: 1e3,
+        size: 15120 //1.89MB
+    }, {
+        dim: 1500,
+        size: 34080 //4.26MB
+    }, {
+        dim: 2e3,
+        size: 60320 //7.54MB
+    }, {
+        dim: 2500,
+        size: 94400 //11.8MB
+    }, {
+        dim: 3e3,
+        size: 135200 //16.9MB
+    }, {
+        dim: 3500,
+        size: 184800 //23.1MB
+    }, {
+        dim: 4e3,
+        size: 240800 //30.1MB
+    }],
+    elm: $e("#wifi", true) || $e("#wifitest", true) || $e("#test", true),
+    test: function () {
+        this.testUp();
+        this.testDown();
+        this.testPing();
+        return "Ping/Up/Down/Gigue up/Gigue down: " + [this.ping, this.up, this.down, this.gigues[0], this.gigues[1]].join("/");
+    },
+    testUp: function () {
+        //...
+        this.vals = $G["wifi"];
+        $G["wifi"] = [];
+        //this.up = ...
+        this.type = evalUpload(this.up).split(" ")[0];
+        this.gigues[0] = parseFloat(evalGigue(this.vals).split(" ")[0]);
+        return this.up + " Ko/s";
+    },
+    testDown: function () {
+        var iState = this.elm.val();
+        for (var i = 0; i < this.imgs;) {
+            CECheck(this.elm.node.id, "../img/random" + this.imgs[i].dim + "x" + this.imgs[i].dim + ".jpg", this.imgs[i].size);
+            while (this.elm.val() === iState || window.defaultStatus != "normal") {}
+            if (this.elm.val() != iState || window.defaultStatus === "normal") i++;
+        }
+        this.vals = $G["wifi"];
+        $G["wifi"] = [];
+        this.down = (this.vals.map(function (x) {
+            return getNumFromStr(x);
+        }).mean(2) / 8).toNDec(2);
+        this.type = evalDownload(this.down).split(" ")[0];
+        this.gigues[1] = parseFloat(evalGigue(this.vals).split(" ")[0]);
+        return this.down + " Ko/s";
+    },
+    testPing: function () {
+        //...
+        this.type = evalPing(this.ping).split(" ")[0];
+        return this.ping + "ms";
+    }
+};
+
+/**
  * @description Getting the URL parameters just like in PHP.
  * @param {Str} p Parameter(s)
  * @param {function(...string)} action Action to be done with the value(s) of the parameter(s)
@@ -619,7 +757,7 @@ function parseURL (p, action) { //Doing some PHP without PHP :) !!
  * @constructor
  * @this {WebPage}
  * @returns {WebPage} Web page
- * @see WebApp
+ * @see module:Web~WebApp
  * @since 1.0
  * @property {string} WebPage.title Title
  * @property {string} WebPage.subtitle Subtitle
@@ -723,7 +861,7 @@ function WebPage (title, name, path, author, ver, stct, type, subtitle) {
  * @returns {WebApp} Web app
  * @this {WebApp}
  * @constructor
- * @see WebPage
+ * @see module:Web~WebPage
  * @since 1.0
  * @property {string} WebApp.name Name of the app
  * @property {string} WebPage.path Path of the file
@@ -757,7 +895,7 @@ function WebApp (name, path, author, ver, stct) {
  * @param {Toolbar} [tb=new Toolbar()] Toolbar
  * @this {Editor}
  * @returns {Editor} Editor
- * @todo Fill up the synthax highlighting list
+ * @todo Fill up the syntax highlighting list
  * @constructor
  * @since 1.0
  * @property {string} Editor.id ID of the element
@@ -784,8 +922,9 @@ function WebApp (name, path, author, ver, stct) {
  * @property {Function} Editor.load Load a file into the editor
  * @property {Function} Editor.generate Save the parsed code
  * @property {Function} Editor.view See the result
- * @property {function((Code), string): (Code)} Editor.highlightSynthax Highlight the synthax
+ * @property {function((Code), string): (Code)} Editor.highlightSyntax Highlight the syntax
  * @property {function(): string} Editor.toString String representation
+ * @see module:Web~Toolbar
  */
 function Editor (id, lang, prev, parser, tb) {
     this.id = id || "#editor";
@@ -852,13 +991,13 @@ function Editor (id, lang, prev, parser, tb) {
         $e(this.id).write(getFileContent(file));
     };
     this.generate = function () { //Save the parsed code
-        if (this.previewer) /<\?php([\s\S] * ?)\?>/.test($e(this.id).val())? save($e(this.previewer.id).val(true), "script" + getTimestamp() + ".php", "php"): save($e(this.previewer.id).val(true), "script" + getTimestamp() + ".html", "html");
-        else /<\?php([\s\S] * ?)\?>$/g.test($e(this.id).val())? save($e("#preview").val(true), "script" + getTimestamp() + ".php", "php"): save($e(prev.id).val(true), "script" + getTimestamp() + ".html", "html")
+        if (this.previewer) /<\?php([\s\S]*?)\?>/.test($e(this.id).val())? save($e(this.previewer.id).val(true), "script" + getTimestamp() + ".php", "php"): save($e(this.previewer.id).val(true), "script" + getTimestamp() + ".html", "html");
+        else /<\?php([\s\S]*?)\?>$/g.test($e(this.id).val())? save($e("#preview").val(true), "script" + getTimestamp() + ".php", "php"): save($e(prev.id).val(true), "script" + getTimestamp() + ".html", "html")
     };
     this.view = function () {
         this.previewer.run($e(this.id).val(), true)
     };
-    this.highlightSynthax = function (code, lang) { //Highlight in the corresponding language and return an HTML result
+    this.highlightSyntax = function (code, lang) { //Highlight in the corresponding language and return an HTML result
         switch (lang.normal()) {
             case "html":
                 //HTML synthax highlighting rules
@@ -934,9 +1073,11 @@ function Editor (id, lang, prev, parser, tb) {
  * @property {Parser} Preview.associatedParser Associated parser
  * @property {Editor} Preview.associatedEditor Associated editor
  * @property {Function} Preview.update Update
- * @property {function(string, boolan)} Preview.run Run the code
+ * @property {function(string, boolean)} Preview.run Run the code
  * @property {Function} Preview.viewCode See the code
  * @property {function(): string} Preview.toString String representation
+ * @see module:Web~Parser
+ * @see module:Web~Editor
  */
 function Preview (id, lang, parser, editor) {
     this.id = id || "#preview";
@@ -998,19 +1139,6 @@ function Debugger (id, lang) {
 }
 
 /**
- * @description Dummy text
- * @type {string}
- * @returns {undefined}
- * @external module:essence~$G
- * @since 1.0
- * @memberof external:essence~$G
- * @default
- * @readonly
- */
-$G["lorem"] = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,";
-
-
-/**
  * @description Language parser
  * @param {string} [from="WebScript"] Parsed language
  * @param {string} [to="DHTML"] Resulting language
@@ -1032,43 +1160,43 @@ function Parser (from, to, customParse) {
      * @returns {Code} Parsed code
      */
     this.run = customParse || function (code) {
-            var res = code;
-            res = res.replace(/<tab \/>/gm, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-            res = res.replace(/\{\{tab}}/gm, "\t");
-            res = res.replace(/<info>(.*?)<\/info>/gm, "<span class='block info'>$1</span>");
-            res = res.replace(/<question>(.*?)<\/question>/gm, "<span class='block question'>$1</span>");
-            res = res.replace(/<error>(.*?)<\/error>/gm, "<span class='block error'>$1</span>");
-            res = res.replace(/<warning>(.*?)<\/warning>/gm, "<span class='block warning'>$1</span>");
-            res = res.replace(/<success>(.*?)<\/success>/gm, "<span class='block success'>$1</span>");
-            res = res.replace(/(\{\{)LOREM(}})/ig, $G["lorem"]);
-            res = res.replace(/(?:\{\{)LOREM\x7c(\d+)-(\d+)(?:}})/ig, $G["lorem"].chunk("$1", "$2"));
-            res = res.replace(/(?:\{\{)HW(?:}})/ig, "Hello World !");
-            res = res.replace(/<icon \/>/gm, "<img src='img/icon.png' class='icon'/>");
-            res = res.replace(/<icon size=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/icon.png' class='icon' style='width: $1; height: $1;' />");
-            res = res.replace(/<icon name=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/$1.png' class='icon' />");
-            res = res.replace(/<(s|m|l|xs|xl):icon name=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<img src='img/$2.png' class='$1-icon' />");
-            res = res.replace(/<js>([\s\S]*?)<\/js>/gm,"<script type='text/javascript'>$1<\/script>");
-            res = res.replace(/<js src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"<script type='text/javascript' src='$1'><\/script>");
-            res = res.replace(/<vb>([\s\S]*?)<\/vb>/gm, "<script type='text/vbscript'>$1<\/script>");
-            res = res.replace(/<vb src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"<script type = 'text/vbscript' src='$1'><\/script>");
-            res = res.replace(/<css>([\s\S]*?)<\/css>/gm, "<style type='text/css'>$1</style>");
-            res = res.replace(/<css href=(?:\"|\')([A-Za-z_ -\.]+)(?:\"|\') \/>/gm, "<link rel='stylesheet' type='text/css' href='$1' />");
-            res = res.replace(/<charset=(?:\"|\')(\w + )(?:\"|\') \/>/gm, "<meta charset='$1' />");
-            res = res.replace(/<author name=(?:\"|\')(\w + )(?:\"|\') href=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<meta name='author' content='$1' /><link rel='author' href='$2' />");
-            res = res.replace(/<desc>(.*?)<\/desc>/gm, "<meta name='description' content='$1' />");
-            res = res.replace(/<copy>(.*?)<\/copy>/gm, "<meta name='copyrights' content='$1' />");
-            res = res.replace(/<lbl>(.*?)<\/lbl>/gm, "<label>$1</label>");
-            res = res.replace(/<submit \/>/gm, "<input type='submit' />");
-            res = res.replace(/<submit val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<input type='submit' value='$1' />");
-            res = res.replace(/<reset \/>/gm, "<input type='reset' />");
-            res = res.replace(/<reset val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<input type='reset' value = '$1' />");
-            res = res.replace(/<hdn name=(?:\"|\')(\w+)(?:\"|\')>(.*?)<\/hdn>/gm, "<input type='hidden' name='$1' value='$2' />");
-            res = res.replace(/<hdn name=(?:\"|\')(\w+)(?:\"|\') id=(?:\"|\')(\w+)(?:\"|\')>(.*?)<\/hdn>/gm, "<input type='hidden' name='$1' value='$3' id='$2' />");
-            res = res.replace(/<txt ((?:id|name|class)(\=(?:\"|\')(\w+)(?:\"|\'))(| ))\/>/gm, "<input type='text' />");
-            res = res.replace(/<sql query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\t$r = mysqli_query($$dbc, '$1');\n\t}else printMsg('error', 'No ping');\n\?>");
-            res = res.replace(/<sqlt table=(?:\"|\')(\w+)(?:\"|\') query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\techo 'Last updated at '._time().\"<br />\";selectTable($dbc, '$1', '$2');\n\t}else printMsg('error', 'No ping');\n\?>");
-            return res
-        };
+        var res = code;
+        res = res.replace(/<tab \/>/gm, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+        res = res.replace(/\{\{tab}}/gm, "\t");
+        res = res.replace(/<info>(.*?)<\/info>/gm, "<span class='block info'>$1</span>");
+        res = res.replace(/<question>(.*?)<\/question>/gm, "<span class='block question'>$1</span>");
+        res = res.replace(/<error>(.*?)<\/error>/gm, "<span class='block error'>$1</span>");
+        res = res.replace(/<warning>(.*?)<\/warning>/gm, "<span class='block warning'>$1</span>");
+        res = res.replace(/<success>(.*?)<\/success>/gm, "<span class='block success'>$1</span>");
+        res = res.replace(/(\{\{)LOREM(}})/ig, $G["lorem"]);
+        res = res.replace(/(?:\{\{)LOREM\x7c(\d+)-(\d+)(?:}})/ig, $G["lorem"].chunk("$1", "$2"));
+        res = res.replace(/(?:\{\{)HW(?:}})/ig, "Hello World !");
+        res = res.replace(/<icon \/>/gm, "<img src='img/icon.png' class='icon'/>");
+        res = res.replace(/<icon size=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/icon.png' class='icon' style='width: $1; height: $1;' />");
+        res = res.replace(/<icon name=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/$1.png' class='icon' />");
+        res = res.replace(/<(s|m|l|xs|xl):icon name=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<img src='img/$2.png' class='$1-icon' />");
+        res = res.replace(/<js>([\s\S]*?)<\/js>/gm,"<script type='text/javascript'>$1<\/script>");
+        res = res.replace(/<js src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"<script type='text/javascript' src='$1'><\/script>");
+        res = res.replace(/<vb>([\s\S]*?)<\/vb>/gm, "<script type='text/vbscript'>$1<\/script>");
+        res = res.replace(/<vb src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"<script type = 'text/vbscript' src='$1'><\/script>");
+        res = res.replace(/<css>([\s\S]*?)<\/css>/gm, "<style type='text/css'>$1</style>");
+        res = res.replace(/<css href=(?:\"|\')([A-Za-z_ -\.]+)(?:\"|\') \/>/gm, "<link rel='stylesheet' type='text/css' href='$1' />");
+        res = res.replace(/<charset=(?:\"|\')(\w + )(?:\"|\') \/>/gm, "<meta charset='$1' />");
+        res = res.replace(/<author name=(?:\"|\')(\w + )(?:\"|\') href=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<meta name='author' content='$1' /><link rel='author' href='$2' />");
+        res = res.replace(/<desc>(.*?)<\/desc>/gm, "<meta name='description' content='$1' />");
+        res = res.replace(/<copy>(.*?)<\/copy>/gm, "<meta name='copyrights' content='$1' />");
+        res = res.replace(/<lbl>(.*?)<\/lbl>/gm, "<label>$1</label>");
+        res = res.replace(/<submit \/>/gm, "<input type='submit' />");
+        res = res.replace(/<submit val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<input type='submit' value='$1' />");
+        res = res.replace(/<reset \/>/gm, "<input type='reset' />");
+        res = res.replace(/<reset val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<input type='reset' value = '$1' />");
+        res = res.replace(/<hdn name=(?:\"|\')(\w+)(?:\"|\')>(.*?)<\/hdn>/gm, "<input type='hidden' name='$1' value='$2' />");
+        res = res.replace(/<hdn name=(?:\"|\')(\w+)(?:\"|\') id=(?:\"|\')(\w+)(?:\"|\')>(.*?)<\/hdn>/gm, "<input type='hidden' name='$1' value='$3' id='$2' />");
+        res = res.replace(/<txt ((?:id|name|class)(\=(?:\"|\')(\w+)(?:\"|\'))(| ))\/>/gm, "<input type='text' />");
+        res = res.replace(/<sql query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\t$r = mysqli_query($$dbc, '$1');\n\t}else printMsg('error', 'No ping');\n\?>");
+        res = res.replace(/<sqlt table=(?:\"|\')(\w+)(?:\"|\') query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\techo 'Last updated at '._time().\"<br />\";selectTable($dbc, '$1', '$2');\n\t}else printMsg('error', 'No ping');\n\?>");
+        return res
+    };
 
     this.toString = function () {
         return "Parser(" + this.from + "->" + this.to + ")";
@@ -1125,7 +1253,10 @@ function Toolbar (id, tools, mdl) {
  * @this {IDE}
  * @returns {IDE} IDE
  * @constructor
- * @see Editor Preview Parser Debugger
+ * @see module:Web~Editor
+ * @see module:Web~Preview
+ * @see module:Web~Parser
+ * @see module:Web~Debugger
  * @since 1.0
  * @property {string} IDE.language Language
  * @property {Editor} IDE.editor Editor
@@ -1288,8 +1419,8 @@ function Console (title, entry, usr) {
 }
 
 /**
- * @description Get the IP address of the client.
- * Source: {@link http://stackoverflow.com/questions/391979/how-to-get-clients-ip-address-using-javascript-only}
+ * @description Get the IP address of the client.<br />
+ * Source: {@link http://stackoverflow.com/questions/391979/how-to-get-clients-ip-address-using-javascript-only|[SO] JS: How to get clients IP address}
  * @param {number} [stackLayer=0] Stack layer
  * @return {string} IP address
  * @since 1.1
@@ -1317,8 +1448,8 @@ function getIP (stackLayer) {
 }
 
 /**
- * @description Get the private IP address of the client.
- * Source: {@link http://stackoverflow.com/questions/391979/how-to-get-clients-ip-address-using-javascript-only}
+ * @description Get the private IP address of the client.<br />
+ * Source: {@link http://stackoverflow.com/questions/391979/how-to-get-clients-ip-address-using-javascript-only|[SO] JS: How to get clients IP address}
  * @author Mido (from SO)
  * @since 1.1
  * @func

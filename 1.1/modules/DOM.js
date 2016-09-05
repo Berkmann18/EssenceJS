@@ -10,7 +10,6 @@
  * @requires Misc
  * @namespace
  * @type {Module}
- * @requires Misc
  * @since 1.1
  * @exports DOM
  */
@@ -23,9 +22,9 @@ var DOM = new Module("DOM", "DOM stuff", ["Misc"], 1, function () {
  * @description Print onto something
  * @param {*} st Data to be printed
  * @param {boolean} [isHTML=false] Has to be formatted as an HTML code or not
- * @param {string} [sw="body"] Place to print $st
+ * @param {string} [sw="body"] Place to print <code>st</code>
  * @returns {undefined}
- * @see println
+ * @see module:DOM~println
  * @since 1.0
  * @func
  */
@@ -36,9 +35,9 @@ function print (st, isHTML, sw) {
 /**
  * @description Print-line onto something
  * @param {*} st Data to be printed
- * @param {string} [sw="body"] Place to print $st
+ * @param {string} [sw="body"] Place to print <code>st</code>
  * @returns {undefined}
- * @see print
+ * @see module:DOM~print
  * @since 1.0
  * @func
  */
@@ -52,14 +51,14 @@ function println (st, sw) {
  * @param {NumberLike} ctt Content
  * @param {boolean} [httpe=false] HTTP Equiv specified ?
  * @returns {undefined}
- * @see getMetaData
+ * @see module:DOM~getMetaData
  * @since 1.0
  * @func
  */
 function addMetaData (n, ctt, httpe) {
     /* exported addMetaData */
     var el = document.createElement("meta");
-    httpe? el.httpEquiv = httpe: el.name = n;
+    httpe? el.httpEquiv = n: el.name = n;
     el.content = ctt;
     document.head.appendChild(el)
 }
@@ -67,7 +66,7 @@ function addMetaData (n, ctt, httpe) {
 /**
  * @description Get the meta-data of the current page
  * @returns {string[]} Name and content results
- * @see addMetaData
+ * @see module:DOM~addMetaData
  * @since 1.0
  * @func
  */
@@ -105,7 +104,7 @@ function reloadPage (lvl) { //Reload the page with 2 different level of reload
 /**
  * @description Redirect to somewhere
  * @param {string} to Place to be redirected to
- * @param {number} [dt=3e3] Time delay
+ * @param {number} [dt=3e3] Time delay (in ms)
  * @param {string} divId Id of the element to be used to inform the user about what's going on
  * @returns {undefined}
  * @since 1.0
@@ -125,7 +124,7 @@ function redirect (to, dt, divId) { //Redirect to #to in #dt ms
  * @param {string} txt Text
  * @param {string} type Type
  * @returns {boolean} Validity check result
- * @see validate
+ * @see module:DOM~validate
  * @since 1.0
  * @func
  */
@@ -194,7 +193,7 @@ function isValid (txt, type) {
  * @param {node} fm Form
  * @param {boolean} [ignoreRequired=false] Ignored the required attribute
  * @returns {boolean} Validation check
- * @see isValid
+ * @see module:DOM~isValid
  * @since 1.0
  * @func
  */
@@ -219,7 +218,7 @@ function validate (fm, ignoreRequired) { //Check if a form is valid
  * @description Get the HTML equivalent of the string
  * @param {string} str String
  * @returns {Code} HTML equivalent
- * @see unescapeHTML
+ * @see module:DOM~unescapeHTML
  * @since 1.0
  * @func
  */
@@ -233,7 +232,7 @@ function escapeHTML (str) {
  * @description Get the string equivalent of the HTML code
  * @param {string} code HTML code
  * @returns {string} String equivalent
- * @see escapeHTML
+ * @see module:DOM~escapeHTML
  * @since 1.0
  * @func
  */
@@ -289,7 +288,7 @@ function getResources (rmEmpty) {
  * @description Get the list of scripts
  * @param {boolean} [asList=false] Result should be a list or an object
  * @returns {*} List/dictionary of scripts
- * @see gatherStylesheets
+ * @see module:DOM~gatherStylesheets
  * @todo Perhaps use document.scripts.toArray() instead ?
  * @since 1.0
  * @func
@@ -302,7 +301,7 @@ function gatherScripts (asList) { //Sort of getResources() but dedicated to only
 
 /**
  * @description Gather internal scripts.
- * @param {boolean} [format=false] Format to easy-to-use array
+ * @param {boolean} [format=false] Format to an easy-to-use array
  * @returns {Array} Internal scripts
  * @since 1.1
  * @func
@@ -319,7 +318,7 @@ function gatherInternalScripts (format) {
 
 /**
  * @description Gather external scripts.
- * @param {boolean} [format=false] Format to easy-to-use array
+ * @param {boolean} [format=false] Format to an easy-to-use array
  * @returns {Array} External scripts
  * @since 1.1
  * @func
@@ -338,7 +337,7 @@ function gatherExternalScripts (format) {
  * @description Get the list of stylesheets
  * @param {boolean} [asList=false] Result should be a list or an object
  * @returns {*} List/dictionary of stylesheets
- * @see gatherScripts
+ * @see module:DOM~gatherScripts
  * @since 1.0
  * @func
  */
@@ -411,7 +410,7 @@ function simpleTable (caption, rows, id, style, split, cellIds) {
 
 /**
  * @description Row HTML table
- * @param {string|number} caption Caption
+ * @param {NumberLike} caption Caption
  * @param {Array} headerRows Row headers
  * @param {Array} rows Rows of the table
  * @param {string} id ID of the table
@@ -440,7 +439,7 @@ function rowTable (caption, headerRows, rows, id, split, style, cellIds) {
 
 /**
  * @description Column HTML table
- * @param {string|number} caption Caption
+ * @param {NumberLike} caption Caption
  * @param {Array} headerCols Row headers
  * @param {Array} cols Cols of the table
  * @param {string} id ID of the table
@@ -465,7 +464,7 @@ function colTable (caption, headerCols, cols, id, split, style, cellIds) {
         tab +="<tr>";
         if (split) {
             for (var j = 0; j < cols[i].length; j++) {
-                tab += "<td id='" + (id || "t") + (isNon(cellIds)? i+"_"+j: cellIds[i][j]) + "'>" + cols[j][i] + "</td>";
+                tab += "<td id='" + (id || "t") + (isNon(cellIds)? i+"_"+j: cellIds[i][j]) + "'>" + cols[i][j] + "</td>";
             }
         } else tab += "<td id='" + (id || "t") + (isNon(cellIds)? i: cellIds[i]) + "'>" + cols[i] + "</td>";
         tab += "</tr>"
@@ -476,7 +475,7 @@ function colTable (caption, headerCols, cols, id, split, style, cellIds) {
 
 /**
  * @description Complex HTML table
- * @param {string|number} caption Caption
+ * @param {NumberLike} caption Caption
  * @param {Array} headerRows Row headers
  * @param {Array} rows Rows of the table
  * @param {Array} headerCols Columns Headers
@@ -536,17 +535,17 @@ function colourTable (caption, cols, clrs, id, split, style) {
 
 /**
  * @description Compare two matrices and display a table with all the different elements of $b in regards to $a
- * @param {Array} a Matrice a
- * @param {Array} b Matrice b
+ * @param {Array} a Matrix a
+ * @param {Array} b Matrix b
  * @param {boolean} [toHTML=false] HTML output
  * @returns {*} Comparison table result
  * @since 1.0
  * @func
  * @throws {Error} Uncomparable matrices
  */
-function tableCompare(a, b, toHTML) { //Compare two matrices and display a table with all the different elements
+function tableCompare (a, b, toHTML) { //Compare two matrices and display a table with all the different elements
     if(a.size(true) != b.size(true)) throw new Error("You can't compare two matrices of different sizes");
-    var res = copy(a);
+    var res = Copy(a);
     for (var i = 0; i < res.length; i++) {
         for (var j = 0; j < res[i].length; j++) res[i][j] = (a[i][j] === b[i][j])? "": b[i][j];
     }
@@ -563,14 +562,15 @@ function tableCompare(a, b, toHTML) { //Compare two matrices and display a table
  * @since 1.0
  * @func
  */
-function addFav (url, title, elmId) { //Url = http://Www...." title = "My Website"
+function addFav (url, title, elmId) {
     var place = elmId? "#" + elmId: "body";
     if (navigator.appName.substring(0, 3) === "Mic" && navigator.appVersion.substring(0, 1) >= 4) $e(place).write("<a href=\"#\" onClick=\"window.external.AddFavorite(" + url + ", " + title + ");return false;\">Bookmark this webpage</a><br />", true);
     else $e(place).write("Press CTRL + D to add this webpage to your bookmarks!", true)
 }
 
 /**
- * @description Browser check
+ * @description Browser check.<br />
+ * Source: somewhere
  * @returns {checkBrowser} Browser check
  * @this checkBrowser
  * @since 1.0
@@ -588,7 +588,7 @@ function checkBrowser () {
 }
 
 /**
- * @description Browser detection system.
+ * @description Browser detection system.<br />
  * Source: somewhere
  * @type {{init: BrowserDetect.init, searchString: BrowserDetect.searchString, searchVersion: BrowserDetect.searchVersion, dataBrowser: Array, dataOS: Array, info: BrowserDetect.info}}
  * @since 1.0
@@ -669,7 +669,7 @@ var BrowserDetect = { //Browser detection system
  * @param {Element|string} where Place to type the message
  * @param {boolean} [HTML=false] HTML flag
  * @returns {undefined}
- * @see writeMsg2
+ * @see module:DOM~writeMsg2
  * @since 1.0
  * @func
  */
@@ -691,7 +691,7 @@ function writeMsg (msg, where, HTML) {
  * @param {string} [txt=""] Text
  * @param {number} [pos=0] Position
  * @returns {undefined}
- * @see writeMsg
+ * @see module:DOM~writeMsg
  * @since 1.0
  * @func
  */
@@ -712,7 +712,7 @@ function writeMsg2 (msg, slc, HTML, speed, txt, pos) {
  * @param {string} [path="Template.jst"] Path
  * @param {string} [txt=""] Text/code containing the {{params}}
  * @param {string[]} [params=["tab", "date", "time", "timestamp", "br"]] Parameters
- * @param {boolean} [consoleSpecial=false] Resulting text formated to the console
+ * @param {boolean} [consoleSpecial=false] Resulting text formatted to the console
  * @constructor
  * @this {Template}
  * @returns {Template} Template
@@ -731,7 +731,7 @@ function Template (name, path, txt, params, consoleSpecial) {
     this.name = name || "Template";
     this.path = path || this.name + ".jst";
     this.params = params || ["name", "description", "version", "title", "path"]; //{{params}}
-    this.special = ["tab", "date", "time", "timestamp", "br"]; // %special%
+    this.special = ["tab", "date", "time", "timestamp", "br"]; //%special%
     this.specialEq = ["&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", getDate(), getTime(), getTimestamp(), "<br />"];
     if (consoleSpecial) {
         this.specialEq[0] = "\t";

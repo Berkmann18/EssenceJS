@@ -236,7 +236,7 @@ function Colour (r, g, b, a) {
  * @param {string} hex Hexadecimal
  * @param {boolean} [toArray=false] Result as an array
  * @returns {?number[]|?string} RGB equivalent
- * @see rgb2hex
+ * @see module:UI~rgb2hex
  * @since 1.0
  * @func
  */
@@ -255,7 +255,7 @@ function hex2rgb (hex, toArray) {
  * @param {string} rgb RGB colour
  * @param {boolean} [toArray=false] Result as an array
  * @returns {NumberLike[]|string} Hexadecimal colour
- * @see hex2rgb
+ * @see module:UI~hex2rgb
  * @since 1.0
  * @func
  */
@@ -265,7 +265,7 @@ function rgb2hex (rgb, toArray) {
 }
 
 /**
- * @description Switch the colour of the $elmt's attribute (that can be the background/border/font colour of an HTML element and which is in hex form) to it's red/green/blue/yellow/cyan/magenta/full negative version.
+ * @description Switch the colour of the <code>elmt</code>'s attribute (that can be the background/border/font colour of an HTML element and which is in hex form) to it's red/green/blue/yellow/cyan/magenta/full negative version.
  * @param {string} elmt Element to be used
  * @param {string} attr Attribute to be used
  * @param {string} [mod="x"] Mod
@@ -485,7 +485,7 @@ function Shape (x, y, b, v) {
  * @param {number} [d=.1] Depth
  * @param {number} [bsz=1] Border size
  * @param {string} [bclr="#000"] Border colour
- * @param {string} [bgclr="#fff"] Background colour
+ * @param {string} [clr="#fff"] Background colour
  * @param {number} [brd=0] Border radius
  * @returns {Box} Box
  * @todo Work on draw(), erase(), rot() and translate()
@@ -556,7 +556,7 @@ AABB.inheritsFrom(Shape);
  * @constructor
  * @implements {Shape}
  * @inheritdoc
- * @see Shape
+ * @see module:UI~Shape
  * @since 1.0
  * @property {number} AABB.x X coordinate
  * @property {number} ABB.y Y coordinate
@@ -650,7 +650,7 @@ Circ.inheritsFrom(Shape);
  * @this Circ
  * @constructor
  * @implements {Shape}
- * @see Shape
+ * @see module:UI~Shape
  * @since 1.0
  * @inheritdoc
  * @property {number} Circ.x X coordinate
@@ -712,7 +712,7 @@ Pt.inheritsFrom(Shape);
  * @param {number} [y=0] Y-coordinate
  * @returns {Pt} Point
  * @this Pt
- * @see Shape
+ * @see module:UI~Shape
  * @implements {Shape}
  * @constructor
  * @since 1.0
@@ -746,7 +746,7 @@ Line.inheritsFrom(Shape);
  * @param {number[]} b Ending point
  * @returns {Line} Line
  * @this Line
- * @see Shape
+ * @see module:UI~Shape
  * @implements {Shape}
  * @constructor
  * @since 1.0
@@ -774,7 +774,7 @@ function Line (a, b) {
 Vector.inheritsFrom(Shape);
 /**
  * @description 2D vector
- * @see Shape
+ * @see module:UI~Shape
  * @this Vector
  * @param {number} [x=0] X-coordinate
  * @param {number} [y=0] Y-coordinate
@@ -872,7 +872,7 @@ Polygon.inheritsFrom(Shape);
 /**
  * @description Polygon
  * @this Polygon
- * @see Shape
+ * @see module:UI~Shape
  * @param {Array} pts Points
  * @param {number} [b=1] Border
  * @param {Vector} [v=new Vector()] Velocity
@@ -1111,7 +1111,7 @@ function daynightMode (exch) { //Switch between enabled or not for Day/Night pag
     if ($G["dnM"]) {
         if (h >= 21) $e("body").setStyles(["backgroundColor", "#000", "color", "#fff"]);
         else $e("body").setStyles(["backgroundColor", "#fff", "color", "#000"]);
-    } else Essence.say("You cannot use the day/night modder if it\'s disabled.", "warn")
+    } else Essence.say("You cannot use the day/night mod if it\'s disabled.", "warn")
 }
 
 /**
@@ -1145,7 +1145,7 @@ function chTab (name) {
  * @param {string} id ID of the element
  * @param {number} [n=1] Incrementation
  * @returns {undefined}
- * @see htmlRange
+ * @see module:UI~htmlRange
  * @since 1.0
  * @func
  */
@@ -1159,9 +1159,9 @@ function moveHTMLRange (id, n) { //Move an HTML range left or right which was ma
  * @param {string} id ID of the element
  * @param {number} [min=0] Minimum
  * @param {number} [val=0] Default value
- * @param {number} [max=100] Maximimum
+ * @param {number} [max=100] Maximum
  * @returns {string} HTML code
- * @see moveHTMLRange
+ * @see module:UI~moveHTMLRange
  * @since 1.0
  * @func
  * @throws {Error} No ID found
@@ -1177,17 +1177,17 @@ function htmlRange (id, min, val, max) {
  * @param {string} id ID of the element
  * @param {string} lbl Label
  * @returns {undefined}
- * @see htmlInput
+ * @see module:UI~htmlInput
  * @since 1.0
  * @func
  */
 function labelFieldSwap (id, lbl) {
-    //if (!$e("#" + id).isEmpty() && $e("#" + id).val()!= lbl && $e("#" + id).val()!=$e("#lbl_" + id).val()) return false
+    //if (!$e("#" + id).isEmpty() && $e("#" + id).val() != lbl && $e("#" + id).val() != $e("#lbl_" + id).val()) return false
     if ($e("#lbl_" + id).isEmpty()) $e("#lbl_" + id).write("&ensp;", true);
     if ($e("#" + id).isEmpty() || $e("#" + id).val() === "\b" || ($e("#" + id).val()!= lbl && $e("#" + id).size() < 2)) { //The field isn't being filled so label inside the field
         $e("#" + id).write($e("#lbl_" + id).val());
         $e("#lbl_" + id).write("&ensp;", true);
-    } else { //The field is being filled up so label shown and no placeholding value in the field
+    } else { //The field is being filled up so label shown and no place-holding value in the field
         $e("#lbl_" + id).write(lbl || $e("#" + id).val());
         if ($e("#" + id).val() === lbl || $e("#" + id).val() === "") $e("#" + id).write("\b");
     }
@@ -1198,7 +1198,7 @@ function labelFieldSwap (id, lbl) {
  * @param {string} id ID of the element
  * @param {string} lbl Label
  * @returns {undefined}
- * @see htmlPassword
+ * @see module:UI~htmlPassword
  * @since 1.0
  * @func
  */
@@ -1208,7 +1208,7 @@ function labelPwSwap (id, lbl) {
         $e("#" + id).type = "text";
         $e("#" + id).write($e("#lbl_" + id).val());
         $e("#lbl_" + id).write("&ensp;", true);
-    } else { //The field is being filled up so label shown and no placeholding value in the field
+    } else { //The field is being filled up so label shown and no place-holding value in the field
         $e("#" + id).type = "password";
         $e("#lbl_" + id).write(lbl || $e("#" + id).val());
         if ($e("#" + id).val() === lbl || $e("#" + id).val() === "") $e("#" + id).write("\b");
@@ -1221,7 +1221,7 @@ function labelPwSwap (id, lbl) {
  * @param {string} [type="text"] Input type
  * @param {string} lbl Label
  * @returns {string} HTML code
- * @see labelFieldSwap
+ * @see module:UI~labelFieldSwap
  * @since 1.0
  * @func
  * @throws {Error} No ID found
@@ -1237,7 +1237,7 @@ function htmlInput (id, type, lbl) {
  * @param {string} id ID of the element
  * @param {string} lbl Label
  * @returns {string} HTML code
- * @see labelPwSwap
+ * @see module:UI~labelPwSwap
  * @since 1.0
  * @func
  * @throws {Error} No ID found
@@ -1258,10 +1258,10 @@ function htmlPassword (id, lbl) {
  * @func
  */
 function htmlDate (id, minYear, maxYear) {
-    var day = "<select name='"+ (id? id + "_": "")  + " day'>", month = "<select name='"+ (id? id + "_": "")  + " month'>", year = "<select name='"+ (id? id + "_": "")  + " year'>", months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], y = (new Date()).getFullYear();
+    var day = "<select name='"+ (id? id + "_": "")  + "day'>", month = "<select name='"+ (id? id + "_": "")  + "month'>", year = "<select name='"+ (id? id + "_": "")  + "year'>", months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], y = (new Date()).getFullYear();
 
     for (var i = 1; i < 32; i++) day += "<option value=" + i + ">" + i + "</option>";
     for (i = 0; i < months.length; i++) month += "<option value=" + (i + 1) + ">" + months[i] + "</option>";
-    for (i = (minYear || y - 80); i < (maxYear || y - 2); i++) day += "<option value=" + i + ">" + i + "</option>";
+    for (i = (minYear || y - 80); i < (maxYear || y - 2); i++) year += "<option value=" + i + ">" + i + "</option>";
     return day + "</select>" + month + "</select>" + year + "</select>";
 }

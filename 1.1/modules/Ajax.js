@@ -23,7 +23,7 @@ var Ajax = new Module("Ajax", "AJAX stuff");
 /**
  * @description HTTP GET request, it retrieves data. Equivalent to:
  * var val;
- * parseURL($name, function (x) {val = x}); //as using return x won't return anything
+ * parseURL(<code>name</code>, function (x) {val = x}); //as using return x won't return anything
  * @param {string} name Name of the key
  * @returns {string} Value of the key
  * @since 1.0
@@ -35,7 +35,7 @@ function GET (name) {
 }
 
 /**
- * @description HTTP POST request. Create data.
+ * @description HTTP POST request. Create data..<br />
  * Source: Stackoverflow
  * @param {string} path Path of the file to post to
  * @param {Object} params Parameters
@@ -91,10 +91,49 @@ function DELETE () {
  * @returns {undefined}
  * @since 1.0
  * @func
+ * @example
+ * function showLogs () {
+ *   load("logs.log", function (xhr) {
+ *      $e("#logView").write(xhr.responseText);
+ *   }
+ * }
  */
 function load (url, cb) {
     var xhr = new XHR(url, "get", true, cb);
     xhr.init();
+}
+
+/**
+ * @description Load a JSON file
+ * @param {string} [file="data"] Filename (without the '.json' bit)
+ * @func
+ * @since 1.1
+ * @returns {*} JSON data
+ * @example
+ * loadJSON("package"); //Loads the package.json file which content can be found in $G["json"] if not returned
+ * //Equivalent of doing that
+ * var package = {};
+ * load("package.json", function (xhr) {
+ *  package = JSON.parse(xhr.response); //Returning that won't do anything so we need to store it in a variable
+ * });
+ */
+function loadJSON (file) {
+    var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
+    xhr.overrideMimeType("application/json");
+    xhr.open("GET", (file || "data") + ".json", true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) (function () {
+            $G["json"] = JSON.parse(xhr.responseText);
+            return JSON.parse(xhr.responseText) || $G["json"];
+        })();
+    };
+    xhr.send(null);
+    //console.log("res=", xhr.response, "\nresTxt=", xhr.responseText, "\nresXML=", xhr.responseXML, "\nresT=", xhr.responseType);
+    try {
+        return JSON.parse(xhr.response);
+    } catch (e) {
+        return $G["json"];
+    }
 }
 
 /**
@@ -244,8 +283,8 @@ function XHR (url, method, async, success, fail, progress, body, creds, mime) {
  * @param {string} [body] Body of the request
  * @returns {CORS} CORS object
  * @since 1.1
- * @inheritDoc
- * @see XHR
+ * @inheritdoc
+ * @see module:Ajax~XHR
  * @constructor
  * @property {string} CORS.url URL
  * @property {string} CORS.method Method
@@ -332,27 +371,6 @@ function AJAXpost (data, to, xml) {
     return res
 }
 
-/**
- * @description Load a JSON file
- * @param {string} [file="data"] Filename (without the '.json' bit)
- * @func
- * @since 1.1
- * @returns {*} JSON data
- */
-function loadJSON (file) {
-    var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
-    xhr.overrideMimeType("application/json");
-    xhr.open("GET", (file || "data") + ".json", true);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) (function () {
-            $G["json"] = JSON.parse(xhr.responseText);
-            return JSON.parse(xhr.responseText);
-        })();
-    };
-    xhr.send(null);
-    return JSON.parse(xhr.responseText) || $G["json"];
-}
-
 /* eslint no-undef: 2 */
 /**
  * @description HTPP status message
@@ -430,23 +448,23 @@ function getXHRMsg (state) {
 }
 
 /**
- * @description Cross Origin Resource Sharing request maker
+ * @description Cross Origin Resource Sharing request maker.<br />
  * Source: {@link https://stackoverflow.com/questions/3076414/ways-to-circumvent-the-same-origin-policy}
  * @param {string} [method="get"] Method
  * @param {string} [url=getDirectoryPath()] URL
  * @returns {XMLHttpRequest} CORS request
  * @example
  * var request = createCORSRequest("get", "http://www.stackoverflow.com/");
- if (request){
-    request.onload = function() {
-        // ...
+ if (request) {
+    request.onload = function () {
+        //...
     };
     request.onreadystatechange = handler;
     request.send();
  }
  * @since 1.1
  * @func
- * @see setCORS
+ * @see module:Ajax~setCORS
  */
 function createCORSRequest (method, url) {
     var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
@@ -466,7 +484,7 @@ function createCORSRequest (method, url) {
  * @param {boolean} [withCreds=false] Add credentials
  * @param {Code} [body] Body of the request
  * @returns {*} CORS response
- * @see createCORSRequest
+ * @see module:Ajax~createCORSRequest
  * @since 1.1
  * @func
  * @throws {Error} CORS not supported

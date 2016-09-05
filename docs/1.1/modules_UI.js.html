@@ -264,7 +264,7 @@ function Colour (r, g, b, a) {
  * @param {string} hex Hexadecimal
  * @param {boolean} [toArray=false] Result as an array
  * @returns {?number[]|?string} RGB equivalent
- * @see rgb2hex
+ * @see module:UI~rgb2hex
  * @since 1.0
  * @func
  */
@@ -283,7 +283,7 @@ function hex2rgb (hex, toArray) {
  * @param {string} rgb RGB colour
  * @param {boolean} [toArray=false] Result as an array
  * @returns {NumberLike[]|string} Hexadecimal colour
- * @see hex2rgb
+ * @see module:UI~hex2rgb
  * @since 1.0
  * @func
  */
@@ -293,7 +293,7 @@ function rgb2hex (rgb, toArray) {
 }
 
 /**
- * @description Switch the colour of the $elmt's attribute (that can be the background/border/font colour of an HTML element and which is in hex form) to it's red/green/blue/yellow/cyan/magenta/full negative version.
+ * @description Switch the colour of the &lt;code>elmt&lt;/code>'s attribute (that can be the background/border/font colour of an HTML element and which is in hex form) to it's red/green/blue/yellow/cyan/magenta/full negative version.
  * @param {string} elmt Element to be used
  * @param {string} attr Attribute to be used
  * @param {string} [mod="x"] Mod
@@ -513,7 +513,7 @@ function Shape (x, y, b, v) {
  * @param {number} [d=.1] Depth
  * @param {number} [bsz=1] Border size
  * @param {string} [bclr="#000"] Border colour
- * @param {string} [bgclr="#fff"] Background colour
+ * @param {string} [clr="#fff"] Background colour
  * @param {number} [brd=0] Border radius
  * @returns {Box} Box
  * @todo Work on draw(), erase(), rot() and translate()
@@ -584,7 +584,7 @@ AABB.inheritsFrom(Shape);
  * @constructor
  * @implements {Shape}
  * @inheritdoc
- * @see Shape
+ * @see module:UI~Shape
  * @since 1.0
  * @property {number} AABB.x X coordinate
  * @property {number} ABB.y Y coordinate
@@ -678,7 +678,7 @@ Circ.inheritsFrom(Shape);
  * @this Circ
  * @constructor
  * @implements {Shape}
- * @see Shape
+ * @see module:UI~Shape
  * @since 1.0
  * @inheritdoc
  * @property {number} Circ.x X coordinate
@@ -740,7 +740,7 @@ Pt.inheritsFrom(Shape);
  * @param {number} [y=0] Y-coordinate
  * @returns {Pt} Point
  * @this Pt
- * @see Shape
+ * @see module:UI~Shape
  * @implements {Shape}
  * @constructor
  * @since 1.0
@@ -774,7 +774,7 @@ Line.inheritsFrom(Shape);
  * @param {number[]} b Ending point
  * @returns {Line} Line
  * @this Line
- * @see Shape
+ * @see module:UI~Shape
  * @implements {Shape}
  * @constructor
  * @since 1.0
@@ -802,7 +802,7 @@ function Line (a, b) {
 Vector.inheritsFrom(Shape);
 /**
  * @description 2D vector
- * @see Shape
+ * @see module:UI~Shape
  * @this Vector
  * @param {number} [x=0] X-coordinate
  * @param {number} [y=0] Y-coordinate
@@ -900,7 +900,7 @@ Polygon.inheritsFrom(Shape);
 /**
  * @description Polygon
  * @this Polygon
- * @see Shape
+ * @see module:UI~Shape
  * @param {Array} pts Points
  * @param {number} [b=1] Border
  * @param {Vector} [v=new Vector()] Velocity
@@ -1139,7 +1139,7 @@ function daynightMode (exch) { //Switch between enabled or not for Day/Night pag
     if ($G["dnM"]) {
         if (h >= 21) $e("body").setStyles(["backgroundColor", "#000", "color", "#fff"]);
         else $e("body").setStyles(["backgroundColor", "#fff", "color", "#000"]);
-    } else Essence.say("You cannot use the day/night modder if it\'s disabled.", "warn")
+    } else Essence.say("You cannot use the day/night mod if it\'s disabled.", "warn")
 }
 
 /**
@@ -1173,7 +1173,7 @@ function chTab (name) {
  * @param {string} id ID of the element
  * @param {number} [n=1] Incrementation
  * @returns {undefined}
- * @see htmlRange
+ * @see module:UI~htmlRange
  * @since 1.0
  * @func
  */
@@ -1187,9 +1187,9 @@ function moveHTMLRange (id, n) { //Move an HTML range left or right which was ma
  * @param {string} id ID of the element
  * @param {number} [min=0] Minimum
  * @param {number} [val=0] Default value
- * @param {number} [max=100] Maximimum
+ * @param {number} [max=100] Maximum
  * @returns {string} HTML code
- * @see moveHTMLRange
+ * @see module:UI~moveHTMLRange
  * @since 1.0
  * @func
  * @throws {Error} No ID found
@@ -1205,17 +1205,17 @@ function htmlRange (id, min, val, max) {
  * @param {string} id ID of the element
  * @param {string} lbl Label
  * @returns {undefined}
- * @see htmlInput
+ * @see module:UI~htmlInput
  * @since 1.0
  * @func
  */
 function labelFieldSwap (id, lbl) {
-    //if (!$e("#" + id).isEmpty() &amp;&amp; $e("#" + id).val()!= lbl &amp;&amp; $e("#" + id).val()!=$e("#lbl_" + id).val()) return false
+    //if (!$e("#" + id).isEmpty() &amp;&amp; $e("#" + id).val() != lbl &amp;&amp; $e("#" + id).val() != $e("#lbl_" + id).val()) return false
     if ($e("#lbl_" + id).isEmpty()) $e("#lbl_" + id).write("&amp;ensp;", true);
     if ($e("#" + id).isEmpty() || $e("#" + id).val() === "\b" || ($e("#" + id).val()!= lbl &amp;&amp; $e("#" + id).size() &lt; 2)) { //The field isn't being filled so label inside the field
         $e("#" + id).write($e("#lbl_" + id).val());
         $e("#lbl_" + id).write("&amp;ensp;", true);
-    } else { //The field is being filled up so label shown and no placeholding value in the field
+    } else { //The field is being filled up so label shown and no place-holding value in the field
         $e("#lbl_" + id).write(lbl || $e("#" + id).val());
         if ($e("#" + id).val() === lbl || $e("#" + id).val() === "") $e("#" + id).write("\b");
     }
@@ -1226,7 +1226,7 @@ function labelFieldSwap (id, lbl) {
  * @param {string} id ID of the element
  * @param {string} lbl Label
  * @returns {undefined}
- * @see htmlPassword
+ * @see module:UI~htmlPassword
  * @since 1.0
  * @func
  */
@@ -1236,7 +1236,7 @@ function labelPwSwap (id, lbl) {
         $e("#" + id).type = "text";
         $e("#" + id).write($e("#lbl_" + id).val());
         $e("#lbl_" + id).write("&amp;ensp;", true);
-    } else { //The field is being filled up so label shown and no placeholding value in the field
+    } else { //The field is being filled up so label shown and no place-holding value in the field
         $e("#" + id).type = "password";
         $e("#lbl_" + id).write(lbl || $e("#" + id).val());
         if ($e("#" + id).val() === lbl || $e("#" + id).val() === "") $e("#" + id).write("\b");
@@ -1249,7 +1249,7 @@ function labelPwSwap (id, lbl) {
  * @param {string} [type="text"] Input type
  * @param {string} lbl Label
  * @returns {string} HTML code
- * @see labelFieldSwap
+ * @see module:UI~labelFieldSwap
  * @since 1.0
  * @func
  * @throws {Error} No ID found
@@ -1265,7 +1265,7 @@ function htmlInput (id, type, lbl) {
  * @param {string} id ID of the element
  * @param {string} lbl Label
  * @returns {string} HTML code
- * @see labelPwSwap
+ * @see module:UI~labelPwSwap
  * @since 1.0
  * @func
  * @throws {Error} No ID found
@@ -1286,11 +1286,11 @@ function htmlPassword (id, lbl) {
  * @func
  */
 function htmlDate (id, minYear, maxYear) {
-    var day = "&lt;select name='"+ (id? id + "_": "")  + " day'>", month = "&lt;select name='"+ (id? id + "_": "")  + " month'>", year = "&lt;select name='"+ (id? id + "_": "")  + " year'>", months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], y = (new Date()).getFullYear();
+    var day = "&lt;select name='"+ (id? id + "_": "")  + "day'>", month = "&lt;select name='"+ (id? id + "_": "")  + "month'>", year = "&lt;select name='"+ (id? id + "_": "")  + "year'>", months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], y = (new Date()).getFullYear();
 
     for (var i = 1; i &lt; 32; i++) day += "&lt;option value=" + i + ">" + i + "&lt;/option>";
     for (i = 0; i &lt; months.length; i++) month += "&lt;option value=" + (i + 1) + ">" + months[i] + "&lt;/option>";
-    for (i = (minYear || y - 80); i &lt; (maxYear || y - 2); i++) day += "&lt;option value=" + i + ">" + i + "&lt;/option>";
+    for (i = (minYear || y - 80); i &lt; (maxYear || y - 2); i++) year += "&lt;option value=" + i + ">" + i + "&lt;/option>";
     return day + "&lt;/select>" + month + "&lt;/select>" + year + "&lt;/select>";
 }</code></pre>
         </article>
@@ -1302,13 +1302,13 @@ function htmlDate (id, minYear, maxYear) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-File.html">File</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-File-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#getFileContent">getFileContent</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#UnitTest">UnitTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Aug 24 2016 18:14:41 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Sep 05 2016 19:03:54 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

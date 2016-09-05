@@ -323,7 +323,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Ajax.js.html">modules/Ajax.js</a>, <a href="modules_Ajax.js.html#line318">line 318</a>
+        <a href="modules_Ajax.js.html">modules/Ajax.js</a>, <a href="modules_Ajax.js.html#line357">line 357</a>
     </li></ul></dd>
     
 
@@ -379,14 +379,13 @@
     <h4 class="name" id="~createCORSRequest"><span class="type-signature">(inner) </span>createCORSRequest<span class="signature">(method<span class="signature-attributes">opt</span>, url<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {XMLHttpRequest}</span></h4>
 
     
-    <p class="summary"><p>Cross Origin Resource Sharing request maker
-Source: <a href="https://stackoverflow.com/questions/3076414/ways-to-circumvent-the-same-origin-policy">https://stackoverflow.com/questions/3076414/ways-to-circumvent-the-same-origin-policy</a></p>.</p>
+    <p class="summary">Cross Origin Resource Sharing request maker.</p>
     
 
 
 
 <div class="description">
-    <p>Cross Origin Resource Sharing request maker
+    <p>Cross Origin Resource Sharing request maker.<br />
 Source: <a href="https://stackoverflow.com/questions/3076414/ways-to-circumvent-the-same-origin-policy">https://stackoverflow.com/questions/3076414/ways-to-circumvent-the-same-origin-policy</a></p>
 </div>
 
@@ -542,7 +541,7 @@ Source: <a href="https://stackoverflow.com/questions/3076414/ways-to-circumvent-
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Ajax.js.html">modules/Ajax.js</a>, <a href="modules_Ajax.js.html#line451">line 451</a>
+        <a href="modules_Ajax.js.html">modules/Ajax.js</a>, <a href="modules_Ajax.js.html#line469">line 469</a>
     </li></ul></dd>
     
 
@@ -552,7 +551,7 @@ Source: <a href="https://stackoverflow.com/questions/3076414/ways-to-circumvent-
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>setCORS</li>
+            <li><a href="module-Ajax.html#~setCORS">module:Ajax~setCORS</a></li>
         </ul>
     </dd>
     
@@ -599,9 +598,9 @@ Source: <a href="https://stackoverflow.com/questions/3076414/ways-to-circumvent-
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>var request = createCORSRequest("get", "http://www.stackoverflow.com/");
- if (request){
-    request.onload = function() {
-        // ...
+ if (request) {
+    request.onload = function () {
+        //...
     };
     request.onreadystatechange = handler;
     request.send();
@@ -737,7 +736,7 @@ Source: <a href="https://stackoverflow.com/questions/3076414/ways-to-circumvent-
 <div class="description">
     <p>HTTP GET request, it retrieves data. Equivalent to:
 var val;
-parseURL($name, function (x) {val = x}); //as using return x won't return anything</p>
+parseURL(<code>name</code>, function (x) {val = x}); //as using return x won't return anything</p>
 </div>
 
 
@@ -991,7 +990,7 @@ parseURL($name, function (x) {val = x}); //as using return x won't return anythi
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Ajax.js.html">modules/Ajax.js</a>, <a href="modules_Ajax.js.html#line364">line 364</a>
+        <a href="modules_Ajax.js.html">modules/Ajax.js</a>, <a href="modules_Ajax.js.html#line382">line 382</a>
     </li></ul></dd>
     
 
@@ -1146,7 +1145,7 @@ parseURL($name, function (x) {val = x}); //as using return x won't return anythi
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Ajax.js.html">modules/Ajax.js</a>, <a href="modules_Ajax.js.html#line421">line 421</a>
+        <a href="modules_Ajax.js.html">modules/Ajax.js</a>, <a href="modules_Ajax.js.html#line439">line 439</a>
     </li></ul></dd>
     
 
@@ -1327,7 +1326,7 @@ parseURL($name, function (x) {val = x}); //as using return x won't return anythi
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Ajax.js.html">modules/Ajax.js</a>, <a href="modules_Ajax.js.html#line95">line 95</a>
+        <a href="modules_Ajax.js.html">modules/Ajax.js</a>, <a href="modules_Ajax.js.html#line101">line 101</a>
     </li></ul></dd>
     
 
@@ -1368,6 +1367,15 @@ parseURL($name, function (x) {val = x}); //as using return x won't return anythi
 </dl>
 
     
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>function showLogs () {
+  load("logs.log", function (xhr) {
+     $e("#logView").write(xhr.responseText);
+  }
+}</code></pre>
 
 
 
@@ -1501,7 +1509,7 @@ parseURL($name, function (x) {val = x}); //as using return x won't return anythi
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Ajax.js.html">modules/Ajax.js</a>, <a href="modules_Ajax.js.html#line342">line 342</a>
+        <a href="modules_Ajax.js.html">modules/Ajax.js</a>, <a href="modules_Ajax.js.html#line120">line 120</a>
     </li></ul></dd>
     
 
@@ -1548,6 +1556,16 @@ parseURL($name, function (x) {val = x}); //as using return x won't return anythi
     
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>loadJSON("package"); //Loads the package.json file which content can be found in $G["json"] if not returned
+//Equivalent of doing that
+var package = {};
+load("package.json", function (xhr) {
+ package = JSON.parse(xhr.response); //Returning that won't do anything so we need to store it in a variable
+});</code></pre>
+
+
 
         
             
@@ -1563,7 +1581,7 @@ parseURL($name, function (x) {val = x}); //as using return x won't return anythi
 
 
 <div class="description">
-    <p>HTTP POST request. Create data.
+    <p>HTTP POST request. Create data..<br />
 Source: Stackoverflow</p>
 </div>
 
@@ -1629,7 +1647,7 @@ Source: Stackoverflow</p>
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type"><a href="Object.html">Object</a></span>
 
 
             
@@ -2123,7 +2141,7 @@ Source: Stackoverflow</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Ajax.js.html">modules/Ajax.js</a>, <a href="modules_Ajax.js.html#line474">line 474</a>
+        <a href="modules_Ajax.js.html">modules/Ajax.js</a>, <a href="modules_Ajax.js.html#line492">line 492</a>
     </li></ul></dd>
     
 
@@ -2133,7 +2151,7 @@ Source: Stackoverflow</p>
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>createCORSRequest</li>
+            <li><a href="module-Ajax.html#~createCORSRequest">module:Ajax~createCORSRequest</a></li>
         </ul>
     </dd>
     
@@ -2360,13 +2378,13 @@ Source: Stackoverflow</p>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-File.html">File</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-File-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#getFileContent">getFileContent</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#UnitTest">UnitTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Aug 24 2016 18:14:41 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Sep 05 2016 19:03:55 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

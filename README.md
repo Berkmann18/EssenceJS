@@ -14,7 +14,6 @@ The main features are the following:
 
 Some ideas to add:
 -	Having a dynamic real-time table/update (e.g: news feeds)
--	Having more stats functions like: confidence interval, predictions, ...;
 -	Adding the 'APIs' (Download bar, loading bar, task progress list)
 -	Having the real-time chat feature as well as the console one
 -	code highlighting feature for editors.
@@ -30,13 +29,12 @@ Some ideas to add:
 -	Add: select, datetime, datetime-local, time, month, range, search, week, url; to validate()
 -	Prim's alg (already there as A* ?!)
 -	Kruskal's alg
--	More maths stuff (from the booklet or/and the Discrete Maths book) ?
 -   AI system that stores it's rules in a database and update it after learning
 -   Combinations maker: 3*[a, b, c] -> [aaa, aab, aac, ..., ccc]
 
 To fix/continue:
 -	Path finding using A*\IDA* with Euclidian/Manhattan
--	Cumultative probability
+-	Cumulative probability
 -	Webpage templating
 -	Radial gradient generator
 -	Connexion features
@@ -63,6 +61,7 @@ To fix/continue:
 -	Algebraic formula to truth table
 -	Something like Java's System.in that allows the code to grab the user's input without having to use JS prompt, contentEditable or HTML's input/textarea fields
 -   Essence.ask
+-   $Data
 
 ##About the future of Essence.js
 1.	Once this library is heading toward a state where having everything in one single script will no longer be good for readability and maintenance causing it to be splitted into several files (modules) which would make it less portable and slower in some cases but it will be way more organised, more readable and more maintanable.

@@ -9,12 +9,13 @@
  * @requires essence
  * @requires Maths
  * @requires DOM
+ * @requires QTest
  * @namespace
  * @type {Module}
  * @since 1.1
  * @exports Security
  */
-var Security = new Module("Security", "Security stuff", ["Maths", "DOM"]);
+var Security = new Module("Security", "Security stuff", ["Maths", "DOM", "QTest"]);
 
 /* eslint no-undef: 0 */
 
@@ -36,7 +37,7 @@ function trans (character, n) {
  * @param {string} txt Text
  * @param {number} [key] Key
  * @returns {string} Encrypted text
- * @see decrypt
+ * @see module:Security~decrypt
  * @since 1.0
  * @func
  */
@@ -65,7 +66,7 @@ function encrypt (txt, key) {
  * @param {string} txt Encrypted text
  * @param {number} [key] Key
  * @returns {string} Decrypted text
- * @see encrypt
+ * @see module:Security~encrypt
  * @since 1.0
  * @func
  */
@@ -82,8 +83,8 @@ function decrypt (txt, key) {
             }
         }
     }
-    console.log(console.table(res));
-    return (!key)? complexTable("Decryption result for <i>" + txt + "</i>", range(-65536, 1, 65536), res, ["Key", "Result"], "decrypted_" + txt, false): txt + " => " + res;
+    if (!key) console.log(console.table(res));
+    return key? res: complexTable("Decryption result for <i>" + txt + "</i>", range(-65536, 1, 65536), res, ["Key", "Result"], "decrypted_" + txt, false);
     //simpleTable("Decryption result for <i>" + txt + "</i>", , res, "decrypt_" + txt, Essence.css)
 }
 
@@ -91,7 +92,7 @@ function decrypt (txt, key) {
  * @description Alphabetically encode (regardless of the case) to hexadecimal
  * @param {string} txt Text
  * @returns {string} Encoded text
- * @see abcDecode
+ * @see module:Security~abcDecode
  * @since 1.0
  * @func
  */
@@ -166,8 +167,8 @@ function abcEncode (txt) {
 /**
  * @description Alphabetically decode from hexadecimal to lowercase text.
  * @param {string} txt Hexadecimal code
- * @returns {string} Alphabtical text
- * @see abcEncode
+ * @returns {string} Alphabetical text
+ * @see module:Security~abcEncode
  * @since 1.0
  * @func
  */
@@ -244,7 +245,7 @@ function abcDecode (txt) {
  * @since 1.0
  * @func
  */
-function ilEncrypt(data) {
+function ilEncrypt (data) {
     var res = isType(data, "String")? data.split(""): data;
     for (var i = 0; i < res.length; i++) res[i] = String.fromCharCode(abcModulus(data[i].charCodeAt(0) * data.length));
     return isType(data, "String")? res.join(""): res;
@@ -257,7 +258,7 @@ function ilEncrypt(data) {
  * @since 1.0
  * @func
  */
-function ilDecrypt(data) {
+function ilDecrypt (data) {
     var res = isType(data, "String")? data.split(""): data;
     for (var i = 0; i < res.length; i++) res[i] = String.fromCharCode(abcModulus(data[i].charCodeAt(0) / data.length));
     return isType(data, "String")? res.join(""): res;
@@ -265,29 +266,38 @@ function ilDecrypt(data) {
 
 /* eslint no-unused-vars: 0 */
 /**
- * @description RSA algorithm keys
- * @param {number} p Number #1
- * @param {number} q Number #2
+ * @description RSA algorithm keys computation
+ * @param {number} p=23 Number #1
+ * @param {number} q=29 Number #2
  * @returns {number[]} Public key
- * @todo Find out how to get $e and $d
- * @see cryptRSA
+ * @see module:Security~cryptRSA
  * @since 1.0
  * @func
+ * @throws {Error} Either p or q isn't a prime number
  */
-function RSA (p, q) {
-    var n = p * q, z = (p - 1) * (q - 1), e, d; //1 < e < n & gcd(e, z) = 1
+function computeRSA (p, q) {
+    if (arguments.toArray().length === 0) {
+        p = bruteForceNum(23, "isPrime(x)", 99);
+        q = bruteForceNum(23, "isPrime(x) && x!=" + p, 99);
+    }
+    if (!isPrime(p)) throw new Error("p=" + p + "; isn't a prime number !!");
+    if (!isPrime(q)) throw new Error("q=" + q + "; isn't a prime number !!");
+    if (p < 20 || q < 20) Essence.say("p/q should be bigger !", "warn");
+    var n = p * q, z = (p - 1) * (q - 1), e = bruteForceNum(2, "1<x<" + n + " && gcd(x," + z + ")==1", n + 1), d; //1 < e < n & gcd(e, z) = 1
+    d = bruteForceNum(0, "(x*" + e + ")%"+ z + "==1", n); //bruteForceNum(0, "x*" + e + "==" + "1+k" + z, n);
 
     Essence.say([n, d]); //Private key
+    //Issue: d might be too big for cryptRSA
     return [n, e]; //Public keys
 }
 /* eslint no-unused-vars: 2 */
 
 /**
  * @description Encrypt/decrypt a message with the public/private key
- * @param {string} msg Message
+ * @param {number} msg Message
  * @param {number[]} key Key
  * @returns {number} Crypted/decrypted code
- * @see RSA
+ * @see module:Security~RSA
  * @since 1.0
  * @func
  */
@@ -296,30 +306,45 @@ function cryptRSA (msg, key) { //Encrypt $msg with the public/private key $key t
 }
 
 /**
+ * @description RSA algorithm
+ * @param {Str} msg Message to encrypt/decrypt
+ * @param {number[]} keys RSA Key pair
+ * @return {Str} Encrypted/decrypted message
+ * @since 1.1
+ * @func
+ * @todo Make sure the RSA(RSA(<code>msg</code>, [n, e|d]), [n, d|e])=<code>msg</code>
+ */
+function RSA (msg, keys) {
+    return msg.map(function (l) {
+        return String.fromCharCode(abcModulus(cryptRSA(l.charCodeAt(0), keys)));
+    })
+}
+
+/**
  * @description Generate a password
  * @returns {string} Password
- * @see genHash
+ * @see module:Security~genHash
  * @since 1.0
  * @func
  */
 function genPassword () {
     var chars = [], sym = ["&", "~", "\"", "#", "\'", "{", "[", "(", "-", "|", "`", "_", "\\", "^", "@", ")", "]", " + ", "=", "}", " % ", " * ", "?", ",", ";", ".", "/", ":", "!", " ", ""], word = "";
     for (var i = 65; i < 123; i++) {
-        if (i <= 90 || i >= 97) chars[i-65] = String.fromCharCode(i);
+        if (i <= 90 || i >= 97) chars[i - 65] = String.fromCharCode(i);
     }
-    chars = chars.concat(sym, range(0, 1, 9)).remove(undefined);
-    if (chars.has(undefined)) chars = chars.concat(sym, range(0, 1, 9)).remove(undefined);
-    while (word.length < 20) word += chars[randTo(chars.length-1)];
-    if (word.length < 20) word += chars[randTo(chars.length-1)];
+    chars = chars.concat(sym, range(9)).remove();
+    while (word.length < 20) word += chars.rand();
+    if (word.length < 20) word += chars.rand();
     return word
 }
 
 /**
  * @description Generate a hash
  * @param {string} password Password
+ * @param {boolean} [withRest=false] Add the rest of the hashing bits to the result
  * @todo To fix
  * @returns {string} Hash
- * @see genPassword
+ * @see module:Security~genPassword
  * @since 1.0
  * @func
  */
@@ -337,6 +362,13 @@ function genHash (password, withRest) {
     return (hash === password)? genHash(hash, true): hash;
 }
 
+/**
+ * @description Hash a word (might deprecate genHash())
+ * @param {string} word Word
+ * @return {Str} hash
+ * @since 1.1
+ * @func
+ */
 function hash (word) {
     var m = word.mean(), s = getStep(word.split("").map(function (x) {
             return x.charCodeAt(0);
@@ -346,9 +378,22 @@ function hash (word) {
     ), w = word.split("");
     var p = w.even().concat(w.odd()).join("").map(function (c) {
         return String.fromCharCode(abcModulus(c.charCodeAt(0) + s));
-    });
-    p = p.split("").portion(2).concat(p.split("").portion(-2)).join("");
+    }), mw = w.even().concat(w.odd()).join("");
+    console.log("p", p, "\nmw", mw);
     return toFSHA(p.split("").portion(2).concat(p.split("").portion(-2)).join(""));
+}
+
+function unHash (hash) {
+    var word = fromFSHA(hash).split("");
+    /*
+   P.portion(2).concat(P.portion(-2)).join("")
+   Px = P.portion(2)
+   Py = Px.concat(P.portion(-2))
+   Py.join("")
+    word =
+     */
+
+    return word.join("");
 }
 
 /**
@@ -382,7 +427,8 @@ function fromFSHA (fsha) {
         else if (/\d+/.test(fsha[i])) {
             var j = i + 1;
             while (j < fsha.length - 1 && /\d+/.test(fsha[j])) j++;
-            res += String.fromCharCode(fsha.get(i, j));
+            res += String.fromCharCode(fsha.get(i, j - 1));
+            i = j - 1;
         }
     }
     return res;

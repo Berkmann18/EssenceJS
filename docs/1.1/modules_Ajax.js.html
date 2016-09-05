@@ -51,7 +51,7 @@ var Ajax = new Module("Ajax", "AJAX stuff");
 /**
  * @description HTTP GET request, it retrieves data. Equivalent to:
  * var val;
- * parseURL($name, function (x) {val = x}); //as using return x won't return anything
+ * parseURL(&lt;code>name&lt;/code>, function (x) {val = x}); //as using return x won't return anything
  * @param {string} name Name of the key
  * @returns {string} Value of the key
  * @since 1.0
@@ -63,7 +63,7 @@ function GET (name) {
 }
 
 /**
- * @description HTTP POST request. Create data.
+ * @description HTTP POST request. Create data..&lt;br />
  * Source: Stackoverflow
  * @param {string} path Path of the file to post to
  * @param {Object} params Parameters
@@ -119,10 +119,49 @@ function DELETE () {
  * @returns {undefined}
  * @since 1.0
  * @func
+ * @example
+ * function showLogs () {
+ *   load("logs.log", function (xhr) {
+ *      $e("#logView").write(xhr.responseText);
+ *   }
+ * }
  */
 function load (url, cb) {
     var xhr = new XHR(url, "get", true, cb);
     xhr.init();
+}
+
+/**
+ * @description Load a JSON file
+ * @param {string} [file="data"] Filename (without the '.json' bit)
+ * @func
+ * @since 1.1
+ * @returns {*} JSON data
+ * @example
+ * loadJSON("package"); //Loads the package.json file which content can be found in $G["json"] if not returned
+ * //Equivalent of doing that
+ * var package = {};
+ * load("package.json", function (xhr) {
+ *  package = JSON.parse(xhr.response); //Returning that won't do anything so we need to store it in a variable
+ * });
+ */
+function loadJSON (file) {
+    var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
+    xhr.overrideMimeType("application/json");
+    xhr.open("GET", (file || "data") + ".json", true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 &amp;&amp; xhr.status === 200) (function () {
+            $G["json"] = JSON.parse(xhr.responseText);
+            return JSON.parse(xhr.responseText) || $G["json"];
+        })();
+    };
+    xhr.send(null);
+    //console.log("res=", xhr.response, "\nresTxt=", xhr.responseText, "\nresXML=", xhr.responseXML, "\nresT=", xhr.responseType);
+    try {
+        return JSON.parse(xhr.response);
+    } catch (e) {
+        return $G["json"];
+    }
 }
 
 /**
@@ -272,8 +311,8 @@ function XHR (url, method, async, success, fail, progress, body, creds, mime) {
  * @param {string} [body] Body of the request
  * @returns {CORS} CORS object
  * @since 1.1
- * @inheritDoc
- * @see XHR
+ * @inheritdoc
+ * @see module:Ajax~XHR
  * @constructor
  * @property {string} CORS.url URL
  * @property {string} CORS.method Method
@@ -360,27 +399,6 @@ function AJAXpost (data, to, xml) {
     return res
 }
 
-/**
- * @description Load a JSON file
- * @param {string} [file="data"] Filename (without the '.json' bit)
- * @func
- * @since 1.1
- * @returns {*} JSON data
- */
-function loadJSON (file) {
-    var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
-    xhr.overrideMimeType("application/json");
-    xhr.open("GET", (file || "data") + ".json", true);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 &amp;&amp; xhr.status === 200) (function () {
-            $G["json"] = JSON.parse(xhr.responseText);
-            return JSON.parse(xhr.responseText);
-        })();
-    };
-    xhr.send(null);
-    return JSON.parse(xhr.responseText) || $G["json"];
-}
-
 /* eslint no-undef: 2 */
 /**
  * @description HTPP status message
@@ -458,23 +476,23 @@ function getXHRMsg (state) {
 }
 
 /**
- * @description Cross Origin Resource Sharing request maker
+ * @description Cross Origin Resource Sharing request maker.&lt;br />
  * Source: {@link https://stackoverflow.com/questions/3076414/ways-to-circumvent-the-same-origin-policy}
  * @param {string} [method="get"] Method
  * @param {string} [url=getDirectoryPath()] URL
  * @returns {XMLHttpRequest} CORS request
  * @example
  * var request = createCORSRequest("get", "http://www.stackoverflow.com/");
- if (request){
-    request.onload = function() {
-        // ...
+ if (request) {
+    request.onload = function () {
+        //...
     };
     request.onreadystatechange = handler;
     request.send();
  }
  * @since 1.1
  * @func
- * @see setCORS
+ * @see module:Ajax~setCORS
  */
 function createCORSRequest (method, url) {
     var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
@@ -494,7 +512,7 @@ function createCORSRequest (method, url) {
  * @param {boolean} [withCreds=false] Add credentials
  * @param {Code} [body] Body of the request
  * @returns {*} CORS response
- * @see createCORSRequest
+ * @see module:Ajax~createCORSRequest
  * @since 1.1
  * @func
  * @throws {Error} CORS not supported
@@ -553,13 +571,13 @@ function setCORS (url, method, xml, withCreds, body) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-File.html">File</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-File-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#getFileContent">getFileContent</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#UnitTest">UnitTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Aug 24 2016 18:14:41 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Sep 05 2016 19:03:54 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>
