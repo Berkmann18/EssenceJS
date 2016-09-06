@@ -38,7 +38,7 @@
 - redirect
 - isValid, validate
 - escapeHTML, unescapeHTML
-- getRessources, gatherScripts, gatherStylesheets
+- getResources, gatherScripts, gatherStylesheets
 - stripTags
 - simpleTable, rowTable, colTable, complexTable, colourTable
 - tableCompare

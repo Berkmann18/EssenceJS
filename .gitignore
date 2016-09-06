@@ -51,3 +51,5 @@ idea
 # Win
 Thumbs.db
 desktop.ini
+builder.bat
+deploy.bat

@@ -1,5 +1,10 @@
 # To do:
 -   Looking for a more efficient way to add CSS styles for each "DOM adders" (e.g: simpleTable, DB)
+-   Get the Spider working (see [Files])
+-   Improve getResources() (see [DOM]) and Console (see [Web])
+-   Having genHash() workable and reversible (by getting hash() and unHash() to work, see [Security])
+-   Fix the failed lib unit tests (see [essence])
+-   Comparing DB and server's event handlers/listeners and use the best for the rest
 
 # To add:
 -   Having a dynamic real-time table/update (e.g: news feeds)
@@ -17,12 +22,16 @@
 -	Prim's alg (already there as A* ?!)
 -	Kruskal's alg
 -   Fully functional NoSQL/NoPHP server/database (with remote access, see [Web])
+-   Event listeners to server, DB, WebPage and WebApp (see [Web])
+-   Lowest Common Multiplier lcm(a, b) in [Maths]
+-   All missing uni converters and renaming the ones to their appropriate names (see Units Plus on iOS for help)
+-   RWD styling (@media and bootstrap-like classes)
 
 # To continue:
 -	code highlighting feature for editors (see [Web]~Editor.highlightSyntax)
 -	Parser for MIPS, Batch, Java, Python to DHTML/PHP and eventually to MIPS (see [Web]~Parser.run)
 -   AI system that stores it's rules in a database and update it after learning (see [Misc]~AI)
--   Combinations maker: 3*[a, b, c] -> [aaa, aab, aac, ..., ccc] (see [DataStruct]~Comb)
+-   Combinations maker: 3*[a, b, c] -> \[aaa, aab, aac, ..., ccc\] (see [DataStruct]~Comb)
 -   Path finding alg using IDA* (see [DataStruct]~IDAstar)
 -	Cumulative probabilities (see [Maths])
 -	Webpage templating (see [Web]~WebPage)
@@ -37,9 +46,10 @@
 -	msgBox() (see [UI]~msgBox)
 -	WebApp (see [Web]~WebApp)
 -	Debugger (see [Web]~Debugger)
--	FA (see [Misc]~FA)
+-	FA (see [Misc]~FA) after perhaps reading more about it
 -	exp2dict (see [Misc]~exp2dict)
 -	Alg formula to truth table (see [Maths]~truthTable, [Maths]~getDNF and [Maths]~getCNF)
+-   PUT() and DELETE() (see [Ajax])
 
 # To fix:
 -	Array.remove not affecting the array (see [essence]~Array.remove)
@@ -53,7 +63,8 @@
 -	A (see [DataStruct]~A)   _might need reconPath to be fixed first !!_
 -	reconPath (see [DataStruct]~reconPath)
 -	Something like Java's System.in that allows the code to grab the user's input without having to use JS prompt, contentEditable or HTML's input/textarea fields (see [Misc]~Sys and [essence]~Essence.ask)
--	$Data, getting $Data.save to save at the desired place and making sure the rest works (see [Files]~$Data)
+-	$Data, getting $Data.save() to save at the desired place and making sure the rest works (see [Files]~$Data)
+-   Array.(min|max)(Avg|Mean)() (see [essence])
 
 [essence]: 1.1/essence.js
 [Ajax]: 1.1/modules/Ajax.js

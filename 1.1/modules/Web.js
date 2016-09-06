@@ -164,6 +164,17 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
  * @property {function(boolean)} DB.init Initialise the database
  * @property {function(): string} database.toString String representation
  * @property {function(number): Array} database.remove Remove a row from the database
+ * @property {Function} DB.onBuild Building event listener
+ * @property {Function} DB.onFill Filling event listener
+ * @property {Function} DB.onSave Saving event listener
+ * @property {Function} DB.onUpdate DB update event listener
+ * @property {Function} DB.onSet DB row set event listener
+ * @property {Function} DB.onGet DB row/cell gathering event listener
+ * @property {Function} DB.onFind Research event listener
+ * @property {Function} DB.onSee Visualisation event listener
+ * @property {Function} DB.onView DOM display event listener
+ * @property {Function} DB.onAdd Row addition/push event listener
+ * @property {Function} DB.onInit Initialisation event listener
  */
 function DB (name, headers, rows, headerRows) {
     this.name = name || "DB";
@@ -327,6 +338,9 @@ function process (name, auth, summup, ctt) {
  * @property {function(process)} server.fire Remove a process from the server
  * @property {Function} server.reset Reset the server
  * @property {function(): string} server.toString String representation
+ * @property {Object} server.listeners Event listeners
+ * @property {function(Event, function(Event))} server.on OnEvt handler
+ * @property {Event} server.event Event
  */
 function server (name, admin, type, ver, mxsz) {
     this.name = name || "Server";
