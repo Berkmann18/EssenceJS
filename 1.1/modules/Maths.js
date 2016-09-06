@@ -8,9 +8,7 @@
  * @copyright Maximilian Berkmann 2016
  * @requires essence
  * @requires Misc
- * @namespace
  * @type {Module}
- * @since 1.1
  * @exports Maths
  */
 var Maths = new Module("Maths", "Maths stuff", ["Misc"]);
@@ -1992,7 +1990,7 @@ function getDNF (exp) {
  * @todo Work on it
  * @func
  */
-function getCNF(exp) {
+function getCNF (exp) {
     var tt = truthTable(exp), cnf = "";
     //code here
     return cnf;

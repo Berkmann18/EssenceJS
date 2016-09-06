@@ -9,9 +9,7 @@
  * @requires essence
  * @requires DataStruct
  * @requires Misc
- * @namespace
  * @type {Module}
- * @since 1.1
  * @exports Web
  */
 var Web = new Module("Web", "Web stuff", ["DataStruct", "Misc"], 1, function () {
@@ -162,15 +160,16 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
  * @property {function(*): number} DB.find Look for an item
  * @property {function(): Array} DB.see Get a viewable copy of the database
  * @property {function(?string)} DB.view Display the database
- * @property {function(Array)} database.add Add a cell (without the index/rank) to the database
+ * @property {function(Array, ?number)} database.add Add a cell (without the index/rank) to the database
  * @property {function(boolean)} DB.init Initialise the database
  * @property {function(): string} database.toString String representation
+ * @property {function(number): Array} database.remove Remove a row from the database
  */
 function DB (name, headers, rows, headerRows) {
     this.name = name || "DB";
     this.head = headers || ["Index", "Value"];
     this.val = rows || [range(1), new Array(range(1).length).fill("...")].translate();
-    this.css = "<style>*{font-family:Consolas,Segoe UI,Tahoma,sans-serif;}table{background: #000;}table,td,th{border:1px solid #000;color:#000;background:#fff;}tr:nth-child(even) td,tr:nth-child(even) th{background:#eee;}</style>";
+    this.css = "<style>table#"+ this.name + "{font-family:Consolas,Segoe UI,Tahoma,sans-serif;background: #000;}table#"+ this.name + ", #"+ this.name + " td, #"+ this.name + " th{border:1px solid #000;color:#000;background:#fff;}#"+ this.name + " tr:nth-child(even) td,#"+ this.name + " tr:nth-child(even) th{background:#eee;}</style>";
     this.html = "";
     this.rows = headerRows || false;
     //this.events = Tablify(["build", "fill", "save", "update", "set", "get", "find", "see", "view", "add", "init"], {data: null, name: "", timeStamp: new Date().getTime()});
@@ -199,7 +198,7 @@ function DB (name, headers, rows, headerRows) {
             this.val = JSON.parse(localStorage[this.name]);
             this.head = JSON.parse(localStorage[this.name + "_head"]);
             this.html = localStorage[this.name + "_html"];
-            this.rows = localStorage[this.name + "_rows"].split(","); //JSON.parse(localStorage[this.name + "_rows"]);
+            this.rows = (localStorage[this.name + "_rows"] == "false")? localStorage[this.name + "_rows"]: localStorage[this.name + "_rows"].split(","); //JSON.parse(localStorage[this.name + "_rows"]);
         } else this.save();
         this.onUpdate(this);
     };
@@ -227,8 +226,8 @@ function DB (name, headers, rows, headerRows) {
         $e(id? "#" + id: "body").write(this.html + this.css, true);
         this.onView($e(id? "#" + id: "body").val(true), id);
     };
-    this.add = function (vals) {
-        this.val.append(vals.unshift(parseInt(this.val.last()[0]) + 1));
+    this.add = function (vals, step) {
+        this.val.push([parseFloat(this.val.last()[0]) + (step || 1)].concat(vals));
         this.onAdd(vals, this.val);
     };
     this.init = function (seeTable) {
@@ -236,6 +235,11 @@ function DB (name, headers, rows, headerRows) {
         this.update();
         if (seeTable) console.table(this.see());
         this.onInit(this);
+    };
+    this.remove = function (i) {
+        this.val[i || this.val.lastIndex()] = undefined;
+        this.val = this.val.remove();
+        return this.val;
     };
 
     this.toString = function () {

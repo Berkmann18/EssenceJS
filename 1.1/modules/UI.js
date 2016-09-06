@@ -8,9 +8,7 @@
  * @copyright Maximilian Berkmann 2016
  * @requires essence
  * @requires Maths
- * @namespace
  * @type {Module}
- * @since 1.1
  * @exports UI
  */
 var UI = new Module("UI", "UI stuff", ["Maths"]);

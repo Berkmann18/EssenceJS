@@ -6,9 +6,9 @@
 - is2dArray
 - isType, getType, isCustomType, getCustomType
 - isNon
-- copy
+- Copy
 - getKey
-- getTime, getDate, getTimestamp, dateTime, weekDay || dayOfWeek, date2num, num2date, date2txt, txt2date, dateDiff, date2s, s2date
+- getTime, getDate, getTimestamp, dateTime, dayOfWeek, date2num, num2date, date2txt, txt2date, dateDiff, date2s, s2date
 - genString
 - mkArray, numArr
 - toSameLength

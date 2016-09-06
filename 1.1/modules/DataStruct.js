@@ -10,9 +10,7 @@
  * @requires DOM
  * @requires Maths
  * @requires Files
- * @namespace
  * @type {Module}
- * @since 1.1
  * @exports DataStruct
  */
 var DataStruct = new Module("DataStruct", "Data structures", ["DOM", "Maths", "Files"]);

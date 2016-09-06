@@ -9,9 +9,7 @@
  * @requires essence
  * @requires Ajax
  * @requires Misc
- * @namespace
  * @type {Module}
- * @since 1.1
  * @exports File
  */
 var Files = new Module("Files", "File management and control", ["Ajax", "Misc"]);

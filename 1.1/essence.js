@@ -3925,22 +3925,6 @@ function dateTime (id) {
 }
 
 /**
- * @description Gives the week day of the given data (slightly inaccurate)
- * @param {string} d Date (in the form dd/mm/yyyy)
- * @todo Getting it right
- * @returns {string} Week day
- * @since 1.0
- * @see module:essence~dayOfWeek
- * @func
- */
-function weekDay (d) {
-    var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], k = parseInt(d.split("/")[0]), m = parseInt(d.split("/")[1]), y = parseInt(d.split("/").last()), c;
-    c = Math.floor(y / 100); //Century
-    y %= 100;
-    return days[Math.round((1 + 2.6 * m - 0.2 + k + y + y / 4 + c / 4 - 2 * c) % 7) - 1]
-}
-
-/**
  * @description Kinch's week day finder
  * @param {string} d Date
  * @author Daniel "Kinch" Sheppard

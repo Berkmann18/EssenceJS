@@ -36,9 +36,7 @@
  * @copyright Maximilian Berkmann 2016
  * @requires essence
  * @requires Misc
- * @namespace
  * @type {Module}
- * @since 1.1
  * @exports DOM
  */
 var DOM = new Module("DOM", "DOM stuff", ["Misc"], 1, function () {
@@ -424,15 +422,16 @@ function gatherExternalStylesheets (format) {
  */
 function simpleTable (caption, rows, id, style, split, cellIds) {
     if (isNon(style)) style = "";
-    var tab = "&lt;table id='" + (id || "t") + "' style='" + style + "' cellspacing=0 cellpadding=2>" + (caption? "&lt;caption>" + caption + "&lt;/caption>": "");
+    if (!id) id = "t";
+    var tab = "&lt;table id='" + id + "' style='" + style + "' cellspacing=0 cellpadding=2>" + (caption? "&lt;caption>" + caption + "&lt;/caption>": "");
     for (var i = 0; i &lt; rows.length; i++) {
         tab += "&lt;tr>";
         if (split) {
-            for(var j = 0; j &lt; rows[i].length; j++) tab += "&lt;td id='" + (id || "t") + (isNon(cellIds)? i+"_"+j: cellIds[i][j]) + "'>" + rows[i][j] + "&lt;/td>";
-        } else  tab += "&lt;td id='" + (id || "t") + (isNon(cellIds)? i: cellIds[i]) + "'>" + rows[i] + "&lt;/td>";
+            for(var j = 0; j &lt; rows[i].length; j++) tab += "&lt;td id='" + id + (isNon(cellIds)? i+"_"+j: cellIds[i][j]) + "'>" + rows[i][j] + "&lt;/td>";
+        } else  tab += "&lt;td id='" + id + (isNon(cellIds)? i: cellIds[i]) + "'>" + rows[i] + "&lt;/td>";
         tab += "&lt;/tr>";
     }
-    tab += "&lt;/table>&lt;style>table{background: #000;}table, td {border: 1px solid #000; color: #000; background: #fff;} tr:nth-child(even) td{background: #ddd;} tr td:hover{background: #bbb;}&lt;/style>";
+    tab += "&lt;/table>&lt;style>#"+ id + " table{background: #000;}#"+ id + " table, #"+ id + " td {border: 1px solid #000; color: #000; background: #fff;}#"+ id + " tr:nth-child(even) td{background: #ddd;}#"+ id + " tr td:hover{background: #bbb;}&lt;/style>";
     return tab
 }
 
@@ -449,19 +448,20 @@ function simpleTable (caption, rows, id, style, split, cellIds) {
  */
 function rowTable (caption, headerRows, rows, id, split, style, cellIds) {
     if (isNon(style)) style = "";
-    var tab = "&lt;table id='" + (id || "t") + "' style='" + style + "' cellspacing=0 cellpadding=2>" + (caption? "&lt;caption>" + caption + "&lt;/caption>": "");
+    if (!id) id = "t";
+    var tab = "&lt;table id='" + id + "' style='" + style + "' cellspacing=0 cellpadding=2>" + (caption? "&lt;caption>" + caption + "&lt;/caption>": "");
     //var rowspan = (headerRows.length &lt;= rows.length)? rows.length/headerRows.length: headerRows.length/rows.length;
     //console.log(rowspan);
     for (var i = 0; i &lt; rows.length; i++) {
         tab += headerRows? "&lt;tr>&lt;th>" + headerRows[i] + "&lt;/th>": "&lt;tr>";
         if (split) {
             for (var j = 0; j &lt; rows[i].length; j++) {
-                tab += "&lt;td id='" + (id || "t") + (isNon(cellIds)? i+"_"+j: cellIds[i][j]) + "'>" + rows[i][j] + "&lt;/td>";
+                tab += "&lt;td id='" + id + (isNon(cellIds)? i+"_"+j: cellIds[i][j]) + "'>" + rows[i][j] + "&lt;/td>";
             }
-        } else tab += "&lt;td id='" + (id || "t") + (isNon(cellIds)? i: cellIds[i]) + "'>" + rows[i] + "&lt;/td>";
+        } else tab += "&lt;td id='" + id + (isNon(cellIds)? i: cellIds[i]) + "'>" + rows[i] + "&lt;/td>";
         tab += "&lt;/tr>";
     }
-    tab += "&lt;/table>&lt;style>table{background: #000;}table, td, th{border: 1px solid #000; color: #000; background: #fff;}tr:nth-child(even) td, tr:nth-child(even) th{background: #ddd;}tr td:hover, tr th:hover{background: #bbb;}&lt;/style>";
+    tab += "&lt;/table>&lt;style>#"+ id + " table{background: #000;}#"+ id + " table, #"+ id + " td, #"+ id + " th{border: 1px solid #000; color: #000; background: #fff;}#"+ id + " tr:nth-child(even) td, #"+ id + " tr:nth-child(even) th{background: #ddd;}#"+ id + " tr td:hover, #"+ id + " tr th:hover{background: #bbb;}&lt;/style>";
     return tab
 }
 
@@ -478,7 +478,8 @@ function rowTable (caption, headerRows, rows, id, split, style, cellIds) {
  */
 function colTable (caption, headerCols, cols, id, split, style, cellIds) {
     if (isNon(style)) style = "";
-    var tab = "&lt;table id='" + (id || "t") + "' style='" + style + "' cellspacing=0 cellpadding=2>" + (caption? "&lt;caption>" + caption + "&lt;/caption>": "");
+    if (!id) id = "t";
+    var tab = "&lt;table id='" + id + "' style='" + style + "' cellspacing=0 cellpadding=2>" + (caption? "&lt;caption>" + caption + "&lt;/caption>": "");
     //var colspan = (headerCols.length &lt;= cols.length)? cols.length/headerCols.length: headerCols.length/cols.length;
     //console.log(colspan);
     if (headerCols) {
@@ -492,12 +493,12 @@ function colTable (caption, headerCols, cols, id, split, style, cellIds) {
         tab +="&lt;tr>";
         if (split) {
             for (var j = 0; j &lt; cols[i].length; j++) {
-                tab += "&lt;td id='" + (id || "t") + (isNon(cellIds)? i+"_"+j: cellIds[i][j]) + "'>" + cols[i][j] + "&lt;/td>";
+                tab += "&lt;td id='" + id + (isNon(cellIds)? i+"_"+j: cellIds[i][j]) + "'>" + cols[i][j] + "&lt;/td>";
             }
-        } else tab += "&lt;td id='" + (id || "t") + (isNon(cellIds)? i: cellIds[i]) + "'>" + cols[i] + "&lt;/td>";
+        } else tab += "&lt;td id='" + id + (isNon(cellIds)? i: cellIds[i]) + "'>" + cols[i] + "&lt;/td>";
         tab += "&lt;/tr>"
     }
-    tab += "&lt;/table>&lt;style>table{background: #000;}table, td, th{border: 1px solid #000; color: #000; background: #fff;}tr:nth-child(even) td{background: #ddd;}tr td:hover{background: #bbb;}&lt;/style>";
+    tab += "&lt;/table>&lt;style>#"+ id + " table{background: #000;}#"+ id + " table, #"+ id + " td, #"+ id + " th{border: 1px solid #000; color: #000; background: #fff;}#"+ id + " tr:nth-child(even) td{background: #ddd;}#"+ id + " tr td:hover{background: #bbb;}&lt;/style>";
     return tab
 }
 
@@ -515,19 +516,20 @@ function colTable (caption, headerCols, cols, id, split, style, cellIds) {
  */
 function complexTable (caption, headerRows, rows, headerCols, id, split, style, cellIds) {
     if (isNon(style)) style = "";
-    var tab = "&lt;table id='" + (id || "t") + "' style='" + style + "' cellspacing=0 cellpadding=2>" + (caption? "&lt;caption>" + caption + "&lt;/caption>&lt;tr>&lt;td>&lt;/td>": "&lt;tr>&lt;td>&lt;/td>");
+    if (!id) id = "t";
+    var tab = "&lt;table id='" + id + "' style='" + style + "' cellspacing=0 cellpadding=2>" + (caption? "&lt;caption>" + caption + "&lt;/caption>&lt;tr>&lt;td>&lt;/td>": "&lt;tr>&lt;td>&lt;/td>");
     for(var i = 0; i &lt; headerCols.length; i++) tab += "&lt;th>" + headerCols[i] + "&lt;/th>";
     tab += "&lt;/tr>";
     for (i = 0; i &lt; rows.length; i++) {
         tab += (headerRows)? "&lt;tr>&lt;th>" + headerRows[i] + "&lt;/th>": "&lt;tr>";
         if (split) {
             for (var j = 0; j &lt; rows[i].length; j++) {
-                tab += "&lt;td id='" + (id || "t") + (isNon(cellIds)? i + "_" + j: cellIds[i][j]) + "'>" + rows[i][j] + "&lt;/td>";
+                tab += "&lt;td id='" + id + (isNon(cellIds)? i + "_" + j: cellIds[i][j]) + "'>" + rows[i][j] + "&lt;/td>";
             }
-        } else tab += "&lt;td id='" + (id || "t") + (isNon(cellIds)? i: cellIds[i]) + "'>" + rows[i] + "&lt;/td>&lt;/tr>";
+        } else tab += "&lt;td id='" + id + (isNon(cellIds)? i: cellIds[i]) + "'>" + rows[i] + "&lt;/td>&lt;/tr>";
         tab += "&lt;/tr>";
     }
-    tab += "&lt;/table>&lt;style>table{background: #000;}table, td, th{border: 1px solid #000; color: #000; background: #fff;}tr:nth-child(even) td{background: #ddd;}tr td:hover{background: #bbb;}&lt;/style>";
+    tab += "&lt;/table>&lt;style>#"+ id + " table{background: #000;}#"+ id + " table, #"+ id + " td, #"+ id + " th{border: 1px solid #000; color: #000; background: #fff;}#"+ id + " tr:nth-child(even) td{background: #ddd;}#"+ id + " tr td:hover{background: #bbb;}&lt;/style>";
     return tab
 }
 
@@ -544,7 +546,8 @@ function complexTable (caption, headerRows, rows, headerCols, id, split, style, 
  * @func
  */
 function colourTable (caption, cols, clrs, id, split, style) {
-    var tab = "&lt;table id='" + (id || "c") + "' style='" + style + "' cellspacing=0 cellpadding=2>" + (caption? "&lt;caption>" + caption + "&lt;/caption>": "");
+    if (!id) id = "c";
+    var tab = "&lt;table id='" + id + "' style='" + style + "' cellspacing=0 cellpadding=2>" + (caption? "&lt;caption>" + caption + "&lt;/caption>": "");
     if (cols) {
         tab += "&lt;tr>";
         for(var i = 0; i &lt; cols.length; i++) tab += "&lt;th>" + cols[i] + "&lt;/th>";
@@ -557,7 +560,7 @@ function colourTable (caption, cols, clrs, id, split, style) {
         } else tab += "&lt;td style='background:" + clrs[i] + ";'>&lt;br />&lt;/td>";
         tab +="&lt;/tr>"
     }
-    tab += "&lt;/table>&lt;style>table{background: #000;}table, td, th{border: 1px solid #000; color: #000; background: #fff;}tr:nth-child(even) td{background: #ddd;}tr td:hover{background: #bbb;}&lt;/style>";
+    tab += "&lt;/table>&lt;style>#"+ id + " table{background: #000;}#"+ id + " table, #"+ id + " td, #"+ id + " th{border: 1px solid #000; color: #000; background: #fff;}#"+ id + " tr:nth-child(even) td{background: #ddd;}#"+ id + " tr td:hover{background: #bbb;}&lt;/style>";
     return tab
 }
 
@@ -811,13 +814,13 @@ function tabs (n) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Sep 05 2016 19:03:54 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Tue Sep 06 2016 00:48:21 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

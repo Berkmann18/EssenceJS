@@ -8,9 +8,7 @@
  * @copyright Maximilian Berkmann 2016
  * @requires essence
  * @requires Files
- * @namespace
  * @type {Module}
- * @since 1.1
  * @exports Misc
  */
 var Misc = new Module("Misc", "Miscellaneous", ["Files"]);
@@ -988,13 +986,46 @@ function anim (msg, startTime, max, step, tuxStyle, stop) {
 }
 
 //AI system that stores it's rules in a database and update it after learning
+/**
+ * @description Artificial Intelligence system.
+ * @param {Array} [rules=[[0, "", null]]] Rules
+ * @return {AI} AI
+ * @constructor
+ * @since 1.1
+ */
 function AI (rules) {
-    this.rules = rules || [];
-    this.db = new DB("AI rules", ["Index", "Rules", "Precision"]);
-    this.updateRule = function (rule, val) {
+    this.rules = rules || [[0, "", null]];
+    this.db = new DB("AI rules", ["Index", "Rules", "Precision"], this.rules);
+    this.db.init();
+    this.updateRule = function (rule, val, newRule) { //rule can be the id/rank of the row
         var pos = this.db.find(rule);
-        this.db.set(val, this.db.get(pos[0], pos[1]))
+        this.db.set(val, pos[0], pos[1] + (isType(rule, "Number")? 2: 1));
+        if (newRule) this.db.set(newRule, pos[0], pos[1]);
+        this.rules = this.db.val;
     };
-
+    this.addRule = function (name, val) {
+        this.db.add([name, val]);
+        this.rules = this.db.val;
+    };
+    this.removeRule = function (name) {
+        this.db.remove(this.db.find(name));
+        this.rules = this.db.val;
+    };
+    this.update = function () {
+        this.db.update();
+        this.db.build();
+        this.rules = this.db.val;
+    };
+    this.save = function () {
+        this.db.save();
+        this.rules = this.db.val;
+    };
+    this.findRule = function (rule) {
+        return this.db.find(rule);
+    };
+    this.verify = function (rule, val) {
+        var pos = this.findRule(rule);
+        return eval(this.rules[pos[0]][pos[1] + 1].replace("x", val));
+    };
     return this;
 }

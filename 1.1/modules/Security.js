@@ -10,9 +10,7 @@
  * @requires Maths
  * @requires DOM
  * @requires QTest
- * @namespace
  * @type {Module}
- * @since 1.1
  * @exports Security
  */
 var Security = new Module("Security", "Security stuff", ["Maths", "DOM", "QTest"]);

@@ -7,9 +7,7 @@
  * @author Maximilian Berkmann <maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
  * @requires essence
- * @namespace
  * @type {Module}
- * @since 1.1
  * @exports Ajax
  */
 var Ajax = new Module("Ajax", "AJAX stuff");

@@ -9,9 +9,7 @@
  * @requires essence
  * @requires Maths
  * @requires DOM
- * @namespace
  * @type {Module}
- * @since 1.1
  * @exports File
  */
 var QTest = new Module("QTest", "QA and tests", ["Maths", "DOM"]);
