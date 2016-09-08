@@ -716,6 +716,8 @@ function $n (selector, silence) { //To get directly the node without having to u
  * @property {Function} Element.scrollRight Scroll to the right of the node
  * @property {function(number, number)} Element.scroll Scroll in any directions
  * @property {function(string, number)} Element.autoScroll Auto scrolling animation
+ * @property {function(string, *): *} Element.attr Get/set the attribute of the node
+ * @property {function(string)} Element.rmAttr Remove an attribute from the node
  */
 function Element (selector) { //The element object
     if (/^([#\.\*_-`~&]\W*|\S|undefined|null|)$/.test(selector)) throw new InvalidParamError("Element cannot accept the selector '" + selector + "' as it's invalid."); //Reject invalid selectors
@@ -966,6 +968,14 @@ function Element (selector) { //The element object
         }, speed || 50);
     };
     //Maybe do something with $n(...).scrollIntoView()
+    
+    this.attr = function (name, nval) {
+        return isNon(nval)? this.node.getAttribute(name): this.node.setAttribute(name, nval);
+    };
+    this.rmAttr = function (name) {
+        this.node.removeAttribute(name);
+    };
+    
     return this
 }
 

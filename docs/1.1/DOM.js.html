@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: modules/DOM.js</title>
+    <title>JSDoc: Source: DOM.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: modules/DOM.js</h1>
+    <h1 class="page-title">Source: DOM.js</h1>
 
     
 
@@ -740,6 +740,7 @@ function writeMsg2 (msg, slc, HTML, speed, txt, pos) {
 /**
  * @description Templating + conversion
  * @param {string} [name="Template"] Name
+ * @param {string} [path="Template.jst"] Path
  * @param {string} [txt=""] Text/code containing the {{params}}
  * @param {string[]} [params=["tab", "date", "time", "timestamp", "br"]] Parameters
  * @param {boolean} [consoleSpecial=false] Resulting text formatted to the console
@@ -757,12 +758,12 @@ function writeMsg2 (msg, slc, HTML, speed, txt, pos) {
  * @property {function(Object): (Code)} Template.gen Text/code generator
  * @property {function(Object, string, string)} Template.save Save the generated text/code in the specified path
  */
-function Template (name, txt, params, consoleSpecial) {
+function Template (name, path, txt, params, consoleSpecial) {
     this.name = name || "Template";
-    this.path = this.name + ".jst";
+    this.path = path || this.name + ".jst";
     this.params = params || ["name", "description", "version", "title", "path"]; //{{params}}
     this.special = ["tab", "date", "time", "timestamp", "br"]; //%special%
-    this.specialEq = ["&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;", getDate(), getTime(true), getTimestamp(true), "&lt;br />"];
+    this.specialEq = ["&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;", getDate(), getTime(), getTimestamp(), "&lt;br />"];
     if (consoleSpecial) {
         this.specialEq[0] = "\t";
         this.specialEq[4] = "\n";
@@ -771,7 +772,8 @@ function Template (name, txt, params, consoleSpecial) {
     this.gen = function (obj) { //Generate a text/code from the template using the keys of the object
         var res = this.text, k = keyList(obj, true);
         for(var i = 0; i &lt; k.length; i++) res = res.replace(RegExpify("{{" + k[i] + "}}"), obj[k[i]]);
-        for(i = 0; i &lt; this.special.length; i++) res = res.replace(RegExpify("%" + this.special[i] + "%"), this.specialEq[i], " ");
+        if (res.index)
+            for(i = 0; i &lt; this.special.length; i++) res = res.replace(RegExpify("%" + this.special[i] + "%"), this.specialEq[i], " ");
         return res
     };
     this.save = function (obj, name, ext) { //Save the template into a file or the converted version
@@ -802,72 +804,7 @@ function stripTags (str) {
  */
 function tabs (n) {
     return "&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;".repeat(n || 1);
-}
-
-/**
- * @description A Document templating system that will change the DOM with the use of data-* attributes or {{*}}
- * @global
- * @type {{attrs: string[], assoc: Array, get: DocTemplate.get, getAll: DocTemplate.getAll, getVal: DocTemplate.getVal, getValAll: DocTemplate.getValAll, associate: DocTemplate.associate, associateAll: DocTemplate.associateAll, template: Template, deMustache: DocTemplate.deMustache}}
- * @since 1.1
- * @this DocTemplate
- * @property {string[]} DocTemplate.attrs Attributes (either preceded by data- attributes in HTML elements or between {{ and }})
- * @property {Array} DocTemplate.assoc Associations What the templating system is going to use to associate/change the elements with data-[attr] or the {{attr}} strings
- * @property {function(string, boolean): (Array|NodeList)} DocTemplate.get Get the HTML elements with the attribute data-[&lt;code>attrName&lt;/code>]
- * @property {function(boolean): (Array[]|NodeList[])} DocTemplate.getAll Get All the HTML elements with a data-* attribute
- * @property {function(string): Array} DocTemplate.getVal Get the values of the data-[&lt;code>attrName&lt;/code>] attributes
- * @property {function(): Array} DocTemplate.getVallAll Get all the values of the data-[attr] attributes
- * @property {function(string, boolean)} DocTemplate.associate Place the corresponding association (in &lt;code>DocTemplate.assoc&lt;/code>) in the HTML element's inner value
- * @property {function(boolean)} DocTemplate.associateAll Place the associations (in &lt;code>DocTemplate.assoc&lt;/code>) in the HTML element's inner values
- * @property {Template} DocTemplate.template Mustache template
- * @property {Function} DocTemplate.deMustache Change all the mustached variables in the HTML body
- */
-var DocTemplate = {
-    attrs: ["lorem", "greet", "date", "time", "timestamp", "essence"],
-    assoc: [$G["lorem"], "Welcome !", getDate(), getTime(true), getTimestamp(true), "EssenceJS v" + Essence.version],
-    get: function (attrName, toArr) {
-        return toArr? $n("*[data-" + attrName + "]").toArray(): $n("*[data-" + attrName + "]");
-    },
-    getAll: function (oneDim) {
-        var nodeLists = this.attrs.map(function (a) {
-            return $n("*[data-" + a + "]");
-        });
-        return oneDim? nodeLists.map(function (nodeList) {
-            return nodeList.toArray();
-        }): nodeLists;
-    },
-    getVal: function (attrName) {
-        return this.get(attrName, true).map(function (node) {
-            return node.getAttribute("data-" + attrName);
-        })
-    },
-    getValAll: function () {
-        var pos = -1;
-        return this.getAll(true).map(function (nodeList) {
-            pos++;
-            return nodeList.map(function (node) {
-                return node.getAttribute("data-" + DocTemplate.attrs[pos]);
-            });
-        })
-    },
-    associate: function (attrName, html) {
-        var self = this;
-        this.get(attrName, true).map(function (node) {
-            html? node.innerHTML = self.assoc[self.attrs.indexOf(attrName)]: node.innerText = self.assoc[self.attrs.indexOf(attrName)];
-        })
-    },
-    associateAll: function (html) {
-        var self = this;
-        for (var i = 0; i &lt; this.attrs.length; i++) {
-            this.get(this.attrs[i], true).map(function (node) {
-                html? node.innerHTML = self.assoc[i]: node.innerText = self.assoc[i];
-            })
-        }
-    },
-    template: new Template("DocTemplate", $e("body").val(true), this.attrs),
-    deMustache: function () {
-        $e("body").write(this.template.gen(Objectify(this.attrs, this.assoc)), true);
-    }
-};</code></pre>
+}</code></pre>
         </article>
     </section>
 
@@ -877,13 +814,13 @@ var DocTemplate = {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#DocTemplate">DocTemplate</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Sep 08 2016 01:13:45 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Sep 07 2016 23:16:47 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

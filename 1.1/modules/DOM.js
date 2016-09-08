@@ -712,7 +712,6 @@ function writeMsg2 (msg, slc, HTML, speed, txt, pos) {
 /**
  * @description Templating + conversion
  * @param {string} [name="Template"] Name
- * @param {string} [path="Template.jst"] Path
  * @param {string} [txt=""] Text/code containing the {{params}}
  * @param {string[]} [params=["tab", "date", "time", "timestamp", "br"]] Parameters
  * @param {boolean} [consoleSpecial=false] Resulting text formatted to the console
@@ -730,12 +729,12 @@ function writeMsg2 (msg, slc, HTML, speed, txt, pos) {
  * @property {function(Object): (Code)} Template.gen Text/code generator
  * @property {function(Object, string, string)} Template.save Save the generated text/code in the specified path
  */
-function Template (name, path, txt, params, consoleSpecial) {
+function Template (name, txt, params, consoleSpecial) {
     this.name = name || "Template";
-    this.path = path || this.name + ".jst";
+    this.path = this.name + ".jst";
     this.params = params || ["name", "description", "version", "title", "path"]; //{{params}}
     this.special = ["tab", "date", "time", "timestamp", "br"]; //%special%
-    this.specialEq = ["&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", getDate(), getTime(), getTimestamp(), "<br />"];
+    this.specialEq = ["&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", getDate(), getTime(true), getTimestamp(true), "<br />"];
     if (consoleSpecial) {
         this.specialEq[0] = "\t";
         this.specialEq[4] = "\n";
@@ -744,8 +743,7 @@ function Template (name, path, txt, params, consoleSpecial) {
     this.gen = function (obj) { //Generate a text/code from the template using the keys of the object
         var res = this.text, k = keyList(obj, true);
         for(var i = 0; i < k.length; i++) res = res.replace(RegExpify("{{" + k[i] + "}}"), obj[k[i]]);
-        if (res.index)
-            for(i = 0; i < this.special.length; i++) res = res.replace(RegExpify("%" + this.special[i] + "%"), this.specialEq[i], " ");
+        for(i = 0; i < this.special.length; i++) res = res.replace(RegExpify("%" + this.special[i] + "%"), this.specialEq[i], " ");
         return res
     };
     this.save = function (obj, name, ext) { //Save the template into a file or the converted version
@@ -777,3 +775,68 @@ function stripTags (str) {
 function tabs (n) {
     return "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".repeat(n || 1);
 }
+
+/**
+ * @description A Document templating system that will change the DOM with the use of data-* attributes or {{*}}
+ * @global
+ * @type {{attrs: string[], assoc: Array, get: DocTemplate.get, getAll: DocTemplate.getAll, getVal: DocTemplate.getVal, getValAll: DocTemplate.getValAll, associate: DocTemplate.associate, associateAll: DocTemplate.associateAll, template: Template, deMustache: DocTemplate.deMustache}}
+ * @since 1.1
+ * @this DocTemplate
+ * @property {string[]} DocTemplate.attrs Attributes (either preceded by data- attributes in HTML elements or between {{ and }})
+ * @property {Array} DocTemplate.assoc Associations What the templating system is going to use to associate/change the elements with data-[attr] or the {{attr}} strings
+ * @property {function(string, boolean): (Array|NodeList)} DocTemplate.get Get the HTML elements with the attribute data-[<code>attrName</code>]
+ * @property {function(boolean): (Array[]|NodeList[])} DocTemplate.getAll Get All the HTML elements with a data-* attribute
+ * @property {function(string): Array} DocTemplate.getVal Get the values of the data-[<code>attrName</code>] attributes
+ * @property {function(): Array} DocTemplate.getVallAll Get all the values of the data-[attr] attributes
+ * @property {function(string, boolean)} DocTemplate.associate Place the corresponding association (in <code>DocTemplate.assoc</code>) in the HTML element's inner value
+ * @property {function(boolean)} DocTemplate.associateAll Place the associations (in <code>DocTemplate.assoc</code>) in the HTML element's inner values
+ * @property {Template} DocTemplate.template Mustache template
+ * @property {Function} DocTemplate.deMustache Change all the mustached variables in the HTML body
+ */
+var DocTemplate = {
+    attrs: ["lorem", "greet", "date", "time", "timestamp", "essence"],
+    assoc: [$G["lorem"], "Welcome !", getDate(), getTime(true), getTimestamp(true), "EssenceJS v" + Essence.version],
+    get: function (attrName, toArr) {
+        return toArr? $n("*[data-" + attrName + "]").toArray(): $n("*[data-" + attrName + "]");
+    },
+    getAll: function (oneDim) {
+        var nodeLists = this.attrs.map(function (a) {
+            return $n("*[data-" + a + "]");
+        });
+        return oneDim? nodeLists.map(function (nodeList) {
+            return nodeList.toArray();
+        }): nodeLists;
+    },
+    getVal: function (attrName) {
+        return this.get(attrName, true).map(function (node) {
+            return node.getAttribute("data-" + attrName);
+        })
+    },
+    getValAll: function () {
+        var pos = -1;
+        return this.getAll(true).map(function (nodeList) {
+            pos++;
+            return nodeList.map(function (node) {
+                return node.getAttribute("data-" + DocTemplate.attrs[pos]);
+            });
+        })
+    },
+    associate: function (attrName, html) {
+        var self = this;
+        this.get(attrName, true).map(function (node) {
+            html? node.innerHTML = self.assoc[self.attrs.indexOf(attrName)]: node.innerText = self.assoc[self.attrs.indexOf(attrName)];
+        })
+    },
+    associateAll: function (html) {
+        var self = this;
+        for (var i = 0; i < this.attrs.length; i++) {
+            this.get(this.attrs[i], true).map(function (node) {
+                html? node.innerHTML = self.assoc[i]: node.innerText = self.assoc[i];
+            })
+        }
+    },
+    template: new Template("DocTemplate", $e("body").val(true), this.attrs),
+    deMustache: function () {
+        $e("body").write(this.template.gen(Objectify(this.attrs, this.assoc)), true);
+    }
+};

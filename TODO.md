@@ -5,6 +5,8 @@
 -   Having genHash() workable and reversible (by getting hash() and unHash() to work, see [Security])
 -   Fix the failed lib unit tests (see [essence])
 -   Comparing DB and server's event handlers/listeners and use the best for the rest
+-   Hosting all the necessary files on [my github website](http://Berkmann18.github.io) and using them for accurate WiFi testing, and module' self update (see [essence]~Essence.update)
+-   Improve daynightMode() (see [UI])
 
 # To add:
 -   Having a dynamic real-time table/update (e.g: news feeds)
@@ -25,7 +27,6 @@
 -   Event listeners to server, DB, WebPage and WebApp (see [Web])
 -   Lowest Common Multiplier lcm(a, b) in [Maths]
 -   All missing uni converters and renaming the ones to their appropriate names (see Units Plus on iOS for help)
--   RWD styling (@media and bootstrap-like classes)
 
 # To continue:
 -	code highlighting feature for editors (see [Web]~Editor.highlightSyntax)

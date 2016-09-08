@@ -3,6 +3,7 @@
 	<meta charset="UTF-8" />
 	<meta name="author" content="Maximilian Berkmann" />
 	<meta http-equiv="pragma" content="no-cache" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<script type="text/javascript" src="1.1/essence.js"></script>
 	<script defer>
 	/*init(["Misc"], false, function (x) {
@@ -152,12 +153,13 @@
 	</script>
 </head>
 <body onpageshow='postHTMLinit();lineTest(function () { Essence.say("Inb4 !! " + getLineNum()) }, function () { Essence.say("Callback ! " + getLineNum()) });' onload='Essence.preInit();'>
-	<span id="test" onmouseover="Essence.applyCSS(true)">Lorem Ipsum</span>
+	<span id="test" onmouseover="Essence.applyCSS(true)" data-lorem></span>
 	<div id="ColourTest" onMouseover='effect()' onClick="effect2()" onMouseout="effect3()">
 		<span id='ba'>Black</span> <span id='r'>Red</span> <span id='g'>Green</span> <span id='b'>Blue</span>
 	</div><br />
 	<input type="button" value="event" id="btn" />
 	<br /><span id="ceval" onclick="testDL()">Click on me to test your download speed.</span> &rArr; <span id="cnx" onclick="WiFi()">0</span>
 	<br /><div id="csl">Console !</div>
+	{{timestamp}}
 </body>
 </html>

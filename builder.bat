@@ -36,16 +36,16 @@ echo Building EssenceJS 1.0
 cd 1.0
 echo Linting ...
 if %lint% == 1 eslint essence.js & echo Linting done -- (1/3)
-if %lint% == 0 echo Linting cancelled
+if %lint% == 0 echo Lintement cancelled
 ping localhost -n 1 > nul
 echo Minifying ...
-if %min% == 1 minify essence.js --no-comments & echo Minifying done -- (2/3)
-if %min% == 0 echo Minifying cancelled
+if %min% == 1 minify essence.js --no-comments & echo Minimisation done -- (2/3)
+if %min% == 0 echo Minimisation cancelled
 ping localhost -n 1 > nul
 echo Documenting ...
 cd ../
-if %doc% == 1 jsdoc -d ./docs/1.0/ 1.0/essence.js & echo Documenting done -- (3/3)
-if %doc% == 0 echo Documenting cancelled
+if %doc% == 1 jsdoc -d ./docs/1.0/ 1.0/essence.js & echo Documentation done -- (3/3)
+if %doc% == 0 echo Documentation cancelled
 goto done
 
 rem EssenceJS 1.1
@@ -55,7 +55,7 @@ cd 1.1
 
 if %lint% == 1 (
     echo Linting ...
-    eslint essence.js modules & csshint essence.css & echo Linting done
+    eslint essence.js modules & csshint essence.css & echo Lint done
     ping localhost -n 1 > nul
 )
 if %min% == 1 (
@@ -65,13 +65,13 @@ if %min% == 1 (
     cd ../
     minify essence.js --no-comments & echo Essence.js minified
     minify modules --no-comments & echo Modules minified
-    minify essence.css --no-comments & echo Minifying done
+    minify essence.css --no-comments & echo Minification done
     ping localhost -n 1 > nul
 )
 if %doc% == 1 (
     echo Documenting ...
     cd ../
-    jsdoc -d ./docs/1.1/ 1.1/essence.js 1.1/modules & echo Documenting done
+    jsdoc -d ./docs/1.1/ 1.1/essence.js 1.1/modules & echo Documentation done
 )
 
 :done

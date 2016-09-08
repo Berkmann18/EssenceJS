@@ -3,6 +3,7 @@
 
 ## [essence](essence.js)
 + \- weekDay()
++ \+ Element.attr(), Element.rmAttr()
 
 ## [Ajax](modules/Ajax.js)
 + 
@@ -11,7 +12,8 @@
 + 
 
 ## [DOM](modules/DOM.js)
-+ 
++ \+ DocTemplate
++ ^ Template.gen(), Template now have a fixed path field
 
 ## [Files](modules/Files.js)
 + 
