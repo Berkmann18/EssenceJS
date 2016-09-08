@@ -2,18 +2,19 @@
 + 
 
 ## [essence](essence.js)
-+ \- weekDay()
-+ \+ Element.attr(), Element.rmAttr()
++ \- Object.hasName
++ ^ Object.getName, minor tweaks
 
 ## [Ajax](modules/Ajax.js)
-+ 
++ \+ CORS.silence()
 
 ## [DataStruct](modules/DataStruct.js)
 + 
 
 ## [DOM](modules/DOM.js)
-+ \+ DocTemplate
-+ ^ Template.gen(), Template now have a fixed path field
++ \+ DocTemplate.add()
++ ^ writeMsg2()
++ \- reloadPage()
 
 ## [Files](modules/Files.js)
 + 
@@ -31,7 +32,6 @@
 + 
 
 ## [Web](modules/Web.js)
-+ \+ DB.remove()
-+ ^ DB.add()
++ ^ getIP()
 
 ## [QTest](modules/QTest.js)

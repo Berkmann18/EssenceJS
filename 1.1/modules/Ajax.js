@@ -6,7 +6,7 @@
  * @license MIT
  * @author Maximilian Berkmann <maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
- * @requires essence
+ * @requires module:essence
  * @type {Module}
  * @exports Ajax
  */
@@ -292,6 +292,7 @@ function XHR (url, method, async, success, fail, progress, body, creds, mime) {
  * @property {Function} CORS.init CORS initializer
  * @property {function(): string} CORS.toString String representation
  * @property {Function} CORS.update Update the object's fields
+ * @property {Function} CORS.silence Ignore all XHR's request errors
  * @this {CORS}
  */
 function CORS (url, method, async, success, fail, progress, body, creds, mime) {
@@ -338,6 +339,9 @@ function CORS (url, method, async, success, fail, progress, body, creds, mime) {
         this.url = this.xhr.url;
         this.method = this.xhr.method;
         if (isNon(this.body)) this.body = this.xhr.body;
+    };
+    this.silence = function () {
+        this.xhr.req.onerror = $f;
     };
 
     return this;

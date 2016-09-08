@@ -6,7 +6,7 @@
  * @license MIT
  * @author Maximilian Berkmann <maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
- * @requires essence
+ * @requires module:essence
  * @requires DataStruct
  * @requires Misc
  * @type {Module}
@@ -287,8 +287,8 @@ function process (name, auth, summup, ctt) {
     this.sig = this.name[0] + this.name[this.name.length - 1] + this.name.prod() + this.author.slice(0, 2) + "-" + (getType(this.content))[0];
     //Rights/privileges ?!
     this.update = function () {
-        if (this.author != auth || this.author === "Anonymous" || isNon(this.author)) this.sig = this.name[0] + this.name[this.name.length-1] + "-" + this.name.prod() + this.author.slice(0, 2) + "-" + getType(this.content)[0]//H4ck
-        else this.sig = this.name[0] + this.name[this.name.length - 1] + this.name.prod() + this.author.slice(0, 2) + "-" + (getType(this.content))[0];;
+        if (this.author != auth || this.author === "Anonymous" || isNon(this.author)) this.sig = this.name[0] + this.name[this.name.length-1] + "-" + this.name.prod() + this.author.slice(0, 2) + "-" + getType(this.content)[0]; //H4ck
+        else this.sig = this.name[0] + this.name[this.name.length - 1] + this.name.prod() + this.author.slice(0, 2) + "-" + (getType(this.content))[0];
         if (this.sig[this.sig.length - 1] === "N") this.bitsize = 8 * conv(this.content, 10, 2).sum();
         else if (this.sig[this.sig.length - 1] === "B") this.bitsize = 8;
         else if (this.sig[this.sig.length - 1] === "A") this.bitsize = (is2dArray(this.content))? 8 * this.content.numElm(): 8 * this.content.length;
@@ -338,7 +338,6 @@ function process (name, auth, summup, ctt) {
  * @property {function(process)} server.fire Remove a process from the server
  * @property {Function} server.reset Reset the server
  * @property {function(): string} server.toString String representation
- * @property {Object} server.listeners Event listeners
  * @property {function(Event, function(Event))} server.on OnEvt handler
  * @property {Event} server.event Event
  */
@@ -438,7 +437,7 @@ function server (name, admin, type, ver, mxsz) {
     };
 
     //Events listeners
-    this.listeners = Tablify(["processAdded", "added", "remove", "update", "fire", "reset", "storage"], false);
+    //this.listeners = Tablify(["processAdded", "added", "remove", "update", "fire", "reset", "storage"], false);
 
     this.on = function (evt, handler) {
         if (this.event.type === evt) handler(this.event);
@@ -895,7 +894,7 @@ function WebApp (name, path, author, ver, stct) {
     this.author = author || "Maximilian Berkmann";
     this.version = ver || 1.0;
     this.dirs = ["img", "script", "style"]; //All dirs which are subdirectories of the path
-    this.pages = [new WebPage(this.name, "index", this.path, this.author, this.ver, stct), new WebPage("Contact us", "contact", this.path, this.author, this.ver, stct), new WebPage("About us", "about", this.path, this.author, this.ver, stct)];
+    this.pages = [new WebPage(this.name, "index", this.path, this.author, this.version, stct), new WebPage("Contact us", "contact", this.path, this.author, this.version, stct), new WebPage("About us", "about", this.path, this.author, this.version, stct)];
 
     this.build = function () { //Generate
         for(var i = 0; i < this.pages.length; i++) this.pages[i].genPage();
@@ -1190,7 +1189,7 @@ function Parser (from, to, customParse) {
         res = res.replace(/(?:\{\{)LOREM\x7c(\d+)-(\d+)(?:}})/ig, $G["lorem"].chunk("$1", "$2"));
         res = res.replace(/(?:\{\{)HW(?:}})/ig, "Hello World !");
         res = res.replace(/<icon \/>/gm, "<img src='img/icon.png' class='icon'/>");
-        res = res.replace(/<icon size=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/icon.png' class='icon' style='width: $1; height: $1;' />");
+        res = res.replace(/<icon size=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/icon.png' class='icon' style='width: $1px; height: $1px;' />");
         res = res.replace(/<icon name=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/$1.png' class='icon' />");
         res = res.replace(/<(s|m|l|xs|xl):icon name=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<img src='img/$2.png' class='$1-icon' />");
         res = res.replace(/<js>([\s\S]*?)<\/js>/gm,"<script type='text/javascript'>$1<\/script>");
@@ -1439,13 +1438,11 @@ function Console (title, entry, usr) {
 /**
  * @description Get the IP address of the client.<br />
  * Source: {@link http://stackoverflow.com/questions/391979/how-to-get-clients-ip-address-using-javascript-only|[SO] JS: How to get clients IP address}
- * @param {number} [stackLayer=0] Stack layer
  * @return {string} IP address
  * @since 1.1
  * @func
  */
-function getIP (stackLayer) {
-    if (!stackLayer) stackLayer = 0;
+function getIP () {
     var res = {}, cors = new CORS("http://api.ipify.org?format=jsonp&callback=_", "GET", false, function (data) {
         res = JSON.parse(data.response.replace(/_\((.*?)\);/, "$1"));
         /**
@@ -1460,8 +1457,8 @@ function getIP (stackLayer) {
     }, function () {
         Essence.say("IP gathering failed !", "warn");
     }, $f);
+    cors.silence();
     cors.init();
-    //if (stackLayer < 1) return getIP(stackLayer + 1);
     return res.ip || $G["IP"];
 }
 
@@ -1474,11 +1471,11 @@ function getIP (stackLayer) {
  * @return {string} Private IP address
  */
 function getPrivateIP () {
-    var myPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection; //compatibility for firefox and chrome
+    //noinspection JSUnresolvedVariable
+    var myPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection; //Compatibility for Firefox and Chrome/Opera
     var pc = new myPeerConnection({iceServers: []}),
         localIPs = {},
-        ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g,
-        key;
+        ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g;
 
     function ipIterate (ip) {
         if (!localIPs[ip]) {
@@ -1500,8 +1497,8 @@ function getPrivateIP () {
             line.match(ipRegex).forEach(ipIterate);
         });
         pc.setLocalDescription(sdp, $f, $f);
-    }, $f); // create offer and set local description
-    pc.onicecandidate = function (ice) { //listen for candidate events
+    }, $f); //Create offer and set local description
+    pc.onicecandidate = function (ice) { //Listen for candidate events
         if (!ice || !ice.candidate || !ice.candidate.candidate || !ice.candidate.candidate.match(ipRegex)) return;
         ice.candidate.candidate.match(ipRegex).forEach(ipIterate);
     };

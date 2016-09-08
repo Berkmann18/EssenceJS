@@ -6,7 +6,7 @@
  * @license MIT
  * @author Maximilian Berkmann <maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
- * @requires essence
+ * @requires module:essence
  * @requires Misc
  * @type {Module}
  * @exports DOM
@@ -85,18 +85,6 @@ function getMetaData () {
  */
 function noRightClick () {
     document.oncontextmenu = new Function("return false")
-}
-
-/**
- * @description Reloads the page
- * @param {number} [lvl=0] Level of reloadness
- * @returns {undefined}
- * @since 1.0
- * @func
- */
-function reloadPage (lvl) { //Reload the page with 2 different level of reload
-    if (lvl === 2) location.href = location.href; //Update the hyper reference of the window's location
-    else location.reload(); //Reload the location of the window (implying lvl = 0||1)
 }
 
 /**
@@ -690,7 +678,7 @@ function writeMsg (msg, where, HTML) {
  * @param {string} msg Message
  * @param {string} slc Place to type the message
  * @param {boolean} [HTML=false] HTML flag
- * @param {number} [speed=150] Speed
+ * @param {number} [delay=150] Inter-character delay
  * @param {string} [txt=""] Text
  * @param {number} [pos=0] Position
  * @returns {undefined}
@@ -698,14 +686,14 @@ function writeMsg (msg, where, HTML) {
  * @since 1.0
  * @func
  */
-function writeMsg2 (msg, slc, HTML, speed, txt, pos) {
+function writeMsg2 (msg, slc, HTML, delay, txt, pos) {
     if(!txt) txt = "";
     if(!pos) pos = 0;
     if (pos < msg.length + 10) {
         txt = msg.substring(pos, 0);
         HTML? $n(slc).innerHTML = txt: $n(slc).innerText = txt;
         pos++;
-        setTimeout("writeMsg2('" + msg + "', '" + slc + "', " + HTML + ", " + speed + ", '" + txt + "', " + pos + ")", speed || 150);
+        setTimeout("writeMsg2('" + msg + "', '" + slc + "', " + HTML + ", " + delay + ", '" + txt + "', " + pos + ")", delay || 150);
     }
 }
 
@@ -784,18 +772,23 @@ function tabs (n) {
  * @this DocTemplate
  * @property {string[]} DocTemplate.attrs Attributes (either preceded by data- attributes in HTML elements or between {{ and }})
  * @property {Array} DocTemplate.assoc Associations What the templating system is going to use to associate/change the elements with data-[attr] or the {{attr}} strings
+ * @property {function(Str, *)} DocTemplate.add Add attribute(s)/association(s) pairs
  * @property {function(string, boolean): (Array|NodeList)} DocTemplate.get Get the HTML elements with the attribute data-[<code>attrName</code>]
  * @property {function(boolean): (Array[]|NodeList[])} DocTemplate.getAll Get All the HTML elements with a data-* attribute
  * @property {function(string): Array} DocTemplate.getVal Get the values of the data-[<code>attrName</code>] attributes
  * @property {function(): Array} DocTemplate.getVallAll Get all the values of the data-[attr] attributes
  * @property {function(string, boolean)} DocTemplate.associate Place the corresponding association (in <code>DocTemplate.assoc</code>) in the HTML element's inner value
  * @property {function(boolean)} DocTemplate.associateAll Place the associations (in <code>DocTemplate.assoc</code>) in the HTML element's inner values
- * @property {Template} DocTemplate.template Mustache template
+ * @property {Template} DocTemplate.template Mustache template (<span style='color: red;'>warning: This might mess up some JS generated HTML content</span>)
  * @property {Function} DocTemplate.deMustache Change all the mustached variables in the HTML body
  */
 var DocTemplate = {
     attrs: ["lorem", "greet", "date", "time", "timestamp", "essence"],
     assoc: [$G["lorem"], "Welcome !", getDate(), getTime(true), getTimestamp(true), "EssenceJS v" + Essence.version],
+    add: function (attr, assoc) {
+        isType(attr, "Array")? this.attrs.append(attr): this.attrs.push(attr);
+        isType(assoc, "Array")? this.assoc.append(assoc): this.assoc.push(assoc);
+    },
     get: function (attrName, toArr) {
         return toArr? $n("*[data-" + attrName + "]").toArray(): $n("*[data-" + attrName + "]");
     },

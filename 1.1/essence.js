@@ -111,7 +111,7 @@ var Essence = {
         }
     },
     applyCSS: function (nonMinify) {
-        include_once(getExtPath(getDirectoryPath(gatherScripts()[gatherScripts()["essence.min.js"]? "essence.min.js": "essence.js"])) + (nonMinify? "essence.css": "essence.min.css"), "link", getDirectoryPath())
+        include_once(getExtPath(getDirectoryPath(gatherScripts()[gatherScripts()["essence.min.js"]? "essence.min.js": "essence.js"])) + (nonMinify? "essence.css": "essence.min.css"), "link", getDirectoryPath());
         /*if ($e("html").val(true).indexOf("<body></body>") > -1) { //A bit of cleaning
             var ix = $e("html").val(true).indexOf("<body></body>");
             var bfr = $e("html").val(true).slice(0, ix), aft = $e("html").val(true).slice(ix + 13, $e("html").val(true).length);
@@ -541,6 +541,15 @@ getExtPath = function (path) {
     };
     var parentPath = sF(cp, path);
     return "../".repeat(ct(getCurrentPath(cp, parentPath), "/")) + getCurrentPath(path, parentPath);
+}, /**
+ * @ignore
+ * @inheritdoc
+ * @external module/File:filenameList
+ * @returns {Array} File name list
+ */ filenameList = function (list) {
+    var res = [];
+    for(var i = 0; i < list.length; i++) res.push(stripPath(list[i]));
+    return res.remove("")
 };
 
 /**
@@ -1039,22 +1048,9 @@ function exclude (file, type) {
 }
 
 /**
- * @description Name checker
- * @this Object
- * @returns {boolean} Presence of a name/title in the object
- * @since 1.0
- * @method
- * @memberof Object.prototype
- * @external Object
- */
-Object.prototype.hasName = function () {
-    return this.name !== undefined || this.title !== undefined
-};
-
-/**
  * @description Get the object's name assuming it has one
  * @this Object
- * @returns {string} Name/title of the object
+ * @returns {undefined|?string} Name/title of the object
  * @since 1.0
  * @method
  * @memberof Object.prototype
@@ -1062,14 +1058,15 @@ Object.prototype.hasName = function () {
  */
 Object.prototype.getName = function () {
     //noinspection JSUnresolvedVariable
+    if (!this.hasOwnProperty("name") && !this.hasOwnProperty("title")) return undefined;
     return this.name != undefined? this.name: this.title
 };
 
 /**
- * @description Counts how many times a character/property/number c is present in the object
+ * @description Counts how many times a character/property/number <code>c</code> is present in the object
  * @param {(string|Bool)} c Character data
  * @this Object
- * @returns {number} Number of occurrences of $c in the object
+ * @returns {number} Number of occurrences of <code>c</code> in the object
  * @since 1.0
  * @method
  * @example
@@ -4281,7 +4278,7 @@ function valList (map, propOnly) {
  * @func
  */
 function keyTable (map, propOnly) { //Same as above but in the form of the HTML table
-    var table = "<table cellspacing=0><caption>KeyTable" + (map.hasName()? ": <i>" + map.getName() + "</i></caption><tr><th>Key</th><th>Value</th></tr>": "</caption><tr><th>Key</th><th>Value</th></tr>");
+    var table = "<table cellspacing=0><caption>KeyTable" + ((map.name || map.title)? ": <i>" + (map.name || map.title) + "</i>": "") + "</caption><tr><th>Key</th><th>Value</th></tr>";
     for (var key in map) {
         table += (propOnly && map.hasOwnProperty(key))? "<tr><td>" + key + "</td><td>" + map[key] + "</td></tr>": "<tr><td>" + key + "</td><td>" + map[key] + "</td></tr>";
     }

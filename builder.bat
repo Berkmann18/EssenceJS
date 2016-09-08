@@ -1,5 +1,4 @@
 @echo off
-
 set lint=1
 set min=1
 set doc=1

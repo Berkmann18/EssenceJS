@@ -1,16 +1,16 @@
-# Essence.js
-My All-in-One JavaScript framework.
+# Essence.js ![Ejs](img/essencejs-1.1-64.png "EssenceJS 1.1")
+An All-in-One JavaScript framework.
 
 The main features are the following:
 -	Adding methods to native objects to make their usage easier and more practical
--	Adding Maths (stats/economics) functions
+-	More Maths (stats/economics) functions
 -	Adding PHP/SQL features without using them
 -	Page management
--	Cryptology stuff
+-	Cryptology
 -	Computer's stuff visualisation such as processes and machines
 -	Processing's java functions.
 -	Web IDE development
--	Using Java objects like Stack, Sets ...
+-	Using Java stuff
 
 ##About the future of Essence.js
 1.	The usage of plugins (yes, you could make your own ones and share it so that anyone could use Essence.js with your additions :))
