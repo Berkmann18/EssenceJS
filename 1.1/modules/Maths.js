@@ -6,7 +6,7 @@
  * @license MIT
  * @author Maximilian Berkmann <maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
- * @requires essence
+ * @requires module:essence
  * @requires Misc
  * @type {Module}
  * @exports Maths
@@ -435,6 +435,23 @@ function ln (x) {
  */
 function gcd (a, b) {
     return b? gcd(b, a % b): Math.abs(a)
+}
+
+/**
+ * @description Least Common Multiplier
+ * @param {number} a Number a
+ * @param {number} b Number b
+ * @returns {number} LCM
+ * @since 1.1
+ * @func
+ */
+function lcm (a, b) {
+    var multiple = a;
+    range(a, 1, b).forEach(function(n) {
+        multiple = (multiple * n) / gcd(multiple, n);
+    });
+
+    return multiple;
 }
 
 /**

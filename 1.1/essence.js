@@ -121,6 +121,9 @@ var Essence = {
     addCSS: function (nstyle) {
         var s = document.createElement("style");
         s.innerText = nstyle;
+        //s.media = "all";
+        s.type = "text/css";
+        s.id = "EssenceCSS";
         $n("head").appendChild(s);
     }, addJS: function (nscript) {
         var s = document.createElement("script");
@@ -727,6 +730,7 @@ function $n (selector, silence) { //To get directly the node without having to u
  * @property {function(string, number)} Element.autoScroll Auto scrolling animation
  * @property {function(string, *): *} Element.attr Get/set the attribute of the node
  * @property {function(string)} Element.rmAttr Remove an attribute from the node
+ * @property {Function} Element.invColour Invert the colour and background colour (by negation)
  */
 function Element (selector) { //The element object
     if (/^([#\.\*_-`~&]\W*|\S|undefined|null|)$/.test(selector)) throw new InvalidParamError("Element cannot accept the selector '" + selector + "' as it's invalid."); //Reject invalid selectors
@@ -984,7 +988,12 @@ function Element (selector) { //The element object
     this.rmAttr = function (name) {
         this.node.removeAttribute(name);
     };
-    
+
+    this.invColour = function () {
+        negateColour(selector, "color", "a");
+        negateColour(selector, "backgroundColor", "a");
+    };
+
     return this
 }
 
@@ -1044,23 +1053,9 @@ function exclude (file, type) {
     if (type === "script") el.src = file;
     else el.href = file;
     el.type = (type === "script")? "text/javascript": "text/css";
+    console.log("el", el);
     document.head.removeChild(el)
 }
-
-/**
- * @description Get the object's name assuming it has one
- * @this Object
- * @returns {undefined|?string} Name/title of the object
- * @since 1.0
- * @method
- * @memberof Object.prototype
- * @external Object
- */
-Object.prototype.getName = function () {
-    //noinspection JSUnresolvedVariable
-    if (!this.hasOwnProperty("name") && !this.hasOwnProperty("title")) return undefined;
-    return this.name != undefined? this.name: this.title
-};
 
 /**
  * @description Counts how many times a character/property/number <code>c</code> is present in the object
@@ -1112,6 +1107,13 @@ Object.prototype.positions = function (c) {
  * @method
  * @memberof Object.prototype
  * @external Object
+ * @example
+ * var myStr = "Hello", myNum = 1.4142, myBool = true, myArr = range(3), myObj = {a: 0, b: 1};
+ * myStr.isIterable(); //true
+ * myNum.isIterable(); //false
+ * myBool.isIterable(); //false
+ * myArr.isIterable(); //true
+ * myObj.isIterable(); //true
  */
 Object.prototype.isIterable = function () {
     return isType(this, "String") || isType(this, "Array") || isType(this, "Object")
@@ -1128,21 +1130,28 @@ Object.prototype.isIterable = function () {
  * @external Object
  */
 Object.prototype.delete = function () {
-    this.property_ = null;
+    this.property = null;
     delete this;
 };
 
 /**
- * @description Equality check
+ * @summary Equality check
+ * @description Check if obj and the current object are the same
  * @param {*} obj Object to compared to
  * @this Object
  * @returns {boolean} Equality check result
  * @since 1.0
  * @method
  * @memberof Object.prototype
- * @inner
+ * @external Object
+ * @example
+ * var a = "Hello", b = "hello", c = ["h", "e", "l", "l", "o"];
+ * a.equals(b); //false
+ * a.toLowerCase().equals(b); //true
+ * c.join("").equals(a); //true
+ * c.equals(a); //false
  */
-Object.prototype.equals = function (obj) { //Check if obj and the current object are the same
+Object.prototype.equals = function (obj) {
     return this.toString() === obj.toString() || this.toLocaleString() === obj.toLocaleString()
 };
 
@@ -1154,11 +1163,11 @@ Object.prototype.equals = function (obj) { //Check if obj and the current object
  * @since 1.0
  * @method
  * @memberof Object.prototype
- * @inner
+ * @external Object
  */
 Object.prototype.multiReplace = function (rules) {
     var res = this.replace(rules[0][0], rules[0][1]);
-    for (var i = 0; i < rules.length; i++) res = res.replace(rules[i][0], rules[i][1]);
+    for (var i = 1; i < rules.length; i++) res = res.replace(rules[i][0], rules[i][1]);
     return res
 };
 
@@ -1207,6 +1216,12 @@ Object.prototype.compareTo = function (obj) {
  * @this Object
  * @method
  * @external Object
+ * @example
+ * var a = {name: "A", size: 8}, b = ["1", "4", "9", "h", "w", "_"];
+ * a.has("name"); //true
+ * a.has("value"); //false
+ * b.has("w"); //true
+ * b.has(" "); //false
  */
 Object.prototype.has = function (prop) {
   return this[prop] != undefined;
@@ -1221,6 +1236,12 @@ Object.prototype.has = function (prop) {
  * @this Object
  * @since 1.1
  * @method
+ * @example
+ * var a = {}, b = new Object(), c = {x: 5}, d = "";
+ * a.isEmpty(); //true
+ * b.isEmpty(); //true
+ * c.isEmpty(); //false
+ * d.isEmpty(); //true
  */
 Object.prototype.isEmpty = function () {
     for (var prop in this) {
@@ -1238,6 +1259,7 @@ Object.prototype.isEmpty = function () {
  * @since 1.1
  * @memberof Array.prototype
  * @external Array
+ * @override
  */
 Array.prototype.has = function (val) {
   return this.indexOf(val) > -1;
@@ -3226,6 +3248,7 @@ String.prototype.remove = function (c) { //Remove c from the string
         for (var i in c) {
             if (c.hasOwnProperty(i)) str = str.remove(i);
         }
+        return str;
     } else {
         var v = str.split(c).map(function (x) {
             return x === c? undefined: x
@@ -3561,6 +3584,20 @@ String.prototype.map = function (cb, sep) {
 String.prototype.reverse = function (splitter) {
     return this.split(splitter || "").reverse().join(splitter || "");
 };
+
+/**
+ * @description Minify a string/code
+ * @param {boolean} [noComment=false] Remove HTML/CSS like comments
+ * @method
+ * @since 1.1
+ * @external String
+ * @return {string}
+ */
+String.prototype.minify = function (noComment) {
+    var min = this.trim().replace(/(\t|\n|\s{2,})/gm, "");
+    return noComment? min.replace(/(<!--(.*?)-->|\/\*+(.*?)\*+\/)/gm, ""): min;
+};
+
 
 /**
  * @description Length of the number

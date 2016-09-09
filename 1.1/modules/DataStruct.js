@@ -149,7 +149,7 @@ function TreeNode (pl, l, r) { //Binary tree
         if (!sym) sym = "|-";
 
         if (this.left) this.left.inOrder(t + s, s, d + 1, sym);
-        println(t + sym + this.payload + s+" (deepth = " + d+")");
+        println(t + sym + this.payload + s+" (deepth=" + d+")");
         if (this.right) this.right.inOrder(t + s, s, d + 1, sym);
     };
     this.preOrder = function (t, s, d, sym) {
@@ -158,7 +158,7 @@ function TreeNode (pl, l, r) { //Binary tree
         if (!d) d = 0;
         if (!sym) sym = "|-";
 
-        println(t + sym + this.payload + s+" (deepth = " + d+")");
+        println(t + sym + this.payload + s+" (deepth=" + d+")");
         if (this.left) this.left.preOrder(t + s, s, d + 1, sym);
         if (this.right) this.right.preOrder(t + s, s, d + 1, sym)
     };
@@ -170,7 +170,7 @@ function TreeNode (pl, l, r) { //Binary tree
 
         if (this.left) this.left.postOrder(t + s, s, d + 1, sym);
         if (this.right) this.right.postOrder(t + s, s, d + 1, sym);
-        println(t + sym + this.payload + s+" (deepth = " + d+")")
+        println(t + sym + this.payload + s+" (deepth=" + d+")")
     };
 
     //Getter
@@ -432,7 +432,7 @@ NTreeNode.inheritsFrom(TreeNode);
  * @description N-ary tree node
  * @see module:DataStruct~TreeNode
  * @param {*} pl Payload
- * @param {TreeNode[]} ch Childs
+ * @param {TreeNode[]} [ch=[]] Childs
  * @returns {NTreeNode} NTreeNode
  * @this NTreeNode
  * @implements {TreeNode}
@@ -483,6 +483,7 @@ function NTreeNode (pl, ch) {
             this.childs[i + 1].printInOrder();
             Essence.addToPrinter("\r\n");
         }
+        Essence.addToPrinter("\b");
     };
     this.printPreOrder = function () {
         for (var i = 0; i < this.childs - 1; i++) {
@@ -491,6 +492,7 @@ function NTreeNode (pl, ch) {
             this.childs[i + 1].printInOrder();
             Essence.addToPrinter("\r\n");
         }
+        Essence.addToPrinter("\b");
     };
     this.printPostOrder = function () {
         for (var i = 0; i < this.childs - 1; i++) {
@@ -499,6 +501,7 @@ function NTreeNode (pl, ch) {
             Essence.addToPrinter(this.payload + "->");
             Essence.addToPrinter("\r\n");
         }
+        Essence.addToPrinter("\b");
     };
     //Window printing
     this.inOrder = function (t, s, d, sym) {
@@ -509,9 +512,8 @@ function NTreeNode (pl, ch) {
 
         for (var i = 0; i < this.childs - 1; i++) {
             this.childs[i].inOrder(t + s, s, d + 1, sym);
-            println(t + sym + this.payload + s+" (deepth= " + d+")");
+            println(t + sym + this.payload + s + " (deepth=" + d+")");
             this.childs[i].inOrder(t + s, s, d + 1, sym);
-            Essence.addToPrinter("\r\n");
         }
     };
     this.preOrder = function (t, s, d, sym) {
@@ -521,10 +523,9 @@ function NTreeNode (pl, ch) {
         if (!sym) sym = "|-";
 
         for (var i = 0; i < this.childs - 1; i++) {
-            println(t + sym + this.payload + s+" (deepth= " + d+")");
+            println(t + sym + this.payload + s + " (deepth=" + d+")");
             this.childs[i].inOrder(t + s, s, d + 1, sym);
             this.childs[i].inOrder(t + s, s, d + 1, sym);
-            Essence.addToPrinter("\r\n");
         }
     };
     this.postOrder = function (t, s, d, sym) {
@@ -536,13 +537,14 @@ function NTreeNode (pl, ch) {
         for (var i = 0; i < this.childs - 1; i++) {
             this.childs[i].inOrder(t + s, s, d + 1, sym);
             this.childs[i].inOrder(t + s, s, d + 1, sym);
-            println(t + sym + this.payload + s+" (deepth = " + d+")");
-            Essence.addToPrinter("\r\n");
+            println(t + sym + this.payload + s + " (deepth=" + d+")");
         }
     };
     //Getter
     this.getOrder = function (sym) {
-        return this.childs.join(sym || "->");
+        return this.payload + (sym || "->") + this.childs.map(function (child) {
+                return child.payload
+            }).join(sym || "->");
     };
 
     this.isLeaf = function () { //Is it an end of branch ?
@@ -608,9 +610,8 @@ function NTreeNode (pl, ch) {
         return this.sum() / this.nbOfBranches()
     };
     this.printBFS = function (t) {
-        var queue = [], tab = t || "-"; //Better and easier than a Queue/QueueList
-        queue.unshift(this); //Add as the end
-        while (queue != []) {
+        var queue = [this], tab = t || "-"; //Better and easier than a Queue/QueueList
+        while (!queue.isEmpty()) {
             var cur = new NTreeNode(queue.pop()); //Get the first element of the queue
             println(tab + ">" + cur.payload);
             tab += "-";
@@ -623,7 +624,7 @@ function NTreeNode (pl, ch) {
         /* Essence.txt2print = "";
          this.printInOrder();
          return "Tree(" + Essence.txt2print + ")" */
-        var str = "NTreeNode(payload= " + this.payload + ", ";
+        var str = "NTreeNode(payload=" + this.payload + ", childs=";
         for (var c in this.childs) {
             if (this.childs.hasOwnProperty(c)) str += c.toString();
         }
@@ -1951,4 +1952,14 @@ function Map (keys) {
         });
     };
     return this;
+}
+
+function DomGraph () {
+    var current = document.children[0];
+    var dom = new NTreeNode(current.tagName.toLowerCase(), current.children.toArray().map(function (child) {
+        return new NTreeNode(child.tagName.toLowerCase());
+    }));
+    dom.add();
+
+    return dom;
 }

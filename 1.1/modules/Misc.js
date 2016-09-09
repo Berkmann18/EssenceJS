@@ -683,7 +683,7 @@ function stup (cb) {
  * @func
  */
 function RegExpify (str) {
-    return new RegExp(str.replace(/[|\\{}()[\]^$+*?.:\'<>%]/g, "\\$&"), "gm");
+    return new RegExp(str.replace(/[|\\{}()[\]^$+*?.:'%]/g, "\\$&"), "gm");
 }
 
 /**

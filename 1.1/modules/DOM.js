@@ -8,10 +8,11 @@
  * @copyright Maximilian Berkmann 2016
  * @requires module:essence
  * @requires Misc
+ * @requires Files
  * @type {Module}
  * @exports DOM
  */
-var DOM = new Module("DOM", "DOM stuff", ["Misc"], 1, function () {
+var DOM = new Module("DOM", "DOM stuff", ["Misc", "Files"], 1, function () {
     BrowserDetect.init();
 });
 /* eslint no-undef: 0 */
@@ -27,7 +28,7 @@ var DOM = new Module("DOM", "DOM stuff", ["Misc"], 1, function () {
  * @func
  */
 function print (st, isHTML, sw) {
-    $e(sw || "body").after(st, isHTML)
+    $e(sw || "body").isEmpty()? $e(sw || "body").write(st, isHTML): $e(sw || "body").after(st, isHTML)
 }
 
 /**
@@ -40,7 +41,7 @@ function print (st, isHTML, sw) {
  * @func
  */
 function println (st, sw) {
-    $e(sw || "body").after(st + "<br />", true)
+    $e(sw || "body").isEmpty()? $e(sw || "body").write(st + "<br />", isHTML): $e(sw || "body").after(st + "<br />", true)
 }
 
 /**
@@ -317,6 +318,36 @@ function gatherExternalScripts (format) {
     }): document.scripts.toArray().filter(function (x) {
         return x.src != "";
     });
+}
+
+/**
+ * @description Gather remote resources from the file.
+ * @param {string} [type] Type (either: "script", "stylesheet" or "" (for both))
+ * @return {string[]} Remote resources
+ * @func
+ * @since 1.1
+ * @see module:DOM~gatherLocalResources
+ */
+function gatherRemoteResources (type) {
+    var $rsc = type === "script"? gatherScripts(true): (type === "stylesheet"? gatherStylesheets(true): gatherStylesheets(true).concat(gatherScripts(true)));
+    return $rsc.filter(function (x) {
+        return x.sameFirst(location.href) != getDirectoryPath()
+    })
+}
+
+/**
+ * @description Gather local resources from the file.
+ * @param {string} [type] Type (either: "script", "stylesheet" or "" (for both))
+ * @return {string[]} Remote resources
+ * @func
+ * @since 1.1
+ * @see module:DOM~gatherRemoteResources
+ */
+function gatherLocalResources (type) {
+    var $rsc = type === "script"? gatherScripts(true): (type === "stylesheet"? gatherStylesheets(true): gatherStylesheets(true).concat(gatherScripts(true)));
+    return $rsc.filter(function (x) {
+        return x.sameFirst(location.href) === getDirectoryPath()
+    })
 }
 
 /**
@@ -711,25 +742,25 @@ function writeMsg2 (msg, slc, HTML, delay, txt, pos) {
  * @property {string} Template.name Name
  * @property {string} Template.path Path (for saving)
  * @property {string[]} Template.params Parameters (in {{...}})
- * @property {string[]} Template.special Special parameters
+ * @property {string[]} Template.special Special parameters (predefined parameters)
  * @property {string[]} Template.specialEq Special parameters equivalence
- * @property {string} Template.text Raw text/code containing the parameters
- * @property {function(Object): (Code)} Template.gen Text/code generator
+ * @property {string} Template.text Raw text/code containing the parameters ({{param}})
+ * @property {function(Object, boolean): (Code)} Template.gen Text/code generator
  * @property {function(Object, string, string)} Template.save Save the generated text/code in the specified path
  */
 function Template (name, txt, params, consoleSpecial) {
     this.name = name || "Template";
     this.path = this.name + ".jst";
-    this.params = params || ["name", "description", "version", "title", "path"]; //{{params}}
-    this.special = ["tab", "date", "time", "timestamp", "br"]; //%special%
+    this.params = params || ["name", "description", "version", "title", "path"];
+    this.special = ["tab", "date", "time", "timestamp", "br", ""];
     this.specialEq = ["&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", getDate(), getTime(true), getTimestamp(true), "<br />"];
     if (consoleSpecial) {
         this.specialEq[0] = "\t";
         this.specialEq[4] = "\n";
     }
-    this.text = txt || ""; //Text/code containing the {{params}}
-    this.gen = function (obj) { //Generate a text/code from the template using the keys of the object
-        var res = this.text, k = keyList(obj, true);
+    this.text = txt || "";
+    this.gen = function (obj, unEscape) { //Generate a text/code from the template using the keys of the object
+        var res = unEscape? unescapeHTML(this.text): this.text, k = keyList(obj, true);
         for(var i = 0; i < k.length; i++) res = res.replace(RegExpify("{{" + k[i] + "}}"), obj[k[i]]);
         for(i = 0; i < this.special.length; i++) res = res.replace(RegExpify("%" + this.special[i] + "%"), this.specialEq[i], " ");
         return res
@@ -765,6 +796,24 @@ function tabs (n) {
 }
 
 /**
+ * @description Get the value of an attribute of a tag with a known attribute selector
+ * @param {string} tagName Tag name
+ * @param {string} knownAttrSelector Know attribute selector (in the form: attr='val')
+ * @param {string} attr Attribute
+ * @return {*} Value of the attribute in the tag
+ * @since 1.1
+ * @func
+ * @example
+ * //We want to get the meta description and we know that there's an element such as $n("meta[name='description']") &ne; null
+ * var docDescription = $t("meta", "name='description'", "content");
+ */
+function $t (tagName, knownAttrSelector, attr) {
+    var tag = $e(tagName + "[" + knownAttrSelector + "]").val(false, true), start;
+    start = tag.search(attr + "=\"|\'") + attr.length + 2;
+    return tag.get(start, start + tag.get(start).indexOf(tag.has("'")? "'": '"') - 1);
+}
+
+/**
  * @description A Document templating system that will change the DOM with the use of data-* attributes or {{*}}
  * @global
  * @type {{attrs: string[], assoc: Array, get: DocTemplate.get, getAll: DocTemplate.getAll, getVal: DocTemplate.getVal, getValAll: DocTemplate.getValAll, associate: DocTemplate.associate, associateAll: DocTemplate.associateAll, template: Template, deMustache: DocTemplate.deMustache}}
@@ -783,8 +832,8 @@ function tabs (n) {
  * @property {Function} DocTemplate.deMustache Change all the mustached variables in the HTML body
  */
 var DocTemplate = {
-    attrs: ["lorem", "greet", "date", "time", "timestamp", "essence"],
-    assoc: [$G["lorem"], "Welcome !", getDate(), getTime(true), getTimestamp(true), "EssenceJS v" + Essence.version],
+    attrs: ["lorem", "greet", "date", "time", "timestamp", "essence", "charset", "author", "title", "dir"],
+    assoc: [$G["lorem"], "Welcome !", getDate(), getTime(true), getTimestamp(true), "EssenceJS v" + Essence.version, $t("meta", "charset", "charset") || "UTF-8", $t("meta", "name='author'", "content") || "Maximilian Berkmann", document.hasChildNodes("title")? $e("title").val(): getFilename(true), getDirectoryPath()],
     add: function (attr, assoc) {
         isType(attr, "Array")? this.attrs.append(attr): this.attrs.push(attr);
         isType(assoc, "Array")? this.assoc.append(assoc): this.assoc.push(assoc);
@@ -828,8 +877,11 @@ var DocTemplate = {
             })
         }
     },
-    template: new Template("DocTemplate", $e("body").val(true), this.attrs),
+    template: new Template("DocTemplate", escapeHTML($e("body").val(true)), this.attrs),
     deMustache: function () {
-        $e("body").write(this.template.gen(Objectify(this.attrs, this.assoc)), true);
+        $e("body").write(this.template.gen(Objectify(this.attrs, this.assoc), true), true);
+    },
+    fullDeMustache: function () {
+        $e("html").write((new Template("DocTemplate", escapeHTML($e("html").val(true)), this.attrs)).gen(Objectify(this.attrs, this.assoc), true), true);
     }
 };

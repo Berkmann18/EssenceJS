@@ -238,6 +238,8 @@
             <li><a href="module-essence.html">module:essence</a></li>
         
             <li><a href="module-Misc.html">module:Misc</a></li>
+        
+            <li><a href="module-Files.html">module:Files</a></li>
         </ul>
     
 
@@ -258,6 +260,215 @@
 
     
         <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="~$t"><span class="type-signature">(inner) </span>$t<span class="signature">(tagName, knownAttrSelector, attr)</span><span class="type-signature"> &rarr; {*}</span></h4>
+
+    
+    <p class="summary"><p>Get the value of an attribute of a tag with a known attribute selector</p>.</p>
+    
+
+
+
+<div class="description">
+    <p>Get the value of an attribute of a tag with a known attribute selector</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>tagName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Tag name</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>knownAttrSelector</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Know attribute selector (in the form: attr='val')</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>attr</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Attribute</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.1</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line810">line 810</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Value of the attribute in the tag</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">*</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>//We want to get the meta description and we know that there's an element such as $n("meta[name='description']") &amp;ne; nullvar docDescription = $t("meta", "name='description'", "content");</code></pre>
+
+
 
         
             
@@ -459,7 +670,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line556">line 556</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line587">line 587</a>
     </li></ul></dd>
     
 
@@ -703,7 +914,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line56">line 56</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line57">line 57</a>
     </li></ul></dd>
     
 
@@ -1061,7 +1272,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line508">line 508</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line539">line 539</a>
     </li></ul></dd>
     
 
@@ -1450,7 +1661,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line439">line 439</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line470">line 470</a>
     </li></ul></dd>
     
 
@@ -1874,7 +2085,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line477">line 477</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line508">line 508</a>
     </li></ul></dd>
     
 
@@ -2032,7 +2243,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line211">line 211</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line212">line 212</a>
     </li></ul></dd>
     
 
@@ -2217,7 +2428,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line312">line 312</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line313">line 313</a>
     </li></ul></dd>
     
 
@@ -2395,7 +2606,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line361">line 361</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line392">line 392</a>
     </li></ul></dd>
     
 
@@ -2573,7 +2784,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line295">line 295</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line296">line 296</a>
     </li></ul></dd>
     
 
@@ -2751,7 +2962,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line344">line 344</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line375">line 375</a>
     </li></ul></dd>
     
 
@@ -2790,6 +3001,360 @@
     <dd>
         
 <span class="param-type">Array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="~gatherLocalResources"><span class="type-signature">(inner) </span>gatherLocalResources<span class="signature">(type<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array.&lt;string>}</span></h4>
+
+    
+    <p class="summary">Gather local resources from the file.</p>
+    
+
+
+
+<div class="description">
+    <p>Gather local resources from the file.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Type (either: &quot;script&quot;, &quot;stylesheet&quot; or &quot;&quot; (for both))</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.1</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line346">line 346</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="module-DOM.html#~gatherRemoteResources">module:DOM~gatherRemoteResources</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Remote resources</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;string></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="~gatherRemoteResources"><span class="type-signature">(inner) </span>gatherRemoteResources<span class="signature">(type<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array.&lt;string>}</span></h4>
+
+    
+    <p class="summary">Gather remote resources from the file.</p>
+    
+
+
+
+<div class="description">
+    <p>Gather remote resources from the file.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Type (either: &quot;script&quot;, &quot;stylesheet&quot; or &quot;&quot; (for both))</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.1</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line331">line 331</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="module-DOM.html#~gatherLocalResources">module:DOM~gatherLocalResources</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Remote resources</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;string></span>
 
 
     </dd>
@@ -2929,7 +3494,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line282">line 282</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line283">line 283</a>
     </li></ul></dd>
     
 
@@ -3121,7 +3686,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line330">line 330</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line361">line 361</a>
     </li></ul></dd>
     
 
@@ -3237,7 +3802,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line71">line 71</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line72">line 72</a>
     </li></ul></dd>
     
 
@@ -3402,7 +3967,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line239">line 239</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line240">line 240</a>
     </li></ul></dd>
     
 
@@ -3590,7 +4155,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line117">line 117</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line118">line 118</a>
     </li></ul></dd>
     
 
@@ -3706,7 +4271,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line86">line 86</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line87">line 87</a>
     </li></ul></dd>
     
 
@@ -3954,7 +4519,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line29">line 29</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line30">line 30</a>
     </li></ul></dd>
     
 
@@ -4170,7 +4735,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line42">line 42</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line43">line 43</a>
     </li></ul></dd>
     
 
@@ -4421,7 +4986,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line99">line 99</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line100">line 100</a>
     </li></ul></dd>
     
 
@@ -4806,7 +5371,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line409">line 409</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line440">line 440</a>
     </li></ul></dd>
     
 
@@ -5163,7 +5728,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line383">line 383</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line414">line 414</a>
     </li></ul></dd>
     
 
@@ -5321,7 +5886,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line752">line 752</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line783">line 783</a>
     </li></ul></dd>
     
 
@@ -5569,7 +6134,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line537">line 537</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line568">line 568</a>
     </li></ul></dd>
     
 
@@ -5776,7 +6341,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line763">line 763</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line794">line 794</a>
     </li></ul></dd>
     
 
@@ -6153,7 +6718,7 @@
 
             
 
-            <td class="description last"><p>Special parameters</p></td>
+            <td class="description last"><p>Special parameters (predefined parameters)</p></td>
         </tr>
 
     
@@ -6199,7 +6764,7 @@
 
             
 
-            <td class="description last"><p>Raw text/code containing the parameters</p></td>
+            <td class="description last"><p>Raw text/code containing the parameters ({{param}})</p></td>
         </tr>
 
     
@@ -6287,7 +6852,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line720">line 720</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line751">line 751</a>
     </li></ul></dd>
     
 
@@ -6445,7 +7010,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line225">line 225</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line226">line 226</a>
     </li></ul></dd>
     
 
@@ -6665,7 +7230,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line186">line 186</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line187">line 187</a>
     </li></ul></dd>
     
 
@@ -6923,7 +7488,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line667">line 667</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line698">line 698</a>
     </li></ul></dd>
     
 
@@ -7291,7 +7856,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line689">line 689</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line720">line 720</a>
     </li></ul></dd>
     
 
@@ -7572,6 +8137,8 @@
             <li><a href="module-essence.html">module:essence</a></li>
         
             <li><a href="module-Misc.html">module:Misc</a></li>
+        
+            <li><a href="module-Files.html">module:Files</a></li>
         </ul>
     
 
@@ -7592,6 +8159,215 @@
 
     
         <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="~$t"><span class="type-signature">(inner) </span>$t<span class="signature">(tagName, knownAttrSelector, attr)</span><span class="type-signature"> &rarr; {*}</span></h4>
+
+    
+    <p class="summary"><p>Get the value of an attribute of a tag with a known attribute selector</p>.</p>
+    
+
+
+
+<div class="description">
+    <p>Get the value of an attribute of a tag with a known attribute selector</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>tagName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Tag name</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>knownAttrSelector</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Know attribute selector (in the form: attr='val')</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>attr</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Attribute</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.1</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line810">line 810</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Value of the attribute in the tag</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">*</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>//We want to get the meta description and we know that there's an element such as $n("meta[name='description']") &amp;ne; nullvar docDescription = $t("meta", "name='description'", "content");</code></pre>
+
+
 
         
             
@@ -7793,7 +8569,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line556">line 556</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line587">line 587</a>
     </li></ul></dd>
     
 
@@ -8037,7 +8813,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line56">line 56</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line57">line 57</a>
     </li></ul></dd>
     
 
@@ -8395,7 +9171,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line508">line 508</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line539">line 539</a>
     </li></ul></dd>
     
 
@@ -8784,7 +9560,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line439">line 439</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line470">line 470</a>
     </li></ul></dd>
     
 
@@ -9208,7 +9984,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line477">line 477</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line508">line 508</a>
     </li></ul></dd>
     
 
@@ -9366,7 +10142,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line211">line 211</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line212">line 212</a>
     </li></ul></dd>
     
 
@@ -9551,7 +10327,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line312">line 312</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line313">line 313</a>
     </li></ul></dd>
     
 
@@ -9729,7 +10505,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line361">line 361</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line392">line 392</a>
     </li></ul></dd>
     
 
@@ -9907,7 +10683,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line295">line 295</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line296">line 296</a>
     </li></ul></dd>
     
 
@@ -10085,7 +10861,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line344">line 344</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line375">line 375</a>
     </li></ul></dd>
     
 
@@ -10124,6 +10900,360 @@
     <dd>
         
 <span class="param-type">Array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="~gatherLocalResources"><span class="type-signature">(inner) </span>gatherLocalResources<span class="signature">(type<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array.&lt;string>}</span></h4>
+
+    
+    <p class="summary">Gather local resources from the file.</p>
+    
+
+
+
+<div class="description">
+    <p>Gather local resources from the file.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Type (either: &quot;script&quot;, &quot;stylesheet&quot; or &quot;&quot; (for both))</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.1</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line346">line 346</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="module-DOM.html#~gatherRemoteResources">module:DOM~gatherRemoteResources</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Remote resources</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;string></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="~gatherRemoteResources"><span class="type-signature">(inner) </span>gatherRemoteResources<span class="signature">(type<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array.&lt;string>}</span></h4>
+
+    
+    <p class="summary">Gather remote resources from the file.</p>
+    
+
+
+
+<div class="description">
+    <p>Gather remote resources from the file.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Type (either: &quot;script&quot;, &quot;stylesheet&quot; or &quot;&quot; (for both))</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.1</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line331">line 331</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="module-DOM.html#~gatherLocalResources">module:DOM~gatherLocalResources</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Remote resources</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;string></span>
 
 
     </dd>
@@ -10263,7 +11393,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line282">line 282</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line283">line 283</a>
     </li></ul></dd>
     
 
@@ -10455,7 +11585,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line330">line 330</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line361">line 361</a>
     </li></ul></dd>
     
 
@@ -10571,7 +11701,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line71">line 71</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line72">line 72</a>
     </li></ul></dd>
     
 
@@ -10736,7 +11866,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line239">line 239</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line240">line 240</a>
     </li></ul></dd>
     
 
@@ -10924,7 +12054,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line117">line 117</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line118">line 118</a>
     </li></ul></dd>
     
 
@@ -11040,7 +12170,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line86">line 86</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line87">line 87</a>
     </li></ul></dd>
     
 
@@ -11288,7 +12418,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line29">line 29</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line30">line 30</a>
     </li></ul></dd>
     
 
@@ -11504,7 +12634,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line42">line 42</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line43">line 43</a>
     </li></ul></dd>
     
 
@@ -11755,7 +12885,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line99">line 99</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line100">line 100</a>
     </li></ul></dd>
     
 
@@ -12140,7 +13270,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line409">line 409</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line440">line 440</a>
     </li></ul></dd>
     
 
@@ -12497,7 +13627,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line383">line 383</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line414">line 414</a>
     </li></ul></dd>
     
 
@@ -12655,7 +13785,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line752">line 752</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line783">line 783</a>
     </li></ul></dd>
     
 
@@ -12903,7 +14033,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line537">line 537</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line568">line 568</a>
     </li></ul></dd>
     
 
@@ -13110,7 +14240,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line763">line 763</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line794">line 794</a>
     </li></ul></dd>
     
 
@@ -13487,7 +14617,7 @@
 
             
 
-            <td class="description last"><p>Special parameters</p></td>
+            <td class="description last"><p>Special parameters (predefined parameters)</p></td>
         </tr>
 
     
@@ -13533,7 +14663,7 @@
 
             
 
-            <td class="description last"><p>Raw text/code containing the parameters</p></td>
+            <td class="description last"><p>Raw text/code containing the parameters ({{param}})</p></td>
         </tr>
 
     
@@ -13621,7 +14751,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line720">line 720</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line751">line 751</a>
     </li></ul></dd>
     
 
@@ -13779,7 +14909,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line225">line 225</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line226">line 226</a>
     </li></ul></dd>
     
 
@@ -13999,7 +15129,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line186">line 186</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line187">line 187</a>
     </li></ul></dd>
     
 
@@ -14257,7 +15387,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line667">line 667</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line698">line 698</a>
     </li></ul></dd>
     
 
@@ -14625,7 +15755,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line689">line 689</a>
+        <a href="modules_DOM.js.html">modules/DOM.js</a>, <a href="modules_DOM.js.html#line720">line 720</a>
     </li></ul></dd>
     
 
@@ -14692,13 +15822,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#DocTemplate">DocTemplate</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="external-String.html">String</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#DocTemplate">DocTemplate</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Sep 08 2016 15:22:25 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Sep 09 2016 22:45:01 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

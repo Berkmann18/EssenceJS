@@ -177,7 +177,7 @@ function TreeNode (pl, l, r) { //Binary tree
         if (!sym) sym = "|-";
 
         if (this.left) this.left.inOrder(t + s, s, d + 1, sym);
-        println(t + sym + this.payload + s+" (deepth = " + d+")");
+        println(t + sym + this.payload + s+" (deepth=" + d+")");
         if (this.right) this.right.inOrder(t + s, s, d + 1, sym);
     };
     this.preOrder = function (t, s, d, sym) {
@@ -186,7 +186,7 @@ function TreeNode (pl, l, r) { //Binary tree
         if (!d) d = 0;
         if (!sym) sym = "|-";
 
-        println(t + sym + this.payload + s+" (deepth = " + d+")");
+        println(t + sym + this.payload + s+" (deepth=" + d+")");
         if (this.left) this.left.preOrder(t + s, s, d + 1, sym);
         if (this.right) this.right.preOrder(t + s, s, d + 1, sym)
     };
@@ -198,7 +198,7 @@ function TreeNode (pl, l, r) { //Binary tree
 
         if (this.left) this.left.postOrder(t + s, s, d + 1, sym);
         if (this.right) this.right.postOrder(t + s, s, d + 1, sym);
-        println(t + sym + this.payload + s+" (deepth = " + d+")")
+        println(t + sym + this.payload + s+" (deepth=" + d+")")
     };
 
     //Getter
@@ -460,7 +460,7 @@ NTreeNode.inheritsFrom(TreeNode);
  * @description N-ary tree node
  * @see module:DataStruct~TreeNode
  * @param {*} pl Payload
- * @param {TreeNode[]} ch Childs
+ * @param {TreeNode[]} [ch=[]] Childs
  * @returns {NTreeNode} NTreeNode
  * @this NTreeNode
  * @implements {TreeNode}
@@ -511,6 +511,7 @@ function NTreeNode (pl, ch) {
             this.childs[i + 1].printInOrder();
             Essence.addToPrinter("\r\n");
         }
+        Essence.addToPrinter("\b");
     };
     this.printPreOrder = function () {
         for (var i = 0; i &lt; this.childs - 1; i++) {
@@ -519,6 +520,7 @@ function NTreeNode (pl, ch) {
             this.childs[i + 1].printInOrder();
             Essence.addToPrinter("\r\n");
         }
+        Essence.addToPrinter("\b");
     };
     this.printPostOrder = function () {
         for (var i = 0; i &lt; this.childs - 1; i++) {
@@ -527,6 +529,7 @@ function NTreeNode (pl, ch) {
             Essence.addToPrinter(this.payload + "->");
             Essence.addToPrinter("\r\n");
         }
+        Essence.addToPrinter("\b");
     };
     //Window printing
     this.inOrder = function (t, s, d, sym) {
@@ -537,9 +540,8 @@ function NTreeNode (pl, ch) {
 
         for (var i = 0; i &lt; this.childs - 1; i++) {
             this.childs[i].inOrder(t + s, s, d + 1, sym);
-            println(t + sym + this.payload + s+" (deepth= " + d+")");
+            println(t + sym + this.payload + s + " (deepth=" + d+")");
             this.childs[i].inOrder(t + s, s, d + 1, sym);
-            Essence.addToPrinter("\r\n");
         }
     };
     this.preOrder = function (t, s, d, sym) {
@@ -549,10 +551,9 @@ function NTreeNode (pl, ch) {
         if (!sym) sym = "|-";
 
         for (var i = 0; i &lt; this.childs - 1; i++) {
-            println(t + sym + this.payload + s+" (deepth= " + d+")");
+            println(t + sym + this.payload + s + " (deepth=" + d+")");
             this.childs[i].inOrder(t + s, s, d + 1, sym);
             this.childs[i].inOrder(t + s, s, d + 1, sym);
-            Essence.addToPrinter("\r\n");
         }
     };
     this.postOrder = function (t, s, d, sym) {
@@ -564,13 +565,14 @@ function NTreeNode (pl, ch) {
         for (var i = 0; i &lt; this.childs - 1; i++) {
             this.childs[i].inOrder(t + s, s, d + 1, sym);
             this.childs[i].inOrder(t + s, s, d + 1, sym);
-            println(t + sym + this.payload + s+" (deepth = " + d+")");
-            Essence.addToPrinter("\r\n");
+            println(t + sym + this.payload + s + " (deepth=" + d+")");
         }
     };
     //Getter
     this.getOrder = function (sym) {
-        return this.childs.join(sym || "->");
+        return this.payload + (sym || "->") + this.childs.map(function (child) {
+                return child.payload
+            }).join(sym || "->");
     };
 
     this.isLeaf = function () { //Is it an end of branch ?
@@ -636,9 +638,8 @@ function NTreeNode (pl, ch) {
         return this.sum() / this.nbOfBranches()
     };
     this.printBFS = function (t) {
-        var queue = [], tab = t || "-"; //Better and easier than a Queue/QueueList
-        queue.unshift(this); //Add as the end
-        while (queue != []) {
+        var queue = [this], tab = t || "-"; //Better and easier than a Queue/QueueList
+        while (!queue.isEmpty()) {
             var cur = new NTreeNode(queue.pop()); //Get the first element of the queue
             println(tab + ">" + cur.payload);
             tab += "-";
@@ -651,7 +652,7 @@ function NTreeNode (pl, ch) {
         /* Essence.txt2print = "";
          this.printInOrder();
          return "Tree(" + Essence.txt2print + ")" */
-        var str = "NTreeNode(payload= " + this.payload + ", ";
+        var str = "NTreeNode(payload=" + this.payload + ", childs=";
         for (var c in this.childs) {
             if (this.childs.hasOwnProperty(c)) str += c.toString();
         }
@@ -1979,6 +1980,16 @@ function Map (keys) {
         });
     };
     return this;
+}
+
+function DomGraph () {
+    var current = document.children[0];
+    var dom = new NTreeNode(current.tagName.toLowerCase(), current.children.toArray().map(function (child) {
+        return new NTreeNode(child.tagName.toLowerCase());
+    }));
+    dom.add();
+
+    return dom;
 }</code></pre>
         </article>
     </section>
@@ -1989,13 +2000,13 @@ function Map (keys) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#DocTemplate">DocTemplate</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="external-String.html">String</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#DocTemplate">DocTemplate</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Sep 08 2016 15:22:24 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Sep 09 2016 22:45:00 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

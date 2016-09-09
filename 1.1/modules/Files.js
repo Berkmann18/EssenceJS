@@ -52,7 +52,7 @@ function getCurrentPath (path, localPath) {
     res = parts.get(i).join("/");
 
     while (res.has(pParts[j])) {
-        console.log("Gone through " + pParts[j]);
+        if (debugging) console.log("Gone through " + pParts[j]);
         j++;
     }
     if (j > 0) {

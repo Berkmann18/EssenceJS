@@ -787,9 +787,9 @@ function parseURL (p, action) { //Doing some PHP without PHP :) !!
  * @property {Code} WebPage.code Code
  * @property {Code} WebPage.template Code template
  * @property {Template|?string} WebPage.page Page
- * @property {function(string): (Code)} WebPage.word2code Word (components) to template code
- * @property {function(): (Code)} WebPage.genTemplate Transform the structure into a template
- * @property {function(Object): (Code)} WebPage.genPage Transform the template into a page
+ * @property {function(string): Code} WebPage.word2code Word (components) to template code
+ * @property {function(): Code} WebPage.genTemplate Transform the structure into a template
+ * @property {function(Object): Code} WebPage.genPage Transform the template into a page
  */
 function WebPage (title, name, path, author, ver, stct, type, subtitle) {
     this.title = title || "My web page";

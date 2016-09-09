@@ -8,13 +8,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<script type="text/javascript" src="1.1/essence.js"></script>
 	<script defer>
-	/*init(["Misc"], false, function (x) {
-		Essence.say(x + " got initiated !\nModules: " + modules.toStr(true) + "   (" + getTime(true) + ")", "info");
-	}, 1.1);*/
 	var bodyBg, ba, r, g, b, csl, lr;
 
 	function start () {
-		Essence.isComplete()? Essence.say("Welcome !!", "succ"): startT = setTimeout("start()", 1e3);
+		//noinspection JSValidateTypes
+		Essence.say("Welcome !!", "succ");
 		//if (typeof(conv) != "function" || !isType(Colour, "Object") || !isType(Console, "Object") || !isType(virtualHistory, "Object")) startT = setTimeout("start();", 100);
 		//else clearTimeout(startT);
 		bodyBg = new Colour(255); ba = new Colour(0); r = new Colour(255, 0, 0); g = new Colour(0, 255, 0); b = new Colour(0, 0, 255);
@@ -30,17 +28,17 @@
 		$e("title").write("EssenceJS v" + Essence.version + " test");
 	}
 
-	function inn () {
+	function inn (stackLayer) {
 		if (typeof Essence !== "undefined") { //Use EssenceJS
-			Essence.say("EssenceJS in da place !!!", "info");
 			start();
+		} else if (stackLayer > 3) {
+			console.log("Wow, hold on ! %d stack layers down !!", stackLayer);
+			setTimeout("inn()", 5);
 		} else {
-			startT = setTimeout("inn()", 20);
+			inn(stackLayer? stackLayer + 1: 1);
 			console.warn("EssenceJS is not currently available !");
 		}
 	}
-
-	var startT = setTimeout("inn()", 2e3);
 
 	function effect () {
 		$e("body").setCSS("background", bodyBg.hex);
@@ -126,6 +124,7 @@
 	}
 	
 	function postHTMLinit () {
+		inn();
 		Essence.init();
 		if(isNon($n("#btn"))){
 			Essence.say("I couldn't find the node #btn !\The element is the following:\n"+$e("#btn"));
@@ -151,8 +150,6 @@
 		Essence.say("line: " + getLineNum(b));
 		c();
 	}
-
-
 	</script>
 </head>
 <body onpageshow='postHTMLinit();lineTest(function () { Essence.say("Inb4 !! " + getLineNum()) }, function () { Essence.say("Callback ! " + getLineNum()) });' onload='Essence.preInit();'>

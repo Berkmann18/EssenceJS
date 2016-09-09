@@ -6,7 +6,7 @@
  * @license MIT
  * @author Maximilian Berkmann <maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
- * @requires essence
+ * @requires module:essence
  * @requires Maths
  * @type {Module}
  * @exports UI
@@ -273,41 +273,41 @@ function rgb2hex (rgb, toArray) {
  */
 function negateColour (elmt, attr, mod) {
     mod = mod? mod[0].toLowerCase(): "x"; //To accept: r, R, red, Red, RED; for the red, ...
-    var clrs = ($e(elmt).css(attr).indexOf("rgb(") === 0)? $e(elmt).css(attr).slice(4, $e(elmt).css(attr).length-1).split(", "): hex2rgb($e(elmt).css(attr), true), clr = new Colour();
+    var clrs = ($e(elmt).css(attr).indexOf("rgb(") === 0)? $e(elmt).css(attr).slice(4, $e(elmt).css(attr).length - 1).split(", "): hex2rgb($e(elmt).css(attr), true), clr = new Colour();
     if (mod === "r") {
         clr.red = 255 - parseInt(clrs[0]);
         clr.green = clrs[1];
-        clr.blue = clrs.last();
+        clr.blue = clrs[2];
     }else if (mod === "g") {
         clr.red = clrs[0];
         clr.green = 255 - parseInt(clrs[0]);
-        clr.blue = clrs.last();
+        clr.blue = clrs[2];
     }else if (mod === "b") {
         clr.red = clrs[0];
         clr.green = clrs[1];
-        clr.blue = 255 - parseInt(clrs.last());
+        clr.blue = 255 - parseInt(clrs[2]);
     }else if (mod === "y") {
         clr.red = 255 - parseInt(clrs[0]);
         clr.green = 255 - parseInt(clrs[1]);
-        clr.blue = clrs.last();
+        clr.blue = clrs[2];
     }else if (mod === "c") {
         clr.red = clrs[0];
         clr.green = 255 - parseInt(clrs[0]);
-        clr.blue = 255 - parseInt(clrs.last());
+        clr.blue = 255 - parseInt(clrs[2]);
     }else if (mod === "m") {
         clr.red = 255 - parseInt(clrs[0]);
         clr.green = clrs[1];
-        clr.blue = 255 - parseInt(clrs.last());
+        clr.blue = 255 - parseInt(clrs[2]);
     }else if (mod === "a" || mod === "f" || mod === "w") {
         clr.red = 255 - parseInt(clrs[0]);
         clr.green = 255 - parseInt(clrs[1]);
-        clr.blue = 255 - parseInt(clrs.last());
+        clr.blue = 255 - parseInt(clrs[2]);
     } else {
         clr.red = clrs[0];
         clr.green = clrs[1];
-        clr.blue = clrs.last();
+        clr.blue = clrs[2];
     }
-    clr.hex = "#" + conv(clr.red, 10, 16).toNDigits() + "" + conv(clr.green, 10, 16).toNDigits() + "" + conv(clr.blue, 10, 16).toNDigits();
+    clr.update();
     $e(elmt).setCSS(attr, clr.hex)
 }
 
@@ -1107,6 +1107,8 @@ function daynightMode (exch) { //Switch between enabled or not for Day/Night pag
     var h = new Date().getHours();
     if (exch) $G["dnM"] = !$G["dnM"];
     if ($G["dnM"]) {
+        //negateColour("body", "color", "a");
+        //negateColour("body", "backgroundColor", "a");
         if (h >= 21) $e("body").setStyles(["backgroundColor", "#000", "color", "#fff"]);
         else $e("body").setStyles(["backgroundColor", "#fff", "color", "#000"]);
     } else Essence.say("You cannot use the day/night mod if it\'s disabled.", "warn")
@@ -1262,4 +1264,15 @@ function htmlDate (id, minYear, maxYear) {
     for (i = 0; i < months.length; i++) month += "<option value=" + (i + 1) + ">" + months[i] + "</option>";
     for (i = (minYear || y - 80); i < (maxYear || y - 2); i++) year += "<option value=" + i + ">" + i + "</option>";
     return day + "</select>" + month + "</select>" + year + "</select>";
+}
+
+/**
+ * @description Add CSS styles without flooding the DOM with more style tags than necessary
+ * @param {Code} css CSS style
+ * @returns {undefined}
+ * @since 1.1
+ * @func
+ */
+function moreCSS (css) {
+    ($e("#EssenceCSS", true))? $e("#EssenceCSS").after(css): Essence.addCSS(css);
 }

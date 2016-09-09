@@ -1,4 +1,4 @@
-# Essence.js ![Ejs](img/essencejs-1.1-64.png "EssenceJS 1.1")
+# EssenceJS ![Ejs](img/essencejs-1.1-64.png "EssenceJS 1.1")
 An All-in-One JavaScript framework.
 
 The main features are the following:
@@ -12,7 +12,7 @@ The main features are the following:
 -	Web IDE development
 -	Using Java stuff
 
-##About the future of Essence.js
+##About the future of EssenceJS
 1.	The usage of plugins (yes, you could make your own ones and share it so that anyone could use Essence.js with your additions :))
 2.	There might be some other upcoming changes after I learn more frameworks and libraries and grab more and more ideas by then as well as better ways to do stuff.
 

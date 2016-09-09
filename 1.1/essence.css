@@ -267,7 +267,6 @@ menu li {
     -moz-border-radius: 3px;
 }
 menu li:hover {
-    cursor: pointer;
     background: #ccc;
 }
 

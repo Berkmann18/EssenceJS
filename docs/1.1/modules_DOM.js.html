@@ -36,10 +36,11 @@
  * @copyright Maximilian Berkmann 2016
  * @requires module:essence
  * @requires Misc
+ * @requires Files
  * @type {Module}
  * @exports DOM
  */
-var DOM = new Module("DOM", "DOM stuff", ["Misc"], 1, function () {
+var DOM = new Module("DOM", "DOM stuff", ["Misc", "Files"], 1, function () {
     BrowserDetect.init();
 });
 /* eslint no-undef: 0 */
@@ -55,7 +56,7 @@ var DOM = new Module("DOM", "DOM stuff", ["Misc"], 1, function () {
  * @func
  */
 function print (st, isHTML, sw) {
-    $e(sw || "body").after(st, isHTML)
+    $e(sw || "body").isEmpty()? $e(sw || "body").write(st, isHTML): $e(sw || "body").after(st, isHTML)
 }
 
 /**
@@ -68,7 +69,7 @@ function print (st, isHTML, sw) {
  * @func
  */
 function println (st, sw) {
-    $e(sw || "body").after(st + "&lt;br />", true)
+    $e(sw || "body").isEmpty()? $e(sw || "body").write(st + "&lt;br />", isHTML): $e(sw || "body").after(st + "&lt;br />", true)
 }
 
 /**
@@ -345,6 +346,36 @@ function gatherExternalScripts (format) {
     }): document.scripts.toArray().filter(function (x) {
         return x.src != "";
     });
+}
+
+/**
+ * @description Gather remote resources from the file.
+ * @param {string} [type] Type (either: "script", "stylesheet" or "" (for both))
+ * @return {string[]} Remote resources
+ * @func
+ * @since 1.1
+ * @see module:DOM~gatherLocalResources
+ */
+function gatherRemoteResources (type) {
+    var $rsc = type === "script"? gatherScripts(true): (type === "stylesheet"? gatherStylesheets(true): gatherStylesheets(true).concat(gatherScripts(true)));
+    return $rsc.filter(function (x) {
+        return x.sameFirst(location.href) != getDirectoryPath()
+    })
+}
+
+/**
+ * @description Gather local resources from the file.
+ * @param {string} [type] Type (either: "script", "stylesheet" or "" (for both))
+ * @return {string[]} Remote resources
+ * @func
+ * @since 1.1
+ * @see module:DOM~gatherRemoteResources
+ */
+function gatherLocalResources (type) {
+    var $rsc = type === "script"? gatherScripts(true): (type === "stylesheet"? gatherStylesheets(true): gatherStylesheets(true).concat(gatherScripts(true)));
+    return $rsc.filter(function (x) {
+        return x.sameFirst(location.href) === getDirectoryPath()
+    })
 }
 
 /**
@@ -739,25 +770,25 @@ function writeMsg2 (msg, slc, HTML, delay, txt, pos) {
  * @property {string} Template.name Name
  * @property {string} Template.path Path (for saving)
  * @property {string[]} Template.params Parameters (in {{...}})
- * @property {string[]} Template.special Special parameters
+ * @property {string[]} Template.special Special parameters (predefined parameters)
  * @property {string[]} Template.specialEq Special parameters equivalence
- * @property {string} Template.text Raw text/code containing the parameters
- * @property {function(Object): (Code)} Template.gen Text/code generator
+ * @property {string} Template.text Raw text/code containing the parameters ({{param}})
+ * @property {function(Object, boolean): (Code)} Template.gen Text/code generator
  * @property {function(Object, string, string)} Template.save Save the generated text/code in the specified path
  */
 function Template (name, txt, params, consoleSpecial) {
     this.name = name || "Template";
     this.path = this.name + ".jst";
-    this.params = params || ["name", "description", "version", "title", "path"]; //{{params}}
-    this.special = ["tab", "date", "time", "timestamp", "br"]; //%special%
+    this.params = params || ["name", "description", "version", "title", "path"];
+    this.special = ["tab", "date", "time", "timestamp", "br", ""];
     this.specialEq = ["&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;", getDate(), getTime(true), getTimestamp(true), "&lt;br />"];
     if (consoleSpecial) {
         this.specialEq[0] = "\t";
         this.specialEq[4] = "\n";
     }
-    this.text = txt || ""; //Text/code containing the {{params}}
-    this.gen = function (obj) { //Generate a text/code from the template using the keys of the object
-        var res = this.text, k = keyList(obj, true);
+    this.text = txt || "";
+    this.gen = function (obj, unEscape) { //Generate a text/code from the template using the keys of the object
+        var res = unEscape? unescapeHTML(this.text): this.text, k = keyList(obj, true);
         for(var i = 0; i &lt; k.length; i++) res = res.replace(RegExpify("{{" + k[i] + "}}"), obj[k[i]]);
         for(i = 0; i &lt; this.special.length; i++) res = res.replace(RegExpify("%" + this.special[i] + "%"), this.specialEq[i], " ");
         return res
@@ -793,6 +824,24 @@ function tabs (n) {
 }
 
 /**
+ * @description Get the value of an attribute of a tag with a known attribute selector
+ * @param {string} tagName Tag name
+ * @param {string} knownAttrSelector Know attribute selector (in the form: attr='val')
+ * @param {string} attr Attribute
+ * @return {*} Value of the attribute in the tag
+ * @since 1.1
+ * @func
+ * @example
+ * //We want to get the meta description and we know that there's an element such as $n("meta[name='description']") &amp;ne; null
+ * var docDescription = $t("meta", "name='description'", "content");
+ */
+function $t (tagName, knownAttrSelector, attr) {
+    var tag = $e(tagName + "[" + knownAttrSelector + "]").val(false, true), start;
+    start = tag.search(attr + "=\"|\'") + attr.length + 2;
+    return tag.get(start, start + tag.get(start).indexOf(tag.has("'")? "'": '"') - 1);
+}
+
+/**
  * @description A Document templating system that will change the DOM with the use of data-* attributes or {{*}}
  * @global
  * @type {{attrs: string[], assoc: Array, get: DocTemplate.get, getAll: DocTemplate.getAll, getVal: DocTemplate.getVal, getValAll: DocTemplate.getValAll, associate: DocTemplate.associate, associateAll: DocTemplate.associateAll, template: Template, deMustache: DocTemplate.deMustache}}
@@ -811,8 +860,8 @@ function tabs (n) {
  * @property {Function} DocTemplate.deMustache Change all the mustached variables in the HTML body
  */
 var DocTemplate = {
-    attrs: ["lorem", "greet", "date", "time", "timestamp", "essence"],
-    assoc: [$G["lorem"], "Welcome !", getDate(), getTime(true), getTimestamp(true), "EssenceJS v" + Essence.version],
+    attrs: ["lorem", "greet", "date", "time", "timestamp", "essence", "charset", "author", "title", "dir"],
+    assoc: [$G["lorem"], "Welcome !", getDate(), getTime(true), getTimestamp(true), "EssenceJS v" + Essence.version, $t("meta", "charset", "charset") || "UTF-8", $t("meta", "name='author'", "content") || "Maximilian Berkmann", document.hasChildNodes("title")? $e("title").val(): getFilename(true), getDirectoryPath()],
     add: function (attr, assoc) {
         isType(attr, "Array")? this.attrs.append(attr): this.attrs.push(attr);
         isType(assoc, "Array")? this.assoc.append(assoc): this.assoc.push(assoc);
@@ -856,9 +905,12 @@ var DocTemplate = {
             })
         }
     },
-    template: new Template("DocTemplate", $e("body").val(true), this.attrs),
+    template: new Template("DocTemplate", escapeHTML($e("body").val(true)), this.attrs),
     deMustache: function () {
-        $e("body").write(this.template.gen(Objectify(this.attrs, this.assoc)), true);
+        $e("body").write(this.template.gen(Objectify(this.attrs, this.assoc), true), true);
+    },
+    fullDeMustache: function () {
+        $e("html").write((new Template("DocTemplate", escapeHTML($e("html").val(true)), this.attrs)).gen(Objectify(this.attrs, this.assoc), true), true);
     }
 };</code></pre>
         </article>
@@ -870,13 +922,13 @@ var DocTemplate = {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#DocTemplate">DocTemplate</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="external-String.html">String</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#DocTemplate">DocTemplate</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Sep 08 2016 15:22:24 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Sep 09 2016 22:45:00 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

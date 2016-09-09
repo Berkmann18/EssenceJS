@@ -25,7 +25,6 @@
 -	Kruskal's alg
 -   Fully functional NoSQL/NoPHP server/database (with remote access, see [Web])
 -   Event listeners to server, DB, WebPage and WebApp (see [Web])
--   Lowest Common Multiplier lcm(a, b) in [Maths]
 -   All missing uni converters and renaming the ones to their appropriate names (see Units Plus on iOS for help)
 
 # To continue:
@@ -53,7 +52,7 @@
 -   PUT() and DELETE() (see [Ajax])
 
 # To fix:
--	Array.remove not affecting the array (see [essence]~Array.remove)
+-	Array.remove not affecting the array (see [essence]~Array.remove) (maybe use splice ?)
 -	Array.getOccurences() (see [essence]~Array.getOccurences)
 -	Array.revSort() which leaves a few elements unsorted (see [essence]~Array.revSort)
 -	Machine.parse() for other bases than base 16 which tries to get string with a code "out of the visible" (see [Misc]~Machine.parse)
