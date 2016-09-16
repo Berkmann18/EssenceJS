@@ -731,9 +731,12 @@ function $n (selector, silence) { //To get directly the node without having to u
  * @property {function(string, *): *} Element.attr Get/set the attribute of the node
  * @property {function(string)} Element.rmAttr Remove an attribute from the node
  * @property {Function} Element.invColour Invert the colour and background colour (by negation)
+ * @property {function(): string[]} Element.classes Get an array of classes of the element
+ * @property {function(function(HTMLElement))} Element.multi Execute a callback on all nodes of a $e("*...") element
+ * @property {function(string, Array)} Element.multiElm Execute a method on all elements of a $e("*...") element
  */
 function Element (selector) { //The element object
-    if (/^([#\.\*_-`~&]\W*|\S|undefined|null|)$/.test(selector)) throw new InvalidParamError("Element cannot accept the selector '" + selector + "' as it's invalid."); //Reject invalid selectors
+    if (/^([#.*_-`~&]\W*|\S|undefined|null|)$/.test(selector)) throw new InvalidParamError("Element cannot accept the selector '" + selector + "' as it's invalid."); //Reject invalid selectors
     if (selector[0] === "#") this.node = document.querySelector(selector) || document.getElementById(selector.slice(1, selector.length)); //Id
     else if (selector[0] === ".") this.node = document.querySelector(selector) || document.getElementByClassName(selector.slice(1, selector.length)); //Class
     else if (selector[0] === "*") this.node = document.querySelectorAll(selector.slice(1, selector.length)) || document.getElementsByTagName(selector.slice(1, selector.length)); //Node array
@@ -993,7 +996,21 @@ function Element (selector) { //The element object
         negateColour(selector, "color", "a");
         negateColour(selector, "backgroundColor", "a");
     };
+    
+    this.classes = function () {
+        return this.node.className.split(" ");
+    };
+    
+    this.multi = function (cb) {
+        var nodes = this.node.toArray();
+        for (var i = 0; i < nodes.length; i++) cb(nodes[i]);
+    };
 
+    this.multiElm = function (method, args) { //Caution: every nodes treated must have an id
+        var nodes = this.node.toArray();
+        for (var i = 0; i < nodes.length; i++) $e(nodes[i].id)[method](args[0], args[1], args[2]);
+    };
+    
     return this
 }
 
@@ -1536,7 +1553,7 @@ Array.prototype.Fill2D = function (c) {
 /**
  * @description Remove a character/number/string from the array without affecting the initial one (it should !)
  * @param {*} [c] Data to remove
- * @todo Make it so that it will affect the initial array
+ * @param {boolean} [preserveInitial] Flag indicating whether the initial array is going to remain unchanged
  * @this Array
  * @returns {Array} Array after the operation
  * @since 1.0
@@ -1544,27 +1561,33 @@ Array.prototype.Fill2D = function (c) {
  * @memberof Array.prototype
  * @external Array
  */
-Array.prototype.remove = function (c) {
+Array.prototype.remove = function (c, preserveInitial) {
     //Note: it will automatically remove undefined and it goes bunckers when trying to remove objects
     var arr = this;
-    if (isType(c, "Array")) {
-        for(var i = 0; i < c.length; i++) arr = arr.remove(c[i]);
-        return arr;
-    } else {
-        for (i = 0; i < this.length; i++) {
-            if (arr[i] === c) arr = arr.slice(0, i).concat(arr.slice(i + 1, arr.length));
-        }
-        arr = arr.map(function (x) { //Double check
-            return x === c? undefined: x
-        });
-        if (arr.has(undefined) && arr.length > 0) {
-            var w = [];
-            for ( i = 0; i < arr.length; i++) {
-                if (arr[i] !== undefined) w.push(isType(arr[i], "Number")? parseFloat(arr[i]): arr[i]);
+    if (preserveInitial) {
+        if (isType(c, "Array")) {
+            for(var i = 0; i < c.length; i++) arr = arr.remove(c[i]);
+            return arr;
+        } else {
+            for (i = 0; i < this.length; i++) {
+                if (arr[i] === c) arr = arr.slice(0, i).concat(arr.slice(i + 1, arr.length));
             }
-            arr = w;
+            arr = arr.map(function (x) { //Double check
+                return x === c? undefined: x
+            });
+            if (arr.has(undefined) && arr.length > 0) {
+                var w = [];
+                for ( i = 0; i < arr.length; i++) {
+                    if (arr[i] !== undefined) w.push(isType(arr[i], "Number")? parseFloat(arr[i]): arr[i]);
+                }
+                arr = w;
+            }
+            return arr
         }
-        return arr
+    } else {
+        var pos = Copy(this.positions(c));
+        for (i = 0; i < pos.length; i++) this.splice(pos[i], 1);
+        return this;
     }
 };
 
@@ -1597,7 +1620,7 @@ Array.prototype.getOccurrences = function (simplified) {
     var arr = rmDuplicates(this), res = [];
     for (var i = 0; i < arr.length; i++) res.push(arr[i] + ":" + this.count(arr[i]) + "{" + this.positions(arr[i]).toStr(true) + "}");
     if (simplified) {
-        for (i = 0; i < res.length; i++) res[i] = parseInt(res[i].replace(/(?:.*?):(\d+)\{(.*?)\}/g, "$1"));
+        for (i = 0; i < res.length; i++) res[i] = parseInt(res[i].replace(/(?:.*?):(\d+)\{(.*?)}/g, "$1"));
     }
     return res
 };
@@ -2772,7 +2795,7 @@ Array.prototype.littleMix = function () {
 };
 
 /**
- * @description Push that adds elements of an array instead of the array itself
+ * @description Push that adds elements of an array instead of the array itself (just like Array.concat)
  * @this Array
  * @param {Array} arr Array used to append
  * @returns {Array} New array
@@ -2780,6 +2803,7 @@ Array.prototype.littleMix = function () {
  * @method
  * @memberof Array.prototype
  * @external Array
+ * @deprecated
  */
 Array.prototype.append = function (arr) {
     for (var i = 0; i < arr.length; i++) this.push(arr[i]);
@@ -3108,8 +3132,9 @@ Array.prototype.portion = function (denominator, numerator) {
 };
 
 /**
- * @description Remove the first element n of the array (so not all values equal to n).
+ * @description Remove the first element <code>n</code> of the array (so not all values equal to n).
  * @param {*} n Element
+ * @param {boolean} [preserveInitial] Flag indicating whether the initial array is going to remain unchanged
  * @returns {Array.<*>} Array without that first element n
  * @see external:Array.remove
  * @since 1.1
@@ -3117,16 +3142,17 @@ Array.prototype.portion = function (denominator, numerator) {
  * @memberof Array.prototype
  * @external Array
  */
-Array.prototype.removeFirst = function (n) {
+Array.prototype.removeFirst = function (n, preserveInitial) {
     var self = this;
-    return this.filter(function (x, i) {
+    return preserveInitial? this.filter(function (x, i) {
         return x != n || i != self.indexOf(n);
-    });
+    }): this.splice(this.indexOf(n), 1);
 };
 
 /**
- * @description Remove the last element n of the array (so not all values equal to n).
+ * @description Remove the last element <code>n</code> of the array (so not all values equal to n).
  * @param {*} n Element
+ * @param {boolean} [preserveInitial] Flag indicating whether the initial array is going to remain unchanged
  * @return {Array.<*>} Array without that last element n
  * @see external:Array.remove
  * @since 1.1
@@ -3134,11 +3160,11 @@ Array.prototype.removeFirst = function (n) {
  * @memberof Array.prototype
  * @external Array
  */
-Array.prototype.removeLast = function (n) {
+Array.prototype.removeLast = function (n, preserveInitial) {
     var self = this;
-    return this.filter(function (x, i) {
+    return preserveInitial? this.filter(function (x, i) {
         return x != n || i != self.lastIndexOf(n);
-    });
+    }): this.splice(this.lastIndexOf(n), 1);
 };
 
 /**

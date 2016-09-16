@@ -7,6 +7,7 @@
 -   Comparing DB and server's event handlers/listeners and use the best for the rest
 -   Hosting all the necessary files on [my github website](http://Berkmann18.github.io) and using them for accurate WiFi testing, and module' self update (see [essence]~Essence.update)
 -   Improve daynightMode() (see [UI])
+-   Add a complete thing for DocTemplate (to avoid having to add manually of the things)
 
 # To add:
 -   Having a dynamic real-time table/update (e.g: news feeds)
@@ -52,7 +53,6 @@
 -   PUT() and DELETE() (see [Ajax])
 
 # To fix:
--	Array.remove not affecting the array (see [essence]~Array.remove) (maybe use splice ?)
 -	Array.getOccurences() (see [essence]~Array.getOccurences)
 -	Array.revSort() which leaves a few elements unsorted (see [essence]~Array.revSort)
 -	Machine.parse() for other bases than base 16 which tries to get string with a code "out of the visible" (see [Misc]~Machine.parse)

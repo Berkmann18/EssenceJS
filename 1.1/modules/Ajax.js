@@ -29,7 +29,7 @@ var Ajax = new Module("Ajax", "AJAX stuff");
  */
 function GET (name) {
     //noinspection JSValidateTypes
-    if (name === (new RegExp("[?&]" + encodeURIComponent(name) + "=([^&]*)")).exec(location.search)) return decodeURIComponent(name[1]);
+    if ((new RegExp("[?&]" + encodeURIComponent(name) + "=([^&]*)").exec(location.search))) return decodeURIComponent((new RegExp("[?&]" + encodeURIComponent(name) + "=([^&]*)").exec(location.search))[1]);
 }
 
 /**

@@ -219,9 +219,9 @@ function conv (n, from, to, float) {
  * @func
  */
 function negateBin (bin, toArr) {
-    var n = [], dec = 0;
+    var n = [];
     for(var i = 0; i < bin.length; i++) n[i] = 1 - parseInt(bin[i]);
-    dec = conv(n.join(""));
+    var dec = conv(n.join(""));
     dec++;
     return toArr? conv(dec, 10, 2).split(""): conv(dec, 10, 2)
 }
@@ -1028,11 +1028,11 @@ function eqSolver (formula, res, a, b) {
          [a-z]+ (variable)
          */
         var expr = "([(]. * ?[)]|\\d + \\.\\d + |\\d + |[a-z] + )";
-        var reg = RegExp(expr + "\\^" + expr);
+        var reg = new RegExp(expr + "\\^" + expr);
         formula = formula.replace(reg, "Math.pow($1, $2)");
     }else if (formula.search(/e\^/g)>0) { //Look for a e^
         expr = "([(]. * ?[)]|\\d + \\.\\d + |\\d + |[a-z] + )";
-        reg = RegExp("e\\^" + expr);
+        reg = new RegExp("e\\^" + expr);
         formula = formula.replace(reg, "Math.exp($1)");
     }
     Essence.say("Formula now converted to %c" + formula, "info", "color: #00f;");
@@ -2060,4 +2060,15 @@ function confidenceInterval (avg, c, n, sd) {
         avg = sampleMean(avg);
     }
     return [avg - z * sd / Math.sqrt(n), avg + z * sd / Math.sqrt(n)];
+}
+
+/**
+ * @description Fibonacci sequence
+ * @param {number} x Number
+ * @return {*} Fibonacci sequence to <code>x</code>
+ * @func
+ * @since 1.1
+ */
+function Fibonacci (x) {
+    return (x <= 1)? x: Fibonacci(x - 1) + Fibonacci(x - 2);
 }
