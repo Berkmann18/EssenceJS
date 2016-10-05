@@ -153,7 +153,7 @@
 	</script>
 </head>
 <body onpageshow='postHTMLinit();lineTest(function () { Essence.say("Inb4 !! " + getLineNum()) }, function () { Essence.say("Callback ! " + getLineNum()) });' onload='Essence.preInit();'>
-	<h4 onmouseover="DocTemplate.associateAll()">You're using <em data-essence>Essence</em></h4>
+	<h4 onmouseover="DocTemplate.associateAll();DocTemplate.fullDeMustache()">You're using <em data-essence>Essence</em></h4>
 	<span id="test" onmouseover="Essence.applyCSS(true)" data-lorem="Hiii"></span>
 	<div id="ColourTest" onMouseover='effect()' onClick="effect2()" onMouseout="effect3()">
 		<span id='ba'>Black</span> <span id='r'>Red</span> <span id='g'>Green</span> <span id='b'>Blue</span>

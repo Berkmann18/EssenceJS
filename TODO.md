@@ -1,13 +1,13 @@
 # To do:
--   Looking for a more efficient way to add CSS styles for each "DOM adders" (e.g: simpleTable, DB)
 -   Get the Spider working (see [Files])
 -   Improve getResources() (see [DOM]) and Console (see [Web])
 -   Having genHash() workable and reversible (by getting hash() and unHash() to work, see [Security])
 -   Fix the failed lib unit tests (see [essence])
 -   Comparing DB and server's event handlers/listeners and use the best for the rest
--   Hosting all the necessary files on [my github website](http://Berkmann18.github.io) and using them for accurate WiFi testing, and module' self update (see [essence]~Essence.update)
--   Improve daynightMode() (see [UI])
+-   Improve daynightMode() (see [UI]) (_finish domGraph() first to get a clue how to reverse colours of all DOM elements of a page_)
 -   Add a complete thing for DocTemplate (to avoid having to add manually of the things)
+-   Speed up the framework
+-   Fixing the module/Essence self update
 
 # To add:
 -   Having a dynamic real-time table/update (e.g: news feeds)

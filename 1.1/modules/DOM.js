@@ -422,7 +422,8 @@ function simpleTable (caption, rows, id, style, split, cellIds) {
         } else  tab += "<td id='" + id + (isNon(cellIds)? i: cellIds[i]) + "'>" + rows[i] + "</td>";
         tab += "</tr>";
     }
-    tab += "</table><style>#"+ id + " table{background: #000;}#"+ id + " table, #"+ id + " td {border: 1px solid #000; color: #000; background: #fff;}#"+ id + " tr:nth-child(even) td{background: #ddd;}#"+ id + " tr td:hover{background: #bbb;}</style>";
+    tab += "</table>";
+    Essence.addCSS("#" + id + " table{background: #000;}#" + id + " table, #" + id + " td {border: 1px solid #000; color: #000; background: #fff;}#" + id + " tr:nth-child(even) td{background: #ddd;}#"+ id + " tr td:hover{background: #bbb;}");
     return tab
 }
 
@@ -442,7 +443,6 @@ function rowTable (caption, headerRows, rows, id, split, style, cellIds) {
     if (!id) id = "t";
     var tab = "<table id='" + id + "' style='" + style + "' cellspacing=0 cellpadding=2>" + (caption? "<caption>" + caption + "</caption>": "");
     //var rowspan = (headerRows.length <= rows.length)? rows.length/headerRows.length: headerRows.length/rows.length;
-    //console.log(rowspan);
     for (var i = 0; i < rows.length; i++) {
         tab += headerRows? "<tr><th>" + headerRows[i] + "</th>": "<tr>";
         if (split) {
@@ -484,12 +484,13 @@ function colTable (caption, headerCols, cols, id, split, style, cellIds) {
         tab +="<tr>";
         if (split) {
             for (var j = 0; j < cols[i].length; j++) {
-                tab += "<td id='" + id + (isNon(cellIds)? i+"_"+j: cellIds[i][j]) + "'>" + cols[i][j] + "</td>";
+                tab += "<td id='" + id + (isNon(cellIds)? i + "_" + j: cellIds[i][j]) + "'>" + cols[i][j] + "</td>";
             }
         } else tab += "<td id='" + id + (isNon(cellIds)? i: cellIds[i]) + "'>" + cols[i] + "</td>";
         tab += "</tr>"
     }
-    tab += "</table><style>#"+ id + " table{background: #000;}#"+ id + " table, #"+ id + " td, #"+ id + " th{border: 1px solid #000; color: #000; background: #fff;}#"+ id + " tr:nth-child(even) td{background: #ddd;}#"+ id + " tr td:hover{background: #bbb;}</style>";
+    tab += "</table>";
+    Essence.addCSS("#"+ id + " table{background: #000;}#"+ id + " table, #"+ id + " td, #"+ id + " th{border: 1px solid #000; color: #000; background: #fff;}#"+ id + " tr:nth-child(even) td{background: #ddd;}#"+ id + " tr td:hover{background: #bbb;}");
     return tab
 }
 
@@ -514,13 +515,12 @@ function complexTable (caption, headerRows, rows, headerCols, id, split, style, 
     for (i = 0; i < rows.length; i++) {
         tab += (headerRows)? "<tr><th>" + headerRows[i] + "</th>": "<tr>";
         if (split) {
-            for (var j = 0; j < rows[i].length; j++) {
-                tab += "<td id='" + id + (isNon(cellIds)? i + "_" + j: cellIds[i][j]) + "'>" + rows[i][j] + "</td>";
-            }
+            for (var j = 0; j < rows[i].length; j++) tab += "<td id='" + id + (isNon(cellIds)? i + "_" + j: cellIds[i][j]) + "'>" + rows[i][j] + "</td>";
         } else tab += "<td id='" + id + (isNon(cellIds)? i: cellIds[i]) + "'>" + rows[i] + "</td></tr>";
         tab += "</tr>";
     }
-    tab += "</table><style>#"+ id + " table{background: #000;}#"+ id + " table, #"+ id + " td, #"+ id + " th{border: 1px solid #000; color: #000; background: #fff;}#"+ id + " tr:nth-child(even) td{background: #ddd;}#"+ id + " tr td:hover{background: #bbb;}</style>";
+    tab += "</table>";
+    Essence.addCSS("#"+ id + " table{background: #000;}#"+ id + " table, #"+ id + " td, #"+ id + " th{border: 1px solid #000; color: #000; background: #fff;}#"+ id + " tr:nth-child(even) td{background: #ddd;}#"+ id + " tr td:hover{background: #bbb;}");
     return tab
 }
 
@@ -551,7 +551,8 @@ function colourTable (caption, cols, clrs, id, split, style) {
         } else tab += "<td style='background:" + clrs[i] + ";'><br /></td>";
         tab +="</tr>"
     }
-    tab += "</table><style>#"+ id + " table{background: #000;}#"+ id + " table, #"+ id + " td, #"+ id + " th{border: 1px solid #000; color: #000; background: #fff;}#"+ id + " tr:nth-child(even) td{background: #ddd;}#"+ id + " tr td:hover{background: #bbb;}</style>";
+    tab += "</table>";
+    Essence.addCSS("#"+ id + " table{background: #000;}#"+ id + " table, #"+ id + " td, #"+ id + " th{border: 1px solid #000; color: #000; background: #fff;}#"+ id + " tr:nth-child(even) td{background: #ddd;}#"+ id + " tr td:hover{background: #bbb;}");
     return tab
 }
 

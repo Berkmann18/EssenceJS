@@ -1265,14 +1265,3 @@ function htmlDate (id, minYear, maxYear) {
     for (i = (minYear || y - 80); i < (maxYear || y - 2); i++) year += "<option value=" + i + ">" + i + "</option>";
     return day + "</select>" + month + "</select>" + year + "</select>";
 }
-
-/**
- * @description Add CSS styles without flooding the DOM with more style tags than necessary
- * @param {Code} css CSS style
- * @returns {undefined}
- * @since 1.1
- * @func
- */
-function moreCSS (css) {
-    ($e("#EssenceCSS", true))? $e("#EssenceCSS").after(css): Essence.addCSS(css);
-}

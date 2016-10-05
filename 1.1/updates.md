@@ -1,22 +1,25 @@
 ## General
-+ 
++ \+ Optimized the CSS addons
++ ^ Better documentation
 
 ## [essence](essence.js)
-+ Array.removeFirst(), Array.removeLast(), Array.remove(), Element.classes, Element.multi, Element.mutliElm
-
++ ^ String.minify(), Essence.addCSS(), Essence.addJS(), bug causing $e(...).(write|before|after)() to not do anything to an empty DOM element, String.sameLast()
++ \+ Module.update(), Essence.updateAll()
+    
 ## [Ajax](modules/Ajax.js)
-+ ^ Fixed GET
++ 
 
 ## [DataStruct](modules/DataStruct.js)
 + 
 
 ## [DOM](modules/DOM.js)
 + 
+
 ## [Files](modules/Files.js)
 + 
 
 ## [Maths](modules/Maths.js)
-+ \+ lcm(), Fibonacci()
++ 
 
 ## [Misc](modules/Misc.js)
 + 
@@ -25,9 +28,11 @@
 + 
 
 ## [UI](modules/UI.js)
-+ 
++ \- moreCSS (integrated into Essence.addCSS())
 
 ## [Web](modules/Web.js)
 + 
 
 ## [QTest](modules/QTest.js)
++ \+ UnitTest.testFalse()
++ ^ UnitTest.report()

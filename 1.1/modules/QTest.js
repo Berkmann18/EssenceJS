@@ -169,6 +169,7 @@ function test (fx) {
  * @property {number} UnitTest.failRate Failure rate
  * @property {number} UnitTest.coverage Coverage
  * @property {function(*, *, string, boolean)} UnitTest.test Assertion tester
+ * @property {function(*, *, string, boolean)} UnitTest.testFalse Reversed assertion tester
  * @property {Function} UnitTest.reset Reset
  * @property {function(Array[], boolean)} UnitTest.multiTest Multi assertion tester
  * @property {Function} UnitTest.report Report loger
@@ -182,10 +183,18 @@ var UnitTest = {
     test: function (then, expected, cmt, noisy) {
         this.total++;
         var res = then; //to avoid random changes while calling the same function/method with the same parameter(s)
-        if (!res.equals(expected)/* || res !== expected*/) {
+        if (!res.equals(expected)) {
             this.bad++;
             console.log("%c[Unit]%c " + (cmt || "Test #b" + this.bad) + ": Expected \"" + expected + "\" but was \"" + res + "\"", "color: #c0c", "color: #000");
         } else if(noisy && res.equals(expected)) console.log("%c[Unit]%c The expectation on " + expected + " was satisfied !", "color: #c0c", "color: #000"); //in case someone wants to not just see what failed
+    },
+    testFalse: function (then, expected, cmt, noisy) {
+        this.total++;
+        var res = then; //to avoid random changes while calling the same function/method with the same parameter(s)
+        if (res.equals(expected)) {
+            this.bad++;
+            console.log("%c[Unit]%c " + (cmt || "Test #b" + this.bad) + ": Didn't expected \"" + expected + "\" to be \"" + res + "\"", "color: #c0c", "color: #000");
+        } else if(noisy && res.equals(expected)) console.log("%c[Unit]%c The anti-expectation on " + expected + " was satisfied !", "color: #c0c", "color: #000"); //in case someone wants to not just see what failed
     },
     reset: function () {
         this.total = 0;
@@ -202,7 +211,7 @@ var UnitTest = {
     },
     report: function () {
         this.failRate = markConv(this.bad, this.total);
-        console.info("%c[Unit]%c Pass/Fail: %c" + (this.total - this.bad) + "%c/%c" + this.bad + "%c (" + this.failRate + "% fail); on " + BrowserDetect.info(), "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
+        console.info("%c[Unit]%c Pass/Fail: %c" + (this.total - this.bad) + "%c/%c" + this.bad + "%c (" + this.failRate + "% fail); on " + BrowserDetect.info() + "at " + getLineNum(), "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
     },
     basicTests: function () {
         this.reset();

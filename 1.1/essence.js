@@ -66,13 +66,14 @@
  * @property {function(string, function(string))} Essence.ask Ask something to the user
  * @property {function(): boolean} Essence.isComplete Module inclusion completeness check
  * @property {string[]} Essence.loadedModules List of loaded modules
+ * @property {Function} Essence.updateAll Update all modules
  * @todo Get the Essence.source thingy right, i.e get a suitable place to get it from (e.g: a website or an expoitable place of Dropbox)
  */
 var Essence = {
     version: "1.1b",
     author: "Maximilian Berkmann",
     description: "library used for DHTML connexions, maths, database management and cryptography",
-    source: "https://www.dropbox.com/s/n2sz2mxz5zwc05t/essence.js?dl=0",
+    source: "http://berkmann18.github.io/rsc/essence.js",
     element: $n,
     handleError: function (msg, url, line) {
         isType(msg, "Error")? alert("[Essence.js] An error has occurred (line/column " + msg.lineNumber + "/" + msg.columnNumber + " of " + msg.fileName + ").\n\nMessage: " + msg.stack): alert("[Essence.js] An error has occurred (line " + line + " of " + url + ").\n\nMessage: " + msg)
@@ -119,20 +120,28 @@ var Essence = {
         }*/
     },
     addCSS: function (nstyle) {
-        var s = document.createElement("style");
-        s.innerText = nstyle;
-        //s.media = "all";
-        s.type = "text/css";
-        s.id = "EssenceCSS";
-        $n("head").appendChild(s);
+        if ($n("style", true) === null) {
+            var s = document.createElement("style");
+            s.innerText = nstyle;
+            //s.media = "all";
+            s.type = "text/css";
+            s.id = "EssenceCSS";
+            $n("head").appendChild(s);
+        } else $e("style[type='text/css']").after(nstyle);
     }, addJS: function (nscript) {
-        var s = document.createElement("script");
-        s.innerText = nscript;
-        $n("head").appendChild(s);
+        if ($n("script", true) === null) {
+            var s = document.createElement("script");
+            s.innerText = nscript;
+            s.type = "text/javascript";
+            $n("head").appendChild(s);
+        } else $e("script[type='text/javascript']").after(nscript);
     }, update: function () { //To keep the script updated !!
-        var scriptArr = $e("*script");
-        for (var i = 0; i < scriptArr.length; i ++) {
-            if (scriptArr[i].src.indexOf("essence.js") > -1 || scriptArr[i].src.indexOf("essence.min.js") > -1) scriptArr[i].src = this.source || Essence.source;
+        var $s = $n("*script").toArray();
+        var scripts = filenameList($s.map(function (script) {
+            return script.src;
+        }));
+        for (var i = 0; i < scripts.length; i++) {
+            if (stripPath(scripts[i]) === "essence.js" || stripPath(scripts[i]) === "essence.min.js") $s[i].src = Essence.source;
         }
         Essence.say("%cEssence(.min).js%c has been updated", "succ", "text-decoration: underline", "text-decoration: none");
     },
@@ -203,7 +212,14 @@ var Essence = {
             if (window[modules[i]].loaded) this.loadedModules.push(window[modules[i]]);
         }
         return !!complete;
-    }, loadedModules: []
+    }, loadedModules: [],
+    updateAll: function () {
+        this.update();
+        this.isComplete();
+        this.loadedModules.map(function (m) {
+            m.update();
+        })
+    }
 },
     /**
      * @description List of modules
@@ -256,6 +272,7 @@ var Essence = {
  * @property {Function} Module.load Load the module as well as initializing its dependencies
  * @property {function(): string} Module.toString String representation
  * @property {function(): number} Module.getWeight Weight of the module on EssenceJS's module ecosystem
+ * @property {Function} Module.update Update the module
  * @since 1.1
  */
 function Module (name, desc, dpc, ver, rn, pathVer) {
@@ -290,6 +307,18 @@ function Module (name, desc, dpc, ver, rn, pathVer) {
         return weight;
     };
 
+    this.update = function () { //This method should not be used before EssenceJS is fully implemented onto the environment using it
+        var $s = $n("*script").toArray();
+        var scripts = filenameList($s.map(function (script) {
+            return script.src;
+        }));
+        for (var i = 0; i < scripts.length; i++) {
+            if (stripPath(scripts[i]) === this.name + ".js") $s[i].src = "http://berkmann18.github.io/rsc/modules/" + this.name + ".js";
+            else if (stripPath(scripts[i]) === this.name + ".min.js") $s[i].src = "http://berkmann18.github.io/rsc/modules/" + this.name + ".min.js";
+        }
+
+        Essence.say(this.name.capitalize() + "(.min).js has been updated", "succ");
+    };
     return this;
 }
 
@@ -582,7 +611,7 @@ getExtPath = function (path) {
                     return m.name;
                 }).toStr(true));
         }
-        if (!filenameList(gatherExternalScripts(true)).has(Essence.source)) Essence.source = Essence.source.replace(".js", ".min.js");
+        if (!filenameList(gatherExternalScripts(true)).has("essence.js")) Essence.source = Essence.source.replace(".js", ".min.js");
         if (testMode) UnitTest.multiTest(UnitTest.libTests);
         UnitTest.libTests = [
             //essence
@@ -766,11 +795,12 @@ function Element (selector) { //The element object
         return this.val().length
     };
 
-    this.isEmpty = function () { //Check if the value is empty/inexistent
+    this.isEmpty = function () {
         return isNon(this.val());
     };
 
-    this.write = function (nval, parseToHTML, incTags) { //Assign #nval as the value of the element's node
+    this.write = function (nval, parseToHTML, incTags) {
+        if (typeof this.val(true) == "undefined") this.node.innerText = "?";
         if (isType(this.node, "array")) {
             for (var i = 0; i < this.node.length; i++) {
                 if (this.node[i].value && !parseToHTML && !incTags) this.node[i].value = isType(nval, "array")? nval[i]: nval;
@@ -788,7 +818,8 @@ function Element (selector) { //The element object
         else this.node.value? this.node.value = nval: this.innerText = nval;
     };
 
-    this.before = function (nval, parseToHTML, incTags) { //Write before (like a string/code unshift)
+    this.before = function (nval, parseToHTML, incTags) {
+        if (typeof this.val(true) == "undefined") this.node.innerText = "?";
         if (isType(this.node, "array")) {
             for (var i = 0; i < this.node.length; i++) {
                 if (this.node[i].value && !parseToHTML && !incTags) this.node[i].value = isType(nval, "array")? nval[i] + this.node[i].value: nval + this.node[i].value;
@@ -806,7 +837,8 @@ function Element (selector) { //The element object
         else this.node.value? this.node.value = nval + this.node.value: this.innerText = nval + this.innerText;
     };
 
-    this.after = function (nval, parseToHTML, incTags) { //Write after (like an array push)
+    this.after = function (nval, parseToHTML, incTags) {
+        if (typeof this.val(true) == "undefined") this.node.innerText = "?";
         if (isType(this.node, "array")) {
             for (var i = 0; i < this.node.length; i++) {
                 if (this.node[i].value && !parseToHTML && !incTags) this.node[i].value += isType(nval, "array")? nval[i]: nval;
@@ -3574,12 +3606,12 @@ String.prototype.sameFirst = function (str) {
  * @external String
  */
 String.prototype.sameLast = function (str) {
-    var sf = "", pos = Math.min(this.length, str.length);
-    while (pos > 0) {
-        pos--;
-        //(this[pos] === str[pos])? sf += this[pos]: break;
-        if (this[pos] === str[pos]) sf += this[pos];
+    var sf = "", pos = 1, minLen = Math.min(this.length, str.length);
+    while (pos <= minLen) {
+        //(this[this.length - pos] === str[str.length - pos])? sf = this[this.length - pos] + sf: break;
+        if (this[this.length - pos] === str[str.length - pos]) sf = this[this.length - pos] + sf;
         else break;
+        pos++;
     }
     return sf;
 };
@@ -3614,13 +3646,14 @@ String.prototype.reverse = function (splitter) {
 /**
  * @description Minify a string/code
  * @param {boolean} [noComment=false] Remove HTML/CSS like comments
+ * @param {boolean} [noSpace=false] Remove spaces
  * @method
  * @since 1.1
  * @external String
  * @return {string}
  */
-String.prototype.minify = function (noComment) {
-    var min = this.trim().replace(/(\t|\n|\s{2,})/gm, "");
+String.prototype.minify = function (noComment, noSpace) {
+    var min = noSpace? this.trim().replace(/(\t|\n|\s)/gm, ""): this.trim().replace(/(\t|\n|\s{2,})/gm, "");
     return noComment? min.replace(/(<!--(.*?)-->|\/\*+(.*?)\*+\/)/gm, ""): min;
 };
 

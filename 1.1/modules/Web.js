@@ -101,16 +101,16 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
     this.setStorage = function () {
         localStorage[this.name] = JSON.stringify(this.val)
     };
-    this.html = complexTable(this.name, this.headerRow, this.content, this.headerCol, name);
-    this.css = "<style>*{font-family:Consolas,Segoe UI,Tahoma,sans-serif;}table{background: #000;}table,td,th{border:1px solid #000;color:#000;background:#fff;}tr:nth-child(even) td,tr:nth-child(even) th{background:#eee;}</style>";
+    this.css = "#" + this.name + "table{font-family:Consolas,Segoe UI,Tahoma,sans-serif;background: #000;}#" + this.name + "table,#" + this.name + "td,#" + this.name + "th{border:1px solid #000;color:#000;background:#fff;}#" + this.name + "tr:nth-child(even) td,#" + this.name + "tr:nth-child(even) th{background:#eee;}";
+    this.html = complexTable(this.name, this.headerRow, this.content, this.headerCol, this.name, false, this.css);
     this.disp = function (elmId) {
-        $e(elmId? "#" + elmId: "body").write(this.html + this.css, true);
+        $e(elmId? "#" + elmId: "body").write(this.html, true);
         this.setStorage();
     };
     this.update = function () {
         if (localStorage[this.name]) this.val = JSON.parse(localStorage[this.name]);
         else this.setStorage();
-        this.html = complexTable(this.name, this.headerRow, this.content, this.headerCol, name);
+        this.html = complexTable(this.name, this.headerRow, this.content, this.headerCol, this.name, false, this.css);
     };
     this.searchAndRemove = function (vals) { //Vals = range|..
         for (var n = 0; n < vals.length; n++) {
@@ -180,7 +180,7 @@ function DB (name, headers, rows, headerRows) {
     this.name = name || "DB";
     this.head = headers || ["Index", "Value"];
     this.val = rows || [range(1), new Array(range(1).length).fill("...")].translate();
-    this.css = "<style>table#"+ this.name + "{font-family:Consolas,Segoe UI,Tahoma,sans-serif;background: #000;}table#"+ this.name + ", #"+ this.name + " td, #"+ this.name + " th{border:1px solid #000;color:#000;background:#fff;}#"+ this.name + " tr:nth-child(even) td,#"+ this.name + " tr:nth-child(even) th{background:#eee;}</style>";
+    this.css = "table#"+ this.name + "{font-family:Consolas,Segoe UI,Tahoma,sans-serif;background: #000;}table#"+ this.name + ", #"+ this.name + " td, #"+ this.name + " th{border:1px solid #000;color:#000;background:#fff;}#"+ this.name + " tr:nth-child(even) td,#"+ this.name + " tr:nth-child(even) th{background:#eee;}";
     this.html = "";
     this.rows = headerRows || false;
     //this.events = Tablify(["build", "fill", "save", "update", "set", "get", "find", "see", "view", "add", "init"], {data: null, name: "", timeStamp: new Date().getTime()});
@@ -234,7 +234,7 @@ function DB (name, headers, rows, headerRows) {
     };
     this.view = function (id) {
         this.build();
-        $e(id? "#" + id: "body").write(this.html + this.css, true);
+        $e(id? "#" + id: "body").write(this.html, true);
         this.onView($e(id? "#" + id: "body").val(true), id);
     };
     this.add = function (vals, step) {
@@ -249,7 +249,7 @@ function DB (name, headers, rows, headerRows) {
     };
     this.remove = function (i) {
         this.val[i || this.val.lastIndex()] = undefined;
-        this.val = this.val.remove();
+        this.val.remove();
         return this.val;
     };
 
@@ -358,7 +358,7 @@ function server (name, admin, type, ver, mxsz) {
     else throw new Error(this.type + " is an invalid server type.");
     this.addProcess = function (pcs) {
         this.event = new Event("processAdded");
-        if (pcs.sig.last() === "-" || pcs.bitsize > this.maxsize/this.nb_slots) console.log("[Server:" + name + "] The process named " + pcs.name + " has been rejected");
+        if (pcs.sig.last() === "-" || pcs.bitsize > this.maxsize / this.nb_slots) console.log("[Server:" + name + "] The process named " + pcs.name + " has been rejected");
         else {
             var pos;
             for (var i = 0; i < this.nb_slots; i++) {
