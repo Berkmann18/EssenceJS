@@ -142,9 +142,9 @@ function loadJSON (file) {
  * @param {XhrCallback} [success] Success handler
  * @param {XhrCallback} [fail] Failure handler
  * @param {XhrCallback} [progress] Loading/progress handler
+ * @param {string} [body] Body of the request
  * @param {string[]} [creds=["", ""]] Credentials (username, password)
  * @param {string} [mime] MIME type
- * @param {string} [body] Body of the request
  * @returns {XHR} XHR object
  * @since 1.1
  * @constructor
@@ -184,6 +184,7 @@ function XHR (url, method, async, success, fail, progress, body, creds, mime) {
     var self = this;
     /**
      * @listens XHR.req.readyState
+     * @returns {undefined}
      */
     this.req.onreadystatechange = function () {
         self.state = getXHRMsg(self.req.readyState);
@@ -219,6 +220,7 @@ function XHR (url, method, async, success, fail, progress, body, creds, mime) {
     };
     /**
      * @listens XHR.req.responseType
+     * @returns {undefined}
      */
     this.handleResponse = function () {
         switch (this.req.responseType) {
@@ -316,7 +318,9 @@ function CORS (url, method, async, success, fail, progress, body, creds, mime) {
     try {
         //noinspection JSUnresolvedVariable
         if (!("withCredentials" in this.xhr.req) && typeof XDomainRequest != "undefined") this.xhr.req = new XDomainRequest();
-    } catch (e) {}
+    } catch (e) {
+
+    }
     this.init = function () {
         this.xhr.init([["Access-Control-Request-Headers", "X-Custom-Header"],
             ["Access-Control-Allow-Headers", "Cache-Control, Content-Language, Content-Type, Expires, Last-Modified, Pragma, Body, Origin, X-Custom-Headers, X-PINGOTHER"],

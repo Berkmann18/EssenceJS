@@ -811,7 +811,7 @@ function tabs (n) {
 function $t (tagName, knownAttrSelector, attr) {
     var tag = $e(tagName + "[" + knownAttrSelector + "]").val(false, true), start;
     start = tag.search(attr + "=\"|\'") + attr.length + 2;
-    return tag.get(start, start + tag.get(start).indexOf(tag.has("'")? "'": '"') - 1);
+    return tag.get(start, start + tag.get(start).indexOf(tag.has("'")? "'": "\"") - 1);
 }
 
 /**

@@ -41,7 +41,7 @@ function getCookie (c_name) {
  * @description Create a cookie
  * @param {string} c_name Cookie name
  * @param {*} value Cookie value
- * @param {number} exdays Expiration days
+ * @param {number} [exdays] Expiration days
  * @returns {undefined}
  * @see module:Web~getCookie
  * @since 1.0
@@ -54,6 +54,34 @@ function setCookie (c_name, value, exdays) {
     var c_value = encodeURIComponent(value) + ((exdays === null) ? "" : "; expires = " + exdate.toUTCString());
     document.cookie = c_name + "=" + c_value
 }
+
+/**
+ * @description Cookie history
+ * @type {{get: CookieHistory.get, set: CookieHistory.set, toObject: CookieHistory.toObject}}
+ * @since 1.1
+ * @see module:Web~setCookie
+ * @see module:Web~getCookie
+ * @property {function(): string[]} CookieHistory.get Get the list of cookies
+ * @property {Function} CookieHistory.set Set the cookie for the list of cookies
+ * @property {function(): Object} CookieHistory.toObject Get the dictionary form of the cookie history
+ */
+var CookieHistory = {
+    get: function () {
+        return document.cookie.split(";").map(function (x) {
+            return x.split("=")[0]
+        }).remove("CookieHistory", true);
+    },
+    set: function () {
+        setCookie("CookieHistory", this.get());
+    },
+    toObject: function () {
+        return Objectify(this.get(), document.cookie.split(";").filter(function (x) {
+            return x.split("=")[0] != "CookieHistory"
+        }).map(function (x) {
+            return x.split("=")[1]
+        }));
+    }
+};
 
 /**
  * @description Local/session database
@@ -313,7 +341,7 @@ function process (name, auth, summup, ctt) {
 
 /**
  * @description Server
- * @param {string} [name="Server" Name
+ * @param {string} [name="Server"] Name
  * @param {string} [admin=""] Admin
  * @param {string} [type="data"] Type (data, process, storage, authentification, register, location)
  * @param {number} [ver=1.0] Version
@@ -699,7 +727,9 @@ var WifiTest = {
         var iState = this.elm.val();
         for (var i = 0; i < this.imgs;) {
             CECheck(this.elm.node.id, "../img/random" + this.imgs[i].dim + "x" + this.imgs[i].dim + ".jpg", this.imgs[i].size);
-            while (this.elm.val() === iState || window.defaultStatus != "normal") {}
+            while (this.elm.val() === iState || window.defaultStatus != "normal") {
+                //wait
+            }
             if (this.elm.val() != iState || window.defaultStatus === "normal") i++;
         }
         this.vals = $G["wifi"];
@@ -1477,6 +1507,11 @@ function getPrivateIP () {
         localIPs = {},
         ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g;
 
+    /**
+     * @description IP iterator
+     * @param {String} ip IP address
+     * @returns {undefined}
+     */
     function ipIterate (ip) {
         if (!localIPs[ip]) {
             /**
@@ -1492,8 +1527,8 @@ function getPrivateIP () {
     }
     pc.createDataChannel(""); //create a bogus data channel
     pc.createOffer(function (sdp) {
-        sdp.sdp.split('\n').forEach(function (line) {
-            if (line.indexOf('candidate') < 0) return;
+        sdp.sdp.split("\n").forEach(function (line) {
+            if (line.indexOf("candidate") < 0) return;
             line.match(ipRegex).forEach(ipIterate);
         });
         pc.setLocalDescription(sdp, $f, $f);

@@ -48,9 +48,9 @@ function evtLog (event) {
  - TypeError: instance representing an error that occurs when a variable or parameter is not of a valid type
  - URIError: instance representing an error that occurs when encodeURI() or decodeURI() are passed invalid parameters
  function MyError(message) { //From Mozilla ?
- this.name = 'MyError';
- this.message = message || 'Default Message';
- this.stack = (new Error()).stack
+     this.name = 'MyError';
+     this.message = message || 'Default Message';
+     this.stack = (new Error()).stack
  }
  MyError.prototype = Object.create(Error.prototype);
  MyError.prototype.constructor = MyError; */
@@ -59,24 +59,26 @@ InvalidParamError.inheritsFrom(Error);
 /**
  * @description Invalid parameter error
  * @param {string} [msg="The parameter used at <code>lineNum</code> is invalid"]  Message
- * @param {string} fname Filename
- * @param {number} lineNum Line number
+ * @param {string} [fname] Filename
+ * @param {number} [lineNum] Line number
  * @constructor
  * @returns {InvalidParamError} Error
  * @extends {Error}
  * @this {InvalidParamError}
- * @since 1.0
+ * @since 1.1
  * @throws {Error}
  */
-function InvalidParamError(msg, fname, lineNum) { //Invalid parameter
-    this.name = "Invalid parameter error";
-    this.fileName = fname;
-    this.lineNumber = lineNum;
-    this.message = msg || "The parameter used at " + this.lineNumber + " is invalid !";
-    this.stack = (new Error()).stack;
+function InvalidParamError (msg, fname, lineNum) {
+    var error = Error.call(this, msg || "The parameter is invalid !");
 
-    return this;
+    this.name = 'CustomError';
+    this.message = error.message;
+    this.stack = error.stack;
+    this.fileName = fname || location.href;
+    this.lineNumber = lineNum || getLineNum();
 }
+InvalidParamError.prototype = Object.create(Error.prototype);
+InvalidParamError.prototype.constructor = InvalidParamError;
 
 /**
  * @description Get the caller's trace's location
@@ -185,7 +187,7 @@ var UnitTest = {
         var res = then; //to avoid random changes while calling the same function/method with the same parameter(s)
         if (!res.equals(expected)) {
             this.bad++;
-            console.log("%c[Unit]%c " + (cmt || "Test #b" + this.bad) + ": Expected \"" + expected + "\" but was \"" + res + "\"", "color: #c0c", "color: #000");
+            console.log("%c[Unit]%c " + (cmt || "Test #b" + this.bad) + ": Expected \"%c" + expected + "%c\" but was \"%c" + res + "%c\"", "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
         } else if(noisy && res.equals(expected)) console.log("%c[Unit]%c The expectation on " + expected + " was satisfied !", "color: #c0c", "color: #000"); //in case someone wants to not just see what failed
     },
     testFalse: function (then, expected, cmt, noisy) {
@@ -193,7 +195,7 @@ var UnitTest = {
         var res = then; //to avoid random changes while calling the same function/method with the same parameter(s)
         if (res.equals(expected)) {
             this.bad++;
-            console.log("%c[Unit]%c " + (cmt || "Test #b" + this.bad) + ": Didn't expected \"" + expected + "\" to be \"" + res + "\"", "color: #c0c", "color: #000");
+            console.log("%c[Unit]%c " + (cmt || "Test #b" + this.bad) + ": Didn't expected \"%c" + expected + "%c\" to be \"%c" + res + "%c\"", "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
         } else if(noisy && res.equals(expected)) console.log("%c[Unit]%c The anti-expectation on " + expected + " was satisfied !", "color: #c0c", "color: #000"); //in case someone wants to not just see what failed
     },
     reset: function () {
@@ -211,7 +213,7 @@ var UnitTest = {
     },
     report: function () {
         this.failRate = markConv(this.bad, this.total);
-        console.info("%c[Unit]%c Pass/Fail: %c" + (this.total - this.bad) + "%c/%c" + this.bad + "%c (" + this.failRate + "% fail); on " + BrowserDetect.info() + "at " + getLineNum(), "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
+        console.info("%c[Unit]%c Pass/Fail: %c" + (this.total - this.bad) + "%c/%c" + this.bad + "%c (" + this.failRate + "% fail); on " + BrowserDetect.info() + " at " + getLineNum(), "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
     },
     basicTests: function () {
         this.reset();

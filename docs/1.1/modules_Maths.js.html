@@ -150,11 +150,11 @@ function random16 () {
 
 /**
  * @description Generate a random double in [0, 1] with &lt;code>bits&lt;/code>-bits of randomness to avoid repetitive patterns when using Math.random() on a large spaces.
- * @param bits
+ * @param {number} [bits=32] Number of bits used in the randomness
  * @return {number} Random double
  * @since 1.1
  * @func
- * @see modume:Maths~random16
+ * @see module:Maths~random16
  */
 function random (bits) {
     if (!bits) bits = 32;
@@ -840,7 +840,7 @@ function fahr2cels (fahr) {
 /**
  * @description Check if &lt;code>x&lt;/code> is a prime number
  * @param {number} x Number
- * @return {boolean}
+ * @return {boolean} Primeness
  * @since 1.1
  * @func
  */
@@ -1257,7 +1257,7 @@ function fromPixel (x, unit) {
 }
 
 /**
- * @description Unit converter
+ * @description Length converter
  * @param {string} x Number with unit
  * @param {string} unit Final unit
  * @returns {string} &lt;code>x&lt;/code> &amp;rArr; &lt;code>y&lt;/code> &lt;code>unit&lt;/code>
@@ -1266,7 +1266,7 @@ function fromPixel (x, unit) {
  * @since 1.0
  * @func
  */
-function convUnit (x, unit) {
+function convLength (x, unit) {
     return fromPixel(toPixel(x), unit); //demux(.* , px)->mux(px, .* )
 }
 
@@ -1516,6 +1516,451 @@ function convSize (x, unit) {
 }
 
 /**
+ * @description &lt;code>x&lt;/code> unit to &lt;code>y&lt;/code> px.
+ * @param {string} x Number with a unit
+ * @returns {number} m^2
+ * @see module:Maths~fromSqMeter
+ * @since 1.0
+ * @func
+ */
+function toSqMeter (x) {
+    var m = 1;
+    switch (x.substring(String(getNumFromStr(x)).length, x.length).remove(" ")) {
+        case "ha":
+            m = 1e4;
+            break;
+        case "a":
+            m = 100;
+            break;
+        case "km^2":
+            m = 1e6;
+            break;
+        case "dm^2":
+            m = .01;
+            break;
+        case "cm^2":
+            m = 1e-4;
+            break;
+        case "mm^2":
+            m = 1e-6;
+            break;
+        case "mi^2":
+            m = 2589988.11;
+            break;
+        case "acre":
+            m = 4046856422;
+            break;
+        case "yd^2":
+            m = .83612736;
+            break;
+        case "ft^2":
+            m = .09290304;
+            break;
+        case "in^2":
+            m = 6.4516e-4;
+            break;
+        default: break;
+    }
+    return getNumFromStr(x) * m
+}
+
+/**
+ * @description X m^2 to y unit
+ * @param {number} x m^2
+ * @param {string} unit Unit
+ * @returns {string} Conversion
+ * @see module:Maths~toSqMeter
+ * @since 1.1
+ * @func
+ */
+function fromSqMeter (x, unit) {
+    var m = 1;
+    switch (unit) {
+        case "ha":
+            m = 1e-4;
+            break;
+        case "a":
+            m = .01;
+            break;
+        case "km^2":
+            m = 1e-6;
+            break;
+        case "dm^2":
+            m = 100;
+            break;
+        case "cm^2":
+            m = 1e4;
+            break;
+        case "mm^2":
+            m = 1e6;
+            break;
+        case "mi^2":
+            m = 1 / 2589988.11;
+            break;
+        case "acre":
+            m = 1 / 4046856422;
+            break;
+        case "yd^2":
+            m = 1 / .83612736;
+            break;
+        case "ft^2":
+            m = 1 / .09290304;
+            break;
+        case "in^2":
+            m = 1 / 6.4516e-4;
+            break;
+        default: break;
+    }
+    return x * m + unit
+}
+
+/**
+ * @description Area converter
+ * @param {string} x Number with unit
+ * @param {string} unit Final unit
+ * @returns {string} &lt;code>x&lt;/code> &amp;rArr; &lt;code>y&lt;/code> &lt;code>unit&lt;/code>
+ * @see module:Maths~fromSqMeter
+ * @see module:Maths~toSqMeter
+ * @since 1.1
+ * @func
+ */
+function convArea (x, unit) {
+    return fromPixel(toPixel(x), unit); //demux(.* , px)->mux(px, .* )
+}
+
+/**
+ * @description &lt;code>x&lt;/code> unit to &lt;code>y&lt;/code> px.
+ * @param {string} x Number with a unit
+ * @returns {number} L/km
+ * @see module:Maths~fromLpkm
+ * @since 1.0
+ * @func
+ */
+function toLpkm (x) {
+    var m = 1;
+    switch (x.substring(String(getNumFromStr(x)).length, x.length).remove(" ")) {
+        case "mipgalUK": //Miles/Gallon (UK)
+            m = 2.352392798;
+            break;
+        case "mipgal":
+            m = 2.352392798;
+            break;
+        case "mipgalUS": //Miles/Gallon (US)
+            m = 2.825364894;
+            break;
+        default: break;
+    }
+    return getNumFromStr(x) * m
+}
+
+/**
+ * @description X L/km to y unit
+ * @param {number} x L/km
+ * @param {string} unit Unit
+ * @returns {string} Conversion
+ * @see module:Maths~toLpkm
+ * @since 1.1
+ * @func
+ */
+function fromLpkm (x, unit) {
+    var m = 1;
+    switch (unit) {
+        case "mipgalUK": //Miles/Gallon (UK)
+            m = 1 / 2.352392798;
+            break;
+        case "mipgal":
+            m = 1 / 2.352392798;
+            break;
+        case "mipgalUS": //Miles/Gallon (US)
+            m = 1 / 2.825364894;
+            break;
+        default: break;
+    }
+    return x * m + unit
+}
+
+/**
+ * @description Fuel/mileage converter
+ * @param {string} x Number with unit
+ * @param {string} unit Final unit
+ * @returns {string} &lt;code>x&lt;/code> &amp;rArr; &lt;code>y&lt;/code> &lt;code>unit&lt;/code>
+ * @see module:Maths~fromLpkm
+ * @see module:Maths~toLpkm
+ * @since 1.1
+ * @func
+ */
+function convFuel (x, unit) {
+    return fromLpkm(toLpkm(x), unit); //demux(.* , px)->mux(px, .* )
+}
+
+/**
+ * @description &lt;code>x&lt;/code> unit to &lt;code>y&lt;/code> px.
+ * @param {string} x Number with a unit
+ * @returns {number} W
+ * @see module:Maths~fromW
+ * @since 1.1
+ * @func
+ */
+function toW (x) {
+    var m = 1;
+    switch (x.substring(String(getNumFromStr(x)).length, x.length).remove(" ")) {
+        case "btuph": //Btu/h
+            m = .2930710703;
+            break;
+        case "hp":
+            m = 735.4990028;
+            break;
+        case "kW":
+            m = 1e3;
+            break;
+        case "tonpref": //Ton of refrigeration (ton/ref)
+            m = 3516.852842;
+            break;
+        default: break;
+    }
+    return getNumFromStr(x) * m
+}
+
+/**
+ * @description X W to y unit
+ * @param {number} x W
+ * @param {string} unit Unit
+ * @returns {string} Conversion
+ * @see module:Maths~toW
+ * @since 1.1
+ * @func
+ */
+function fromW (x, unit) {
+    var m = 1;
+    switch (unit) {
+        case "btuph": //Btu/h
+            m = 1 / .2930710703;
+            break;
+        case "hp":
+            m = 1 / 735.4990028;
+            break;
+        case "kW":
+            m = 1e-3;
+            break;
+        case "tonpref": //Ton of refrigeration (ton/ref)
+            m = 1 / 3516.852842;
+            break;
+        default: break;
+    }
+    return x * m + unit
+}
+
+/**
+ * @description Power converter
+ * @param {string} x Number with unit
+ * @param {string} unit Final unit
+ * @returns {string} &lt;code>x&lt;/code> &amp;rArr; &lt;code>y&lt;/code> &lt;code>unit&lt;/code>
+ * @see module:Maths~fromW
+ * @see module:Maths~toW
+ * @since 1.1
+ * @func
+ */
+function convPower (x, unit) {
+    return fromW(toW(x), unit); //demux(.* , px)->mux(px, .* )
+}
+
+/**
+ * @description &lt;code>x&lt;/code> unit to &lt;code>y&lt;/code> bar.
+ * @param {string} x Number with a unit
+ * @returns {number} bar
+ * @see module:Maths~fromBar
+ * @since 1.1
+ * @func
+ */
+function toBar (x) {
+    var m = 1;
+    switch (x.substring(String(getNumFromStr(x)).length, x.length).remove(" ")) {
+        case "atm":
+            m = 1.01325;
+            break;
+        case "mbar":
+            m = 1e-3;
+            break;
+        case "inHg": //Inch Mercury
+            m = .03386388158;
+            break;
+        case "mmHg": //Millimeter Mercury
+            m = 0.001333223684;
+            break;
+        case "MPa": //Mega Pascal
+            m = 10;
+            break;
+        case "KPa":
+            m = .01;
+            break;
+        case "Pa": //Pascal (N/m^2)
+            m = 1e-5;
+            break;
+        case "psf": //Pound/foot^2
+            m = 4.788025898e-4;
+            break;
+        case "psi": //Pound/in^2
+            m = .06894757293;
+            break;
+        default: break;
+    }
+    return getNumFromStr(x) * m
+}
+
+/**
+ * @description X bar to y unit
+ * @param {number} x bar
+ * @param {string} unit Unit
+ * @returns {string} Conversion
+ * @see module:Maths~toBar
+ * @since 1.1
+ * @func
+ */
+function fromBar (x, unit) {
+    var m = 1;
+    switch (unit) {
+        case "atm":
+            m = 1 / 1.01325;
+            break;
+        case "mbar":
+            m = 1e3;
+            break;
+        case "inHg": //Inch Mercury
+            m = 1 / .03386388158;
+            break;
+        case "mmHg": //Millimeter Mercury
+            m = 1 / 0.001333223684;
+            break;
+        case "MPa": //Mega Pascal
+            m = .1;
+            break;
+        case "KPa":
+            m = 100;
+            break;
+        case "Pa": //Pascal (N/m^2)
+            m = 1e5;
+            break;
+        case "psf": //Pound/foot^2
+            m = 2088.5434233296623;
+            break;
+        case "psi": //Pound/in^2
+            m = 1 / .06894757293;
+            break;
+        default: break;
+    }
+    return x * m + unit
+}
+
+/**
+ * @description Pressure converter
+ * @param {string} x Number with unit
+ * @param {string} unit Final unit
+ * @returns {string} &lt;code>x&lt;/code> &amp;rArr; &lt;code>y&lt;/code> &lt;code>unit&lt;/code>
+ * @see module:Maths~fromBar
+ * @see module:Maths~toBar
+ * @since 1.1
+ * @func
+ */
+function convPressure (x, unit) {
+    return fromBar(toBar(x), unit); //demux(.* , px)->mux(px, .* )
+}
+
+/**
+ * @description &lt;code>x&lt;/code> unit to &lt;code>y&lt;/code> bar.
+ * @param {string} x Number with a unit
+ * @returns {number} M/s
+ * @see module:Maths~fromMps
+ * @since 1.1
+ * @func
+ */
+function toMps (x) {
+    var m = 1;
+    switch (x.substring(String(getNumFromStr(x)).length, x.length).remove(" ")) {
+        case "kmph": //km/h
+            m = .277777778;
+            break;
+        case "mph": //miles/h
+            m = .44704;
+            break;
+        case "ftpmin": //Feet per minute (ft/min)
+            m = .00508;
+            break;
+        case "ftps": //Feet per second
+            m = .3048;
+            break;
+        case "knot":
+            m = .5144444444;
+            break;
+        case "c(v)": //Light speed (celerity)
+            m = 299792458;
+            break;
+        case "Mach(a)": //Sound speed
+            m = 343.2;
+            break;
+        case "Mach(w)": //Sound speed
+            m = 1484;
+            break;
+        default: break;
+    }
+    return getNumFromStr(x) * m
+}
+
+/**
+ * @description X m/s to y unit
+ * @param {number} x bar
+ * @param {string} unit Unit
+ * @returns {string} Conversion
+ * @see module:Maths~toMps
+ * @since 1.1
+ * @func
+ */
+function fromMps (x, unit) {
+    var m = 1;
+    switch (unit) {
+        case "kmph": //km/h
+            m = 1 / .277777778;
+            break;
+        case "mph": //miles/h
+            m = 1 / .44704;
+            break;
+        case "ftpmin": //Feet per minute (ft/min)
+            m = 1 / .00508;
+            break;
+        case "ftps": //Feet per second
+            m = 1 / .3048;
+            break;
+        case "knot":
+            m = 1 / .5144444444;
+            break;
+        case "c(v)": //Light speed (celerity)
+            m = 1 / 299792458;
+            break;
+        case "Mach(a)": //Sound speed
+            m = 1 / 343.2;
+            break;
+        case "Mach(w)": //Sound speed
+            m = 1 / 1484;
+            break;
+        default: break;
+    }
+    return x * m + unit
+}
+
+/**
+ * @description Speed converter
+ * @param {string} x Number with unit
+ * @param {string} unit Final unit
+ * @returns {string} &lt;code>x&lt;/code> &amp;rArr; &lt;code>y&lt;/code> &lt;code>unit&lt;/code>
+ * @see module:Maths~fromMps
+ * @see module:Maths~toMps
+ * @since 1.1
+ * @func
+ */
+function convSpeed (x, unit) {
+    return fromMps(toMps(x), unit); //demux(.* , px)->mux(px, .* )
+}
+
+/**
  * @description Matlab min:inc:max range
  * @param {number} [min=0] Minimum
  * @param {number} [inc=1] Increment
@@ -1761,6 +2206,151 @@ function bitStr (a, b) {
         if(a.hasOwnProperty(i)) ba[i] = (a[i] === b[i])? 1: 0;
     }
     return ba
+}
+
+/**
+ * @description Logical and for arrays
+ * @param {Array} a Array a
+ * @param {Array} b Array b
+ * @param {string|null} [cr=null] Filling character
+ * @param {boolean} [toArr=false] To array
+ * @returns {Array|boolean} Result
+ * @since 1.0
+ * @func
+ */
+function And (a, b, cr, toArr) {
+    toSameLength(a, b, cr || null);
+    var res = toArr? new Array(a.length): (a[0] &amp;&amp; b[0]);
+    for (var i in a) {
+        if (a.hasOwnProperty(i)) {
+            (toArr)? res[i] = a[i] &amp;&amp; b[i]: res = (res &amp;&amp; a[i] &amp;&amp; b[i]);
+        }
+    }
+    return res
+}
+
+/**
+ * @description Logical or for arrays
+ * @param {Array} a Array a
+ * @param {Array} b Array b
+ * @param {string|null} [cr=null] Filling character
+ * @param {boolean} [toArr=false] To array
+ * @returns {Array|boolean} Result
+ * @since 1.0
+ * @func
+ */
+function Or (a, b, cr, toArr) {
+    toSameLength(a, b, cr || null);
+    var res = toArr? new Array(a.length): (a[0] || b[0]);
+    for (var i in a) {
+        if (a.hasOwnProperty(i)) {
+            if (toArr) res[i] = a[i] || b[i];
+            else res = (res || a[i] || b[i]);
+        }
+    }
+    return res
+}
+
+/**
+ * @description Logical xor for arrays
+ * @param {Array} a Array a
+ * @param {Array} b Array b
+ * @param {string|null} [cr=null] Filling character
+ * @param {boolean} [toArr=false] To array
+ * @returns {Array|boolean} Result
+ * @since 1.0
+ * @func
+ */
+function Xor (a, b, cr, toArr) {
+    toSameLength(a, b, cr || null);
+    var res = toArr? new Array(a.length): xor(a[0], b[0]);
+    for (var i in a) {
+        if (a.hasOwnProperty(i)) {
+            if (toArr) res[i] = xor(a[i], b[i]);
+            else res = xor(res, xor(a[i], b[i]));
+        }
+    }
+    return res
+}
+
+/**
+ * @description Logical imply for arrays
+ * @param {Array} a Array a
+ * @param {Array} b Array b
+ * @param {string|null} [cr=null] Filling character
+ * @param {boolean} [toArr=false] To array
+ * @returns {Array|boolean} Result
+ * @since 1.0
+ * @func
+ */
+function Imply (a, b, cr, toArr) {
+    toSameLength(a, b, cr || null);
+    var res = toArr? new Array(a.length): (!a[0] || b[0]);
+    for (var i in a) {
+        if(a.hasOwnProperty(i)) {
+            if (toArr) res[i] = (!a[i] || b[i]);
+            else res = (!res || (!a[i] || b[i]));
+        }
+    }
+    return res
+}
+
+/**
+ * @description Manhattan distance between two points
+ * @param {number[]} a Initial point
+ * @param {number[]} b Final point
+ * @returns {number} Distance
+ * @since 1.0
+ * @func
+ */
+function manhattanDist (a, b) {
+    return Math.abs(Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]))
+}
+
+/**
+ * @description Euclidian distance between two points
+ * @param {number[]} a Initial point
+ * @param {number[]} b Final point
+ * @returns {number} Distance
+ * @since 1.0
+ * @func
+ */
+function euclidianDist (a, b) {
+    return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2))
+}
+
+/**
+ * @description Diagonal distance between two points
+ * @param {number[]} a Initial point
+ * @param {number[]} b Final point
+ * @returns {number} Distance
+ * @since 1.0
+ * @func
+ */
+function diagDist (a, b) { //Return the Diagonal distance  ...
+    return Math.max(Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1]))
+}
+
+/**
+ * @description Heuristic of a matrix
+ * @param {Array} mtx Matrix
+ * @param {Array} solvedMtx Solved matrix (goal)
+ * @param {Function} [hrt=euclidiantDist] Heuristic method
+ * @returns {number} Result
+ * @see module:Maths~euclidianDist
+ * @since 1.0
+ * @func
+ */
+function h (mtx, solvedMtx, hrt) {
+    var res = new Array(mtx.length);
+    for (var i = 0; i &lt; mtx.length; i++) {
+        res[i] = new Array(mtx[i].length);
+        for (var j = 0; j &lt; mtx[i].length; j++) {
+            res[i][j] = hrt([i, j], lookfor(mtx[i][j], solvedMtx)) || euclidianDist([i, j], lookfor(mtx[i][j], solvedMtx));
+        }
+    }
+    Essence.say(console.table(res));
+    return res.sum2d()
 }
 
 /**
@@ -2115,7 +2705,7 @@ function Fibonacci (x) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Wed Oct 05 2016 22:47:44 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Mon Oct 17 2016 21:25:51 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

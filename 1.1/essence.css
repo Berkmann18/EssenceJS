@@ -19,7 +19,7 @@ table {
 table, td, th {
     border: 1px solid #000;
     color: #000;
-    background: #fff;
+    background: #FFF;
     /*cell-spacing: 0;
     cell-padding: 2;*/
     border-collapse: collapsed;
@@ -43,24 +43,24 @@ tr:hover td {
 }
 
 .succ {
-    color: #0f0;
+    color: #0F0;
 }
 
 .err {
-    color: #f00;
+    color: #F00;
 }
 
 .quest {
-    color: #00f;
+    color: #00F;
 }
 
 .warn {
-    color: #fc0;
+    color: #FC0;
 }
 
 .info {
     border-color: #008;
-    background-color: #00008f;
+    background-color: #00008F;
 }
 
 .success {
@@ -70,21 +70,21 @@ tr:hover td {
 
 .error {
     border-color: #800;
-    background-color: #8f0000;
+    background-color: #8F0000;
 }
 
 .question {
-    border-color: #00f;
-    background-color: #0000f8;
+    border-color: #00F;
+    background-color: #0000F8;
 }
 
 .warning {
     border-color: #f8c808;
-    background-color: #fc0;
+    background-color: #FC0;
 }
 
 .block {
-    color: #fff;
+    color: #FFF;
     background: repeat 0 center;
     border: 1px solid;
     -webkit-appearance: none;
@@ -116,8 +116,8 @@ tr:hover td {
 }
 
 kbd {
-    border: 3px outset #ccc;
-    background: #ccc;
+    border: 3px outset #CCC;
+    background: #CCC;
     border-radius: 5px;
     -webkit-border-radius: 7px;
     -moz-border-radius: 7px;
@@ -134,15 +134,15 @@ h2 {
 }
 
 h3 {
-    color: #0ff;
+    color: #0FF;
 }
 
 .code-tag, .code-inst {
-    color: #00f;
+    color: #00F;
 }
 
 .code-cmt {
-    color: #0f0;
+    color: #0F0;
 }
 
 .code-str, .code-id {
@@ -150,7 +150,7 @@ h3 {
 }
 
 .code-num, .code-class {
-    color: #f00;
+    color: #F00;
 }
 
 .code-attr {
@@ -158,7 +158,7 @@ h3 {
 }
 
 .code-val {
-    color: #fc0;
+    color: #FC0;
 }
 
 .code-type {
@@ -166,7 +166,7 @@ h3 {
 }
 
 .code-doc, .code-op {
-    color: #0ff;
+    color: #0FF;
 }
 
 .code-var {
@@ -214,7 +214,7 @@ h3 {
 }
 
 #console {
-    border: 2px solid #ccc;
+    border: 2px solid #CCC;
     background: #000;
     font-family: Consolas, Tahoma, Segoe UI, sans-serif;
     width: 19em;
@@ -232,14 +232,14 @@ h3 {
     width: 100%;
     height: 11em;
     border: none;
-    color: #fff;
+    color: #FFF;
     display: block;
 }
 
 #consoleIn {
     background: #000;
-    color: #fff;
-    border: 1px solid #fff;
+    color: #FFF;
+    border: 1px solid #FFF;
     margin: 0;
     width: 100%;
 }
@@ -259,7 +259,7 @@ menu {
 menu li {
     display: inline-block;
     cursor: pointer;
-    background: #fff;
+    background: #FFF;
     color: #000;
     padding: 5px;
     border-radius: 3px;
@@ -267,12 +267,12 @@ menu li {
     -moz-border-radius: 3px;
 }
 menu li:hover {
-    background: #ccc;
+    background: #CCC;
 }
 
 .tabOn {
     background: #303D74;
-    color: #fff;
+    color: #FFF;
 }
 
 .tabOff {
@@ -280,7 +280,7 @@ menu li:hover {
     color: #000;
 }
 
-div#content {
+#content {
     padding-left: 40%;
 }
 

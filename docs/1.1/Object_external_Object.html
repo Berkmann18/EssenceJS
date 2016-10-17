@@ -37,7 +37,106 @@
     <div class="container-overview">
     
         
-            <div class="description">Self-destruction of the object.Source: <a href="https://Google.github.io/styleguide/javascriptguide.xml?showone=delete#delete">https://Google.github.io/styleguide/javascriptguide.xml?showone=delete#delete</a></div>
+            <div class="description">Check if an object has a property</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.1</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line1266">line 1266</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+            <h3>Example</h3>
+            
+    <pre class="prettyprint"><code>var a = {name: "A", size: 8}, b = ["1", "4", "9", "h", "w", "_"];a.has("name"); //truea.has("value"); //falseb.has("w"); //trueb.has(" "); //false</code></pre>
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>Object</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">Check if an object is iterable hence if it's a string/array/object</div>
         
 
         
@@ -75,7 +174,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line1171">line 1171</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line1158">line 1158</a>
     </li></ul></dd>
     
 
@@ -86,6 +185,209 @@
     
 </dl>
 
+
+        
+            <h3>Example</h3>
+            
+    <pre class="prettyprint"><code>var myStr = "Hello", myNum = 1.4142, myBool = true, myArr = range(3), myObj = {a: 0, b: 1};myStr.isIterable(); //truemyNum.isIterable(); //falsemyBool.isIterable(); //falsemyArr.isIterable(); //truemyObj.isIterable(); //true</code></pre>
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>Object</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">Get all the positions of a character/property/number c</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.0</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line1137">line 1137</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+            <h3>Example</h3>
+            
+    <pre class="prettyprint"><code>"AbcdAbc".positions("A"); //[0, 4]</code></pre>
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>Object</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">Counts how many times a character/property/number <code>c</code> is present in the object</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>1.0</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line1116">line 1116</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+            <h3>Example</h3>
+            
+    <pre class="prettyprint"><code>"Hello world".count("o"); //2[4, 2, 0, -4, 1, 2, 3].count(0); //1</code></pre>
 
         
     
@@ -169,7 +471,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line1186">line 1186</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line1193">line 1193</a>
     </li></ul></dd>
     
 
@@ -268,7 +570,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line1207">line 1207</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line1214">line 1214</a>
     </li></ul></dd>
     
 
@@ -324,7 +626,7 @@
     <div class="container-overview">
     
         
-            <div class="description">Get all the positions of a character/property/number c</div>
+            <div class="description">Self-destruction of the object.Source: <a href="https://Google.github.io/styleguide/javascriptguide.xml?showone=delete#delete">https://Google.github.io/styleguide/javascriptguide.xml?showone=delete#delete</a></div>
         
 
         
@@ -362,7 +664,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line1130">line 1130</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line1178">line 1178</a>
     </li></ul></dd>
     
 
@@ -373,11 +675,6 @@
     
 </dl>
 
-
-        
-            <h3>Example</h3>
-            
-    <pre class="prettyprint"><code>"AbcdAbc".positions("A"); //[0, 4]</code></pre>
 
         
     
@@ -461,7 +758,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line1223">line 1223</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line1230">line 1230</a>
     </li></ul></dd>
     
 
@@ -555,7 +852,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line1241">line 1241</a>
+        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line1248">line 1248</a>
     </li></ul></dd>
     
 
@@ -566,303 +863,6 @@
     
 </dl>
 
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
-
-
-
-
-
-
-
-<section>
-
-<header>
-    
-        <h2>Object</h2>
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description">Check if an object has a property</div>
-        
-
-        
-
-
-<dl class="details">
-
-    
-
-    
-    <dt class="tag-since">Since:</dt>
-    <dd class="tag-since"><ul class="dummy"><li>1.1</li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line1259">line 1259</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-        
-            <h3>Example</h3>
-            
-    <pre class="prettyprint"><code>var a = {name: "A", size: 8}, b = ["1", "4", "9", "h", "w", "_"];a.has("name"); //truea.has("value"); //falseb.has("w"); //trueb.has(" "); //false</code></pre>
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
-
-
-
-
-
-
-
-<section>
-
-<header>
-    
-        <h2>Object</h2>
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description">Counts how many times a character/property/number <code>c</code> is present in the object</div>
-        
-
-        
-
-
-<dl class="details">
-
-    
-
-    
-    <dt class="tag-since">Since:</dt>
-    <dd class="tag-since"><ul class="dummy"><li>1.0</li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line1109">line 1109</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-        
-            <h3>Example</h3>
-            
-    <pre class="prettyprint"><code>"Hello world".count("o"); //2[4, 2, 0, -4, 1, 2, 3].count(0); //1</code></pre>
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
-
-
-
-
-
-
-
-<section>
-
-<header>
-    
-        <h2>Object</h2>
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description">Check if an object is iterable hence if it's a string/array/object</div>
-        
-
-        
-
-
-<dl class="details">
-
-    
-
-    
-    <dt class="tag-since">Since:</dt>
-    <dd class="tag-since"><ul class="dummy"><li>1.0</li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="essence.js.html">essence.js</a>, <a href="essence.js.html#line1151">line 1151</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-        
-            <h3>Example</h3>
-            
-    <pre class="prettyprint"><code>var myStr = "Hello", myNum = 1.4142, myBool = true, myArr = range(3), myObj = {a: 0, b: 1};myStr.isIterable(); //truemyNum.isIterable(); //falsemyBool.isIterable(); //falsemyArr.isIterable(); //truemyObj.isIterable(); //true</code></pre>
 
         
     
@@ -901,7 +901,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Wed Oct 05 2016 22:47:46 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Mon Oct 17 2016 21:25:54 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

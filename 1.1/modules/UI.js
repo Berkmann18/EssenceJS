@@ -233,7 +233,7 @@ function Colour (r, g, b, a) {
  * @description Hexadecimal to RGB
  * @param {string} hex Hexadecimal
  * @param {boolean} [toArray=false] Result as an array
- * @returns {?number[]|?string} RGB equivalent
+ * @returns {?(number[]|string)} RGB equivalent
  * @see module:UI~rgb2hex
  * @since 1.0
  * @func

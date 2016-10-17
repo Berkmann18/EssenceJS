@@ -836,6 +836,7 @@ function Stack (arr, lim) {
     /**
      * @throws {Error} Stack overflow
      * @param {*} item Item
+     * @returns {undefined}
      */
     this.push = function (item) {
         if (this.isFull()) throw new Error("Stack overflow !");
@@ -905,6 +906,7 @@ function StackArray (sz) {
     /**
      * @throws {Error} Stack overflow
      * @param {*} item Item
+     * @returns {undefined}
      */
     this.push = function (item) {
         if (this.isFull()) throw new Error("Stack overflow !");
@@ -970,13 +972,13 @@ function StackArray (sz) {
  * @see module:DataStruct~Stack
  */
 function StackList (arr) {
-    this.top = new Node();
-
-    this.peek = function () {
-        return (this.isEmpty() || this.top === null)? null: this.top.next.payload
-    };
+    this.top = null;
 
     this.ground = function () {
+        return (this.isEmpty() || this.top === null)? null: (this.top.next === null? this.top.payload: this.top.next.payload);
+    };
+
+    this.peek = function () {
         return this.top.payload;
     };
 
@@ -1011,8 +1013,22 @@ function StackList (arr) {
         return this.top == null
     };
 
-    this.size = function (n) {
-        return this.top != null? this.size(n + 1): n
+    this.size = function () {
+        var size = 0, crt = this.top;
+        while (crt != null) {
+            crt = crt.next;
+            size++;
+        }
+        return size;
+    };
+
+    this.toString = function () {
+        var chain = "", crt = this.top;
+        do {
+            chain += crt.payload + "->";
+            crt = crt.next;
+        } while (crt != null);
+        return "StackList(" + chain + ")";
     };
 
     return this;
@@ -1045,6 +1061,7 @@ function Queue (arr, lim) {
     /**
      * @throws {Error} Queue overflow
      * @param {*} item Item
+     * @returns {undefined}
      */
     this.enqueue = function (item) {
         if (this.isFull()) throw new Error("Queue overflow !");
@@ -1120,6 +1137,7 @@ function QueueArray (arr) {
     /**
      * @throws {Error} Queue full
      * @param {*} item Item
+     * @returns {undefined}
      */
     this.enqueue = function (item) {
         if (isType(item, "array")) {
@@ -1139,7 +1157,7 @@ function QueueArray (arr) {
 
     /**
      * @throws {Error} Queue empty
-     * @returns {*}
+     * @returns {*} Dequeued element
      */
     this.dequeue = function () {
         var val;
@@ -1196,8 +1214,8 @@ function QueueArray (arr) {
  * @property {function(number, *)} QueueList.insertAt Positional node insertion
  */
 function QueueList () {
-    this.front = null;
-    this.back = null;
+    this.front = new Node(null);
+    this.back = new Node(null);
     this.len = 0;
 
     this.enqueue = function (item) {
@@ -1205,7 +1223,7 @@ function QueueList () {
             for(var i = 0; i < item.length; i++) this.enqueue(item[i]);
         } else {
             var n = this.back != null? new Node(item, this.back, null): new Node(item);
-            if (this.back.prev != null) this.back.prev = n;
+            this.back.prev = n;
             this.back = n;
             this.len++;
         }
@@ -1214,7 +1232,7 @@ function QueueList () {
 
     /**
      * @throws {Error} Queue underflow
-     * @returns {?Node}
+     * @returns {?Node} Dequeued node
      */
     this.dequeue = function () {
         if (this.isEmpty()) throw new Error("I can't dequeue an empty queue list");
@@ -1315,7 +1333,7 @@ function Astar (start, goal) {
  * @param {number[]} start Starting node
  * @param {number[]} goal Ending node
  * @param {Array} grid Grid
- * @returns {?Array}
+ * @returns {?Array} Optimal Path
  * @since 1.0
  * @func
  */
@@ -1377,8 +1395,7 @@ function IDAstar () {
  * @param {string|Array} x String|array to alphabetically sort
  * @returns {string|Array} Sorted string|array
  * @since 1.0
- * @func
- * @throws {TypeError} x isn't iterable
+ * @funcs
  */
 function alphabetSort (x) {
     if (!x.isIterable()) throw new TypeError("alphabetSort cannot sort non iterable objects");
@@ -1454,7 +1471,7 @@ function binarySearch (list, x) {
  * Source: {@link https://www.khanacademy.org/computing/computer-science/algorithms/binary-search/a/implementing-binary-search-of-an-array|KhanAcademy}
  * @param {number[]} arr Array
  * @param {NumberLike} target Target of the search
- * @return {number}
+ * @return {number} Binary index
  */
 function search (arr, target) {
     var min = 0, max = arr.length - 1, guess = Math.floor((max - min) / 2);
@@ -1569,6 +1586,7 @@ function virtualHistory (elm) {
 
     /**
      * @throws {Error} Set underflow
+     * @returns {undefined}
      */
     this.undo = function () {
         if (this.state === 0) throw new Error("Set underflow, it's not possible to undo to a non-existent state.");
@@ -1578,6 +1596,7 @@ function virtualHistory (elm) {
 
     /**
      * @throws {Error} Set overflow
+     * @returns {undefined}
      */
     this.redo = function () {
         if (this.state === (this.states.size() - 1)) throw new Error("Set overflow, it's not possible to redo to a non-existent state.");
@@ -1954,6 +1973,13 @@ function Map (keys) {
     return this;
 }
 
+/**
+ * @description DOM graph
+ * @returns {NTreeNode} Tree representing the DOM structure of the current web page
+ * @func
+ * @since 1.1
+ * @todo Finish it !
+ */
 function DomGraph () {
     var current = document.children[0];
     var dom = new NTreeNode(current.tagName.toLowerCase(), current.children.toArray().map(function (child) {

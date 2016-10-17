@@ -1,13 +1,12 @@
 # To do:
 -   Get the Spider working (see [Files])
 -   Improve getResources() (see [DOM]) and Console (see [Web])
--   Having genHash() workable and reversible (by getting hash() and unHash() to work, see [Security])
--   Fix the failed lib unit tests (see [essence])
 -   Comparing DB and server's event handlers/listeners and use the best for the rest
 -   Improve daynightMode() (see [UI]) (_finish domGraph() first to get a clue how to reverse colours of all DOM elements of a page_)
 -   Add a complete thing for DocTemplate (to avoid having to add manually of the things)
 -   Speed up the framework
--   Fixing the module/Essence self update
+-   Rewrite README.md
+-   Test DES()
 
 # To add:
 -   Having a dynamic real-time table/update (e.g: news feeds)
@@ -19,14 +18,14 @@
 -	History (event history, command history, viewed pages, ...)
 -	Colour.getColourName() (prototype already placed)
 -	Heap ?
--	cookie historic for multi cookie storage !?
 -	greyish hover effect for rows/columns headers that would highlight the whole row/column
 -	select, datetime, datetime-local, time, month, range, search, week, url; to validate() (see [DOM]~validate)
 -	Prim's alg (already there as A* ?!)
 -	Kruskal's alg
 -   Fully functional NoSQL/NoPHP server/database (with remote access, see [Web])
 -   Event listeners to server, DB, WebPage and WebApp (see [Web])
--   All missing uni converters and renaming the ones to their appropriate names (see Units Plus on iOS for help)
+-   All missing uni converters such as: convTemperature, convVolume and convWeight; (see Units Plus on iOS for help)
+-   double DES, triple (2/3-key) DES, MiTM attack
 
 # To continue:
 -	code highlighting feature for editors (see [Web]~Editor.highlightSyntax)
@@ -57,9 +56,7 @@
 -	Array.revSort() which leaves a few elements unsorted (see [essence]~Array.revSort)
 -	Machine.parse() for other bases than base 16 which tries to get string with a code "out of the visible" (see [Misc]~Machine.parse)
 -	QueueList (see [DataStruct]~QueueList)
--	StackList (see [DataStruct]~StackList)
 -	Archive.getResult (see [DataStruct]~Archive)
--	InvalidParamError (see [QTest]~InvalidParamError)
 -	A (see [DataStruct]~A)   _might need reconPath to be fixed first !!_
 -	reconPath (see [DataStruct]~reconPath)
 -	Something like Java's System.in that allows the code to grab the user's input without having to use JS prompt, contentEditable or HTML's input/textarea fields (see [Misc]~Sys and [essence]~Essence.ask)

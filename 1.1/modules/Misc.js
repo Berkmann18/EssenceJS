@@ -11,7 +11,7 @@
  * @type {Module}
  * @exports Misc
  */
-var Misc = new Module("Misc", "Miscellaneous", ["Files"]);
+var Misc = new Module("Misc", "Miscellaneous", ["Files", "DataStruct"]);
 
 /* eslint no-undef: 0 */
 /**
@@ -175,8 +175,6 @@ function Item (name, cat, price, amr, nb) { //An item like the ones that can be 
     return this
 }
 
-
-
 /**
  * @description Letter pair array
  * @param {string} [first="a"] First letter
@@ -220,25 +218,24 @@ function rmConsecDuplicates (arr) {
 }
 
 /**
- * @description Remove the duplicates of an array
+ * @description Remove the duplicates of an array.
  * @param {Array|string} arr Array
  * @returns {Array|string} Filtered array
  * @see module:Misc~rmConsecDuplicates
- * @since 1.0
+ * @since 1.1
  * @func
+ * @throws {TypeError} arr isn't iterable
+ * @example
+ * rmDuplicates("hello world !"); //"helo wrd!"
+ * rmDuplicates([4, 10, 1, 9, 10, 10, 10, 3, 4, 2]); //[4, 10, 1, 9, 3, 2]
  */
 function rmDuplicates (arr) {
-    var out = rmConsecDuplicates(arr), j = 0;
-
-    for (var i = 0; i < arr.length; i++) { //Pre-filtering
-        if (i === 0 || arr[i] != arr[i-1] || (i >= 1 && arr[i] != arr[i-2]) || (i >= 2 && arr[i] != arr[i-3])) out[j++] = arr[i];
+    if (!arr.isIterable()) throw new TypeError("It's not possible to remove duplicates of a non iterable object.");
+    var uniques = [];
+    for (var i = 0; i < arr.length; i++) {
+        if (!uniques.has(arr[i])) uniques.push(arr[i]);
     }
-    for (i = 0; i < out.length; i++) {
-        for (j = 0; j < out.length; j++) {
-            if (i != j && out[i] === out[j]) out[j] = undefined;
-        }
-    }
-    return isType(arr, "String")? out.remove().join(""): out.remove()
+    return isType(arr, "Array")? uniques: uniques.join("");
 }
 
 /**
@@ -268,6 +265,9 @@ var base64 = {
     ALPHA: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
     /**
      * @throws Invalid character error: DOM Exception 5
+     * @param {String} s String to use
+     * @param {number} [i=0] Index
+     * @returns {undefined}
      */
     getbyte64: function (s, i) {
         /* "This is oddly fast, except on Chrome/V8.
@@ -279,8 +279,10 @@ var base64 = {
     },
     /**
      * @throws Cannot decode base64
+     * @param {String} s String to decode
+     * @returns {String} Decoded base64 code
      */
-    decode: function (s) { //Convert to string
+    decode: function (s) {
         s += "";
         var pads, i, b10;
         var imax = s.length;
@@ -315,6 +317,9 @@ var base64 = {
     },
     /**
      * @throws Invalid character error: DOM Exception 5
+     * @param {String} s String to use
+     * @param {number} [i=0] Index
+     * @returns {undefined}
      */
     getbyte: function (s, i) {
         var x = s.charCodeAt(i || 0);
@@ -323,6 +328,8 @@ var base64 = {
     },
     /**
      * @throws {SyntaxError} Only one argument needed
+     * @param {string} s String to encode
+     * @returns {undefined}
      */
     encode: function (s) {
         if (arguments.length != 1) throw new SyntaxError("Only one argument please !");
@@ -856,6 +863,7 @@ function arrayLiteral (arr, cjt) {
 
 /**
  * @description Module list
+ * @param {boolean} [extended=false] Extension table flag
  * @return {Array[]} Module list
  * @func
  * @since 1.1
@@ -1028,4 +1036,15 @@ function AI (rules) {
         return eval(this.rules[pos[0]][pos[1] + 1].replace("x", val));
     };
     return this;
+}
+
+/**
+ * @description Clear the document as well as the console
+ * @since 1.1
+ * @func
+ * @returns {undefined}
+ */
+function clearEnv () {
+    $e("body").write("");
+    console.clear();
 }

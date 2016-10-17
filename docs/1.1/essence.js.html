@@ -155,7 +155,8 @@ var Essence = {
             s.type = "text/css";
             s.id = "EssenceCSS";
             $n("head").appendChild(s);
-        } else $e("style[type='text/css']").after(nstyle);
+        } else if ($e("style[type='text/css']", true) != null) $e("style[type='text/css']").after(nstyle);
+        else $e("style").after(nstyle);
     }, addJS: function (nscript) {
         if ($n("script", true) === null) {
             var s = document.createElement("script");
@@ -269,6 +270,7 @@ var Essence = {
      * @type {Function}
      * @since 1.1
      * @readonly
+     * @returns {undefined}
      */
     $f = function () {},
     /**
@@ -277,7 +279,7 @@ var Essence = {
      * @global
      * @since 1.1
      */
-    testMode = false;
+    testMode = true;
 
 /**
  * @description EssenceJS Module
@@ -441,6 +443,7 @@ function run (module, ver) {
          * @description Go onto the running phase of the module
          * @inner
          * @func
+         * @returns {undefined}
          */
         var go = function () {
             try {
@@ -458,6 +461,8 @@ function run (module, ver) {
          * @description Retry to get the module to be usable and launch go()
          * @inner
          * @func
+         * @param {number} [stackLayer=0] Stack layer
+         * @returns {undefined}
          */
         retry = function (stackLayer) {
             if (!stackLayer) stackLayer = 0;
@@ -562,8 +567,10 @@ gatherStylesheets = function (asList) {
             start = 0;
         }
         if (end &lt; 0) end = o.length + end - 1;
-        for(var i = (start || 0); i &lt;= (end || o.length - 1); i++) r.push(o[i]);
-        return r.filter(function (x) { return x != undefined; });
+        for (var i = (start || 0); i &lt;= (end || o.length - 1); i++) r.push(o[i]);
+        return r.filter(function (x) {
+            return x != undefined;
+        });
     };
     while (localPath.indexOf(parts[i]) > -1) i++;
     res = _get(parts, i).join("/");
@@ -674,9 +681,9 @@ getExtPath = function (path) {
             //Security
             [decrypt(encrypt("Hello", 5), -5), "Hello"," de(encrypt)"],
             [encrypt(decrypt("Hello", -5), 5), "Hello", "en(decrypt)"],
-            [abcDecode(abcEncode("Lorem")), "Lorem", "de(encode)"], //Result: lorem
-            [abcEncode(abcDecode("Lorem")), "Lorem", "en(decode)"], //Result: xxx
-            [ilDecrypt(ilEncrypt("Hello")), "Hello", "il-De(En)"], //Result: ne
+            [abcDecode(abcEncode("Lorem")), "Lorem", "de(encode)"],
+            [abcEncode(abcDecode("6415180513")), "6415180513", "en(decode)"],
+            [ilDecrypt(ilEncrypt("Hello")), "Hello", "il-De(En)"],
             [ilEncrypt(ilDecrypt("Hello")), "Hello", "il-En(De)"], //Result: £¡¡«
             //[RSA(RSA("Secrete", keys), ??), "Secrete", "RSA"]
             [fromFSHA(toFSHA("password")), "password", "fromFSHA(to)"],
@@ -1287,7 +1294,7 @@ Object.prototype.compareTo = function (obj) {
 /**
  * @description Check if an object has a property
  * @param {string} prop Property
- * @return {boolean} Containment check result
+ * @returns {boolean} Containment check result
  * @memberof Object.prototype
  * @since 1.1
  * @this Object
@@ -1301,13 +1308,13 @@ Object.prototype.compareTo = function (obj) {
  * b.has(" "); //false
  */
 Object.prototype.has = function (prop) {
-  return this[prop] != undefined;
+    return this[prop] != undefined;
 };
 
 /**
  * @description Emptiness check on the object.
  * Source: {@link https://stackoverflow.com/a/679937/5893085|SO}
- * @return {boolean}
+ * @return {boolean} Emptiness state
  * @memberof Object.prototype
  * @external Object
  * @this Object
@@ -3294,7 +3301,7 @@ Array.prototype.multiPlace = function (arr) {
  * @description Check if the string has a character
  * @inheritdoc
  * @param {*} val Character
- * @return {boolean} Containment check result
+ * @returns {boolean} Containment check result
  * @this String
  * @method
  * @since 1.1
@@ -3313,7 +3320,6 @@ String.prototype.has = Array.prototype.has;
  * @method
  * @memberof String.prototype
  * @external String
- * @return {*}
  */
 String.prototype.last = function (nval) {
     return this.split("").last(nval);
@@ -3678,13 +3684,28 @@ String.prototype.reverse = function (splitter) {
  * @method
  * @since 1.1
  * @external String
- * @return {string}
+ * @return {string} Minified version of the string/code
  */
 String.prototype.minify = function (noComment, noSpace) {
     var min = noSpace? this.trim().replace(/(\t|\n|\s)/gm, ""): this.trim().replace(/(\t|\n|\s{2,})/gm, "");
     return noComment? min.replace(/(&lt;!--(.*?)-->|\/\*+(.*?)\*+\/)/gm, ""): min;
 };
 
+/**
+ * @description Get a portion of the string
+ * @inheritdoc
+ * @param {number} [denominator=2] How many parts (halfs by default)
+ * @param {number} [numerator=1] Position of the part (1st half by default)
+ * @returns {String} Portion of the string
+ * @this String
+ * @method
+ * @since 1.1
+ * @memberof String.prototype
+ * @external String
+ */
+String.prototype.portion = function (denominator, numerator) {
+    return this.split("").portion(denominator, numerator).join("");
+};
 
 /**
  * @description Length of the number
@@ -3920,10 +3941,11 @@ function isNon (val) {
 function exist (obj) {
     var undefined, t;
     try {
+        /* eslint no-shadow-restricted-names: 0 */
         //noinspection JSUnusedAssignment
         t = typeof obj !== "undefined" || obj !== undefined || obj in window;
+        /* eslint no-shadow-restricted-names: 2 */
     } catch (e) {
-        alert("d");
         t = false;
     }
     return t;
@@ -4515,7 +4537,7 @@ function timeUp (act, pref, params) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Wed Oct 05 2016 22:47:44 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Mon Oct 17 2016 21:25:50 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

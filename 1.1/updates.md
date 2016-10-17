@@ -1,16 +1,15 @@
 ## General
-+ \+ Optimized the CSS addons
-+ ^ Better documentation
++ ^ Resolved most of the ESLint errors, fixed all current unit test failures
 
 ## [essence](essence.js)
-+ ^ String.minify(), Essence.addCSS(), Essence.addJS(), bug causing $e(...).(write|before|after)() to not do anything to an empty DOM element, String.sameLast()
-+ \+ Module.update(), Essence.updateAll()
++ \+ String.portion()
     
 ## [Ajax](modules/Ajax.js)
 + 
 
 ## [DataStruct](modules/DataStruct.js)
-+ 
++ ^ StackList.size()
++ \+ StackList.toString()
 
 ## [DOM](modules/DOM.js)
 + 
@@ -19,20 +18,23 @@
 + 
 
 ## [Maths](modules/Maths.js)
-+ 
++ ^ convUnit-\>convLength
++ \+ toSqMeter(), fromSqMeter(), convArea(), toLpkm(), fromLpkm(), convFuel(), And(), Or(), Xor(), Imply(), convPower(), convPressure(), convSpeed()
 
 ## [Misc](modules/Misc.js)
-+ 
++ \+ clearEnv()
++ ^ rmDuplicates()
 
 ## [Security](modules/Security.js)
-+ 
++ \- genHash(), unHash()
++ \+ DES()
++ ^ ilEncrypt(), ilDecrypt()
 
 ## [UI](modules/UI.js)
-+ \- moreCSS (integrated into Essence.addCSS())
-
-## [Web](modules/Web.js)
 + 
 
+## [Web](modules/Web.js)
++ \+ CookieHistory
+
 ## [QTest](modules/QTest.js)
-+ \+ UnitTest.testFalse()
-+ ^ UnitTest.report()
++ ^ Fixed InvalidParamError()
