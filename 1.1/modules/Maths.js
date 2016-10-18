@@ -2468,11 +2468,42 @@ function abcModulus (code) {
  */
 function bruteForceNum (min, cond, max) { //Brute force through R to find a x such that min <= x <= max and cond is true for x
     for (var x = min; x <= max; x++) {
-        if(eval(cond.replace(RegExpify("x"), x + ""))) return x;
+        if (eval(cond.replace(RegExpify("x"), x + ""))) return x;
     }
     return false;
 }
 
+/**
+ * @description Brute force through &natural; to find an x such that <code>min</code> &le; x &le; <code>max</code> and the condition is true for x
+ * @param {number} min Minimum
+ * @param {string} cond Condition
+ * @param {number} max Maximum
+ * @returns {Bool} X or false
+ * @since 1.1
+ * @func
+ */
+function bruteForceFloat (min, cond, max) { //Brute force through N to find a x such that min <= x <= max and cond is true for x
+    for (var x = min; x <= max; x += 1e-3) {
+        if (eval(cond.replace(RegExpify("x"), x + ""))) return x;
+    }
+    return false;
+}
+
+/**
+ * @description Brute force through &natural; to find an x such that <code>min</code> &le; x &le; <code>max</code> and the condition is true for x
+ * @param {number} min Minimum
+ * @param {string} cond Condition
+ * @param {number} max Maximum
+ * @returns {Bool} X or false
+ * @since 1.1
+ * @func
+ */
+function bruteForceDouble (min, cond, max) { //Brute force through N to find a x such that min <= x <= max and cond is true for x
+    for (var x = min; x <= max; x += 1e-6) {
+        if (eval(cond.replace(RegExpify("x"), x + ""))) return x;
+    }
+    return false;
+}
 /**
  * @description Is <code>a</code> closer to <code>x</code> than <code>b</code>
  * @param {number} x Number x

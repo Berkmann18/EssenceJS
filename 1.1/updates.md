@@ -19,7 +19,7 @@
 
 ## [Maths](modules/Maths.js)
 + ^ convUnit-\>convLength
-+ \+ toSqMeter(), fromSqMeter(), convArea(), toLpkm(), fromLpkm(), convFuel(), And(), Or(), Xor(), Imply(), convPower(), convPressure(), convSpeed()
++ \+ toSqMeter(), fromSqMeter(), convArea(), toLpkm(), fromLpkm(), convFuel(), And(), Or(), Xor(), Imply(), convPower(), convPressure(), convSpeed(), bruteForceFloat(), bruteForceDouble()
 
 ## [Misc](modules/Misc.js)
 + \+ clearEnv()
