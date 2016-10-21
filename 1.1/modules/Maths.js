@@ -1094,7 +1094,7 @@ function getNumFromStr (x) {
 
 /**
  * @description <code>x</code> unit to <code>y</code> px.<br />
- * Reference/help: {@link http://www.endmemo.com/sconvert/centimeterpixel.php}
+ * Reference/help: {@link http://www.endmemo.com/sconvert/centiMetrepixel.php}
  * @param {string} x Number with a unit
  * @returns {number} Pixels
  * @see module:Maths~fromPixel
@@ -1491,11 +1491,11 @@ function convSize (x, unit) {
  * @description <code>x</code> unit to <code>y</code> px.
  * @param {string} x Number with a unit
  * @returns {number} m^2
- * @see module:Maths~fromSqMeter
+ * @see module:Maths~fromSqMetre
  * @since 1.0
  * @func
  */
-function toSqMeter (x) {
+function toSqMetre (x) {
     var m = 1;
     switch (x.substring(String(getNumFromStr(x)).length, x.length).remove(" ")) {
         case "ha":
@@ -1541,11 +1541,11 @@ function toSqMeter (x) {
  * @param {number} x m^2
  * @param {string} unit Unit
  * @returns {string} Conversion
- * @see module:Maths~toSqMeter
+ * @see module:Maths~toSqMetre
  * @since 1.1
  * @func
  */
-function fromSqMeter (x, unit) {
+function fromSqMetre (x, unit) {
     var m = 1;
     switch (unit) {
         case "ha":
@@ -1591,8 +1591,8 @@ function fromSqMeter (x, unit) {
  * @param {string} x Number with unit
  * @param {string} unit Final unit
  * @returns {string} <code>x</code> &rArr; <code>y</code> <code>unit</code>
- * @see module:Maths~fromSqMeter
- * @see module:Maths~toSqMeter
+ * @see module:Maths~fromSqMetre
+ * @see module:Maths~toSqMetre
  * @since 1.1
  * @func
  */
@@ -1756,7 +1756,7 @@ function toBar (x) {
         case "inHg": //Inch Mercury
             m = .03386388158;
             break;
-        case "mmHg": //Millimeter Mercury
+        case "mmHg": //MilliMetre Mercury
             m = 0.001333223684;
             break;
         case "MPa": //Mega Pascal
@@ -1800,7 +1800,7 @@ function fromBar (x, unit) {
         case "inHg": //Inch Mercury
             m = 1 / .03386388158;
             break;
-        case "mmHg": //Millimeter Mercury
+        case "mmHg": //MilliMetre Mercury
             m = 1 / 0.001333223684;
             break;
         case "MPa": //Mega Pascal
@@ -1930,6 +1930,316 @@ function fromMps (x, unit) {
  */
 function convSpeed (x, unit) {
     return fromMps(toMps(x), unit); //demux(.* , px)->mux(px, .* )
+}
+
+/**
+ * @description <code>x</code> unit to <code>y</code> °C.
+ * @param {string} x Number with a unit
+ * @returns {number} °C
+ * @see module:Maths~fromCelsius
+ * @since 1.1
+ * @func
+ */
+function toCelsius (x) {
+    var m = 1;
+    switch (x.substring(String(getNumFromStr(x)).length, x.length).remove(" ")) {
+        case "°F": //Fahrenheit
+            m = -17.22222222;
+            break;
+        case "K": //Kelvin
+            m = -272.15;
+            break;
+        case "°Ra": //Rankine
+            m = -272.5944444;
+            break;
+        default: break;
+    }
+    return getNumFromStr(x) * m
+}
+
+/**
+ * @description X °C to y unit
+ * @param {number} x °C
+ * @param {string} unit Unit
+ * @returns {string} Conversion
+ * @see module:Maths~toCelsius
+ * @since 1.1
+ * @func
+ */
+function fromCelsius (x, unit) {
+    var m = 1;
+    switch (unit) {
+        case "°F": //Fahrenheit
+            m = 1 / -17.22222222;
+            break;
+        case "K": //Kelvin
+            m = 1 / -272.15;
+            break;
+        case "°Ra": //Rankine
+            m = 1 / -272.5944444;
+            break;
+        default: break;
+    }
+    return x * m + unit
+}
+
+/**
+ * @description Temperature converter
+ * @param {string} x Number with unit
+ * @param {string} unit Final unit
+ * @returns {string} <code>x</code> &rArr; <code>y</code> <code>unit</code>
+ * @see module:Maths~fromCelsius
+ * @see module:Maths~toCelsius
+ * @todo deprecate fahrs2cels() and cels2fahrs()
+ * @since 1.1
+ * @func
+ */
+function convTemperature (x, unit) {
+    return fromCelsius(toCelsius(x), unit); //demux(.* , px)->mux(px, .* )
+}
+
+/**
+ * @description <code>x</code> unit to <code>y</code> m³.
+ * @param {string} x Number with a unit
+ * @returns {number} m³
+ * @see module:Maths~fromCbMetre
+ * @since 1.1
+ * @func
+ */
+function toCbMetre (x) {
+    var m = 1;
+    switch (x.substring(String(getNumFromStr(x)).length, x.length).remove(" ")) {
+        case "L": //Litre
+            m = 1e-3;
+            break;
+        case "dm^3": //Cubic decimetre
+            m = 1e-3;
+            break;
+        case "dL": //decilitre
+            m = 1e-4;
+            break;
+        case "cL": //centilitre
+            m = 1e-5;
+            break;
+        case "mL": //millilitre
+            m = 1e-6;
+            break;
+        case "cm^3": //Cubic centimetre
+            m = 1e-6;
+            break;
+        case "mm^3": //Cubic millimetre
+            m = 1e-9;
+            break;
+        case "tblspn": //Tablespoon
+            m = 1.5e-5;
+            break;
+        case "tspn": //Teaspoon
+            m = 5e-6;
+            break;
+        case "yd^3": //Cubic yard
+            m = .764554858;
+            break;
+        case "ft^3": //Cubic foot
+            m = .02831684659;
+            break;
+        case "in^3": //Cubic inch
+            m = 1.6387064e-5;
+            break;
+        case "bushel": //US bushel
+            m = .03523907017;
+            break;
+        case "barrel": //UK barrel
+            m = .16365924;
+            break;
+        case "gal": //UK gallon
+            m = 4.54609e-3;
+            break;
+        case "fl oz": //UK fluid ounce
+            m = 2.84130625e-5;
+            break;
+        case "pint": //UK pint
+            m = 5.6826125e-4;
+            break;
+        case "quart": //UK quart
+            m = 1.1365225e-3;
+            break;
+        case "cup": //US cup
+            m = 2.365882365e-4;
+            break;
+        default: break;
+    }
+    return getNumFromStr(x) * m
+}
+
+/**
+ * @description X m³ to y unit
+ * @param {number} x m³
+ * @param {string} unit Unit
+ * @returns {string} Conversion
+ * @see module:Maths~toCbMetre
+ * @since 1.1
+ * @func
+ */
+function fromCbMetre (x, unit) {
+    var m = 1;
+    switch (unit) {
+        case "L": //Litre
+            m = 1e3;
+            break;
+        case "dm^3": //Cubic decimetre
+            m = 1e3;
+            break;
+        case "dL": //decilitre
+            m = 1e4;
+            break;
+        case "cL": //centilitre
+            m = 1e5;
+            break;
+        case "mL": //millilitre
+            m = 1e6;
+            break;
+        case "cm^3": //Cubic centimetre
+            m = 1e6;
+            break;
+        case "mm^3": //Cubic millimetre
+            m = 1e9;
+            break;
+        case "tblspn": //Tablespoon
+            m = 1 / 1.5e-5;
+            break;
+        case "tspn": //Teaspoon
+            m = 1 / 5e-6;
+            break;
+        case "yd^3": //Cubic yard
+            m = 1 / .764554858;
+            break;
+        case "ft^3": //Cubic foot
+            m = 1 / .02831684659;
+            break;
+        case "in^3": //Cubic inch
+            m = 1 / 1.6387064e-5;
+            break;
+        case "bushel": //US bushel
+            m = 1 / .03523907017;
+            break;
+        case "barrel": //UK barrel
+            m = 1 / .16365924;
+            break;
+        case "gal": //UK gallon
+            m = 1 / 4.54609e-3;
+            break;
+        case "fl oz": //UK fluid ounce
+            m = 1 / 2.84130625e-5;
+            break;
+        case "pint": //UK pint
+            m = 1 / 5.6826125e-4;
+            break;
+        case "quart": //UK quart
+            m = 1 / 1.1365225e-3;
+            break;
+        case "cup": //US cup
+            m = 1 / 2.365882365e-4;
+            break;
+        default: break;
+    }
+    return x * m + unit
+}
+
+/**
+ * @description Volume converter
+ * @param {string} x Number with unit
+ * @param {string} unit Final unit
+ * @returns {string} <code>x</code> &rArr; <code>y</code> <code>unit</code>
+ * @see module:Maths~fromCbMetre
+ * @see module:Maths~toCbMetre
+ * @since 1.1
+ * @func
+ */
+function convVolume (x, unit) {
+    return fromCbMetre(toCbMetre(x), unit); //demux(.* , px)->mux(px, .* )
+}
+
+/**
+ * @description <code>x</code> unit to <code>y</code> g.
+ * @param {string} x Number with a unit
+ * @returns {number} g
+ * @see module:Maths~fromGram
+ * @since 1.1
+ * @func
+ */
+function toGram (x) {
+    var m = 1;
+    switch (x.substring(String(getNumFromStr(x)).length, x.length).remove(" ")) {
+        case "kg":
+            m = 1e3;
+            break;
+        case "mg":
+            m = 1e-3;
+            break;
+        case "lb": //Pound
+            m = 453.59237;
+            break;
+        case "oz": //Ounce
+            m = 28.34952312;
+            break;
+        case "ton": //Metric ton
+            m = 1e6;
+            break;
+        case "st": //Stone
+            m = 6350.29318;
+            break;
+        default: break;
+    }
+    return getNumFromStr(x) * m
+}
+
+/**
+ * @description X g to y unit
+ * @param {number} x g
+ * @param {string} unit Unit
+ * @returns {string} Conversion
+ * @see module:Maths~toGram
+ * @since 1.1
+ * @func
+ */
+function fromGram (x, unit) {
+    var m = 1;
+    switch (unit) {
+        case "kg":
+            m = 1e-3;
+            break;
+        case "mg":
+            m = 1e3;
+            break;
+        case "lb": //Pound
+            m = 1 / 453.59237;
+            break;
+        case "oz": //Ounce
+            m = 1 / 28.34952312;
+            break;
+        case "ton": //Metric ton
+            m = 1e-6;
+            break;
+        case "st": //Stone
+            m = 1 / 6350.29318;
+            break;
+        default: break;
+    }
+    return x * m + unit
+}
+
+/**
+ * @description Weight converter
+ * @param {string} x Number with unit
+ * @param {string} unit Final unit
+ * @returns {string} <code>x</code> &rArr; <code>y</code> <code>unit</code>
+ * @see module:Maths~fromGram
+ * @see module:Maths~toGram
+ * @since 1.1
+ * @func
+ */
+function convWeight (x, unit) {
+    return fromGram(toGram(x), unit); //demux(.* , px)->mux(px, .* )
 }
 
 /**
@@ -2462,11 +2772,11 @@ function abcModulus (code) {
  * @param {number} min Minimum
  * @param {string} cond Condition
  * @param {number} max Maximum
- * @returns {Bool} X or false
+ * @returns {Bool} x or false
  * @since 1.0
  * @func
  */
-function bruteForceNum (min, cond, max) { //Brute force through R to find a x such that min <= x <= max and cond is true for x
+function bruteForceNum (min, cond, max) {
     for (var x = min; x <= max; x++) {
         if (eval(cond.replace(RegExpify("x"), x + ""))) return x;
     }
@@ -2478,32 +2788,56 @@ function bruteForceNum (min, cond, max) { //Brute force through R to find a x su
  * @param {number} min Minimum
  * @param {string} cond Condition
  * @param {number} max Maximum
- * @returns {Bool} X or false
+ * @param {number} [precision=1e-3] Precision.
+ * @returns {Bool} x or false
  * @since 1.1
  * @func
  */
-function bruteForceFloat (min, cond, max) { //Brute force through N to find a x such that min <= x <= max and cond is true for x
-    for (var x = min; x <= max; x += 1e-3) {
+function bruteForceFloat (min, cond, max, precision) {
+    for (var x = min; x <= max; x += (precision || 1e-3)) {
         if (eval(cond.replace(RegExpify("x"), x + ""))) return x;
     }
     return false;
 }
 
 /**
- * @description Brute force through &natural; to find an x such that <code>min</code> &le; x &le; <code>max</code> and the condition is true for x
+ * @description Brute force through &real; to find x and y such that <code>min</code> &le; x &le; <code>max</code>, <code>min</code> &le; y &le; <code>max</code> and the condition is true for x and y
  * @param {number} min Minimum
  * @param {string} cond Condition
  * @param {number} max Maximum
- * @returns {Bool} X or false
+ * @returns {boolean|number[]} [x, y] or false
  * @since 1.1
  * @func
  */
-function bruteForceDouble (min, cond, max) { //Brute force through N to find a x such that min <= x <= max and cond is true for x
-    for (var x = min; x <= max; x += 1e-6) {
-        if (eval(cond.replace(RegExpify("x"), x + ""))) return x;
+function doubleBruteForceNum (min, cond, max) {
+    for (var x = min; x <= max; x++) {
+        for (var y = min; y <= max; y++) {
+            if (eval(cond.replace(RegExpify("x"), x + "").replace(RegExpify("y"), y + ""))) return [x, y];
+        }
     }
     return false;
 }
+
+/**
+ * @description Brute force through &natural; to find x and y such that <code>min</code> &le; x &le; <code>max</code>, <code>min</code> &le; y &le; <code>max</code> and the condition is true for x and y
+ * @param {number} min Minimum
+ * @param {string} cond Condition
+ * @param {number} max Maximum
+ * @param {number} [precision=1e-3] Precision
+ * @returns {boolean|number[]} [x, y] or false
+ * @since 1.1
+ * @func
+ */
+function doubleBruteForceFloat (min, cond, max, precision) {
+    if (!precision) precision = 1e-3;
+    for (var x = min; x <= max; x += precision) {
+        for (var y = min; y <= max; y += precision) {
+            if (eval(cond.replace(RegExpify("x"), x + "").replace(RegExpify("y"), y + ""))) return [x, y];
+        }
+    }
+    return false;
+}
+
 /**
  * @description Is <code>a</code> closer to <code>x</code> than <code>b</code>
  * @param {number} x Number x
@@ -2668,9 +3002,9 @@ function sampleMean (arr) { //bar(x)
  * @since 1.1
  * @func
  * @example
- * //If the first parameter is a number (hence the sample mean), than the rest of the parameters are necessary
+ * //If the first paraMetre is a number (hence the sample mean), than the rest of the paraMetres are necessary
  * var ci = confidenceInterval(6.34, .75, 5, .74);
- * //Otherwise if the first parameter is an array (of numbers), than the rest of the parameters are useless (except the second one)
+ * //Otherwise if the first paraMetre is an array (of numbers), than the rest of the paraMetres are useless (except the second one)
  * ci = confidenceInterval([5.7, 6.63, 6.57, 7.7, 7.51], .75);
  */
 function confidenceInterval (avg, c, n, sd) {

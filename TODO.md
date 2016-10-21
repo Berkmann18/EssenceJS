@@ -6,7 +6,8 @@
 -   Add a complete thing for DocTemplate (to avoid having to add manually of the things)
 -   Speed up the framework
 -   Rewrite README.md
--   Test DES()
+-   Test DES() (see [Security])
+-   Add an URL (or any good) pipeline to BuddyGit to send updates to the github website for each releases.
 
 # To add:
 -   Having a dynamic real-time table/update (e.g: news feeds)
@@ -24,7 +25,6 @@
 -	Kruskal's alg
 -   Fully functional NoSQL/NoPHP server/database (with remote access, see [Web])
 -   Event listeners to server, DB, WebPage and WebApp (see [Web])
--   All missing uni converters such as: convTemperature, convVolume and convWeight; (see Units Plus on iOS for help)
 -   double DES, triple (2/3-key) DES, MiTM attack
 
 # To continue:

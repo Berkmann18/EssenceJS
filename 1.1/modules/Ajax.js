@@ -153,7 +153,7 @@ function loadJSON (file) {
  * @property {*} XHR.response Response
  * @property {string[]} XHR.credentials Credentials
  * @property {boolean} XHR.async Asynchronousness
- * @property {XMLHttpRequest|ActiveXObject} XHR.req XHR/AXO request
+ * @property {(XMLHttpRequest|ActiveXObject)} XHR.req XHR/AXO request
  * @property {boolean} XHR.forIE Is the request only for MS IE
  * @property {string} XHR.state State (message of the ready-stateness of the request)
  * @property {number} XHR.status HTTP status
@@ -278,9 +278,9 @@ function XHR (url, method, async, success, fail, progress, body, creds, mime) {
  * @param {XhrCallback} [success] Success handler
  * @param {XhrCallback} [fail] Failure handler
  * @param {XhrCallback} [progress] Loading/progress handler
+ * @param {string} [body] Body of the request
  * @param {string[]} [creds=["", ""]] Credentials (username, password)
  * @param {string} [mime] MIME type
- * @param {string} [body] Body of the request
  * @returns {CORS} CORS object
  * @since 1.1
  * @inheritdoc
@@ -319,7 +319,7 @@ function CORS (url, method, async, success, fail, progress, body, creds, mime) {
         //noinspection JSUnresolvedVariable
         if (!("withCredentials" in this.xhr.req) && typeof XDomainRequest != "undefined") this.xhr.req = new XDomainRequest();
     } catch (e) {
-
+        //Nothing do to here
     }
     this.init = function () {
         this.xhr.init([["Access-Control-Request-Headers", "X-Custom-Header"],

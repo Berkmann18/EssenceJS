@@ -51,7 +51,7 @@ exit /b
 
 :main
 git add *
-if not "%~2" == "" git commit -m %~2
+if not "%~2" == "" git commit -m "%~2"
 if "%~2" == "" git commit -m "Update"
 git push origin %branch%
 exit /b
@@ -64,7 +64,7 @@ exit /b
 :add
 if not "%~2" == "" git add %~2
 if "%~2" == "" git add *
-if not "%~3" == "" git commit -m %~3
+if not "%~3" == "" git commit -m "%~3"
 if "%~3" == "" git commit -m "Add file via upload"
 goto main
 exit /b

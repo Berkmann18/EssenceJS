@@ -71,7 +71,7 @@ InvalidParamError.inheritsFrom(Error);
 function InvalidParamError (msg, fname, lineNum) {
     var error = Error.call(this, msg || "The parameter is invalid !");
 
-    this.name = 'CustomError';
+    this.name = "CustomError";
     this.message = error.message;
     this.stack = error.stack;
     this.fileName = fname || location.href;
@@ -90,6 +90,7 @@ InvalidParamError.prototype.constructor = InvalidParamError;
 function getTrace () {
     var err = function () {
         try {
+            //noinspection ExceptionCaughtLocallyJS
             throw Error("")
         } catch(e) {
             return e;
@@ -122,6 +123,7 @@ function getLineNum (noCols) {
  */
 function testErr (err) {
     try {
+        //noinspection ExceptionCaughtLocallyJS
         throw err;
     } catch (e) {
         Essence.say("%cTested error%c:\n" + e.stack, "erro", "text-decoration: underline; color: #000;", "text-decoration: none; color: #000;");

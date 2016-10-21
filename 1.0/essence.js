@@ -1130,6 +1130,7 @@ Array.prototype.bruteForceSort = function () {
  */
 Array.prototype.maxSort = function () {
 	//Ignores repeated values and loose data
+	//noinspection UnnecessaryLocalVariableJS
 	var mn = this.min(), med = this.median(), mx = this.max(), res = new Array(this.length), inc = this.getIncrement(3), q1 = this.quartile(1), q3 = this.quartile(3);
 	//Pre-sort some elements
 	res[0] = mn;
@@ -2537,7 +2538,9 @@ function toMaxSize () {
 		else if (frameX) frame.resizeTo(frameX, frameY);
 		else if (frame.X) frame.resizeTo(frame.X, frame.Y);
 		else if (frame.x) frame.resizeTo(frame.x, frame.y);
-		else throw new Error("It's not possible to maximise the size or you need to do more researches.");
+		else { //noinspection ExceptionCaughtLocallyJS
+			throw new Error("It's not possible to maximise the size or you need to do more researches.");
+		}
 	} catch(e) {
 		Essence.say("An error occurred when trying to maximise the size Because of %c" + e, "err", "text-decoration: underline;");
 	}
@@ -5645,6 +5648,7 @@ function StackList (arr) {
 		if (isType(item, "array")) {
 			for(var i = 0; i < item.length; i++) this.push(item[i]);
 		} else {
+			//noinspection UnnecessaryLocalVariableJS
 			var n = new Node(item, this.top);
 			this.top = n;
 		}
@@ -7381,9 +7385,9 @@ function server (name, admin, type, ver, mxsz) {
 				}
 			}
 			if (this.slots[pos] != [pcs.name, pcs.author, pcs.description, pcs.content, pcs.bitsize] && this.nb_slots < this.maxsize) { //Check if the process was added to the server
-				this.nb_slots += this.maxsize / this.nb_slots//Extend by one slot
+				this.nb_slots += this.maxsize / this.nb_slots; //Extend by one slot
 				this.slots[this.nb_slots] = [pcs.name, pcs.author, pcs.description, pcs.content, pcs.bitsize];
-			};;
+			}
 		}
 	};
 	this.add = function (data) {
@@ -8397,6 +8401,7 @@ function InvalidParamError(msg, fname, lineNum) { //Invalid parameter
  */
 function testErr(err) {
 	try {
+		//noinspection ExceptionCaughtLocallyJS
 		throw err;
 	} catch (e) {
 		Essence.say("%cTested error%c:\n" + e.stack, "erro", "text-decoration: underline; color: #000;", "text-decoration: none; color: #000;");
@@ -9674,6 +9679,7 @@ function truthTable(exp) { //Get the truth table of an expression
  * @see getCNF
  */
 function getDNF(exp) {
+	//noinspection UnnecessaryLocalVariableJS
 	var tt = truthTable(exp), dnf = "";
 	//code here
 	return dnf;
@@ -9686,6 +9692,7 @@ function getDNF(exp) {
  * @see getDNF
  */
 function getCNF(exp) {
+	//noinspection UnnecessaryLocalVariableJS
 	var tt = truthTable(exp), cnf = "";
 	//code here
 	return cnf;
@@ -9752,6 +9759,7 @@ function EventTable(name, srcs) {
 function getTrace () {
 	var err = function () {
 		try {
+			//noinspection ExceptionCaughtLocallyJS
 			throw Error("")
 		} catch(e) {
 			return e;
@@ -9797,6 +9805,7 @@ function FA (re) {
  * @returns {Array} Dictionnary
  */
 function exp2dict (exp) {
+	//noinspection UnnecessaryLocalVariableJS
 	var re = RegExpify(exp), res = [], grp = [
 		/([a-z]+\|[a-z]+)+/gm, //...|...
 		/([a-z]+)\*/gm, //...*

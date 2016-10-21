@@ -1,14 +1,13 @@
 /* General */
-@charset "UTF-8";
 
-* {
+html {
     font-family: Calibrie, Verdana, sans-serif;
 }
 
 body {
     height: 100%;
-    width: auto;
     padding: 0;
+    width: auto;
 }
 
 /* Tables */
@@ -17,12 +16,12 @@ table {
 }
 
 table, td, th {
-    border: 1px solid #000;
-    color: #000;
     background: #FFF;
+    border: 1px solid #000;
+    border-collapse: collapse;
     /*cell-spacing: 0;
     cell-padding: 2;*/
-    border-collapse: collapsed;
+    color: #000;
 }
 
 tr:nth-child(even) td {
@@ -59,70 +58,71 @@ tr:hover td {
 }
 
 .info {
-    border-color: #008;
     background-color: #00008F;
+    border-color: #008;
 }
 
 .success {
-    border-color: #080;
     background-color: #008f00;
+    border-color: #080;
 }
 
 .error {
-    border-color: #800;
     background-color: #8F0000;
+    border-color: #800;
 }
 
 .question {
-    border-color: #00F;
     background-color: #0000F8;
+    border-color: #00F;
 }
 
 .warning {
-    border-color: #f8c808;
     background-color: #FC0;
+    border-color: #f8c808;
 }
 
 .block {
-    color: #FFF;
     background: repeat 0 center;
     border: 1px solid;
-    -webkit-appearance: none;
+    color: #FFF;
     outline: 0;
-    -webkit-box-sizing: border-box;
-       -moz-box-sizing: border-box;
-            box-sizing: border-box;
-    width: 100%;
     height: 1.1em;
     line-height: 200%;
-    white-space: nowrap;
-    min-height: 16px;
-    position: relative;
     margin: 2px;
+    min-height: 16px;
     padding: .3em 2px;
+    position: relative;
+    white-space: nowrap;
+    width: 100%;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+    border-radius: 7px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -moz-appearance: none;
+    -webkit-appearance: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     -webkit-touch-callout: none;
-    border-radius: 7px;
-    -webkit-border-radius: 7px;
-       -moz-border-radius: 7px;
 }
 
 /* Web styling */
 .icon {
-    width: 64px;
-    height: 64px;
     border: none;
+    height: 64px;
     margin: 2px;
+    width: 64px;
 }
 
 kbd {
-    border: 3px outset #CCC;
     background: #CCC;
-    border-radius: 5px;
-    -webkit-border-radius: 7px;
-    -moz-border-radius: 7px;
-    padding: 2px;
+    border: 3px outset #CCC;
     font-family: Consolas, Tahoma, Segoe UI, sans-serif;
+    padding: 2px;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+    border-radius: 5px;
 }
 
 .title {
@@ -178,30 +178,28 @@ h3 {
 }
 
 .nocss {
-    margin: auto;
-    padding: auto;
-    text-align: left;
-    z-index: auto;
     background: transparent;
     border: none;
     border-radius: 0;
     box-shadow: none;
-    clear: none;
     color: inherit;
-    float: none;
     content: normal;
-    width: auto;
+    clear: none;
+    float: none;
     height: auto;
     letter-spacing: normal;
     line-height: normal;
-    max-width: none;
+    margin: auto;
     max-height: none;
-    min-width: 0;
+    max-width: none;
     min-height: 0;
+    min-width: 0;
+    padding: auto;
     opacity: 1;
     overflow: visible;
     page-break-inside: auto;
     position: static;
+    text-align: left;
     text-shadow: none;
     text-transform: none;
     transform: none;
@@ -209,46 +207,47 @@ h3 {
     vertical-align: baseline;
     visibility: visible;
     white-space: normal;
+    width: auto;
     word-spacing: normal;
-
+    z-index: auto;
 }
 
 #console {
-    border: 2px solid #CCC;
     background: #000;
+    border: 2px solid #CCC;
     font-family: Consolas, Tahoma, Segoe UI, sans-serif;
-    width: 19em;
     padding: 0;
+    width: 19em;
 }
 
 #console td {
-    margin: 0;
     border: none;
+    margin: 0;
 }
 
 #consoleOut {
-    overflow: auto;
     background: #000;
-    width: 100%;
-    height: 11em;
     border: none;
     color: #FFF;
     display: block;
+    height: 11em;
+    overflow: auto;
+    width: 100%;
 }
 
 #consoleIn {
     background: #000;
-    color: #FFF;
     border: 1px solid #FFF;
+    color: #FFF;
     margin: 0;
     width: 100%;
 }
 
 #consoleTitle {
-    text-align: center;
-    font-weight: bold;
-    text-decoration: none;
     border: none;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
 }
 
 /* Layout */
@@ -262,9 +261,9 @@ menu li {
     background: #FFF;
     color: #000;
     padding: 5px;
-    border-radius: 3px;
-    -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
 }
 menu li:hover {
     background: #CCC;

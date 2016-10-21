@@ -1195,7 +1195,6 @@ function QueueArray (arr) {
  * @description Queue list
  * @this QueueList
  * @returns {QueueList} QueueList
- * @todo Probably add the pre-init similar to StackList() ?
  * @constructor
  * @since 1.0
  * @property {number[]} QueueList.value Values
@@ -1986,6 +1985,22 @@ function DomGraph () {
         return new NTreeNode(child.tagName.toLowerCase());
     }));
     dom.add();
+
+    return dom;
+}
+
+/**
+ * @description DOM graph/tree
+ * @returns {{}} DOM graph/tree
+ * @see DomGraph
+ */
+function Dom () {
+    var dom = {}, depth = 0, current = document.children[0];
+
+    dom[current.tagName.toLowerCase()] = {};
+    current.children.toArray().map(function (child) {
+        dom[current.tagName.toLowerCase()][child.tagName.toLowerCase()] = {};
+    });
 
     return dom;
 }

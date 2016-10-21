@@ -67,7 +67,6 @@
  * @property {function(): boolean} Essence.isComplete Module inclusion completeness check
  * @property {string[]} Essence.loadedModules List of loaded modules
  * @property {Function} Essence.updateAll Update all modules
- * @todo Get the Essence.source thingy right, i.e get a suitable place to get it from (e.g: a website or an expoitable place of Dropbox)
  */
 var Essence = {
     version: "1.1b",
@@ -3167,7 +3166,7 @@ Array.prototype.sanitise = function (type) {
  * @external Array
  */
 Array.prototype.portion = function (denominator, numerator) {
-    return this.get((numerator || 1) * Math.round(this.length) / (denominator || 2));
+    return (this.length%2 === 0)? this.get((numerator || 1) * Math.round(this.length) / (denominator || 2)): this.get((numerator || 1) * Math.floor(this.length) / (denominator || 2));
 };
 
 /**
@@ -3911,9 +3910,9 @@ function isNon (val) {
  * exist(d); //false
  */
 function exist (obj) {
+    /* eslint no-shadow-restricted-names: 0 */
     var undefined, t;
     try {
-        /* eslint no-shadow-restricted-names: 0 */
         //noinspection JSUnusedAssignment
         t = typeof obj !== "undefined" || obj !== undefined || obj in window;
         /* eslint no-shadow-restricted-names: 2 */

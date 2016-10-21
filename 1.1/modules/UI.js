@@ -65,7 +65,9 @@ function toMaxSize () {
         else if (frameX) frame.resizeTo(frameX, frameY);
         else if (frame.X) frame.resizeTo(frame.X, frame.Y);
         else if (frame.x) frame.resizeTo(frame.x, frame.y);
-        else throw new Error("It's not possible to maximise the size or you need to do more researches.");
+        else { //noinspection ExceptionCaughtLocallyJS
+            throw new Error("It's not possible to maximise the size or you need to do more researches.");
+        }
     } catch(e) {
         Essence.say("An error occurred when trying to maximise the size Because of %c" + e, "err", "text-decoration: underline;");
     }
