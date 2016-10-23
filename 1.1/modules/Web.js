@@ -13,8 +13,8 @@
  * @exports Web
  */
 var Web = new Module("Web", "Web stuff", ["DataStruct", "Misc"], 1, function () {
-    if (!isValid($G["IP"], "ip")) getIP();
-    if (!isValid($G["IP"], "ip")) getPrivateIP();
+    //if (!isValid($G["IP"], "ip")) getIP();
+    //if (!isValid($G["IP"], "ip")) getPrivateIP();
 });
 
 /* eslint no-undef: 0 */
@@ -294,6 +294,7 @@ function DB (name, headers, rows, headerRows) {
  * @param {string} [auth="Anonymous"] Author
  * @param {string} [summup=""] Summary
  * @param {string} [ctt=""] Content
+ * @param {Function} [runnable=$f] Runnable method of the process
  * @returns {process} Process
  * @since 1.0
  * @property {string} process.name Name
@@ -304,9 +305,8 @@ function DB (name, headers, rows, headerRows) {
  * @property {Function} process.update Update the process
  * @property {function(server)} process.askPermission Ask the permission to integrate a particular server
  * @property {Function} process.destroy Self-destruction
- * @todo Add a customisable run method ?
  */
-function process (name, auth, summup, ctt) {
+function process (name, auth, summup, ctt, runnable) {
     this.name = name;
     this.author = auth || "Anonymous";
     this.bitsize = 0; //Size in binary unit
@@ -335,6 +335,8 @@ function process (name, auth, summup, ctt) {
         Essence.processList = Essence.processList.remove(this);
     };
     Essence.addProcess(this);
+
+    this.run = runnable || $f;
 
     return this;
 }
@@ -1222,6 +1224,7 @@ function Parser (from, to, customParse) {
         res = res.replace(/<icon size=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/icon.png' class='icon' style='width: $1px; height: $1px;' />");
         res = res.replace(/<icon name=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/$1.png' class='icon' />");
         res = res.replace(/<(s|m|l|xs|xl):icon name=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "<img src='img/$2.png' class='$1-icon' />");
+        //noinspection BadExpressionStatementJS
         res = res.replace(/<js>([\s\S]*?)<\/js>/gm,"<script type='text/javascript'>$1<\/script>");
         res = res.replace(/<js src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"<script type='text/javascript' src='$1'><\/script>");
         res = res.replace(/<vb>([\s\S]*?)<\/vb>/gm, "<script type='text/vbscript'>$1<\/script>");
@@ -1393,7 +1396,6 @@ function loadBar (dlb, cb, delay) {
  * @this {Console}
  * @returns {Console} Console
  * @since 1.1
- * @todo Add more commands ?
  * @property {string} Console.title Title of the console
  * @property {Code} Console.val Entry of the console
  * @property {virtualHistory} Console.history Command history

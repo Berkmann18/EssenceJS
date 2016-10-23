@@ -250,7 +250,7 @@ var Essence = {
      * @global
      * @since 1.1
      */
-    testMode = true;
+    testMode = false;
 
 /**
  * @description EssenceJS Module
@@ -656,7 +656,7 @@ getExtPath = function (path) {
             [abcEncode(abcDecode("6415180513")), "6415180513", "en(decode)"],
             [ilDecrypt(ilEncrypt("Hello")), "Hello", "il-De(En)"],
             [ilEncrypt(ilDecrypt("Hello")), "Hello", "il-En(De)"], //Result: £¡¡«
-            //[RSA(RSA("Secrete", keys), ??), "Secrete", "RSA"]
+            //[RSA(RSA("Secrete", keys), ??), "Secrete", "RSA"],
             [fromFSHA(toFSHA("password")), "password", "fromFSHA(to)"],
             [toFSHA(fromFSHA("password")), "password", "toFSHA(from)"]
             //UI
@@ -3161,12 +3161,11 @@ Array.prototype.sanitise = function (type) {
  * @returns {Array} Portion of the array
  * @since 1.1
  * @method
- * @todo Add the support for odd lengthed arrays
  * @memberof Array.prototype
  * @external Array
  */
 Array.prototype.portion = function (denominator, numerator) {
-    return (this.length%2 === 0)? this.get((numerator || 1) * Math.round(this.length) / (denominator || 2)): this.get((numerator || 1) * Math.floor(this.length) / (denominator || 2));
+    return (this.length % 2 === 0)? this.get((numerator || 1) * Math.round(this.length) / (denominator || 2)): this.get(Math.floor((numerator || 1) * Math.floor(this.length) / (denominator || 2)));
 };
 
 /**

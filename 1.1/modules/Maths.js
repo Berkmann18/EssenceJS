@@ -786,30 +786,6 @@ function rad2deg (rad) {
 }
 
 /**
- * @description Celsius to fahrenheit
- * @param {number} cel Celsius (°C)
- * @returns {number} Fahrenheit (°F)
- * @see module:Maths~fahr2cels
- * @since 1.0
- * @func
- */
-function cels2fahr (cel) {
-    return cel * 33.8
-}
-
-/**
- * @description Fahrenheit to celsius
- * @param {number} fahr Fahrenheit (°F)
- * @returns {number} Celsius (°C)
- * @see module:Maths~fahr2cels
- * @since 1.0
- * @func
- */
-function fahr2cels (fahr) {
-    return fahr / 33.8
-}
-
-/**
  * @description Check if <code>x</code> is a prime number
  * @param {number} x Number
  * @return {boolean} Primeness
@@ -1990,7 +1966,6 @@ function fromCelsius (x, unit) {
  * @returns {string} <code>x</code> &rArr; <code>y</code> <code>unit</code>
  * @see module:Maths~fromCelsius
  * @see module:Maths~toCelsius
- * @todo deprecate fahrs2cels() and cels2fahrs()
  * @since 1.1
  * @func
  */

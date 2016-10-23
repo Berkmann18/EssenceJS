@@ -1,5 +1,5 @@
 ## General
-+ ^clean-up, linting
++ ^clean-up, linting, minor fixes and documentation update
 
 ## [essence](essence.js)
 + 
@@ -8,7 +8,7 @@
 + 
 
 ## [DataStruct](modules/DataStruct.js)
-+ 
++ ^ DomGraph()->DomTree(), Dom()->DomStructure()
 
 ## [DOM](modules/DOM.js)
 + 
@@ -18,14 +18,14 @@
 
 ## [Maths](modules/Maths.js)
 + ^ bruteForceFloat()
-+ \- bruteForceDouble()
++ \- bruteForceDouble(), fahr2cels(), cels2fahr()
 + \+ doubleBruteForceNum(), doubleBruteForceFloat(), toCelsius(), fromCelsius(), convTemperature(), toCbMetre(), fromCbMetre(), convVolume(), toGram(), fromGram(), convWeight()
 
 ## [Misc](modules/Misc.js)
 + 
 
 ## [Security](modules/Security.js)
-+ 
++ ^ computeRSA(), RSA(), hash()
 
 ## [UI](modules/UI.js)
 + 

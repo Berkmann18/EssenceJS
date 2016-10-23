@@ -6,7 +6,7 @@
  * @license MIT
  * @author Maximilian Berkmann <maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
- * @requires essence
+ * @requires module:essence
  * @requires DOM
  * @requires Maths
  * @requires Files
@@ -41,6 +41,7 @@ function LinkedList (pl, nx, name) {
     this.payload = pl || 1;
     this.next = nx || {payload: 1, next: null};
     this.next.show = function () {
+        /** @this LinkedList.next */
         return this.name + ":" + this.next.payload + "->"
     };
     this.name = name;
@@ -985,10 +986,7 @@ function StackList (arr) {
     this.push = function (item) {
         if (isType(item, "array")) {
             for(var i = 0; i < item.length; i++) this.push(item[i]);
-        } else {
-            var n = new Node(item, this.top);
-            this.top = n;
-        }
+        } else this.top = new Node(item, this.top);
         return this
     };
     if (arr) this.push(arr);
@@ -1286,7 +1284,7 @@ function QueueList () {
  */
 function Astar (start, goal) {
     //PathNode.f (score) = g (sum of all cost to get at this point) + h (heuristic: estimate of what it will take to get the goal)
-    var nodeGoal = goal, nodeCurrent, nodeSuccessor, _h;
+    var nodeGoal = goal, nodeCurrent, _h;
     var openList = [start], closedList = [];
     while (openList.length > 0) {
         var scores = [], minScore = openList[0].f;
@@ -1303,8 +1301,8 @@ function Astar (start, goal) {
             if (x.f != minScore) return x
         });
         if (nodeCurrent === nodeGoal) {
-            //Generate each states nodeSucessor that can come after nodeCurrent
-            for (nodeSucessor in nodeCurrent) {
+            //Generate each states nodeSuccessor that can come after nodeCurrent
+            for (var nodeSuccessor in nodeCurrent) {
                 if (nodeCurrent.hasOwnProperty(nodeSuccessor)) {
                     nodeSuccessor.f = nodeCurrent.f + h(nodeSuccessor, nodeCurrent);
                     var l = lookfor(nodeSuccessor, openList);
@@ -1977,9 +1975,10 @@ function Map (keys) {
  * @returns {NTreeNode} Tree representing the DOM structure of the current web page
  * @func
  * @since 1.1
- * @todo Finish it !
+ * @todo Finish it or just get rid of it and use DomStructure !
+ * @see module:DataStruct~DomStructure
  */
-function DomGraph () {
+function DomTree () {
     var current = document.children[0];
     var dom = new NTreeNode(current.tagName.toLowerCase(), current.children.toArray().map(function (child) {
         return new NTreeNode(child.tagName.toLowerCase());
@@ -1990,17 +1989,31 @@ function DomGraph () {
 }
 
 /**
- * @description DOM graph/tree
- * @returns {{}} DOM graph/tree
- * @see DomGraph
+ * @description DOM structure
+ * @returns {{}} DOM object structure
+ * @func
+ * @since 1.1
+ * @see module:DataStruct~DomGraph
  */
-function Dom () {
-    var dom = {}, depth = 0, current = document.children[0];
+function DomStructure () {
+    var dom = {}, current = document.children[0], nameOf = function (tag) { //Return the tag's name
+        return tag.localName || tag.tagName.toLowerCase();
+    }, kidsOf = function (tag) {
+        return tag.children.toArray();
+    }, stepIn = function (tag, parent) {
+        if (!parent) parent = {};
+        parent[nameOf(tag)] = {};
+        kidsOf(tag).map(function (child) {
+            parent[nameOf(tag)][nameOf(child)] = {};
+            if (!kidsOf(child).isEmpty()) {
+                kidsOf(child).map(function (subChild) {
+                    //parent[nameOf(tag)][nameOf(child)][nameOf(subChild)] = {};
+                    parent[nameOf(tag)][nameOf(child)] = stepIn(subChild, parent[nameOf(tag)][nameOf(child)]);
+                })
+            }
+        });
+        return parent;
+    };
 
-    dom[current.tagName.toLowerCase()] = {};
-    current.children.toArray().map(function (child) {
-        dom[current.tagName.toLowerCase()][child.tagName.toLowerCase()] = {};
-    });
-
-    return dom;
+    return stepIn(current, dom);
 }

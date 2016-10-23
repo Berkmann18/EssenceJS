@@ -317,15 +317,16 @@ function ilDecrypt (data) {
 /* eslint no-unused-vars: 0 */
 /**
  * @description RSA algorithm keys computation
- * @param {number} p=23 Number #1
- * @param {number} q=29 Number #2
+ * @param {number} [p=23] Number #1
+ * @param {number} [q=29] Number #2
+ * @param {boolean} [safe=false] Safety flag for returning the private key
  * @returns {number[]} Public key
  * @see module:Security~cryptRSA
  * @since 1.0
  * @func
  * @throws {Error} Either p or q isn't a prime number
  */
-function computeRSA (p, q) {
+function computeRSA (p, q, safe) {
     if (arguments.toArray().length === 0) {
         p = bruteForceNum(23, "isPrime(x)", 99);
         q = bruteForceNum(23, "isPrime(x) && x!=" + p, 99);
@@ -338,7 +339,7 @@ function computeRSA (p, q) {
 
     Essence.say([n, d]); //Private key
     //Issue: d might be too big for cryptRSA
-    return [n, e]; //Public keys
+    return safe? [[n, d], [n, e]]: [n, e]; //Public keys
 }
 /* eslint no-unused-vars: 2 */
 
@@ -365,6 +366,7 @@ function cryptRSA (msg, key) { //Encrypt $msg with the public/private key $key t
  * @todo Make sure the RSA(RSA(<code>msg</code>, [n, e|d]), [n, d|e])=<code>msg</code>
  */
 function RSA (msg, keys) {
+    if (!keys) keys = computeRSA();
     return msg.map(function (l) {
         return String.fromCharCode(abcModulus(cryptRSA(l.charCodeAt(0), keys)));
     })
@@ -396,7 +398,7 @@ function genPassword () {
  * @func
  */
 function hash (word) {
-    var m = word.mean(), s = getStep(word.split("").map(function (x) {
+    var s = getStep(word.split("").map(function (x) {
             return x.charCodeAt(0);
         }).min(), word.split("").map(function (x) {
             return x.charCodeAt(0);
@@ -404,8 +406,8 @@ function hash (word) {
     ), w = word.split("");
     var p = w.even().concat(w.odd()).join("").map(function (c) {
         return String.fromCharCode(abcModulus(c.charCodeAt(0) + s));
-    }), mw = w.even().concat(w.odd()).join("");
-    console.log("p", p, "\nmw", mw);
+    })/*, mw = w.even().concat(w.odd()).join("")*/;
+   // console.log("p", p, "\nmw", mw);
     return toFSHA(p.split("").portion(2).concat(p.split("").portion(-2)).join(""));
 }
 
@@ -426,7 +428,6 @@ function toFSHA (str) {
  * @description Fake SHA hash to string
  * @param {Str} fsha Fake SHA hash
  * @return {string} String
- * @todo Get it right
  * @func
  * @since 1.1
  */
@@ -454,6 +455,7 @@ function fromFSHA (fsha) {
  * @returns {Array|string} DES cipher
  * @method
  * @since 1.1
+ * @todo Check
  */
 function DES (text, keys) {
     var left = text.portion(2, -1), right = text.portion(2, 1);

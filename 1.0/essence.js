@@ -8951,6 +8951,7 @@ function Parser (from, to, customParse) {
 		res = res.replace(/<icon size=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/icon.png' class='icon' style='width: $1px; height: $1px;' />");
 		res = res.replace(/<icon name=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/$1.png' class='icon' />");
 		res = res.replace(/<(s|m|l|xs|xl):icon name=(?:"|')(\w+)(?:"|') \/>/gm, "<img src='img/$2.png' class='$1-icon' />");
+		//noinspection BadExpressionStatementJS
 		res = res.replace(/<js>([\s\S]*?)<\/js>/gm,"<script type='text/javascript'>$1<\/script>");
 		res = res.replace(/<js src=(?:"|')(\w+)(?:\"|\') \/>/gm,"<script type='text/javascript' src='$1'><\/script>");
 		res = res.replace(/<vb>([\s\S]*?)<\/vb>/gm, "<script type='text/vbscript'>$1<\/script>");

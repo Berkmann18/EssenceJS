@@ -276,7 +276,6 @@ function getResources (rmEmpty) {
  * @param {boolean} [asList=false] Result should be a list or an object
  * @returns {*} List/dictionary of scripts
  * @see module:DOM~gatherStylesheets
- * @todo Perhaps use document.scripts.toArray() instead ?
  * @since 1.0
  * @func
  */
@@ -597,6 +596,7 @@ function addFav (url, title, elmId) {
  * @returns {checkBrowser} Browser check
  * @this checkBrowser
  * @since 1.0
+ * @todo Document the properties
  * @constructor
  */
 function checkBrowser () {
@@ -606,7 +606,7 @@ function checkBrowser () {
     this.ie4 = (document.all && !this.dom)? 1: 0;
     this.ns5 = (this.dom && parseInt(this.ver) >= 5)? 1: 0;
     this.ns4 = (document.layers && !this.dom)? 1: 0;
-    this.bw = (this.ie5 || this.ie4 || this.ns4 || this.ns5);
+    this.any = (this.ie5 || this.ie4 || this.ns4 || this.ns5);
     return this
 }
 

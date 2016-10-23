@@ -69,7 +69,7 @@ function build {
         cd 1.2
         if [ ${lint} -eq 1 ]; then
             echo "Linting ..."
-            eslint essence.js modules & csslint essence.css & echo "Linting done!"
+            eslint essence.js & csslint essence.css & echo "Linting done!"
         fi
         if [ ${min} -eq 1 ]; then
             echo "Minification ..."
