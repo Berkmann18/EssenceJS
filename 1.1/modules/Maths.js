@@ -24,7 +24,7 @@ var Maths = new Module("Maths", "Maths stuff", ["Misc"]);
  * @func
  */
 function xor (a, b) {
-    return (a && !b) || (!a && b)
+	return (a && !b) || (!a && b)
 }
 
 /**
@@ -35,11 +35,11 @@ function xor (a, b) {
  * @func
  */
 function timesLiteral (n) {
-    switch (n) {
-        case 1: return "once";
-        case 2: return "twice";
-        default: return n + " times";
-    }
+	switch (n) {
+		case 1: return "once";
+		case 2: return "twice";
+		default: return n + " times";
+	}
 }
 
 /**
@@ -52,7 +52,7 @@ function timesLiteral (n) {
  * @func
  */
 function rand (min, max, integer) {
-    return integer? Math.floor(Math.random() * (max - min + 1) + min): Math.random() * (max - min + 1) + min; //Math.random() * (max - min) / min doesn't works for min = 0
+	return integer? Math.floor(Math.random() * (max - min + 1) + min): Math.random() * (max - min + 1) + min; //Math.random() * (max - min) / min doesn't works for min = 0
 }
 
 /**
@@ -64,7 +64,7 @@ function rand (min, max, integer) {
  * @func
  */
 function randTo (max) {
-    return rand(0, max, true); //To only have to use the max value and already knowing the rest
+	return rand(0, max, true); //To only have to use the max value and already knowing the rest
 }
 
 /**
@@ -79,7 +79,7 @@ function randTo (max) {
  * @func
  */
 function baseRand (min, max, base, integer) { //Randomise a number in the selected base
-    return parseFloat(rand(min, max, integer)).toString(base || 10)
+	return parseFloat(rand(min, max, integer)).toString(base || 10)
 }
 
 /**
@@ -93,7 +93,7 @@ function baseRand (min, max, base, integer) { //Randomise a number in the select
  * @func
  */
 function randVar (var1, var2, integer) {
-    return rand(Math.min(var1, var2), Math.max(var1, var2), integer); //Setting the max and min for the rand() call
+	return rand(Math.min(var1, var2), Math.max(var1, var2), integer); //Setting the max and min for the rand() call
 }
 
 /**
@@ -105,7 +105,7 @@ function randVar (var1, var2, integer) {
  * @func
  */
 function lenRand (len, if0) {
-    return Math.floor(Math.random() * (if0? len + 1: len)); //If the first term is 0 or 1
+	return Math.floor(Math.random() * (if0? len + 1: len)); //If the first term is 0 or 1
 }
 
 /**
@@ -117,7 +117,7 @@ function lenRand (len, if0) {
  * @see modume:Maths~random
  */
 function random16 () {
-    return (65280 * Math.random() + 255 * Math.random()) / 65535
+	return (65280 * Math.random() + 255 * Math.random()) / 65535
 }
 
 /**
@@ -129,8 +129,8 @@ function random16 () {
  * @see module:Maths~random16
  */
 function random (bits) {
-    if (!bits) bits = 32;
-    return ((Math.pow(2, bits) - Math.pow(2, bits / 2)) * Math.random() + (Math.pow(2, bits / 2 - 1)) * Math.random()) / (Math.pow(2, bits) - 1)
+	if (!bits) bits = 32;
+	return ((Math.pow(2, bits) - Math.pow(2, bits / 2)) * Math.random() + (Math.pow(2, bits / 2 - 1)) * Math.random()) / (Math.pow(2, bits) - 1)
 }
 
 /**
@@ -142,7 +142,7 @@ function random (bits) {
  * @func
  */
 function randFloatSpread (range) {
-    return range * (.5 - Math.random())
+	return range * (.5 - Math.random())
 }
 
 /**
@@ -155,9 +155,9 @@ function randFloatSpread (range) {
  * @returns {Array} Random number array where &forall;i&in;r, i&in;[<code>min</code>, <code>max</code>]<sub>(base)</sub>
  */
 function randNum (n, min, max, float, base) {
-    var r = [];
-    for (var i = 0; i < (n || 10); i++) r[i] = base? conv(rand(min || 0, max || 100, !float || true), 10, base): rand(min || 0, max || 100, !float);
-    return r
+	var r = [];
+	for (var i = 0; i < (n || 10); i++) r[i] = base? conv(rand(min || 0, max || 100, !float || true), 10, base): rand(min || 0, max || 100, !float);
+	return r
 }
 
 /**
@@ -170,15 +170,15 @@ function randNum (n, min, max, float, base) {
  * @func
  */
 function genNearlySortedArr (n, min, max) {
-    var aI = range(min, 1, max).slice(0, n), res = [], ic;
-    ic = aI.getIncrement(0);
-    for (var i = 0; i < aI.length; i++) {
-        var r = randTo(ic);
-        res.push(aI[i]);
-        if (i > 0 && r === 0) swap(res, i, i - 1);
-        else if (i > 1 && r === ic) swap(res, i, i - 2);
-    }
-    return res
+	var aI = range(min, 1, max).slice(0, n), res = [], ic;
+	ic = aI.getIncrement(0);
+	for (var i = 0; i < aI.length; i++) {
+		var r = randTo(ic);
+		res.push(aI[i]);
+		if (i > 0 && r === 0) swap(res, i, i - 1);
+		else if (i > 1 && r === ic) swap(res, i, i - 2);
+	}
+	return res
 }
 
 /**
@@ -190,10 +190,10 @@ function genNearlySortedArr (n, min, max) {
  * @func
  */
 function sumPow2 (arr, nbDec) {
-    if (!isType(arr, "Array")) return false;
-    return arr.map(function (x) {
-        return x * x;
-    }).sum().toNDec(nbDec)
+	if (!isType(arr, "Array")) return false;
+	return arr.map(function (x) {
+		return x * x;
+	}).sum().toNDec(nbDec)
 }
 
 /**
@@ -207,7 +207,7 @@ function sumPow2 (arr, nbDec) {
  * @func
  */
 function conv (n, from, to, float) {
-    return float? parseFloat(n, from || 2).toString(to || 10): parseInt(n, from || 2).toString(to || 10)
+	return float? parseFloat(n, from || 2).toString(to || 10): parseInt(n, from || 2).toString(to || 10)
 }
 
 /**
@@ -219,11 +219,11 @@ function conv (n, from, to, float) {
  * @func
  */
 function negateBin (bin, toArr) {
-    var n = [];
-    for(var i = 0; i < bin.length; i++) n[i] = 1 - parseInt(bin[i]);
-    var dec = conv(n.join(""));
-    dec++;
-    return toArr? conv(dec, 10, 2).split(""): conv(dec, 10, 2)
+	var n = [];
+	for(var i = 0; i < bin.length; i++) n[i] = 1 - parseInt(bin[i]);
+	var dec = conv(n.join(""));
+	dec++;
+	return toArr? conv(dec, 10, 2).split(""): conv(dec, 10, 2)
 }
 
 /**
@@ -235,54 +235,54 @@ function negateBin (bin, toArr) {
  * @throws {Error} Invalid binary number
  */
 function floatingPtBin (bin) {
-    //%= .05859375 (sign) + .27734375 (exponent) + .6640625 (mantissa)
-    /* Lookup table aid
-     var s = new Stream(8, "x*2", 5);
-     table(s.data.map(function (x) {
-     return [(.05859375 * x), (.27734375 * x), (.6640625 * x), (.05859375 * x) + (.27734375 * x) + (.6640625 * x)];
-     }))
-     S/E/M              (x2/x??/x??)
-     1/4/3 (8bit) -%> .125/.5/.375
-     1/6/9 (16bit) -%> .0625/.375/.5625
-     1/8/23 (32bit) -%> .03125/.25/.71875
-     1/11/52 (64bit) -%> .015625/.171875/.8125
-     1/14/112 (128bit) -%> .0078125/.109375/.875
-     1/x/y (Nbit) -%> .0484375/.28125/.66875 => .9984375
-     var s = new Stream(8, "x*2", 5);
-     table(s.data.map(function (x) {
-     return [1, (.3212890625 * x), (.6787109375 * x), (.3212890625 * x) + (.6787109375 * x)];
-     }))
-     */
-    var s = (bin[0] === 1)? -1: 1, e, m, mLoop = function (x, M) {
-        var res = 0;
-        for (var i = 0; i < M; i++) res += parseInt(x[i]) * Math.pow(2, -i - 1);
-        return res;
-    }; //sign, exponent, mantissa
-    switch(bin.length) {
-        case 8:
-            e = ((bin[1] === 1)? 1: -1) * conv(bin.get(2, 4));
-            m = mLoop(bin.get(5), 3);
-            break;
-        case 16:
-            e = ((bin[1] === 1)? 1: -1) * conv(bin.get(2, 6));
-            m = mLoop(bin.get(7), 9);
-            break;
-        case 32:
-            e = ((bin[1] === 1)? 1: -1) * conv(bin.get(2, 8));
-            m = mLoop(bin.get(9), 23);
-            break;
-        case 64:
-            e = ((bin[1] === 1)? 1: -1) * conv(bin.get(2, 11));
-            m = mLoop(bin.get(12), 52);
-            break;
-        case 128:
-            e = ((bin[1] === 1)? 1: -1) * conv(bin.get(2, 14));
-            m = mLoop(bin.get(15), 112);
-            break;
-        default:
-            throw new Error("Invalid binary number");
-    }
-    return s * Math.pow(2, e) * m;
+	//%= .05859375 (sign) + .27734375 (exponent) + .6640625 (mantissa)
+	/* Lookup table aid
+	 var s = new Stream(8, "x*2", 5);
+	 table(s.data.map(function (x) {
+	 return [(.05859375 * x), (.27734375 * x), (.6640625 * x), (.05859375 * x) + (.27734375 * x) + (.6640625 * x)];
+	 }))
+	 S/E/M              (x2/x??/x??)
+	 1/4/3 (8bit) -%> .125/.5/.375
+	 1/6/9 (16bit) -%> .0625/.375/.5625
+	 1/8/23 (32bit) -%> .03125/.25/.71875
+	 1/11/52 (64bit) -%> .015625/.171875/.8125
+	 1/14/112 (128bit) -%> .0078125/.109375/.875
+	 1/x/y (Nbit) -%> .0484375/.28125/.66875 => .9984375
+	 var s = new Stream(8, "x*2", 5);
+	 table(s.data.map(function (x) {
+	 return [1, (.3212890625 * x), (.6787109375 * x), (.3212890625 * x) + (.6787109375 * x)];
+	 }))
+	 */
+	var s = (bin[0] === 1)? -1: 1, e, m, mLoop = function (x, M) {
+		var res = 0;
+		for (var i = 0; i < M; i++) res += parseInt(x[i]) * Math.pow(2, -i - 1);
+		return res;
+	}; //sign, exponent, mantissa
+	switch(bin.length) {
+		case 8:
+			e = ((bin[1] === 1)? 1: -1) * conv(bin.get(2, 4));
+			m = mLoop(bin.get(5), 3);
+			break;
+		case 16:
+			e = ((bin[1] === 1)? 1: -1) * conv(bin.get(2, 6));
+			m = mLoop(bin.get(7), 9);
+			break;
+		case 32:
+			e = ((bin[1] === 1)? 1: -1) * conv(bin.get(2, 8));
+			m = mLoop(bin.get(9), 23);
+			break;
+		case 64:
+			e = ((bin[1] === 1)? 1: -1) * conv(bin.get(2, 11));
+			m = mLoop(bin.get(12), 52);
+			break;
+		case 128:
+			e = ((bin[1] === 1)? 1: -1) * conv(bin.get(2, 14));
+			m = mLoop(bin.get(15), 112);
+			break;
+		default:
+			throw new Error("Invalid binary number");
+	}
+	return s * Math.pow(2, e) * m;
 }
 
 /**
@@ -294,7 +294,7 @@ function floatingPtBin (bin) {
  * @func
  */
 function min2dec (min) { //Minute to decimal
-    return (50 * min) / 30
+	return (50 * min) / 30
 }
 
 /**
@@ -306,7 +306,7 @@ function min2dec (min) { //Minute to decimal
  * @func
  */
 function dec2min (dec) {
-    return (30 * dec) / 50
+	return (30 * dec) / 50
 }
 
 /**
@@ -318,25 +318,25 @@ function dec2min (dec) {
  * @func
  */
 function toS (i) {
-    if (i == parseFloat(i)) return parseFloat(i);
-    var withH = i.count(":") === 2;
-    if (!i) i = withH? "00:00:00.000": "00:00.000"; //Avoid having errors
-    if (!isType(i, "String")) i += "";
-    if (i.length >= 4 && i.indexOf(":") == 1) return toS("0" + i); //So times without the leading 0 or simply with a 1-digit first section could be read properly
+	if (i == parseFloat(i)) return parseFloat(i);
+	var withH = i.count(":") === 2;
+	if (!i) i = withH? "00:00:00.000": "00:00.000"; //Avoid having errors
+	if (!isType(i, "String")) i += "";
+	if (i.length >= 4 && i.indexOf(":") == 1) return toS("0" + i); //So times without the leading 0 or simply with a 1-digit first section could be read properly
 
-    var t = i.split(":");
+	var t = i.split(":");
 
-    if (withH) {
-        var h, m, s; //Any parts that need to be extracted
-        h = parseInt(t[0]); //The first section: hour
-        m = parseInt(t[1]); //The second section: min
-        s = parseFloat(t[2]); //The third section: sec
-        return h * 3600 + m * 60 + s.toNDec();
-    } else {
-        m = parseInt(t[0]); //The first section: min
-        s = parseFloat(t[1]); //The second section: sec
-        return m * 60 + s;
-    }
+	if (withH) {
+		var h, m, s; //Any parts that need to be extracted
+		h = parseInt(t[0]); //The first section: hour
+		m = parseInt(t[1]); //The second section: min
+		s = parseFloat(t[2]); //The third section: sec
+		return h * 3600 + m * 60 + s.toNDec();
+	} else {
+		m = parseInt(t[0]); //The first section: min
+		s = parseFloat(t[1]); //The second section: sec
+		return m * 60 + s;
+	}
 }
 
 /**
@@ -349,19 +349,19 @@ function toS (i) {
  * @func
  */
 function sec2time (i, withH) {
-    var h = 0, m = 0, s = i;
-    if (withH) {
-        s = (i % 60).toNDigits();
-        h = (i >= 3600)? Math.floor(i / 3600): 0;
-        m = Math.floor((i - s - 3600 * h) / 60);
-        m = (m <= 0)? "00": m.toNDigits();
-        h = (h <= 0)? "00": h.toNDigits();
-        return h + ":" + m + ":" + s.toNDec().toNDigits(); ////Return the result as h:min:s.ms
-    } else {
-        s = (i % 60).toNDigits();
-        m = Math.floor(i / 60).toNDigits();
-        return (m <= 0)? s: m + ":" + s.toNDec().toNDigits(); //Return the result as min:s.ms
-    }
+	var h = 0, m = 0, s = i;
+	if (withH) {
+		s = (i % 60).toNDigits();
+		h = (i >= 3600)? Math.floor(i / 3600): 0;
+		m = Math.floor((i - s - 3600 * h) / 60);
+		m = (m <= 0)? "00": m.toNDigits();
+		h = (h <= 0)? "00": h.toNDigits();
+		return h + ":" + m + ":" + s.toNDec().toNDigits(); ////Return the result as h:min:s.ms
+	} else {
+		s = (i % 60).toNDigits();
+		m = Math.floor(i / 60).toNDigits();
+		return (m <= 0)? s: m + ":" + s.toNDec().toNDigits(); //Return the result as min:s.ms
+	}
 }
 
 /**
@@ -383,7 +383,7 @@ var s2t = sec2time;
  * @func
  */
 function markConv (mark, initTotal, endTotal, nbDec) {
-    return (mark / initTotal * (endTotal || 100)).toNDec(nbDec || 2)
+	return (mark / initTotal * (endTotal || 100)).toNDec(nbDec || 2)
 }
 
 /**
@@ -396,9 +396,9 @@ function markConv (mark, initTotal, endTotal, nbDec) {
  * @func
  */
 function nthroot (x, n, nbDec) {
-    var r = getClosestRoot(x, n);
-    for(var i = 0; i < 60; i++) r += (x - Math.pow(r, n)) / (Math.pow(r + 1, n) - Math.pow(r, n));
-    return r.toNDec(nbDec || 20)
+	var r = getClosestRoot(x, n);
+	for(var i = 0; i < 60; i++) r += (x - Math.pow(r, n)) / (Math.pow(r + 1, n) - Math.pow(r, n));
+	return r.toNDec(nbDec || 20)
 }
 
 /**
@@ -410,7 +410,7 @@ function nthroot (x, n, nbDec) {
  * @func
  */
 function log (x, y) {
-    return Math.log(x) / Math.log(y || 10)
+	return Math.log(x) / Math.log(y || 10)
 }
 
 /**
@@ -422,7 +422,7 @@ function log (x, y) {
  * @func
  */
 function ln (x) {
-    return log(x, Math.E);
+	return log(x, Math.E);
 }
 
 /**
@@ -434,7 +434,7 @@ function ln (x) {
  * @func
  */
 function gcd (a, b) {
-    return b? gcd(b, a % b): Math.abs(a)
+	return b? gcd(b, a % b): Math.abs(a)
 }
 
 /**
@@ -446,12 +446,12 @@ function gcd (a, b) {
  * @func
  */
 function lcm (a, b) {
-    var multiple = a;
-    range(a, 1, b).forEach(function(n) {
-        multiple = (multiple * n) / gcd(multiple, n);
-    });
+	var multiple = a;
+	range(a, 1, b).forEach(function(n) {
+		multiple = (multiple * n) / gcd(multiple, n);
+	});
 
-    return multiple;
+	return multiple;
 }
 
 /**
@@ -464,23 +464,23 @@ function lcm (a, b) {
  * @func
  */
 function Bin (n, p, r) { //Binomial distrib. where X~Bin(n, p) and it returns P(X = r)
-    return C(n, r) * Math.pow(p, r) * Math.pow(1 - p, n - r)
+	return C(n, r) * Math.pow(p, r) * Math.pow(1 - p, n - r)
 }
 
 /**
- * @description Cumultative binomial distribution (P(X<r)?)
+ * @description Cumulative binomial distribution (P(X<r)?)
  * @param {number} n Total number of attempts
  * @param {number} p Success probability
  * @param {number} r Number of attempts
- * @returns {number} Cumultative binomial distribution
+ * @returns {number} Cumulative binomial distribution
  * @see module:Maths~Bin
  * @since 1.0
  * @func
  */
 function BinCumul (n, p, r) { //P(X < r) ?
-    var res = [];
-    for (var i = 0; i < r; i++) res.push(Bin(n, p, r));
-    return res.sum();
+	var res = [];
+	for (var i = 0; i < r; i++) res.push(Bin(n, p, r));
+	return res.sum();
 }
 
 /**
@@ -494,9 +494,9 @@ function BinCumul (n, p, r) { //P(X < r) ?
  * @func
  */
 function BinCumulLT (n, p, r) { //P(X <= r) (adapted from http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function)
-    var x = 1 - p, a = n - r, b = r + 1, c = a + b - 1, res = 0;
-    for (var i = a; i < c + 1; i++) res += factorial(c) / (factorial(i) * factorial(c - i)) * Math.pow(x, i) * Math.pow((1 - x), c - i);
-    return res;
+	var x = 1 - p, a = n - r, b = r + 1, c = a + b - 1, res = 0;
+	for (var i = a; i < c + 1; i++) res += factorial(c) / (factorial(i) * factorial(c - i)) * Math.pow(x, i) * Math.pow((1 - x), c - i);
+	return res;
 }
 
 /**
@@ -509,10 +509,10 @@ function BinCumulLT (n, p, r) { //P(X <= r) (adapted from http://stackoverflow.c
  * @func
  */
 function Norm (x) { //P(z < x) where Z~N(0, 1) (or P(z>-x) if x is positive) === normalcdf(x)
-    var t = 1 / (1 + .2316419 * Math.abs(x));
-    var d = .3989423 * Math.exp(-x * x / 2);
-    var p = d * t * (.3193815 + t * (-.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
-    return p.toNDec(4)
+	var t = 1 / (1 + .2316419 * Math.abs(x));
+	var d = .3989423 * Math.exp(-x * x / 2);
+	var p = d * t * (.3193815 + t * (-.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
+	return p.toNDec(4)
 }
 
 /**
@@ -526,7 +526,7 @@ function Norm (x) { //P(z < x) where Z~N(0, 1) (or P(z>-x) if x is positive) ===
  * @func
  */
 function StdNorm (m, sd, x) {
-    return Norm((x - m) / sd); //P(Z<(x-m)/sd)
+	return Norm((x - m) / sd); //P(Z<(x-m)/sd)
 }
 
 /**
@@ -536,16 +536,16 @@ function StdNorm (m, sd, x) {
  * @constructor
  */
 function InvNorm (x) {
-    var a = [2.50662823884,	-18.61500062529, 41.39119773534, -25.44106049637], b = [-8.47351093090,	23.08336743743, -21.06224101826, 3.13082909833], c = [.3374754822726147, .9761690190917186,	.1607979714918209, .0276438810333863,	.0038405729373609,	.0003951896511919, .0000321767881768, .0000002888167364, .0000003960315187], y = x - .5, absY = Math.abs(y), sqY = y * y, res;
+	var a = [2.50662823884,	-18.61500062529, 41.39119773534, -25.44106049637], b = [-8.47351093090,	23.08336743743, -21.06224101826, 3.13082909833], c = [.3374754822726147, .9761690190917186,	.1607979714918209, .0276438810333863,	.0038405729373609,	.0003951896511919, .0000321767881768, .0000002888167364, .0000003960315187], y = x - .5, absY = Math.abs(y), sqY = y * y, res;
 
-    //Beasley-Springer function
-    if (absY < .42) res = y * (((a[3] * sqY + a[2]) * sqY + a[1]) * sqY + a[0]) / ((((b[3] * sqY +b[2]) * sqY + b[1]) * sqY + b[0]) * sqY + 1);
-    else { //Moro function
-        res = Math.log(-Math.log(y > 0? 1 - x: x));
-        res = c[0] + res * (c[1] + res * (c[2] + res * (c[3] + res * (c[4] + res * (c[5] + res * (c[6] + res * (c[7] + res * c[8])))))));
-        if (y < 0) res = -res;
-    }
-    return res;
+	//Beasley-Springer function
+	if (absY < .42) res = y * (((a[3] * sqY + a[2]) * sqY + a[1]) * sqY + a[0]) / ((((b[3] * sqY +b[2]) * sqY + b[1]) * sqY + b[0]) * sqY + 1);
+	else { //Moro function
+		res = Math.log(-Math.log(y > 0? 1 - x: x));
+		res = c[0] + res * (c[1] + res * (c[2] + res * (c[3] + res * (c[4] + res * (c[5] + res * (c[6] + res * (c[7] + res * c[8])))))));
+		if (y < 0) res = -res;
+	}
+	return res;
 }
 
 /**
@@ -557,7 +557,7 @@ function InvNorm (x) {
  * @func
  */
 function Po (l, x) {
-    return (Math.exp(-l) * Math.pow(l, x)) / factorial(x).toNDec(4)
+	return (Math.exp(-l) * Math.pow(l, x)) / factorial(x).toNDec(4)
 }
 
 /**
@@ -571,10 +571,10 @@ function Po (l, x) {
  * @func
  */
 function PoCumul (l, x) {
-    /*var res = [];
-    for (var i = 0; i < l; i++) res.push(Po(l, x));
-    return res.sum();*/
-    return Po(l, x) * l;
+	/*var res = [];
+	for (var i = 0; i < l; i++) res.push(Po(l, x));
+	return res.sum();*/
+	return Po(l, x) * l;
 }
 
 /**
@@ -585,7 +585,7 @@ function PoCumul (l, x) {
  * @func
  */
 function factorial (x) {
-    return (x <= 1)? x: x * factorial(x - 1)
+	return (x <= 1)? x: x * factorial(x - 1)
 }
 
 /**
@@ -598,7 +598,7 @@ function factorial (x) {
  * @func
  */
 function C (n, r) {
-    return factorial(n) / (factorial(r) * factorial(n - r))
+	return factorial(n) / (factorial(r) * factorial(n - r))
 }
 
 /**
@@ -614,10 +614,10 @@ function C (n, r) {
  * @func
  */
 function Bin2Norm (n, p, r, sign) {
-    if (n * p > 5 && n * (1 - p) > 5) {
-        r += (sign === ">=")? -.5: .5; //Continuity correction
-        return StdNorm(n * p, Math.sqrt(n * p * (1 - p)), r)
-    } else return false
+	if (n * p > 5 && n * (1 - p) > 5) {
+		r += (sign === ">=")? -.5: .5; //Continuity correction
+		return StdNorm(n * p, Math.sqrt(n * p * (1 - p)), r)
+	} else return false
 }
 
 /**
@@ -632,7 +632,7 @@ function Bin2Norm (n, p, r, sign) {
  * @func
  */
 function Bin2Po (n, p, r) {
-    return (n > 50 && p < .1)? Po(n * p, r): false;
+	return (n > 50 && p < .1)? Po(n * p, r): false;
 }
 
 /**
@@ -646,7 +646,7 @@ function Bin2Po (n, p, r) {
  * @func
  */
 function Po2Norm (l, x) {
-    return (l > 10)? StdNorm(l, Math.sqrt(x), x): false;
+	return (l > 10)? StdNorm(l, Math.sqrt(x), x): false;
 }
 
 /**
@@ -658,9 +658,9 @@ function Po2Norm (l, x) {
  * @func
  */
 function erf (z) {
-    var t = 1/(1 + .5 * Math.abs(z)), res;
-    res = 1 - t * Math.exp(-z * z - 1.26551223 + t * (1.00002368 + t * ( 0.37409196 + t * ( 0.09678418 + t * (-0.18628806 + t * ( 0.27886807 + t * (-1.13520398 + t * ( 1.48851587 + t * (-0.82215223 + t * ( 0.17087277))))))))));
-    return z > 0? res: -res;
+	var t = 1/(1 + .5 * Math.abs(z)), res;
+	res = 1 - t * Math.exp(-z * z - 1.26551223 + t * (1.00002368 + t * ( 0.37409196 + t * ( 0.09678418 + t * (-0.18628806 + t * ( 0.27886807 + t * (-1.13520398 + t * ( 1.48851587 + t * (-0.82215223 + t * ( 0.17087277))))))))));
+	return z > 0? res: -res;
 }
 
 /**
@@ -675,9 +675,9 @@ function erf (z) {
  * @func
  */
 function NormEstimate (n, p, r) {
-    var u = n * p, o;
-    o = Math.pow(u * (1 - p), .5);
-    return .5 * (1 + erf((r - u) / (o * Math.pow(2, .5))));
+	var u = n * p, o;
+	o = Math.pow(u * (1 - p), .5);
+	return .5 * (1 + erf((r - u) / (o * Math.pow(2, .5))));
 }
 
 /**
@@ -691,7 +691,7 @@ function NormEstimate (n, p, r) {
  * @func
  */
 function clamp (x, a, b) {
-    return (x < a)? a: ((x > b)? b: x)
+	return (x < a)? a: ((x > b)? b: x)
 }
 
 /**
@@ -705,7 +705,7 @@ function clamp (x, a, b) {
  * @func
  */
 function revClamp(x, a, b) {
-    return (a <= x && x <= b)? getClosest(x, [a, b]): x;
+	return (a <= x && x <= b)? getClosest(x, [a, b]): x;
 }
 
 /**
@@ -719,7 +719,7 @@ function revClamp(x, a, b) {
  * @func
  */
 function clampBottom (x, a) {
-    return (x < a)? a: x
+	return (x < a)? a: x
 }
 
 /**
@@ -732,7 +732,7 @@ function clampBottom (x, a) {
  * @func
  */
 function clampTop (x, b) {
-    return (x > b)? b: x
+	return (x > b)? b: x
 }
 
 /**
@@ -743,7 +743,7 @@ function clampTop (x, b) {
  * @func
  */
 function abcClamp(code) {
-    return code === 32? 32: revClamp(clamp(code, 65, 122), 90, 97);
+	return code === 32? 32: revClamp(clamp(code, 65, 122), 90, 97);
 }
 
 /**
@@ -758,7 +758,7 @@ function abcClamp(code) {
  * @func
  */
 function mapLinear (x, a1, a2, b1, b2) {
-    return b1 + (x - a1) * (b2 - b1) / (a2 - a1)
+	return b1 + (x - a1) * (b2 - b1) / (a2 - a1)
 }
 
 /**
@@ -770,7 +770,7 @@ function mapLinear (x, a1, a2, b1, b2) {
  * @func
  */
 function deg2rad (deg) {
-    return deg * Math.PI / 180
+	return deg * Math.PI / 180
 }
 
 /**
@@ -782,7 +782,7 @@ function deg2rad (deg) {
  * @func
  */
 function rad2deg (rad) {
-    return rad * 180 / Math.PI
+	return rad * 180 / Math.PI
 }
 
 /**
@@ -793,7 +793,7 @@ function rad2deg (rad) {
  * @func
  */
 function isPrime (x) {
-    return primeN(range(1, 1, x)).has(x);
+	return primeN(range(1, 1, x)).has(x);
 }
 
 /**
@@ -805,14 +805,14 @@ function isPrime (x) {
  * @func
  */
 function primeN (arr) {
-    var res = arr.quickSort();
-    for (var i = 0; i < arr.length; i++) {
-        if (arr[i] % 2 === 0 && arr[i] != 2) res[i] = "x";
-        for (var j = 0; j < i; j++) {
-            if (primeCheck(res[j], res[i])) res[i] = "x";
-        }
-    }
-    return res.remove("x")
+	var res = arr.quickSort();
+	for (var i = 0; i < arr.length; i++) {
+		if (arr[i] % 2 === 0 && arr[i] != 2) res[i] = "x";
+		for (var j = 0; j < i; j++) {
+			if (primeCheck(res[j], res[i])) res[i] = "x";
+		}
+	}
+	return res.remove()
 }
 
 /**
@@ -825,7 +825,7 @@ function primeN (arr) {
  * @func
  */
 function primeCheck (a, b) {
-    return (a > 1 && b > 1 && b % a === 0 && b != a)
+	return (a > 1 && b > 1 && b % a === 0 && b != a)
 }
 
 /**
@@ -837,28 +837,28 @@ function primeCheck (a, b) {
  * @func
  */
 function getClosestRoot (x, n) {
-    if (!n) n = 2;
-    var rof = 0, er = 0;
+	if (!n) n = 2;
+	var rof = 0, er = 0;
 
-    if ((x / 2 * x / 2) / 2 - 2 <= x) rof = x / 2;
-    else if (x / 3 * x / 3 <= x) rof = x / 3;
-    else rof = x / 4;
-    if (Math.pow(rof, n) === x) return rof;
+	if ((x / 2 * x / 2) / 2 - 2 <= x) rof = x / 2;
+	else if (x / 3 * x / 3 <= x) rof = x / 3;
+	else rof = x / 4;
+	if (Math.pow(rof, n) === x) return rof;
 
-    for (var p = 1; p <= n; p++) {
-        for (var i = 1; i < x; i++) {
-            if (Math.pow(i, p) === x || Math.pow(i, p - 1) * i === x) er = i;
-            else if (Math.pow(i, p) > x || Math.pow(i, p - 1) * i > x) er = i - .5;
-        }
-    }
-    if (Math.pow(er, n) <= x) return er;
-    else er = (Math.pow(n, -2) + x / Math.pow(n, 4)-x / Math.pow(n, 5) + Math.pow(x, n) / (Math.pow(n, Math.pow(n, 3) + 3)) + x / Math.pow(n, 2)) / 2;
-    if (Math.pow(er, n) > x) er = (er + rof) / 2;
-    var res = [rof, er, (x / er + er) / 2, (er + rof) / 2];
-    var resMap = res.map(function (x) {
-        return Math.pow(x, n);
-    });
-    return res[resMap.lookFor(getClosest(x, resMap))] * .9956973041;
+	for (var p = 1; p <= n; p++) {
+		for (var i = 1; i < x; i++) {
+			if (Math.pow(i, p) === x || Math.pow(i, p - 1) * i === x) er = i;
+			else if (Math.pow(i, p) > x || Math.pow(i, p - 1) * i > x) er = i - .5;
+		}
+	}
+	if (Math.pow(er, n) <= x) return er;
+	else er = (Math.pow(n, -2) + x / Math.pow(n, 4)-x / Math.pow(n, 5) + Math.pow(x, n) / (Math.pow(n, Math.pow(n, 3) + 3)) + x / Math.pow(n, 2)) / 2;
+	if (Math.pow(er, n) > x) er = (er + rof) / 2;
+	var res = [rof, er, (x / er + er) / 2, (er + rof) / 2];
+	var resMap = res.map(function (x) {
+		return Math.pow(x, n);
+	});
+	return res[resMap.lookFor(getClosest(x, resMap))] * .9956973041;
 }
 
 /**
@@ -872,7 +872,7 @@ function getClosestRoot (x, n) {
  * @func
  */
 function simpleInterest (po, i, t) {
-    return po * (1 + i * (t || 1))
+	return po * (1 + i * (t || 1))
 }
 
 /**
@@ -887,7 +887,7 @@ function simpleInterest (po, i, t) {
  * @func
  */
 function compoundInterest (po, i, t, n) {
-    return n > 1? po * Math.pow(1 + i / n, (t || 1) * n): po * Math.pow(1 + i, (t || 1))
+	return n > 1? po * Math.pow(1 + i / n, (t || 1) * n): po * Math.pow(1 + i, (t || 1))
 }
 
 /**
@@ -899,7 +899,7 @@ function compoundInterest (po, i, t, n) {
  * @func
  */
 function non0 (x) {
-    return (x === 0)? Essence.eps: x;
+	return (x === 0)? Essence.eps: x;
 }
 
 /**
@@ -913,15 +913,15 @@ function non0 (x) {
  * @func
  */
 function toFrac (n, prec, up) {
-    var s = n.toString(), p = s.indexOf(".");
-    if (p === -1) return s;
+	var s = n.toString(), p = s.indexOf(".");
+	if (p === -1) return s;
 
-    var i = Math.floor(n) || "", dec = s.substring(p),  m = prec || Math.pow(10, dec.length - 1), num = up? Math.ceil(dec * m): Math.round(dec * m), den = m,
-        g = gcd(num, den);
+	var i = Math.floor(n) || "", dec = s.substring(p),  m = prec || Math.pow(10, dec.length - 1), num = up? Math.ceil(dec * m): Math.round(dec * m), den = m,
+		g = gcd(num, den);
 
-    if (den / g === 1) return String(i + (num / g));
-    if (i) i += " and ";
-    return i + String(num / g) + "/" + (den / g)
+	if (den / g === 1) return String(i + (num / g));
+	if (i) i += " and ";
+	return i + String(num / g) + "/" + (den / g)
 }
 
 /**
@@ -934,13 +934,13 @@ function toFrac (n, prec, up) {
  * @func
  */
 function clearNum (n, nDec, usFormat) {
-    var sps = (Math.floor(n) + "").length/3, str = "";
-    for (var i = 0; i < sps; i++) {
-        str = ((n - n % Math.pow(1000, i)) % Math.pow(1000, i + 1)) / Math.pow(1000, i) + " " + str;
-    }
-    str = str.split(" ");
-    str.pop();
-    return str.join(usFormat? ",": " ") + (n % 1).toNDec(nDec || 3)
+	var sps = (Math.floor(n) + "").length/3, str = "";
+	for (var i = 0; i < sps; i++) {
+		str = ((n - n % Math.pow(1000, i)) % Math.pow(1000, i + 1)) / Math.pow(1000, i) + " " + str;
+	}
+	str = str.split(" ");
+	str.pop();
+	return str.join(usFormat? ",": " ") + (n % 1).toNDec(nDec || 3)
 }
 
 /**
@@ -954,7 +954,7 @@ function clearNum (n, nDec, usFormat) {
  * @func
  */
 function getStep (a, b, nbDec) {
-    return [a, b].getIncrement(nbDec)
+	return [a, b].getIncrement(nbDec)
 }
 
 /**
@@ -968,8 +968,8 @@ function getStep (a, b, nbDec) {
  * @func
  */
 function quadraticSolver (a, b, c, nDec) {
-    var d = Math.sqrt(b, 2) - 4 * a * c;
-    return d === 0? (-b / (2 * a)).toNDec(nDec): [((-b - Math.sqrt(Math.abs(d))) / (2 * a) + (d < 0? "i": 0)).toNDec(nDec), (-b + Math.sqrt(Math.abs(d)))/(2 * a) + (d < 0? "i": 0).toNDec(nDec)]
+	var d = Math.sqrt(b) - 4 * a * c;
+	return d === 0? (-b / (2 * a)).toNDec(nDec): [((-b - Math.sqrt(Math.abs(d))) / (2 * a) + (d < 0? "i": 0)).toNDec(nDec), (-b + Math.sqrt(Math.abs(d)))/(2 * a) + (d < 0? "i": 0).toNDec(nDec)]
 }
 
 /**
@@ -983,44 +983,44 @@ function quadraticSolver (a, b, c, nDec) {
  * @func
  */
 function eqSolver (formula, res, a, b) {
-    a = a || -100;
-    b = b || 200;
-    var  r= mkArray(a > 0? b - a: b - a + 1, 2, 1);
-    //Translation from text to commands or to a computer readable string for eval()
-    //Str.replace(/([A-z]|[0-9])\x29$/m, "m") for end )
-    //Str.replace(/^\x28([A-z]|[0-9])/m, "m") for start (
-    if (formula.search(/\^[0-9]/g)>0) { //Look for a ^n
-        /* if (formula.charAt(formula.search(/\^[0-9]/g)-1) == ")") {
-         formula = formula.replace(/^\(/m, "Math.pow(");
-         formula = formula.replace(/\)\^[0-9]/g, [A-z] + );
-         } else {
-         formula = formula.replace(/^\(/m, "Math.pow(");
-         formula = formula.replace(/\^[0-9]/g, [A-z] + );
-         } */
-        /* propposed by Jhonatan Sneider Salguero Villa
-         [(]. * ?[)] (very simplistic, what is inside might not be a math expression)
-         \d + \.\d+ (float)
-         \d+ (int)
-         [a-z]+ (variable)
-         */
-        var expr = "([(]. * ?[)]|\\d + \\.\\d + |\\d + |[a-z] + )";
-        var reg = new RegExp(expr + "\\^" + expr);
-        formula = formula.replace(reg, "Math.pow($1, $2)");
-    }else if (formula.search(/e\^/g)>0) { //Look for a e^
-        expr = "([(]. * ?[)]|\\d + \\.\\d + |\\d + |[a-z] + )";
-        reg = new RegExp("e\\^" + expr);
-        formula = formula.replace(reg, "Math.exp($1)");
-    }
-    Essence.say("Formula now converted to %c" + formula, "info", "color: #00f;");
-    //Brute force using any values within [a, b]
-    for (var x = a; x <= b; x++) {
-        for (var y = a; y <= b; y++) {
-            r[x][y] = "(" + x+"," + y+") " + eval(formula);
-        }
-    }
-    return r.filter(function (n) {
-        if (n.split(") ")[1] == res) return n.split(") ")[0] + ")"
-    }); //Filter out the values which doesn't match the result and returns only (x, y)
+	a = a || -100;
+	b = b || 200;
+	var  r= mkArray(a > 0? b - a: b - a + 1, 2, 1);
+	//Translation from text to commands or to a computer readable string for eval()
+	//Str.replace(/([A-z]|[0-9])\x29$/m, "m") for end )
+	//Str.replace(/^\x28([A-z]|[0-9])/m, "m") for start (
+	if (formula.search(/\^[0-9]/g)>0) { //Look for a ^n
+		/* if (formula.charAt(formula.search(/\^[0-9]/g)-1) == ")") {
+		 formula = formula.replace(/^\(/m, "Math.pow(");
+		 formula = formula.replace(/\)\^[0-9]/g, [A-z] + );
+		 } else {
+		 formula = formula.replace(/^\(/m, "Math.pow(");
+		 formula = formula.replace(/\^[0-9]/g, [A-z] + );
+		 } */
+		/* proposed by Jhonatan Sneider Salguero Villa
+		 [(]. * ?[)] (very simplistic, what is inside might not be a math expression)
+		 \d + \.\d+ (float)
+		 \d+ (int)
+		 [a-z]+ (variable)
+		 */
+		var expr = "([(]. * ?[)]|\\d + \\.\\d + |\\d + |[a-z] + )";
+		var reg = new RegExp(expr + "\\^" + expr);
+		formula = formula.replace(reg, "Math.pow($1, $2)");
+	}else if (formula.search(/e\^/g)>0) { //Look for a e^
+		expr = "([(]. * ?[)]|\\d + \\.\\d + |\\d + |[a-z] + )";
+		reg = new RegExp("e\\^" + expr);
+		formula = formula.replace(reg, "Math.exp($1)");
+	}
+	Essence.say("Formula now converted to %c" + formula, "info", "color: #00f;");
+	//Brute force using any values within [a, b]
+	for (var x = a; x <= b; x++) {
+		for (var y = a; y <= b; y++) {
+			r[x][y] = "(" + x+"," + y+") " + eval(formula);
+		}
+	}
+	return r.filter(function (n) {
+		if (n.split(") ")[1] == res) return n.split(") ")[0] + ")"
+	}); //Filter out the values which doesn't match the result and returns only (x, y)
 }
 
 
@@ -1035,26 +1035,26 @@ function eqSolver (formula, res, a, b) {
  * @func
  */
 function manuEqSolver (eq, max, dim, r) {
-    var res = mkArray(max + 1, dim, 1), p = [];
-    for (var x = 0; x < res.length; x++) {
-        if (dim === 2) {
-            for (var y = 0; y < res.length; y++) {
-                res[x][y] = eval(eq);
-                if (res[x][y] === r) p.push("x = " + x + ", y = " + y);
-            }
-        } else if (dim === 3) {
-            for (y = 0; y < res.length; y++) {
-                for (var z = 0; z < res.length; z++) {
-                    res[x][y][z] = eval(eq);
-                    if (res[x][y][z] === r) p.push("x = " + x + ", y = " + y + ", z = " + z);
-                }
-            }
-        } else {
-            res[x] = eval(eq);
-            if (res[x] === r) p.push("x = " + x);
-        }
-    }
-    return p
+	var res = mkArray(max + 1, dim, 1), p = [];
+	for (var x = 0; x < res.length; x++) {
+		if (dim === 2) {
+			for (var y = 0; y < res.length; y++) {
+				res[x][y] = eval(eq);
+				if (res[x][y] === r) p.push("x = " + x + ", y = " + y);
+			}
+		} else if (dim === 3) {
+			for (y = 0; y < res.length; y++) {
+				for (var z = 0; z < res.length; z++) {
+					res[x][y][z] = eval(eq);
+					if (res[x][y][z] === r) p.push("x = " + x + ", y = " + y + ", z = " + z);
+				}
+			}
+		} else {
+			res[x] = eval(eq);
+			if (res[x] === r) p.push("x = " + x);
+		}
+	}
+	return p
 }
 
 /**
@@ -1065,7 +1065,7 @@ function manuEqSolver (eq, max, dim, r) {
  * @func
  */
 function getNumFromStr (x) {
-    return isNon(x)? NaN: parseFloat(x.replace(/[A-Za-z_ ]+/g, ""))
+	return isNon(x)? NaN: parseFloat(x.replace(/[A-Za-z_ ]+/g, ""))
 }
 
 /**
@@ -1078,62 +1078,62 @@ function getNumFromStr (x) {
  * @func
  */
 function toPixel (x) {
-    var m = 1;
-    switch (x.substring(String(getNumFromStr(x)).length, x.length).remove(" ")) {
-        case "em":
-            m = 16;
-            break;
-        case "km":
-            m = 3779527.5593333;
-            break;
-        case "hm":
-            m = 377952.75593333;
-            break;
-        case "m":
-            m = 3779.5275593333;
-            break;
-        case "dm":
-            m = 377.95275593333;
-            break;
-        case "cm":
-            m = 37.795275593333;
-            break;
-        case "mm":
-            m = 3.7795275593333;
-            break;
-        case "ɥm":
-            m = 0.0037795275593333;
-            break;
-        case "nm":
-            m = 3.7795275593333e-6;
-            break;
-        case "ex":
-            m = 7.156;
-            break;
-        case "in":
-            m = 96;
-            break;
-        case "pt":
-            m = 1.3333333333333;
-            break;
-        case "pc":
-            m = 16;
-            break;
-        case "ft":
-            m = 1152;
-            break;
-        case "twip":
-            m = 15;
-            break;
-        case "mi":
-            m = 6082636.631643;
-            break;
-        case "yd":
-            m = 3456.043540706;
-            break;
-        default: break;
-    }
-    return getNumFromStr(x) * m
+	var m = 1;
+	switch (x.substring(String(getNumFromStr(x)).length, x.length).remove()) {
+		case "em":
+			m = 16;
+			break;
+		case "km":
+			m = 3779527.5593333;
+			break;
+		case "hm":
+			m = 377952.75593333;
+			break;
+		case "m":
+			m = 3779.5275593333;
+			break;
+		case "dm":
+			m = 377.95275593333;
+			break;
+		case "cm":
+			m = 37.795275593333;
+			break;
+		case "mm":
+			m = 3.7795275593333;
+			break;
+		case "ɥm":
+			m = 0.0037795275593333;
+			break;
+		case "nm":
+			m = 3.7795275593333e-6;
+			break;
+		case "ex":
+			m = 7.156;
+			break;
+		case "in":
+			m = 96;
+			break;
+		case "pt":
+			m = 1.3333333333333;
+			break;
+		case "pc":
+			m = 16;
+			break;
+		case "ft":
+			m = 1152;
+			break;
+		case "twip":
+			m = 15;
+			break;
+		case "mi":
+			m = 6082636.631643;
+			break;
+		case "yd":
+			m = 3456.043540706;
+			break;
+		default: break;
+	}
+	return getNumFromStr(x) * m
 }
 
 /**
@@ -1146,62 +1146,62 @@ function toPixel (x) {
  * @func
  */
 function fromPixel (x, unit) {
-    var m = 1;
-    switch (unit) {
-        case "em":
-            m = 1 / 16;
-            break;
-        case "km":
-            m = 1 / 3779527.5593333;
-            break;
-        case "hm":
-            m = 1 / 377952.75593333;
-            break;
-        case "m":
-            m = 1 / 3779.5275593333;
-            break;
-        case "dm":
-            m = 1 / 377.95275593333;
-            break;
-        case "cm":
-            m = 1 / 37.795275593333;
-            break;
-        case "mm":
-            m = 1 / 3.7795275593333;
-            break;
-        case "ɥm":
-            m = 1 / .0037795275593333;
-            break;
-        case "nm":
-            m = 1 / 3.7795275593333e-6;
-            break;
-        case "ex":
-            m = 1 / 7.156;
-            break;
-        case "in":
-            m = 1 / 96;
-            break;
-        case "pt":
-            m = 1 / 1.3333333333333;
-            break;
-        case "pc":
-            m = 1 / 16;
-            break;
-        case "ft":
-            m = 1 / 1152;
-            break;
-        case "twip":
-            m = 1 / 15;
-            break;
-        case "mi":
-            m = 1 / 6082636.631643;
-            break;
-        case "yd":
-            m = 1 / 3456.043540706;
-            break;
-        default: break;
-    }
-    return x * m + unit
+	var m = 1;
+	switch (unit) {
+		case "em":
+			m = 1 / 16;
+			break;
+		case "km":
+			m = 1 / 3779527.5593333;
+			break;
+		case "hm":
+			m = 1 / 377952.75593333;
+			break;
+		case "m":
+			m = 1 / 3779.5275593333;
+			break;
+		case "dm":
+			m = 1 / 377.95275593333;
+			break;
+		case "cm":
+			m = 1 / 37.795275593333;
+			break;
+		case "mm":
+			m = 1 / 3.7795275593333;
+			break;
+		case "ɥm":
+			m = 1 / .0037795275593333;
+			break;
+		case "nm":
+			m = 1 / 3.7795275593333e-6;
+			break;
+		case "ex":
+			m = 1 / 7.156;
+			break;
+		case "in":
+			m = 1 / 96;
+			break;
+		case "pt":
+			m = 1 / 1.3333333333333;
+			break;
+		case "pc":
+			m = 1 / 16;
+			break;
+		case "ft":
+			m = 1 / 1152;
+			break;
+		case "twip":
+			m = 1 / 15;
+			break;
+		case "mi":
+			m = 1 / 6082636.631643;
+			break;
+		case "yd":
+			m = 1 / 3456.043540706;
+			break;
+		default: break;
+	}
+	return x * m + unit
 }
 
 /**
@@ -1215,7 +1215,7 @@ function fromPixel (x, unit) {
  * @func
  */
 function convLength (x, unit) {
-    return fromPixel(toPixel(x), unit); //demux(.* , px)->mux(px, .* )
+	return fromPixel(toPixel(x), unit); //demux(.* , px)->mux(px, .* )
 }
 
 /**
@@ -1227,110 +1227,110 @@ function convLength (x, unit) {
  * @func
  */
 function toBit (x) {
-    var m = 1;
-    switch (x.substring(String(getNumFromStr(x)).length, x.length).remove(" ")) {
-        case "Kb":
-            m = 1e-3;
-            break;
-        case "Mb":
-            m = 1e-6;
-            break;
-        case "Gb":
-            m = 1e-9;
-            break;
-        case "Tb":
-            m = 1e-12;
-            break;
-        case "Pb":
-            m = 1e-15;
-            break;
-        case "Eb":
-            m = 1e-18;
-            break;
-        case "Zb":
-            m = 1e-21;
-            break;
-        case "Yb":
-            m = 1e-24;
-            break;
-        case "o":
-            m = 8;
-            break;
-        case "Ko":
-            m = 8e-3;
-            break;
-        case "Mo":
-            m = 8e-6;
-            break;
-        case "Go":
-            m = 8e-9;
-            break;
-        case "To":
-            m = 8e-12;
-            break;
-        case "Po":
-            m = 8e-15;
-            break;
-        case "Eo":
-            m = 8e-18;
-            break;
-        case "Zo":
-            m = 8e-21;
-            break;
-        case "Yo":
-            m = 8e-24;
-            break;
-        case "Kio":
-            m = 8 * Math.pow(2, -10);
-            break;
-        case "Mio":
-            m = 8* Math.pow(2, -20);
-            break;
-        case "Gio":
-            m = 8 * Math.pow(2, -30);
-            break;
-        case "Tio":
-            m = 8 * Math.pow(2, -40);
-            break;
-        case "Pio":
-            m = 8 * Math.pow(2, -50);
-            break;
-        case "Eio":
-            m = 8 * Math.pow(2, -60);
-            break;
-        case "Zio":
-            m = 8 * Math.pow(2, -70);
-            break;
-        case "Yio":
-            m = 8 * Math.pow(2, -80);
-            break;
-        case "Kib":
-            m = Math.pow(2, -10);
-            break;
-        case "Mib":
-            m = Math.pow(2, -20);
-            break;
-        case "Gib":
-            m = Math.pow(2, -30);
-            break;
-        case "Tib":
-            m = Math.pow(2, -40);
-            break;
-        case "Pib":
-            m = Math.pow(2, -50);
-            break;
-        case "Eib":
-            m = Math.pow(2, -60);
-            break;
-        case "Zib":
-            m = Math.pow(2, -70);
-            break;
-        case "Yib":
-            m = Math.pow(2, -80);
-            break;
-        default: m = 1;
-    }
-    return getNumFromStr(x) * m
+	var m = 1;
+	switch (x.substring(String(getNumFromStr(x)).length, x.length).remove()) {
+		case "Kb":
+			m = 1e-3;
+			break;
+		case "Mb":
+			m = 1e-6;
+			break;
+		case "Gb":
+			m = 1e-9;
+			break;
+		case "Tb":
+			m = 1e-12;
+			break;
+		case "Pb":
+			m = 1e-15;
+			break;
+		case "Eb":
+			m = 1e-18;
+			break;
+		case "Zb":
+			m = 1e-21;
+			break;
+		case "Yb":
+			m = 1e-24;
+			break;
+		case "o":
+			m = 8;
+			break;
+		case "Ko":
+			m = 8e-3;
+			break;
+		case "Mo":
+			m = 8e-6;
+			break;
+		case "Go":
+			m = 8e-9;
+			break;
+		case "To":
+			m = 8e-12;
+			break;
+		case "Po":
+			m = 8e-15;
+			break;
+		case "Eo":
+			m = 8e-18;
+			break;
+		case "Zo":
+			m = 8e-21;
+			break;
+		case "Yo":
+			m = 8e-24;
+			break;
+		case "Kio":
+			m = 8 * Math.pow(2, -10);
+			break;
+		case "Mio":
+			m = 8* Math.pow(2, -20);
+			break;
+		case "Gio":
+			m = 8 * Math.pow(2, -30);
+			break;
+		case "Tio":
+			m = 8 * Math.pow(2, -40);
+			break;
+		case "Pio":
+			m = 8 * Math.pow(2, -50);
+			break;
+		case "Eio":
+			m = 8 * Math.pow(2, -60);
+			break;
+		case "Zio":
+			m = 8 * Math.pow(2, -70);
+			break;
+		case "Yio":
+			m = 8 * Math.pow(2, -80);
+			break;
+		case "Kib":
+			m = Math.pow(2, -10);
+			break;
+		case "Mib":
+			m = Math.pow(2, -20);
+			break;
+		case "Gib":
+			m = Math.pow(2, -30);
+			break;
+		case "Tib":
+			m = Math.pow(2, -40);
+			break;
+		case "Pib":
+			m = Math.pow(2, -50);
+			break;
+		case "Eib":
+			m = Math.pow(2, -60);
+			break;
+		case "Zib":
+			m = Math.pow(2, -70);
+			break;
+		case "Yib":
+			m = Math.pow(2, -80);
+			break;
+		default: m = 1;
+	}
+	return getNumFromStr(x) * m
 }
 
 /**
@@ -1343,110 +1343,110 @@ function toBit (x) {
  * @func
  */
 function fromBit (x, unit) {
-    var m = 1;
-    switch (unit) {
-        case "Kb":
-            m = 1e3;
-            break;
-        case "Mb":
-            m = 1e6;
-            break;
-        case "Gb":
-            m = 1e9;
-            break;
-        case "Tb":
-            m = 1e12;
-            break;
-        case "Pb":
-            m = 1e15;
-            break;
-        case "Eb":
-            m = 1e18;
-            break;
-        case "Zb":
-            m = 1e21;
-            break;
-        case "Yb":
-            m = 1e24;
-            break;
-        case "o":
-            m = 1 / 8;
-            break;
-        case "Ko":
-            m = 1e3 / 8;
-            break;
-        case "Mo":
-            m = 1e6 / 8;
-            break;
-        case "Go":
-            m = 1e9 / 8;
-            break;
-        case "To":
-            m = 1e12 / 8;
-            break;
-        case "Po":
-            m = 1e15 / 8;
-            break;
-        case "Eo":
-            m = 1e18 / 8;
-            break;
-        case "Zo":
-            m = 1e21 / 8;
-            break;
-        case "Yo":
-            m = 1e24 / 8;
-            break;
-        case "Kio":
-            m = Math.pow(2, 10) / 8;
-            break;
-        case "Mio":
-            m = Math.pow(2, 20) / 8;
-            break;
-        case "Gio":
-            m = Math.pow(2, 30) / 8;
-            break;
-        case "Tio":
-            m = Math.pow(2, 40) / 8;
-            break;
-        case "Pio":
-            m = Math.pow(2, 50) / 8;
-            break;
-        case "Eio":
-            m = Math.pow(2, 60) / 8;
-            break;
-        case "Zio":
-            m = Math.pow(2, 70) / 8;
-            break;
-        case "Yio":
-            m = Math.pow(2, 80) / 8;
-            break;
-        case "Kib":
-            m = Math.pow(2, 10);
-            break;
-        case "Mib":
-            m = Math.pow(2, 20);
-            break;
-        case "Gib":
-            m = Math.pow(2, 30);
-            break;
-        case "Tib":
-            m = Math.pow(2, 40);
-            break;
-        case "Pib":
-            m = Math.pow(2, 50);
-            break;
-        case "Eib":
-            m = Math.pow(2, 60);
-            break;
-        case "Zib":
-            m = Math.pow(2, 70);
-            break;
-        case "Yib":
-            m = Math.pow(2, 80);
-            break;
-        default: m = 1;
-    }
-    return x * m + unit
+	var m = 1;
+	switch (unit) {
+		case "Kb":
+			m = 1e3;
+			break;
+		case "Mb":
+			m = 1e6;
+			break;
+		case "Gb":
+			m = 1e9;
+			break;
+		case "Tb":
+			m = 1e12;
+			break;
+		case "Pb":
+			m = 1e15;
+			break;
+		case "Eb":
+			m = 1e18;
+			break;
+		case "Zb":
+			m = 1e21;
+			break;
+		case "Yb":
+			m = 1e24;
+			break;
+		case "o":
+			m = 1 / 8;
+			break;
+		case "Ko":
+			m = 1e3 / 8;
+			break;
+		case "Mo":
+			m = 1e6 / 8;
+			break;
+		case "Go":
+			m = 1e9 / 8;
+			break;
+		case "To":
+			m = 1e12 / 8;
+			break;
+		case "Po":
+			m = 1e15 / 8;
+			break;
+		case "Eo":
+			m = 1e18 / 8;
+			break;
+		case "Zo":
+			m = 1e21 / 8;
+			break;
+		case "Yo":
+			m = 1e24 / 8;
+			break;
+		case "Kio":
+			m = Math.pow(2, 10) / 8;
+			break;
+		case "Mio":
+			m = Math.pow(2, 20) / 8;
+			break;
+		case "Gio":
+			m = Math.pow(2, 30) / 8;
+			break;
+		case "Tio":
+			m = Math.pow(2, 40) / 8;
+			break;
+		case "Pio":
+			m = Math.pow(2, 50) / 8;
+			break;
+		case "Eio":
+			m = Math.pow(2, 60) / 8;
+			break;
+		case "Zio":
+			m = Math.pow(2, 70) / 8;
+			break;
+		case "Yio":
+			m = Math.pow(2, 80) / 8;
+			break;
+		case "Kib":
+			m = Math.pow(2, 10);
+			break;
+		case "Mib":
+			m = Math.pow(2, 20);
+			break;
+		case "Gib":
+			m = Math.pow(2, 30);
+			break;
+		case "Tib":
+			m = Math.pow(2, 40);
+			break;
+		case "Pib":
+			m = Math.pow(2, 50);
+			break;
+		case "Eib":
+			m = Math.pow(2, 60);
+			break;
+		case "Zib":
+			m = Math.pow(2, 70);
+			break;
+		case "Yib":
+			m = Math.pow(2, 80);
+			break;
+		default: m = 1;
+	}
+	return x * m + unit
 }
 
 /**
@@ -1460,7 +1460,7 @@ function fromBit (x, unit) {
  * @func
  */
 function convSize (x, unit) {
-    return fromBit(toBit(x), unit); //demux(.* , bit)->mux(px, .* )
+	return fromBit(toBit(x), unit); //demux(.* , bit)->mux(px, .* )
 }
 
 /**
@@ -1472,44 +1472,44 @@ function convSize (x, unit) {
  * @func
  */
 function toSqMetre (x) {
-    var m = 1;
-    switch (x.substring(String(getNumFromStr(x)).length, x.length).remove(" ")) {
-        case "ha":
-            m = 1e4;
-            break;
-        case "a":
-            m = 100;
-            break;
-        case "km^2":
-            m = 1e6;
-            break;
-        case "dm^2":
-            m = .01;
-            break;
-        case "cm^2":
-            m = 1e-4;
-            break;
-        case "mm^2":
-            m = 1e-6;
-            break;
-        case "mi^2":
-            m = 2589988.11;
-            break;
-        case "acre":
-            m = 4046856422;
-            break;
-        case "yd^2":
-            m = .83612736;
-            break;
-        case "ft^2":
-            m = .09290304;
-            break;
-        case "in^2":
-            m = 6.4516e-4;
-            break;
-        default: break;
-    }
-    return getNumFromStr(x) * m
+	var m = 1;
+	switch (x.substring(String(getNumFromStr(x)).length, x.length).remove()) {
+		case "ha":
+			m = 1e4;
+			break;
+		case "a":
+			m = 100;
+			break;
+		case "km^2":
+			m = 1e6;
+			break;
+		case "dm^2":
+			m = .01;
+			break;
+		case "cm^2":
+			m = 1e-4;
+			break;
+		case "mm^2":
+			m = 1e-6;
+			break;
+		case "mi^2":
+			m = 2589988.11;
+			break;
+		case "acre":
+			m = 4046856422;
+			break;
+		case "yd^2":
+			m = .83612736;
+			break;
+		case "ft^2":
+			m = .09290304;
+			break;
+		case "in^2":
+			m = 6.4516e-4;
+			break;
+		default: break;
+	}
+	return getNumFromStr(x) * m
 }
 
 /**
@@ -1522,44 +1522,44 @@ function toSqMetre (x) {
  * @func
  */
 function fromSqMetre (x, unit) {
-    var m = 1;
-    switch (unit) {
-        case "ha":
-            m = 1e-4;
-            break;
-        case "a":
-            m = .01;
-            break;
-        case "km^2":
-            m = 1e-6;
-            break;
-        case "dm^2":
-            m = 100;
-            break;
-        case "cm^2":
-            m = 1e4;
-            break;
-        case "mm^2":
-            m = 1e6;
-            break;
-        case "mi^2":
-            m = 1 / 2589988.11;
-            break;
-        case "acre":
-            m = 1 / 4046856422;
-            break;
-        case "yd^2":
-            m = 1 / .83612736;
-            break;
-        case "ft^2":
-            m = 1 / .09290304;
-            break;
-        case "in^2":
-            m = 1 / 6.4516e-4;
-            break;
-        default: break;
-    }
-    return x * m + unit
+	var m = 1;
+	switch (unit) {
+		case "ha":
+			m = 1e-4;
+			break;
+		case "a":
+			m = .01;
+			break;
+		case "km^2":
+			m = 1e-6;
+			break;
+		case "dm^2":
+			m = 100;
+			break;
+		case "cm^2":
+			m = 1e4;
+			break;
+		case "mm^2":
+			m = 1e6;
+			break;
+		case "mi^2":
+			m = 1 / 2589988.11;
+			break;
+		case "acre":
+			m = 1 / 4046856422;
+			break;
+		case "yd^2":
+			m = 1 / .83612736;
+			break;
+		case "ft^2":
+			m = 1 / .09290304;
+			break;
+		case "in^2":
+			m = 1 / 6.4516e-4;
+			break;
+		default: break;
+	}
+	return x * m + unit
 }
 
 /**
@@ -1573,7 +1573,7 @@ function fromSqMetre (x, unit) {
  * @func
  */
 function convArea (x, unit) {
-    return fromPixel(toPixel(x), unit); //demux(.* , px)->mux(px, .* )
+	return fromPixel(toPixel(x), unit); //demux(.* , px)->mux(px, .* )
 }
 
 /**
@@ -1585,20 +1585,20 @@ function convArea (x, unit) {
  * @func
  */
 function toLpkm (x) {
-    var m = 1;
-    switch (x.substring(String(getNumFromStr(x)).length, x.length).remove(" ")) {
-        case "mipgalUK": //Miles/Gallon (UK)
-            m = 2.352392798;
-            break;
-        case "mipgal":
-            m = 2.352392798;
-            break;
-        case "mipgalUS": //Miles/Gallon (US)
-            m = 2.825364894;
-            break;
-        default: break;
-    }
-    return getNumFromStr(x) * m
+	var m = 1;
+	switch (x.substring(String(getNumFromStr(x)).length, x.length).remove()) {
+		case "mipgalUK": //Miles/Gallon (UK)
+			m = 2.352392798;
+			break;
+		case "mipgal":
+			m = 2.352392798;
+			break;
+		case "mipgalUS": //Miles/Gallon (US)
+			m = 2.825364894;
+			break;
+		default: break;
+	}
+	return getNumFromStr(x) * m
 }
 
 /**
@@ -1611,20 +1611,20 @@ function toLpkm (x) {
  * @func
  */
 function fromLpkm (x, unit) {
-    var m = 1;
-    switch (unit) {
-        case "mipgalUK": //Miles/Gallon (UK)
-            m = 1 / 2.352392798;
-            break;
-        case "mipgal":
-            m = 1 / 2.352392798;
-            break;
-        case "mipgalUS": //Miles/Gallon (US)
-            m = 1 / 2.825364894;
-            break;
-        default: break;
-    }
-    return x * m + unit
+	var m = 1;
+	switch (unit) {
+		case "mipgalUK": //Miles/Gallon (UK)
+			m = 1 / 2.352392798;
+			break;
+		case "mipgal":
+			m = 1 / 2.352392798;
+			break;
+		case "mipgalUS": //Miles/Gallon (US)
+			m = 1 / 2.825364894;
+			break;
+		default: break;
+	}
+	return x * m + unit
 }
 
 /**
@@ -1638,7 +1638,7 @@ function fromLpkm (x, unit) {
  * @func
  */
 function convFuel (x, unit) {
-    return fromLpkm(toLpkm(x), unit); //demux(.* , px)->mux(px, .* )
+	return fromLpkm(toLpkm(x), unit); //demux(.* , px)->mux(px, .* )
 }
 
 /**
@@ -1650,23 +1650,23 @@ function convFuel (x, unit) {
  * @func
  */
 function toW (x) {
-    var m = 1;
-    switch (x.substring(String(getNumFromStr(x)).length, x.length).remove(" ")) {
-        case "btuph": //Btu/h
-            m = .2930710703;
-            break;
-        case "hp":
-            m = 735.4990028;
-            break;
-        case "kW":
-            m = 1e3;
-            break;
-        case "tonpref": //Ton of refrigeration (ton/ref)
-            m = 3516.852842;
-            break;
-        default: break;
-    }
-    return getNumFromStr(x) * m
+	var m = 1;
+	switch (x.substring(String(getNumFromStr(x)).length, x.length).remove()) {
+		case "btuph": //Btu/h
+			m = .2930710703;
+			break;
+		case "hp":
+			m = 735.4990028;
+			break;
+		case "kW":
+			m = 1e3;
+			break;
+		case "tonpref": //Ton of refrigeration (ton/ref)
+			m = 3516.852842;
+			break;
+		default: break;
+	}
+	return getNumFromStr(x) * m
 }
 
 /**
@@ -1679,23 +1679,23 @@ function toW (x) {
  * @func
  */
 function fromW (x, unit) {
-    var m = 1;
-    switch (unit) {
-        case "btuph": //Btu/h
-            m = 1 / .2930710703;
-            break;
-        case "hp":
-            m = 1 / 735.4990028;
-            break;
-        case "kW":
-            m = 1e-3;
-            break;
-        case "tonpref": //Ton of refrigeration (ton/ref)
-            m = 1 / 3516.852842;
-            break;
-        default: break;
-    }
-    return x * m + unit
+	var m = 1;
+	switch (unit) {
+		case "btuph": //Btu/h
+			m = 1 / .2930710703;
+			break;
+		case "hp":
+			m = 1 / 735.4990028;
+			break;
+		case "kW":
+			m = 1e-3;
+			break;
+		case "tonpref": //Ton of refrigeration (ton/ref)
+			m = 1 / 3516.852842;
+			break;
+		default: break;
+	}
+	return x * m + unit
 }
 
 /**
@@ -1709,7 +1709,7 @@ function fromW (x, unit) {
  * @func
  */
 function convPower (x, unit) {
-    return fromW(toW(x), unit); //demux(.* , px)->mux(px, .* )
+	return fromW(toW(x), unit); //demux(.* , px)->mux(px, .* )
 }
 
 /**
@@ -1721,38 +1721,38 @@ function convPower (x, unit) {
  * @func
  */
 function toBar (x) {
-    var m = 1;
-    switch (x.substring(String(getNumFromStr(x)).length, x.length).remove(" ")) {
-        case "atm":
-            m = 1.01325;
-            break;
-        case "mbar":
-            m = 1e-3;
-            break;
-        case "inHg": //Inch Mercury
-            m = .03386388158;
-            break;
-        case "mmHg": //MilliMetre Mercury
-            m = 0.001333223684;
-            break;
-        case "MPa": //Mega Pascal
-            m = 10;
-            break;
-        case "KPa":
-            m = .01;
-            break;
-        case "Pa": //Pascal (N/m^2)
-            m = 1e-5;
-            break;
-        case "psf": //Pound/foot^2
-            m = 4.788025898e-4;
-            break;
-        case "psi": //Pound/in^2
-            m = .06894757293;
-            break;
-        default: break;
-    }
-    return getNumFromStr(x) * m
+	var m = 1;
+	switch (x.substring(String(getNumFromStr(x)).length, x.length).remove()) {
+		case "atm":
+			m = 1.01325;
+			break;
+		case "mbar":
+			m = 1e-3;
+			break;
+		case "inHg": //Inch Mercury
+			m = .03386388158;
+			break;
+		case "mmHg": //MilliMetre Mercury
+			m = 0.001333223684;
+			break;
+		case "MPa": //Mega Pascal
+			m = 10;
+			break;
+		case "KPa":
+			m = .01;
+			break;
+		case "Pa": //Pascal (N/m^2)
+			m = 1e-5;
+			break;
+		case "psf": //Pound/foot^2
+			m = 4.788025898e-4;
+			break;
+		case "psi": //Pound/in^2
+			m = .06894757293;
+			break;
+		default: break;
+	}
+	return getNumFromStr(x) * m
 }
 
 /**
@@ -1765,38 +1765,38 @@ function toBar (x) {
  * @func
  */
 function fromBar (x, unit) {
-    var m = 1;
-    switch (unit) {
-        case "atm":
-            m = 1 / 1.01325;
-            break;
-        case "mbar":
-            m = 1e3;
-            break;
-        case "inHg": //Inch Mercury
-            m = 1 / .03386388158;
-            break;
-        case "mmHg": //MilliMetre Mercury
-            m = 1 / 0.001333223684;
-            break;
-        case "MPa": //Mega Pascal
-            m = .1;
-            break;
-        case "KPa":
-            m = 100;
-            break;
-        case "Pa": //Pascal (N/m^2)
-            m = 1e5;
-            break;
-        case "psf": //Pound/foot^2
-            m = 2088.5434233296623;
-            break;
-        case "psi": //Pound/in^2
-            m = 1 / .06894757293;
-            break;
-        default: break;
-    }
-    return x * m + unit
+	var m = 1;
+	switch (unit) {
+		case "atm":
+			m = 1 / 1.01325;
+			break;
+		case "mbar":
+			m = 1e3;
+			break;
+		case "inHg": //Inch Mercury
+			m = 1 / .03386388158;
+			break;
+		case "mmHg": //MilliMetre Mercury
+			m = 1 / 0.001333223684;
+			break;
+		case "MPa": //Mega Pascal
+			m = .1;
+			break;
+		case "KPa":
+			m = 100;
+			break;
+		case "Pa": //Pascal (N/m^2)
+			m = 1e5;
+			break;
+		case "psf": //Pound/foot^2
+			m = 2088.5434233296623;
+			break;
+		case "psi": //Pound/in^2
+			m = 1 / .06894757293;
+			break;
+		default: break;
+	}
+	return x * m + unit
 }
 
 /**
@@ -1810,7 +1810,7 @@ function fromBar (x, unit) {
  * @func
  */
 function convPressure (x, unit) {
-    return fromBar(toBar(x), unit); //demux(.* , px)->mux(px, .* )
+	return fromBar(toBar(x), unit); //demux(.* , px)->mux(px, .* )
 }
 
 /**
@@ -1822,35 +1822,35 @@ function convPressure (x, unit) {
  * @func
  */
 function toMps (x) {
-    var m = 1;
-    switch (x.substring(String(getNumFromStr(x)).length, x.length).remove(" ")) {
-        case "kmph": //km/h
-            m = .277777778;
-            break;
-        case "mph": //miles/h
-            m = .44704;
-            break;
-        case "ftpmin": //Feet per minute (ft/min)
-            m = .00508;
-            break;
-        case "ftps": //Feet per second
-            m = .3048;
-            break;
-        case "knot":
-            m = .5144444444;
-            break;
-        case "c(v)": //Light speed (celerity)
-            m = 299792458;
-            break;
-        case "Mach(a)": //Sound speed
-            m = 343.2;
-            break;
-        case "Mach(w)": //Sound speed
-            m = 1484;
-            break;
-        default: break;
-    }
-    return getNumFromStr(x) * m
+	var m = 1;
+	switch (x.substring(String(getNumFromStr(x)).length, x.length).remove()) {
+		case "kmph": //km/h
+			m = .277777778;
+			break;
+		case "mph": //miles/h
+			m = .44704;
+			break;
+		case "ftpmin": //Feet per minute (ft/min)
+			m = .00508;
+			break;
+		case "ftps": //Feet per second
+			m = .3048;
+			break;
+		case "knot":
+			m = .5144444444;
+			break;
+		case "c(v)": //Light speed (celerity)
+			m = 299792458;
+			break;
+		case "Mach(a)": //Sound speed
+			m = 343.2;
+			break;
+		case "Mach(w)": //Sound speed
+			m = 1484;
+			break;
+		default: break;
+	}
+	return getNumFromStr(x) * m
 }
 
 /**
@@ -1863,35 +1863,35 @@ function toMps (x) {
  * @func
  */
 function fromMps (x, unit) {
-    var m = 1;
-    switch (unit) {
-        case "kmph": //km/h
-            m = 1 / .277777778;
-            break;
-        case "mph": //miles/h
-            m = 1 / .44704;
-            break;
-        case "ftpmin": //Feet per minute (ft/min)
-            m = 1 / .00508;
-            break;
-        case "ftps": //Feet per second
-            m = 1 / .3048;
-            break;
-        case "knot":
-            m = 1 / .5144444444;
-            break;
-        case "c(v)": //Light speed (celerity)
-            m = 1 / 299792458;
-            break;
-        case "Mach(a)": //Sound speed
-            m = 1 / 343.2;
-            break;
-        case "Mach(w)": //Sound speed
-            m = 1 / 1484;
-            break;
-        default: break;
-    }
-    return x * m + unit
+	var m = 1;
+	switch (unit) {
+		case "kmph": //km/h
+			m = 1 / .277777778;
+			break;
+		case "mph": //miles/h
+			m = 1 / .44704;
+			break;
+		case "ftpmin": //Feet per minute (ft/min)
+			m = 1 / .00508;
+			break;
+		case "ftps": //Feet per second
+			m = 1 / .3048;
+			break;
+		case "knot":
+			m = 1 / .5144444444;
+			break;
+		case "c(v)": //Light speed (celerity)
+			m = 1 / 299792458;
+			break;
+		case "Mach(a)": //Sound speed
+			m = 1 / 343.2;
+			break;
+		case "Mach(w)": //Sound speed
+			m = 1 / 1484;
+			break;
+		default: break;
+	}
+	return x * m + unit
 }
 
 /**
@@ -1905,7 +1905,7 @@ function fromMps (x, unit) {
  * @func
  */
 function convSpeed (x, unit) {
-    return fromMps(toMps(x), unit); //demux(.* , px)->mux(px, .* )
+	return fromMps(toMps(x), unit); //demux(.* , px)->mux(px, .* )
 }
 
 /**
@@ -1917,20 +1917,20 @@ function convSpeed (x, unit) {
  * @func
  */
 function toCelsius (x) {
-    var m = 1;
-    switch (x.substring(String(getNumFromStr(x)).length, x.length).remove(" ")) {
-        case "°F": //Fahrenheit
-            m = -17.22222222;
-            break;
-        case "K": //Kelvin
-            m = -272.15;
-            break;
-        case "°Ra": //Rankine
-            m = -272.5944444;
-            break;
-        default: break;
-    }
-    return getNumFromStr(x) * m
+	var m = 1;
+	switch (x.substring(String(getNumFromStr(x)).length, x.length).remove()) {
+		case "°F": //Fahrenheit
+			m = -17.22222222;
+			break;
+		case "K": //Kelvin
+			m = -272.15;
+			break;
+		case "°Ra": //Rankine
+			m = -272.5944444;
+			break;
+		default: break;
+	}
+	return getNumFromStr(x) * m
 }
 
 /**
@@ -1943,20 +1943,20 @@ function toCelsius (x) {
  * @func
  */
 function fromCelsius (x, unit) {
-    var m = 1;
-    switch (unit) {
-        case "°F": //Fahrenheit
-            m = 1 / -17.22222222;
-            break;
-        case "K": //Kelvin
-            m = 1 / -272.15;
-            break;
-        case "°Ra": //Rankine
-            m = 1 / -272.5944444;
-            break;
-        default: break;
-    }
-    return x * m + unit
+	var m = 1;
+	switch (unit) {
+		case "°F": //Fahrenheit
+			m = 1 / -17.22222222;
+			break;
+		case "K": //Kelvin
+			m = 1 / -272.15;
+			break;
+		case "°Ra": //Rankine
+			m = 1 / -272.5944444;
+			break;
+		default: break;
+	}
+	return x * m + unit
 }
 
 /**
@@ -1970,7 +1970,7 @@ function fromCelsius (x, unit) {
  * @func
  */
 function convTemperature (x, unit) {
-    return fromCelsius(toCelsius(x), unit); //demux(.* , px)->mux(px, .* )
+	return fromCelsius(toCelsius(x), unit); //demux(.* , px)->mux(px, .* )
 }
 
 /**
@@ -1982,68 +1982,68 @@ function convTemperature (x, unit) {
  * @func
  */
 function toCbMetre (x) {
-    var m = 1;
-    switch (x.substring(String(getNumFromStr(x)).length, x.length).remove(" ")) {
-        case "L": //Litre
-            m = 1e-3;
-            break;
-        case "dm^3": //Cubic decimetre
-            m = 1e-3;
-            break;
-        case "dL": //decilitre
-            m = 1e-4;
-            break;
-        case "cL": //centilitre
-            m = 1e-5;
-            break;
-        case "mL": //millilitre
-            m = 1e-6;
-            break;
-        case "cm^3": //Cubic centimetre
-            m = 1e-6;
-            break;
-        case "mm^3": //Cubic millimetre
-            m = 1e-9;
-            break;
-        case "tblspn": //Tablespoon
-            m = 1.5e-5;
-            break;
-        case "tspn": //Teaspoon
-            m = 5e-6;
-            break;
-        case "yd^3": //Cubic yard
-            m = .764554858;
-            break;
-        case "ft^3": //Cubic foot
-            m = .02831684659;
-            break;
-        case "in^3": //Cubic inch
-            m = 1.6387064e-5;
-            break;
-        case "bushel": //US bushel
-            m = .03523907017;
-            break;
-        case "barrel": //UK barrel
-            m = .16365924;
-            break;
-        case "gal": //UK gallon
-            m = 4.54609e-3;
-            break;
-        case "fl oz": //UK fluid ounce
-            m = 2.84130625e-5;
-            break;
-        case "pint": //UK pint
-            m = 5.6826125e-4;
-            break;
-        case "quart": //UK quart
-            m = 1.1365225e-3;
-            break;
-        case "cup": //US cup
-            m = 2.365882365e-4;
-            break;
-        default: break;
-    }
-    return getNumFromStr(x) * m
+	var m = 1;
+	switch (x.substring(String(getNumFromStr(x)).length, x.length).remove()) {
+		case "L": //Litre
+			m = 1e-3;
+			break;
+		case "dm^3": //Cubic decimetre
+			m = 1e-3;
+			break;
+		case "dL": //decilitre
+			m = 1e-4;
+			break;
+		case "cL": //centilitre
+			m = 1e-5;
+			break;
+		case "mL": //millilitre
+			m = 1e-6;
+			break;
+		case "cm^3": //Cubic centimetre
+			m = 1e-6;
+			break;
+		case "mm^3": //Cubic millimetre
+			m = 1e-9;
+			break;
+		case "tblspn": //Tablespoon
+			m = 1.5e-5;
+			break;
+		case "tspn": //Teaspoon
+			m = 5e-6;
+			break;
+		case "yd^3": //Cubic yard
+			m = .764554858;
+			break;
+		case "ft^3": //Cubic foot
+			m = .02831684659;
+			break;
+		case "in^3": //Cubic inch
+			m = 1.6387064e-5;
+			break;
+		case "bushel": //US bushel
+			m = .03523907017;
+			break;
+		case "barrel": //UK barrel
+			m = .16365924;
+			break;
+		case "gal": //UK gallon
+			m = 4.54609e-3;
+			break;
+		case "fl oz": //UK fluid ounce
+			m = 2.84130625e-5;
+			break;
+		case "pint": //UK pint
+			m = 5.6826125e-4;
+			break;
+		case "quart": //UK quart
+			m = 1.1365225e-3;
+			break;
+		case "cup": //US cup
+			m = 2.365882365e-4;
+			break;
+		default: break;
+	}
+	return getNumFromStr(x) * m
 }
 
 /**
@@ -2056,68 +2056,68 @@ function toCbMetre (x) {
  * @func
  */
 function fromCbMetre (x, unit) {
-    var m = 1;
-    switch (unit) {
-        case "L": //Litre
-            m = 1e3;
-            break;
-        case "dm^3": //Cubic decimetre
-            m = 1e3;
-            break;
-        case "dL": //decilitre
-            m = 1e4;
-            break;
-        case "cL": //centilitre
-            m = 1e5;
-            break;
-        case "mL": //millilitre
-            m = 1e6;
-            break;
-        case "cm^3": //Cubic centimetre
-            m = 1e6;
-            break;
-        case "mm^3": //Cubic millimetre
-            m = 1e9;
-            break;
-        case "tblspn": //Tablespoon
-            m = 1 / 1.5e-5;
-            break;
-        case "tspn": //Teaspoon
-            m = 1 / 5e-6;
-            break;
-        case "yd^3": //Cubic yard
-            m = 1 / .764554858;
-            break;
-        case "ft^3": //Cubic foot
-            m = 1 / .02831684659;
-            break;
-        case "in^3": //Cubic inch
-            m = 1 / 1.6387064e-5;
-            break;
-        case "bushel": //US bushel
-            m = 1 / .03523907017;
-            break;
-        case "barrel": //UK barrel
-            m = 1 / .16365924;
-            break;
-        case "gal": //UK gallon
-            m = 1 / 4.54609e-3;
-            break;
-        case "fl oz": //UK fluid ounce
-            m = 1 / 2.84130625e-5;
-            break;
-        case "pint": //UK pint
-            m = 1 / 5.6826125e-4;
-            break;
-        case "quart": //UK quart
-            m = 1 / 1.1365225e-3;
-            break;
-        case "cup": //US cup
-            m = 1 / 2.365882365e-4;
-            break;
-        default: break;
-    }
-    return x * m + unit
+	var m = 1;
+	switch (unit) {
+		case "L": //Litre
+			m = 1e3;
+			break;
+		case "dm^3": //Cubic decimetre
+			m = 1e3;
+			break;
+		case "dL": //decilitre
+			m = 1e4;
+			break;
+		case "cL": //centilitre
+			m = 1e5;
+			break;
+		case "mL": //millilitre
+			m = 1e6;
+			break;
+		case "cm^3": //Cubic centimetre
+			m = 1e6;
+			break;
+		case "mm^3": //Cubic millimetre
+			m = 1e9;
+			break;
+		case "tblspn": //Tablespoon
+			m = 1 / 1.5e-5;
+			break;
+		case "tspn": //Teaspoon
+			m = 1 / 5e-6;
+			break;
+		case "yd^3": //Cubic yard
+			m = 1 / .764554858;
+			break;
+		case "ft^3": //Cubic foot
+			m = 1 / .02831684659;
+			break;
+		case "in^3": //Cubic inch
+			m = 1 / 1.6387064e-5;
+			break;
+		case "bushel": //US bushel
+			m = 1 / .03523907017;
+			break;
+		case "barrel": //UK barrel
+			m = 1 / .16365924;
+			break;
+		case "gal": //UK gallon
+			m = 1 / 4.54609e-3;
+			break;
+		case "fl oz": //UK fluid ounce
+			m = 1 / 2.84130625e-5;
+			break;
+		case "pint": //UK pint
+			m = 1 / 5.6826125e-4;
+			break;
+		case "quart": //UK quart
+			m = 1 / 1.1365225e-3;
+			break;
+		case "cup": //US cup
+			m = 1 / 2.365882365e-4;
+			break;
+		default: break;
+	}
+	return x * m + unit
 }
 
 /**
@@ -2131,7 +2131,7 @@ function fromCbMetre (x, unit) {
  * @func
  */
 function convVolume (x, unit) {
-    return fromCbMetre(toCbMetre(x), unit); //demux(.* , px)->mux(px, .* )
+	return fromCbMetre(toCbMetre(x), unit); //demux(.* , px)->mux(px, .* )
 }
 
 /**
@@ -2143,29 +2143,29 @@ function convVolume (x, unit) {
  * @func
  */
 function toGram (x) {
-    var m = 1;
-    switch (x.substring(String(getNumFromStr(x)).length, x.length).remove(" ")) {
-        case "kg":
-            m = 1e3;
-            break;
-        case "mg":
-            m = 1e-3;
-            break;
-        case "lb": //Pound
-            m = 453.59237;
-            break;
-        case "oz": //Ounce
-            m = 28.34952312;
-            break;
-        case "ton": //Metric ton
-            m = 1e6;
-            break;
-        case "st": //Stone
-            m = 6350.29318;
-            break;
-        default: break;
-    }
-    return getNumFromStr(x) * m
+	var m = 1;
+	switch (x.substring(String(getNumFromStr(x)).length, x.length).remove()) {
+		case "kg":
+			m = 1e3;
+			break;
+		case "mg":
+			m = 1e-3;
+			break;
+		case "lb": //Pound
+			m = 453.59237;
+			break;
+		case "oz": //Ounce
+			m = 28.34952312;
+			break;
+		case "ton": //Metric ton
+			m = 1e6;
+			break;
+		case "st": //Stone
+			m = 6350.29318;
+			break;
+		default: break;
+	}
+	return getNumFromStr(x) * m
 }
 
 /**
@@ -2178,29 +2178,29 @@ function toGram (x) {
  * @func
  */
 function fromGram (x, unit) {
-    var m = 1;
-    switch (unit) {
-        case "kg":
-            m = 1e-3;
-            break;
-        case "mg":
-            m = 1e3;
-            break;
-        case "lb": //Pound
-            m = 1 / 453.59237;
-            break;
-        case "oz": //Ounce
-            m = 1 / 28.34952312;
-            break;
-        case "ton": //Metric ton
-            m = 1e-6;
-            break;
-        case "st": //Stone
-            m = 1 / 6350.29318;
-            break;
-        default: break;
-    }
-    return x * m + unit
+	var m = 1;
+	switch (unit) {
+		case "kg":
+			m = 1e-3;
+			break;
+		case "mg":
+			m = 1e3;
+			break;
+		case "lb": //Pound
+			m = 1 / 453.59237;
+			break;
+		case "oz": //Ounce
+			m = 1 / 28.34952312;
+			break;
+		case "ton": //Metric ton
+			m = 1e-6;
+			break;
+		case "st": //Stone
+			m = 1 / 6350.29318;
+			break;
+		default: break;
+	}
+	return x * m + unit
 }
 
 /**
@@ -2214,7 +2214,7 @@ function fromGram (x, unit) {
  * @func
  */
 function convWeight (x, unit) {
-    return fromGram(toGram(x), unit); //demux(.* , px)->mux(px, .* )
+	return fromGram(toGram(x), unit); //demux(.* , px)->mux(px, .* )
 }
 
 /**
@@ -2228,18 +2228,18 @@ function convWeight (x, unit) {
  * @func
  */
 function range (min, inc, max, nbDec) {
-    var val = [], n = 0;
-    if (min && !inc && !max && max != 0) return range(0, 1, min);
-    else if (min && inc && !max && max != 0) return range(0, inc, min);
-    if (!min) min = 0;
-    if (!inc) inc = 1;
-    if (!max) max = 100;
-    if (inc > 0) { //Ascending order
-        for (var i = min; i <= max; i += inc) val[n++] = Number(i).toNDec(nbDec);
-    } else { //Descending order
-        for (i = min; i >= max; i -= inc) val[n++] = Number(i).toNDec(nbDec);
-    }
-    return val
+	var val = [], n = 0;
+	if (min && !inc && !max && max != 0) return range(0, 1, min);
+	else if (min && inc && !max && max != 0) return range(0, inc, min);
+	if (!min) min = 0;
+	if (!inc) inc = 1;
+	if (!max) max = 100;
+	if (inc > 0) { //Ascending order
+		for (var i = min; i <= max; i += inc) val[n++] = Number(i).toNDec(nbDec);
+	} else { //Descending order
+		for (i = min; i >= max; i -= inc) val[n++] = Number(i).toNDec(nbDec);
+	}
+	return val
 }
 
 /**
@@ -2254,13 +2254,13 @@ function range (min, inc, max, nbDec) {
  * @func
  */
 function range2base (min, inc, max, b) {
-    var val = [], n = 0;
-    if (inc > 0) {
-        for (var i = min; i <= max; i += inc) val[n++] = conv(i, 10, b);
-    } else {
-        for (i = min; i >= max; i += inc) val[n++] = conv(i, 10, b);
-    }
-    return val
+	var val = [], n = 0;
+	if (inc > 0) {
+		for (var i = min; i <= max; i += inc) val[n++] = conv(i, 10, b);
+	} else {
+		for (i = min; i >= max; i += inc) val[n++] = conv(i, 10, b);
+	}
+	return val
 }
 
 /**
@@ -2274,8 +2274,8 @@ function range2base (min, inc, max, b) {
  * @func
  */
 function mixedRange (min, inc, max, noRepeat) {
-    var r = range(min, inc, max);
-    return noRepeat? r.shuffle(): r.rand(r.length);
+	var r = range(min, inc, max);
+	return noRepeat? r.shuffle(): r.rand();
 }
 
 /**
@@ -2286,11 +2286,11 @@ function mixedRange (min, inc, max, noRepeat) {
  * @func
  */
 function fisherYatesShuffle (obj) { //Inspired by https://Github.com/duereg/js-algorithms/blob/master/lib/algorithms/1-strings/shuffle.js
-    var l = obj.length;
-    while (l > 0) {
-        if (obj.hasOwnProperty(l)) swap(obj, l, Math.floor(Math.random() * l--));
-    }
-    return obj
+	var l = obj.length;
+	while (l > 0) {
+		if (obj.hasOwnProperty(l)) swap(obj, l, Math.floor(Math.random() * l--));
+	}
+	return obj
 }
 
 /**
@@ -2303,14 +2303,14 @@ function fisherYatesShuffle (obj) { //Inspired by https://Github.com/duereg/js-a
  * @func
  */
 function vectorProd (v1, v2) { //V1 x v2
-    var x = [], prod = [0, 0, 0];
-    x[0] = ["i", "j", "k"];
-    x[1] = [v1.x, v1.y, v1.z];
-    x.last([v2.x, v2.y, v2.z]);
-    prod[0] = v1.y * v2.z - v1.z * v2.y; //I
-    prod[1] = v1.x * v2.z - v1.z * v2.x; //J
-    prod.last(v1.x * v2.y - v1.y * v2.x); //K
-    return prod[0] + "i + " + prod[1] + "j + " + prod.last() + "k"
+	var x = [], prod = [0, 0, 0];
+	x[0] = ["i", "j", "k"];
+	x[1] = [v1.x, v1.y, v1.z];
+	x.last([v2.x, v2.y, v2.z]);
+	prod[0] = v1.y * v2.z - v1.z * v2.y; //I
+	prod[1] = v1.x * v2.z - v1.z * v2.x; //J
+	prod.last(v1.x * v2.y - v1.y * v2.x); //K
+	return prod[0] + "i + " + prod[1] + "j + " + prod.last() + "k"
 }
 
 /**
@@ -2322,7 +2322,7 @@ function vectorProd (v1, v2) { //V1 x v2
  * @func
  */
 function vector2Point (v) { //Get the conversion of the vector to a point
-    return new Pt(v.x, v.y, v.z)
+	return new Pt(v.x, v.y, v.z)
 }
 
 /**
@@ -2334,7 +2334,7 @@ function vector2Point (v) { //Get the conversion of the vector to a point
  * @func
  */
 function vector2PointForm (r) {
-    return "(" + (r.split("i")[0]).clean() + ", " + (r.split("i")[1].split("j")[0].slice(1, r.split("i")[1].split("j")[0].length)).clean() + ", " + (r.split("i")[1].split("j")[1].split("k")[0]).clean() + ")";
+	return "(" + (r.split("i")[0]).clean() + ", " + (r.split("i")[1].split("j")[0].slice(1, r.split("i")[1].split("j")[0].length)).clean() + ", " + (r.split("i")[1].split("j")[1].split("k")[0]).clean() + ")";
 }
 
 /**
@@ -2347,7 +2347,7 @@ function vector2PointForm (r) {
  * @func
  */
 function scalarProd (v1, v2) {
-    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z
+	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z
 }
 
 /**
@@ -2361,7 +2361,7 @@ function scalarProd (v1, v2) {
  * @func
  */
 function union (a, b, c, toSort) {
-    return toSort? rmDuplicates(a.concat(b, c)).quickSort(): rmDuplicates(a.concat(b, c))
+	return toSort? rmDuplicates(a.concat(b, c)).quickSort(): rmDuplicates(a.concat(b, c))
 }
 
 /**
@@ -2375,18 +2375,18 @@ function union (a, b, c, toSort) {
  * @func
  */
 function intersection (a, b, c, toSort) {
-    var inter = [];
-    a = a.quickSort();
-    b = b.quickSort();
-    c = c? c.quickSort(): false;
+	var inter = [];
+	a = a.quickSort();
+	b = b.quickSort();
+	c = c? c.quickSort(): false;
 
-    for (var i in a) {
-        if(a.hasOwnProperty(i)) {
-            if (b.has(a[i]) && isNon(c)) inter.push(a[i]);
-            else if (b.has(a[i]) && c.has(a[i])) inter.push(a[i]);
-        }
-    }
-    return toSort? rmDuplicates(inter).quickSort(): rmDuplicates(inter)
+	for (var i in a) {
+		if(a.hasOwnProperty(i)) {
+			if (b.has(a[i]) && isNon(c)) inter.push(a[i]);
+			else if (b.has(a[i]) && c.has(a[i])) inter.push(a[i]);
+		}
+	}
+	return toSort? rmDuplicates(inter).quickSort(): rmDuplicates(inter)
 }
 
 /**
@@ -2400,18 +2400,18 @@ function intersection (a, b, c, toSort) {
  * @func
  */
 function complement (a, b, c, toSort) {
-    var cpt = [];
-    a = a.quickSort();
-    b = b.quickSort();
-    c = c? c.quickSort(): false;
+	var cpt = [];
+	a = a.quickSort();
+	b = b.quickSort();
+	c = c? c.quickSort(): false;
 
-    for (var i in a) {
-        if(a.hasOwnProperty(i)) {
-            if (b.indexOf(a[i]) === -1 && isNon(c)) cpt.push(a[i]);
-            else if (b.indexOf(a[i]) === -1 && c.indexOf(a[i]) === -1) cpt.push(a[i]);
-        }
-    }
-    return toSort? rmDuplicates(cpt).quickSort(): rmDuplicates(cpt)
+	for (var i in a) {
+		if(a.hasOwnProperty(i)) {
+			if (b.indexOf(a[i]) === -1 && isNon(c)) cpt.push(a[i]);
+			else if (b.indexOf(a[i]) === -1 && c.indexOf(a[i]) === -1) cpt.push(a[i]);
+		}
+	}
+	return toSort? rmDuplicates(cpt).quickSort(): rmDuplicates(cpt)
 }
 
 /**
@@ -2425,28 +2425,28 @@ function complement (a, b, c, toSort) {
  * @func
  */
 function symDif (a, b, c, toSort) {
-    var sd = [];
-    a = a.quickSort();
-    b = b.quickSort();
-    c = c? c.quickSortort(): false;
-    for (var i in a) {
-        if(a.hasOwnProperty(i)) {
-            if (b.indexOf(a[i]) === -1 && isNon(c)) sd.push(a[i]);
-            else if (b.indexOf(a[i]) === -1 && c.indexOf(a[i]) === -1) sd.push(a[i]);
-        }
-    }
-    for (i in b) {
-        if(b.hasOwnProperty(i)) {
-            if (a.indexOf(b[i]) === -1 && isNon(c)) sd.push(b[i]);
-            else if (a.indexOf(b[i]) === -1 && c.indexOf(b[i]) === -1) sd.push(b[i])
-        }
-    }
-    if (c) {
-        for (i in c) {
-            if (c.hasOwnProperty(i) && a.indexOf(c[i]) === -1 && b.indexOf(c[i]) === -1) sd.push(c[i]);
-        }
-    }
-    return toSort? rmDuplicates(sd).quickSort(): rmDuplicates(sd)
+	var sd = [];
+	a = a.quickSort();
+	b = b.quickSort();
+	c = c? c.quickSortort(): false;
+	for (var i in a) {
+		if(a.hasOwnProperty(i)) {
+			if (b.indexOf(a[i]) === -1 && isNon(c)) sd.push(a[i]);
+			else if (b.indexOf(a[i]) === -1 && c.indexOf(a[i]) === -1) sd.push(a[i]);
+		}
+	}
+	for (i in b) {
+		if(b.hasOwnProperty(i)) {
+			if (a.indexOf(b[i]) === -1 && isNon(c)) sd.push(b[i]);
+			else if (a.indexOf(b[i]) === -1 && c.indexOf(b[i]) === -1) sd.push(b[i])
+		}
+	}
+	if (c) {
+		for (i in c) {
+			if (c.hasOwnProperty(i) && a.indexOf(c[i]) === -1 && b.indexOf(c[i]) === -1) sd.push(c[i]);
+		}
+	}
+	return toSort? rmDuplicates(sd).quickSort(): rmDuplicates(sd)
 }
 
 /**
@@ -2458,11 +2458,11 @@ function symDif (a, b, c, toSort) {
  * @func
  */
 function bitStr (a, b) {
-    var ba = []; //Ba in b
-    for(var i in a) {
-        if(a.hasOwnProperty(i)) ba[i] = (a[i] === b[i])? 1: 0;
-    }
-    return ba
+	var ba = []; //Ba in b
+	for(var i in a) {
+		if(a.hasOwnProperty(i)) ba[i] = (a[i] === b[i])? 1: 0;
+	}
+	return ba
 }
 
 /**
@@ -2476,14 +2476,14 @@ function bitStr (a, b) {
  * @func
  */
 function And (a, b, cr, toArr) {
-    toSameLength(a, b, cr || null);
-    var res = toArr? new Array(a.length): (a[0] && b[0]);
-    for (var i in a) {
-        if (a.hasOwnProperty(i)) {
-            (toArr)? res[i] = a[i] && b[i]: res = (res && a[i] && b[i]);
-        }
-    }
-    return res
+	toSameLength(a, b, cr || null);
+	var res = toArr? new Array(a.length): (a[0] && b[0]);
+	for (var i in a) {
+		if (a.hasOwnProperty(i)) {
+			(toArr)? res[i] = a[i] && b[i]: res = (res && a[i] && b[i]);
+		}
+	}
+	return res
 }
 
 /**
@@ -2497,15 +2497,15 @@ function And (a, b, cr, toArr) {
  * @func
  */
 function Or (a, b, cr, toArr) {
-    toSameLength(a, b, cr || null);
-    var res = toArr? new Array(a.length): (a[0] || b[0]);
-    for (var i in a) {
-        if (a.hasOwnProperty(i)) {
-            if (toArr) res[i] = a[i] || b[i];
-            else res = (res || a[i] || b[i]);
-        }
-    }
-    return res
+	toSameLength(a, b, cr || null);
+	var res = toArr? new Array(a.length): (a[0] || b[0]);
+	for (var i in a) {
+		if (a.hasOwnProperty(i)) {
+			if (toArr) res[i] = a[i] || b[i];
+			else res = (res || a[i] || b[i]);
+		}
+	}
+	return res
 }
 
 /**
@@ -2519,15 +2519,15 @@ function Or (a, b, cr, toArr) {
  * @func
  */
 function Xor (a, b, cr, toArr) {
-    toSameLength(a, b, cr || null);
-    var res = toArr? new Array(a.length): xor(a[0], b[0]);
-    for (var i in a) {
-        if (a.hasOwnProperty(i)) {
-            if (toArr) res[i] = xor(a[i], b[i]);
-            else res = xor(res, xor(a[i], b[i]));
-        }
-    }
-    return res
+	toSameLength(a, b, cr || null);
+	var res = toArr? new Array(a.length): xor(a[0], b[0]);
+	for (var i in a) {
+		if (a.hasOwnProperty(i)) {
+			if (toArr) res[i] = xor(a[i], b[i]);
+			else res = xor(res, xor(a[i], b[i]));
+		}
+	}
+	return res
 }
 
 /**
@@ -2541,15 +2541,15 @@ function Xor (a, b, cr, toArr) {
  * @func
  */
 function Imply (a, b, cr, toArr) {
-    toSameLength(a, b, cr || null);
-    var res = toArr? new Array(a.length): (!a[0] || b[0]);
-    for (var i in a) {
-        if(a.hasOwnProperty(i)) {
-            if (toArr) res[i] = (!a[i] || b[i]);
-            else res = (!res || (!a[i] || b[i]));
-        }
-    }
-    return res
+	toSameLength(a, b, cr || null);
+	var res = toArr? new Array(a.length): (!a[0] || b[0]);
+	for (var i in a) {
+		if(a.hasOwnProperty(i)) {
+			if (toArr) res[i] = (!a[i] || b[i]);
+			else res = (!res || (!a[i] || b[i]));
+		}
+	}
+	return res
 }
 
 /**
@@ -2561,7 +2561,7 @@ function Imply (a, b, cr, toArr) {
  * @func
  */
 function manhattanDist (a, b) {
-    return Math.abs(Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]))
+	return Math.abs(Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]))
 }
 
 /**
@@ -2573,7 +2573,7 @@ function manhattanDist (a, b) {
  * @func
  */
 function euclidianDist (a, b) {
-    return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2))
+	return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2))
 }
 
 /**
@@ -2585,29 +2585,29 @@ function euclidianDist (a, b) {
  * @func
  */
 function diagDist (a, b) { //Return the Diagonal distance  ...
-    return Math.max(Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1]))
+	return Math.max(Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1]))
 }
 
 /**
  * @description Heuristic of a matrix
  * @param {Array} mtx Matrix
  * @param {Array} solvedMtx Solved matrix (goal)
- * @param {Function} [hrt=euclidiantDist] Heuristic method
+ * @param {Function} [hrt=euclidianDist] Heuristic method
  * @returns {number} Result
  * @see module:Maths~euclidianDist
  * @since 1.0
  * @func
  */
 function h (mtx, solvedMtx, hrt) {
-    var res = new Array(mtx.length);
-    for (var i = 0; i < mtx.length; i++) {
-        res[i] = new Array(mtx[i].length);
-        for (var j = 0; j < mtx[i].length; j++) {
-            res[i][j] = hrt([i, j], lookfor(mtx[i][j], solvedMtx)) || euclidianDist([i, j], lookfor(mtx[i][j], solvedMtx));
-        }
-    }
-    Essence.say(console.table(res));
-    return res.sum2d()
+	var res = new Array(mtx.length);
+	for (var i = 0; i < mtx.length; i++) {
+		res[i] = new Array(mtx[i].length);
+		for (var j = 0; j < mtx[i].length; j++) {
+			res[i][j] = hrt([i, j], lookfor(mtx[i][j], solvedMtx)) || euclidianDist([i, j], lookfor(mtx[i][j], solvedMtx));
+		}
+	}
+	Essence.say(console.table(res));
+	return res.sum2d()
 }
 
 /**
@@ -2619,7 +2619,7 @@ function h (mtx, solvedMtx, hrt) {
  * @func
  */
 function equivalent (a, b) {
-    return Math.round(a) === Math.round(b) || Math.floor(a) === Math.floor(b) || Math.ceil(a) === Math.floor(b) || Math.floor(a) === Math.ceil(b);
+	return Math.round(a) === Math.round(b) || Math.floor(a) === Math.floor(b) || Math.ceil(a) === Math.floor(b) || Math.floor(a) === Math.ceil(b);
 }
 
 /**
@@ -2632,8 +2632,8 @@ function equivalent (a, b) {
  * @func
  */
 function approxEqual (a, b, precision) {
-    if (!precision) precision = Essence.eps;
-    return a >= b - precision && a <= b + precision || b >= a - precision && b <= a + precision;
+	if (!precision) precision = Essence.eps;
+	return a >= b - precision && a <= b + precision || b >= a - precision && b <= a + precision;
 }
 
 /**
@@ -2646,10 +2646,10 @@ function approxEqual (a, b, precision) {
  * @func
  */
 function P (arr, prop) {
-    arr.map(function (x) {
-        truth.push(Boolean(prop.replace(/x/gm, x)));
-    });
-    return truth;
+	arr.map(function (x) {
+		truth.push(Boolean(prop.replace(/x/gm, x)));
+	});
+	return truth;
 }
 
 /**
@@ -2662,17 +2662,17 @@ function P (arr, prop) {
  * @func
  */
 function forAll (arr, prop) {
-    var truth = true;
-    for (var i = 0; i < arr.length; i++) {
-        truth &= prop.replace(/x/gm, arr[i]);
-        if (!truth) return false;
-    }
-    return !!truth; //P(arr, prop).count(true) === arr.length || !P(arr, prop).has(false)
+	var truth = true;
+	for (var i = 0; i < arr.length; i++) {
+		truth &= prop.replace(/x/gm, arr[i]);
+		if (!truth) return false;
+	}
+	return !!truth; //P(arr, prop).count(true) === arr.length || !P(arr, prop).has(false)
 }
 
 /**
  * @description Check if the proposition holds for some elements of the array.
- * @summary Existensial quantification of P(arr): &exist;P(arr)
+ * @summary Existential quantification of P(arr): &exist;P(arr)
  * @param {number} arr Array
  * @param {string} prop Proposition
  * @return {boolean} Quantification result
@@ -2680,12 +2680,12 @@ function forAll (arr, prop) {
  * @func
  */
 function forSome (arr, prop) {
-    var truth = prop.replace(/x/gm, arr[0]);
-    for (var i = 1; i < arr.length; i++) {
-        truth &= prop.replace(/x/gm, arr[i]);
-        if (truth) return true;
-    }
-    return false; //P(arr, prop).has(true)
+	var truth = prop.replace(/x/gm, arr[0]);
+	for (var i = 1; i < arr.length; i++) {
+		truth &= prop.replace(/x/gm, arr[i]);
+		if (truth) return true;
+	}
+	return false; //P(arr, prop).has(true)
 }
 
 /**
@@ -2711,8 +2711,8 @@ function forOne (arr, prop) {
  * @func
  */
 function readCoord (str, isInt) {
-    var c = str.slice(1, str.length - 1).split(", ");
-    return isInt? [parseInt(c[0]), parseInt(c[1])]: c
+	var c = str.slice(1, str.length - 1).split(", ");
+	return isInt? [parseInt(c[0]), parseInt(c[1])]: c
 }
 
 /**
@@ -2725,8 +2725,8 @@ function readCoord (str, isInt) {
  * @func
  */
 function modRange (x, a, b) {
-    var r = x % (b + 1);
-    return r + (r < a)? a + r: 0;
+	var r = x % (b + 1);
+	return r + (r < a)? a + r: 0;
 }
 
 /**
@@ -2737,9 +2737,9 @@ function modRange (x, a, b) {
  * @func
  */
 function abcModulus (code) {
-    var m = code % 123;
-    if (90 < m && m < 97) return m + abcModulus(Math.abs(getClosest(m, [90, 97]) - m));
-    return m + ((m < 65 && m != 32)? 65 + m: 0);
+	var m = code % 123;
+	if (90 < m && m < 97) return m + abcModulus(Math.abs(getClosest(m, [90, 97]) - m));
+	return m + ((m < 65 && m != 32)? 65 + m: 0);
 }
 
 /**
@@ -2752,10 +2752,10 @@ function abcModulus (code) {
  * @func
  */
 function bruteForceNum (min, cond, max) {
-    for (var x = min; x <= max; x++) {
-        if (eval(cond.replace(RegExpify("x"), x + ""))) return x;
-    }
-    return false;
+	for (var x = min; x <= max; x++) {
+		if (eval(cond.replace(RegExpify("x"), x + ""))) return x;
+	}
+	return false;
 }
 
 /**
@@ -2769,10 +2769,10 @@ function bruteForceNum (min, cond, max) {
  * @func
  */
 function bruteForceFloat (min, cond, max, precision) {
-    for (var x = min; x <= max; x += (precision || 1e-3)) {
-        if (eval(cond.replace(RegExpify("x"), x + ""))) return x;
-    }
-    return false;
+	for (var x = min; x <= max; x += (precision || 1e-3)) {
+		if (eval(cond.replace(RegExpify("x"), x + ""))) return x;
+	}
+	return false;
 }
 
 /**
@@ -2785,12 +2785,12 @@ function bruteForceFloat (min, cond, max, precision) {
  * @func
  */
 function doubleBruteForceNum (min, cond, max) {
-    for (var x = min; x <= max; x++) {
-        for (var y = min; y <= max; y++) {
-            if (eval(cond.replace(RegExpify("x"), x + "").replace(RegExpify("y"), y + ""))) return [x, y];
-        }
-    }
-    return false;
+	for (var x = min; x <= max; x++) {
+		for (var y = min; y <= max; y++) {
+			if (eval(cond.replace(RegExpify("x"), x + "").replace(RegExpify("y"), y + ""))) return [x, y];
+		}
+	}
+	return false;
 }
 
 /**
@@ -2804,13 +2804,13 @@ function doubleBruteForceNum (min, cond, max) {
  * @func
  */
 function doubleBruteForceFloat (min, cond, max, precision) {
-    if (!precision) precision = 1e-3;
-    for (var x = min; x <= max; x += precision) {
-        for (var y = min; y <= max; y += precision) {
-            if (eval(cond.replace(RegExpify("x"), x + "").replace(RegExpify("y"), y + ""))) return [x, y];
-        }
-    }
-    return false;
+	if (!precision) precision = 1e-3;
+	for (var x = min; x <= max; x += precision) {
+		for (var y = min; y <= max; y += precision) {
+			if (eval(cond.replace(RegExpify("x"), x + "").replace(RegExpify("y"), y + ""))) return [x, y];
+		}
+	}
+	return false;
 }
 
 /**
@@ -2823,7 +2823,7 @@ function doubleBruteForceFloat (min, cond, max, precision) {
  * @func
  */
 function isCloser (x, a, b) {
-    return Math.abs(x - a) < Math.abs(x - b);
+	return Math.abs(x - a) < Math.abs(x - b);
 }
 
 /**
@@ -2835,9 +2835,9 @@ function isCloser (x, a, b) {
  * @func
  */
 function getClosest (x, opt) {
-    var closest = opt[0];
-    for (var i = 1; i < opt.length; i++) closest = isCloser(x, closest, opt[i])? closest: opt[i];
-    return closest;
+	var closest = opt[0];
+	for (var i = 1; i < opt.length; i++) closest = isCloser(x, closest, opt[i])? closest: opt[i];
+	return closest;
 }
 
 /**
@@ -2854,25 +2854,25 @@ function getClosest (x, opt) {
  * @property {function(): string} Equation.toString String representation
  */
 function Equation (formula) {
-    this.formula = formula.normal() || "y=x";
-    this.leftSide = this.formula.split("=")[0];
-    this.rightSide = this.formula.split("=")[1];
-    this.compute = function (data) {
-        return eval(this.rightSide.multiReplace([
-            [/x/g, data.x || 0], [/y/g, data.y || 0], [/z/g, data.z || 0],
-            [/pi/ig, Math.PI], [/e/ig, Math.E], [/sqrt(2)/ig, Math.SQRT2],
-            [/(pow|max|min)\((.*?),(.*?)\)/, "Math.$1($2, $3)"], //fails on first occurrence
-            [/(sqrt|cbrt|cos|sin|tan|acos|asin|cosh|sinh|tanh|acosh|asinh|atanh|exp|abs|e\^)\((.*?)\)/, "Math.$1($2)"],
-            [/(ln|log|nthroot|clampTop|clampBottom)\((.*?),(.*?)\)/, "$1($2, $3)"],
-            [/(clamp)\((.*?),(.*?),(.*?)\)/, "$1($2, $3, $4)"]
-        ]))
-    };
+	this.formula = formula.normal() || "y=x";
+	this.leftSide = this.formula.split("=")[0];
+	this.rightSide = this.formula.split("=")[1];
+	this.compute = function (data) {
+		return eval(this.rightSide.multiReplace([
+			[/x/g, data.x || 0], [/y/g, data.y || 0], [/z/g, data.z || 0],
+			[/pi/ig, Math.PI], [/e/ig, Math.E], [/sqrt(2)/ig, Math.SQRT2],
+			[/(pow|max|min)\((.*?),(.*?)\)/, "Math.$1($2, $3)"], //fails on first occurrence
+			[/(sqrt|cbrt|cos|sin|tan|acos|asin|cosh|sinh|tanh|acosh|asinh|atanh|exp|abs|e\^)\((.*?)\)/, "Math.$1($2)"],
+			[/(ln|log|nthroot|clampTop|clampBottom)\((.*?),(.*?)\)/, "$1($2, $3)"],
+			[/(clamp)\((.*?),(.*?),(.*?)\)/, "$1($2, $3, $4)"]
+		]))
+	};
 
-    this.toString = function () {
-        return "Equation(" + this.formula + ")";
-    };
+	this.toString = function () {
+		return "Equation(" + this.formula + ")";
+	};
 
-    return this;
+	return this;
 }
 
 /**
@@ -2883,11 +2883,11 @@ function Equation (formula) {
  * @func
  */
 function binaryCases (x) {
-    var end = parseInt("1".repeat(x)), res = [], i = 0;
-    do {
-        res.push(conv(i++, 10, 2));
-    } while(i <= conv(end));
-    return res;
+	var end = parseInt("1".repeat(x)), res = [], i = 0;
+	do {
+		res.push(conv(i++, 10, 2));
+	} while(i <= conv(end));
+	return res;
 }
 
 /**
@@ -2898,20 +2898,20 @@ function binaryCases (x) {
  * @func
  */
 function truthTable (exp) { //Get the truth table of an expression
-    // /(([a-z])(\+|\x2a))+/g
-    var ascii = asciiTable("a-z"), vars = [], rows, res = [];
-    for (var i = 0; i < ascii.length; i++) {
-        if(exp.has(ascii[i])) vars.push(ascii[i]);
-    }
-    Essence.say("variables: " + vars.toStr(true), "info");
-    rows = binaryCases(vars.length);
-    for (i = 0; i < rows.length; i++) {
-        var cexp = exp;
-        for (var j = 0; j < vars.length; j++) cexp = cexp.multiReplace([[vars[j], rows[i][j]]]);
-        Essence.say("current exp: " + cexp, "info");
-        res.push(eval(cexp));
-    }
-    return [vars, rows, res];
+	// /(([a-z])(\+|\x2a))+/g
+	var ascii = asciiTable("a-z"), vars = [], rows, res = [];
+	for (var i = 0; i < ascii.length; i++) {
+		if(exp.has(ascii[i])) vars.push(ascii[i]);
+	}
+	Essence.say("variables: " + vars.toStr(true), "info");
+	rows = binaryCases(vars.length);
+	for (i = 0; i < rows.length; i++) {
+		var cexp = exp;
+		for (var j = 0; j < vars.length; j++) cexp = cexp.multiReplace([[vars[j], rows[i][j]]]);
+		Essence.say("current exp: " + cexp, "info");
+		res.push(eval(cexp));
+	}
+	return [vars, rows, res];
 }
 
 /* eslint no-unused-vars: 0 */
@@ -2924,9 +2924,9 @@ function truthTable (exp) { //Get the truth table of an expression
  * @func
  */
 function getDNF (exp) {
-    var tt = truthTable(exp), dnf = "";
-    //code here
-    return dnf;
+	var tt = truthTable(exp), dnf = "";
+	//code here
+	return dnf;
 }
 
 /**
@@ -2938,9 +2938,9 @@ function getDNF (exp) {
  * @func
  */
 function getCNF (exp) {
-    var tt = truthTable(exp), cnf = "";
-    //code here
-    return cnf;
+	var tt = truthTable(exp), cnf = "";
+	//code here
+	return cnf;
 }
 /* eslint no-unused-vars: 2 */
 
@@ -2954,7 +2954,7 @@ function getCNF (exp) {
  * @func
  */
 function timeCI (avg, n, sd) {
-    return [avg + InvNorm(n / 200) * sd / Math.sqrt(n), avg - InvNorm(n / 200) * sd / Math.sqrt(n)];
+	return [avg + InvNorm(n / 200) * sd / Math.sqrt(n), avg - InvNorm(n / 200) * sd / Math.sqrt(n)];
 }
 
 /**
@@ -2963,7 +2963,7 @@ function timeCI (avg, n, sd) {
  * @return {number} Sample mean <span style='text-decoration: overline'>x</span>
  */
 function sampleMean (arr) { //bar(x)
-    return Math.sqrt(sumPow2(arr) / arr.length - arr.mean());
+	return Math.sqrt(sumPow2(arr) / arr.length - arr.mean());
 }
 
 /**
@@ -2983,13 +2983,13 @@ function sampleMean (arr) { //bar(x)
  * ci = confidenceInterval([5.7, 6.63, 6.57, 7.7, 7.51], .75);
  */
 function confidenceInterval (avg, c, n, sd) {
-    var z = InvNorm(c || .95); //sd? InvNorm(c): TDistrib((1 - c) / 2, n - 1);
-    if (isType(avg, "Array")) {
-        sd = avg.stddev();
-        n = avg.length;
-        avg = sampleMean(avg);
-    }
-    return [avg - z * sd / Math.sqrt(n), avg + z * sd / Math.sqrt(n)];
+	var z = InvNorm(c || .95); //sd? InvNorm(c): TDistrib((1 - c) / 2, n - 1);
+	if (isType(avg, "Array")) {
+		sd = avg.stddev();
+		n = avg.length;
+		avg = sampleMean(avg);
+	}
+	return [avg - z * sd / Math.sqrt(n), avg + z * sd / Math.sqrt(n)];
 }
 
 /**
@@ -3000,5 +3000,5 @@ function confidenceInterval (avg, c, n, sd) {
  * @since 1.1
  */
 function Fibonacci (x) {
-    return (x <= 1)? x: Fibonacci(x - 1) + Fibonacci(x - 2);
+	return (x <= 1)? x: Fibonacci(x - 1) + Fibonacci(x - 2);
 }

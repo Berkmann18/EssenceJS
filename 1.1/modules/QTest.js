@@ -24,7 +24,7 @@ var QTest = new Module("QTest", "QA and tests", ["Maths", "DOM"]);
  * @func
  */
 function EvtShow (evt) {
-    alert("\tName: " + evt.name + "\nsource: " + evt.source + "\ndata: " + evt.data + "\ntarget: " + evt.target + "\ntime stamp: " + evt.timeStamp)
+	alert("\tName: " + evt.name + "\nsource: " + evt.source + "\ndata: " + evt.data + "\ntarget: " + evt.target + "\ntime stamp: " + evt.timeStamp)
 }
 
 /**
@@ -35,22 +35,22 @@ function EvtShow (evt) {
  * @func
  */
 function evtLog (event) {
-    for(var atr in event) {
-        if (event.hasOwnProperty(atr)) Essence.say(atr + ": " + event[atr])
-    }
+	for(var atr in event) {
+		if (event.hasOwnProperty(atr)) Essence.say(atr + ": " + event[atr])
+	}
 }
 /* Types
  - EvalError: instance representing an error that occurs regarding the global function eval()
  - InternalError: instance representing an error that occurs when an internal error in the JavaScript engine is thrown. E.g. "too much recursion"
  - RangeError: instance representing an error that occurs when a numeric variable or parameter is outside of its valid range
  - ReferenceError: instance representing an error that occurs when de-referencing an invalid reference
- - SynthaxError: instance representing a syntax error that occurs while parsing code in eval()
+ - SyntaxError: instance representing a syntax error that occurs while parsing code in eval()
  - TypeError: instance representing an error that occurs when a variable or parameter is not of a valid type
  - URIError: instance representing an error that occurs when encodeURI() or decodeURI() are passed invalid parameters
  function MyError(message) { //From Mozilla ?
-     this.name = 'MyError';
-     this.message = message || 'Default Message';
-     this.stack = (new Error()).stack
+	 this.name = 'MyError';
+	 this.message = message || 'Default Message';
+	 this.stack = (new Error()).stack
  }
  MyError.prototype = Object.create(Error.prototype);
  MyError.prototype.constructor = MyError; */
@@ -69,13 +69,13 @@ InvalidParamError.inheritsFrom(Error);
  * @throws {Error}
  */
 function InvalidParamError (msg, fname, lineNum) {
-    var error = Error.call(this, msg || "The parameter is invalid !");
+	var error = Error.call(this, msg || "The parameter is invalid !");
 
-    this.name = "CustomError";
-    this.message = error.message;
-    this.stack = error.stack;
-    this.fileName = fname || location.href;
-    this.lineNumber = lineNum || getLineNum();
+	this.name = "CustomError";
+	this.message = error.message;
+	this.stack = error.stack;
+	this.fileName = fname || location.href;
+	this.lineNumber = lineNum || getLineNum();
 }
 InvalidParamError.prototype = Object.create(Error.prototype);
 InvalidParamError.prototype.constructor = InvalidParamError;
@@ -88,17 +88,17 @@ InvalidParamError.prototype.constructor = InvalidParamError;
  * @throws {Error}
  */
 function getTrace () {
-    var err = function () {
-        try {
-            //noinspection ExceptionCaughtLocallyJS
-            throw Error("")
-        } catch(e) {
-            return e;
-        }
-        //return new Error("");
-    };
-    var fn = stripPath(err().stack.split("\n").last());
-    return fn.split(" ").last();
+	var err = function () {
+		try {
+			//noinspection ExceptionCaughtLocallyJS
+			throw Error("")
+		} catch(e) {
+			return e;
+		}
+		//return new Error("");
+	};
+	var fn = stripPath(err().stack.split("\n").last());
+	return fn.split(" ").last();
 }
 
 /**
@@ -109,7 +109,7 @@ function getTrace () {
  * @func
  */
 function getLineNum (noCols) {
-    return noCols ? getTrace().split(":")[1] : getTrace().get(getTrace().indexOf(":") + 1).remove(")");
+	return noCols ? getTrace().split(":")[1] : getTrace().get(getTrace().indexOf(":") + 1).remove();
 }
 
 
@@ -122,12 +122,12 @@ function getLineNum (noCols) {
  * @throws {Error}
  */
 function testErr (err) {
-    try {
-        //noinspection ExceptionCaughtLocallyJS
-        throw err;
-    } catch (e) {
-        Essence.say("%cTested error%c:\n" + e.stack, "erro", "text-decoration: underline; color: #000;", "text-decoration: none; color: #000;");
-    }
+	try {
+		//noinspection ExceptionCaughtLocallyJS
+		throw err;
+	} catch (e) {
+		Essence.say("%cTested error%c:\n" + e.stack, "erro", "text-decoration: underline; color: #000;", "text-decoration: none; color: #000;");
+	}
 }
 
 /**
@@ -140,11 +140,11 @@ function testErr (err) {
  * @func
  */
 function noobTest (fx, param) {
-    try {
-        fx(param);
-    } catch(e) {
-        location.href = "http://Stackoverflow.com/search?q=[js]+" + e.message;
-    }
+	try {
+		fx(param);
+	} catch(e) {
+		location.href = "http://Stackoverflow.com/search?q=[js]+" + e.message;
+	}
 }
 
 /**
@@ -155,11 +155,11 @@ function noobTest (fx, param) {
  * @func
  */
 function test (fx) {
-    try {
-        isType(fx, "String")? eval(fx): fx(arguments.toArray().get(1));
-    } catch (e) {
-        Essence.handleError(e + "\n", getFilename(true), getLineNum(true));
-    }
+	try {
+		isType(fx, "String")? eval(fx): fx(arguments.toArray().get(1));
+	} catch (e) {
+		Essence.handleError(e + "\n", getFilename(true), getLineNum(true));
+	}
 }
 
 /**
@@ -180,50 +180,50 @@ function test (fx) {
  * @property {Array[]} UnitTest.libTests Intern tests to EssenceJS
  */
 var UnitTest = {
-    total: 0,
-    bad: 0,
-    failRate: 0,
-    coverage: 0,
-    test: function (then, expected, cmt, noisy) {
-        this.total++;
-        var res = then; //to avoid random changes while calling the same function/method with the same parameter(s)
-        if (!res.equals(expected)) {
-            this.bad++;
-            console.log("%c[Unit]%c " + (cmt || "Test #b" + this.bad) + ": Expected \"%c" + expected + "%c\" but was \"%c" + res + "%c\"", "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
-        } else if(noisy && res.equals(expected)) console.log("%c[Unit]%c The expectation on " + expected + " was satisfied !", "color: #c0c", "color: #000"); //in case someone wants to not just see what failed
-    },
-    testFalse: function (then, expected, cmt, noisy) {
-        this.total++;
-        var res = then; //to avoid random changes while calling the same function/method with the same parameter(s)
-        if (res.equals(expected)) {
-            this.bad++;
-            console.log("%c[Unit]%c " + (cmt || "Test #b" + this.bad) + ": Didn't expected \"%c" + expected + "%c\" to be \"%c" + res + "%c\"", "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
-        } else if(noisy && res.equals(expected)) console.log("%c[Unit]%c The anti-expectation on " + expected + " was satisfied !", "color: #c0c", "color: #000"); //in case someone wants to not just see what failed
-    },
-    reset: function () {
-        this.total = 0;
-        this.bad = 0;
-        this.failRate = 0;
-        this.coverage = 0;
-    },
-    multiTest: function (pairs, noisy) {
-        this.reset();
-        console.time("Unit test");
-        for (var i = 0; i < pairs.length - 1; i++) this.test(pairs[i][0], pairs[i][1], (pairs[i].length === 3)? pairs[i][2]: "", noisy);
-        console.timeEnd("Unit test");
-        this.report();
-    },
-    report: function () {
-        this.failRate = markConv(this.bad, this.total);
-        console.info("%c[Unit]%c Pass/Fail: %c" + (this.total - this.bad) + "%c/%c" + this.bad + "%c (" + this.failRate + "% fail); on " + BrowserDetect.info() + " at " + getLineNum(), "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
-    },
-    basicTests: function () {
-        this.reset();
-        this.multiTest([
-            [eval(1.0 + 2.0), 3.0], //Rounding
-            ["Hello World".split(" "), [["H", "e", "l", "l", "o"].join(""), ["W", "o", "r", "l", "d"].join("")]], //Diving and joining
-            [nthroot(5, 2, 4), Math.pow(5, 1/2).toNDec(4)]
-        ]);
-    },
-    libTests: []
+	total: 0,
+	bad: 0,
+	failRate: 0,
+	coverage: 0,
+	test: function (then, expected, cmt, noisy) {
+		this.total++;
+		var res = then; //to avoid random changes while calling the same function/method with the same parameter(s)
+		if (!res.equals(expected)) {
+			this.bad++;
+			console.log("%c[Unit]%c " + (cmt || "Test #b" + this.bad) + ": Expected \"%c" + expected + "%c\" but was \"%c" + res + "%c\"", "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
+		} else if(noisy && res.equals(expected)) console.log("%c[Unit]%c The expectation on " + expected + " was satisfied !", "color: #c0c", "color: #000"); //in case someone wants to not just see what failed
+	},
+	testFalse: function (then, expected, cmt, noisy) {
+		this.total++;
+		var res = then; //to avoid random changes while calling the same function/method with the same parameter(s)
+		if (res.equals(expected)) {
+			this.bad++;
+			console.log("%c[Unit]%c " + (cmt || "Test #b" + this.bad) + ": Didn't expected \"%c" + expected + "%c\" to be \"%c" + res + "%c\"", "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
+		} else if(noisy && res.equals(expected)) console.log("%c[Unit]%c The anti-expectation on " + expected + " was satisfied !", "color: #c0c", "color: #000"); //in case someone wants to not just see what failed
+	},
+	reset: function () {
+		this.total = 0;
+		this.bad = 0;
+		this.failRate = 0;
+		this.coverage = 0;
+	},
+	multiTest: function (pairs, noisy) {
+		this.reset();
+		console.time("Unit test");
+		for (var i = 0; i < pairs.length - 1; i++) this.test(pairs[i][0], pairs[i][1], (pairs[i].length === 3)? pairs[i][2]: "", noisy);
+		console.timeEnd("Unit test");
+		this.report();
+	},
+	report: function () {
+		this.failRate = markConv(this.bad, this.total);
+		console.info("%c[Unit]%c Pass/Fail: %c" + (this.total - this.bad) + "%c/%c" + this.bad + "%c (" + this.failRate + "% fail); on " + BrowserDetect.info() + " at " + getLineNum(), "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
+	},
+	basicTests: function () {
+		this.reset();
+		this.multiTest([
+			[eval(1.0 + 2.0), 3.0], //Rounding
+			["Hello World".split(" "), [["H", "e", "l", "l", "o"].join(""), ["W", "o", "r", "l", "d"].join("")]], //Diving and joining
+			[nthroot(5, 2, 4), Math.pow(5, 1/2).toNDec(4)]
+		]);
+	},
+	libTests: []
 };

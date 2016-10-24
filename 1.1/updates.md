@@ -2,16 +2,17 @@
 + ^clean-up, linting, minor fixes and documentation update
 
 ## [essence](essence.js)
-+ 
++ \+ new type definition (Node)
 
 ## [Ajax](modules/Ajax.js)
 + 
 
 ## [DataStruct](modules/DataStruct.js)
-+ ^ DomGraph()->DomTree(), Dom()->DomStructure()
++ ^ DomGraph()->DomTree(), Dom()->DomStructure(), NTreeNode.IsLeaf()
++ \+ NTreeNode.remove(), NTreeNode.getChild(), object2tree(), traverseTree(), NTreeNode.see()
 
 ## [DOM](modules/DOM.js)
-+ 
++ \+ html2text(), text2html(), Buffer
 
 ## [Files](modules/Files.js)
 + 

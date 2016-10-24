@@ -62,9 +62,9 @@ if %min% == 1 (
     cd modules
     del /s /q *.min.js
     cd ../
-    minify essence.js --no-comments & echo Essence.js minified
-    minify modules --no-comments & echo Modules minified
-    minify essence.css --no-comments & echo Minification done
+    minify essence.js --no-comments & echo Essence.js minimised
+    minify modules --no-comments & echo Modules minimised
+    minify essence.css --no-comments & echo Minimisation done
     ping localhost -n 1 > nul
 )
 if %doc% == 1 (

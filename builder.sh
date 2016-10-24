@@ -39,8 +39,8 @@ function build {
             eslint essence.js & echo "Linting done!"
         fi
         if [ ${min} -eq 1 ]; then
-            echo "Minification ..."
-            minify essence.js --no-comments & echo "Minification done!"
+            echo "Minimisation ..."
+            minify essence.js --no-comments & echo "Minimisation done!"
         fi
         if [ ${doc} -eq 1 ]; then
             echo "Documentation ..."
@@ -54,10 +54,10 @@ function build {
             eslint essence.js modules & csslint essence.css & echo "Linting done!"
         fi
         if [ ${min} -eq 1 ]; then
-            echo "Minification ..."
+            echo "Minimisation ..."
             rm modules/*.min.js
-            minify essence.js modules --no-comments & echo ".js scripts minified"
-            minify essence.css --no-comments & echo "Minification done!"
+            minify essence.js modules --no-comments & echo ".js scripts minimised"
+            minify essence.css --no-comments & echo "Minimisation done!"
         fi
         if [ ${doc} -eq 1 ]; then
             echo "Documentation ..."
@@ -72,10 +72,10 @@ function build {
             eslint essence.js & csslint essence.css & echo "Linting done!"
         fi
         if [ ${min} -eq 1 ]; then
-            echo "Minification ..."
+            echo "Minimisation ..."
             rm modules/*.min.js
-            minify essence.js modules --no-comments & echo ".js scripts minified"
-            minify essence.css --no-comments & echo "Minification done!"
+            minify essence.js modules --no-comments & echo ".js scripts minimised"
+            minify essence.css --no-comments & echo "Minimisation done!"
         fi
         if [ ${doc} -eq 1 ]; then
             echo "Documentation ..."

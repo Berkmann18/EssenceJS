@@ -700,16 +700,15 @@ Array.prototype.Fill2D = function (c) {
 
 /**
  * @description Remove a character/number/string from the array without affecting the initial one (it should !)
- * @param {*} c Data to remove
  * @todo Make it so that it will affect the initial array
  * @this Array
  * @returns {Array} Array after the operation
  */
-Array.prototype.remove = function (c) {
+Array.prototype.remove = function () {
 	//Note: it will automatically remove undefined and it goes bunckers when trying to remove objects
 	var arr = this;
 	if (isType(c, "Array")) {
-		for(var i = 0; i < c.length; i++) arr = arr.remove(c[i]);
+		for(var i = 0; i < c.length; i++) arr = arr.remove();
 		return arr;
 	} else {
 		for (i = 0; i < this.length; i++) {
@@ -875,11 +874,10 @@ Array.prototype.stddev = function (nbDec) {
 
 /**
  * @description Get a random cell of the array
- * @param {number} n Number of random elements to be returned
  * @this Array
  * @returns {*} Random element
  */
-Array.prototype.rand = function (n) {
+Array.prototype.rand = function () {
 	if (n > 0) {
 		var res = [];
 		for (var i = 0; i < n; i++) res.push(this.rand());
@@ -980,12 +978,10 @@ Array.prototype.get = function (start, end) {
 
 /**
  * @description QuickSort adapted from https://Www.nczonline.net/blog/2012/11/27/computer-science-in-javascript-quicksort/
- * @param {number} left Left position
- * @param {number} right Right position
  * @this Array
  * @returns {Array} Sorted array
  */
-Array.prototype.quickSort = function (left, right) {
+Array.prototype.quickSort = function () {
 	if (!left && !right) {
 		left = 0;
 		right = this.lastIndex();
@@ -1003,8 +999,8 @@ Array.prototype.quickSort = function (left, right) {
 				j--;
 			}
 		}
-		if (left < i-1) this.quickSort(left, i-1);
-		if (i < right) this.quickSort(i, right);
+		if (left < i-1) this.quickSort();
+		if (i < right) this.quickSort();
 	}
 	return this
 };
@@ -1220,7 +1216,7 @@ Array.prototype.clean = function (noDuplic) { //Remove undesirable items
 	for (var i = 0; i < this.length; i++) {
 		if (!isNon(this[i])) arr[j++] = this[i];
 	}
-	return noDuplic? rmDuplicates(arr).remove(undefined): arr; //Take off (or not) duplicates of actual values and double clean it
+	return noDuplic? rmDuplicates(arr).remove(): arr; //Take off (or not) duplicates of actual values and double clean it
 };
 
 /**
@@ -1229,7 +1225,7 @@ Array.prototype.clean = function (noDuplic) { //Remove undesirable items
  * @returns {Array} Cleaned array
  */
 Array.prototype.xclean = function () {
-	return this.clean(true).remove([undefined, "undefined", null, "null"])
+	return this.clean(true).remove()
 };
 
 /**
@@ -1529,7 +1525,7 @@ Array.prototype.dotAdd = function (a) {
  */
 Array.prototype.dotSub = function (a, order) {
 	var res = [];
-	order = order.toLowerCase().remove(" ");
+	order = order.toLowerCase().remove();
 	for (var i = 0; i < this.length; i++) {
 		res[i] = [];
 		for(var j = 0; j < this[i].length; j++) res[i][j] = (order === "a-b")? a-this[i][j]: this[i][j]-a;
@@ -1545,7 +1541,7 @@ Array.prototype.dotSub = function (a, order) {
  */
 Array.prototype.dotFrac = function (a, order) {
 	var res = [];
-	order = order.toLowerCase().remove(" ");
+	order = order.toLowerCase().remove();
 	for (var i = 0; i < this.length; i++) {
 		res[i] = [];
 		for(var j = 0; j < this[i].length; j++) res[i][j] = (order === "a/b")? a/this[i][j]: this[i][j]/a;
@@ -1888,7 +1884,7 @@ String.prototype.remove = function (c) { //Remove c from the string
 	var str = this;
 	if (isType(c, "Array")) {
 		for(var i in c) {
-			if(c.hasOwnProperty(i)) str = str.remove(i);
+			if(c.hasOwnProperty(i)) str = str.remove();
 		}
 	} else {
 		var v = str.split(c).map(function (x) {
@@ -1944,11 +1940,10 @@ String.prototype.divide = function (n) {
 
 /**
  * @description Capitalize the first letter(s)
- * @param {boolean} whole Every words or just the first one
  * @this String
  * @returns {string} String
  */
-String.prototype.capitalize = function (whole) {
+String.prototype.capitalize = function () {
 	var res = this.toString(); //Because it will return the String object rather than the actual string
 	if (whole) {
 		var str = res.split(" ");
@@ -1996,7 +1991,7 @@ String.prototype.mean = function () {
  * @returns {string} Normalised string
  */
 String.prototype.normal = function () {
-	return this.toLowerCase().remove(" ")
+	return this.toLowerCase().remove()
 };
 
 /**
@@ -2119,10 +2114,9 @@ Number.prototype.toNDec = function (n) { //A bit like .toFixed(n) and .toPrecisi
 
 /**
  * @description Keep a fixed amount of unit digits
- * @param {number} n Number of digits
  * @returns {string} New number
  */
-Number.prototype.toNDigits = function (n) { //Get the number to be a n-digit number
+Number.prototype.toNDigits = function () { //Get the number to be a n-digit number
 	var i = this + ""; //Because it won't work with other types than strings
 	n = n || 2;
 	if (parseFloat(i) < Math.pow(10, n - 1)) {
@@ -2747,7 +2741,7 @@ function getCurrentPath (path, localPath) { //A bit like stripPath but which wou
 function filenameList (list) {
 	var res = [];
 	for(var i = 0; i < list.length; i++) res.push(stripPath(list[i]));
-	return res.remove("")
+	return res.remove()
 }
 
 /**
@@ -2821,7 +2815,7 @@ function lenRand (len, if0) {
 
 /**
  * @description Random float in [0; 1] with 16-bits of randomness as Math.random() creates repetitive patterns when applied over larger space
- * Source: {@link Three.js}
+ * Source: {@link https://threejs.org/}
  * @returns {number} Random float
  */
 function random16 () { //Random float from <0, 1> with 16 bits of randomness
@@ -2830,7 +2824,7 @@ function random16 () { //Random float from <0, 1> with 16 bits of randomness
 
 /**
  * @description Random float in [-range/2, range/2]
- * Source: {@link Three.js}
+ * Source: {@link https://threejs.org/}
  * @param {number} range Range length
  * @returns {number} Random float
  */
@@ -3349,7 +3343,7 @@ function primeN (arr) {
 			if (primeCheck(res[j], res[i])) res[i] = "x";
 		}
 	}
-	return res.remove("x")
+	return res.remove()
 }
 
 /**
@@ -4286,7 +4280,7 @@ function Item (name, cat, price, amr, nb) { //An item like the ones that can be 
 		for (var i = 0; i < n; i++) dest.push(new Item(this.name, this.category, this.price, this.ageMinRequired, this.quantity));
 	};
 	this.remove = function (dest) {
-		dest = dest.remove(this)
+		dest = dest.remove()
 	};
 	this.toString = function () {
 		var str = "";
@@ -4373,7 +4367,7 @@ function mixedRange (min, inc, max, noRepeat) {
 	if (noRepeat) {
 		while (available.length > 0) {
 			val.push(available.rand());
-			available = available.remove(val.last());
+			available = available.remove();
 		}
 	} else {
 		for(var i = min; i <= max; i++) val[i] = available.rand();
@@ -5219,37 +5213,37 @@ NTreeNode.inheritsFrom(TreeNode);
  */
 function NTreeNode (pl, ch) {
 	this.payload = pl || 0;
-	this.childs = ch || [];
+	this.child = ch || [];
 	this.add = function (c) {
-		this.childs.push(c);
+		this.child.push(c);
 	};
 	this.traverse = function () {
-		for (var c in this.childs) {
-			if (this.childs.hasOwnProperty(c)) c.traverse();
+		for (var c in this.child) {
+			if (this.child.hasOwnProperty(c)) c.traverse();
 		}
 		return this
 	};
 	//Console printing
 	this.printInOrder = function () {
-		for (var i = 0; i < this.childs - 1; i++) {
-			this.childs[i].printInOrder();
+		for (var i = 0; i < this.child - 1; i++) {
+			this.child[i].printInOrder();
 			Essence.addToPrinter(this.payload + "->");
-			this.childs[i + 1].printInOrder();
+			this.child[i + 1].printInOrder();
 			Essence.addToPrinter("\r\n");
 		}
 	};
 	this.printPreOrder = function () {
-		for (var i = 0; i < this.childs - 1; i++) {
+		for (var i = 0; i < this.child - 1; i++) {
 			Essence.addToPrinter(this.payload + "->");
-			this.childs[i].printInOrder();
-			this.childs[i + 1].printInOrder();
+			this.child[i].printInOrder();
+			this.child[i + 1].printInOrder();
 			Essence.addToPrinter("\r\n");
 		}
 	};
 	this.printPostOrder = function () {
-		for (var i = 0; i < this.childs - 1; i++) {
-			this.childs[i].printInOrder();
-			this.childs[i + 1].printInOrder();
+		for (var i = 0; i < this.child - 1; i++) {
+			this.child[i].printInOrder();
+			this.child[i + 1].printInOrder();
 			Essence.addToPrinter(this.payload + "->");
 			Essence.addToPrinter("\r\n");
 		}
@@ -5261,10 +5255,10 @@ function NTreeNode (pl, ch) {
 		if (!d) d = 0;
 		if (!sym) sym = "|-";
 
-		for (var i = 0; i < this.childs - 1; i++) {
-			this.childs[i].inOrder(t + s, s, d + 1, sym);
+		for (var i = 0; i < this.child - 1; i++) {
+			this.child[i].inOrder(t + s, s, d + 1, sym);
 			println(t + sym + this.payload + s+" (deepth= " + d+")");
-			this.childs[i].inOrder(t + s, s, d + 1, sym);
+			this.child[i].inOrder(t + s, s, d + 1, sym);
 			Essence.addToPrinter("\r\n");
 		}
 	};
@@ -5274,10 +5268,10 @@ function NTreeNode (pl, ch) {
 		if (!d) d = 0;
 		if (!sym) sym = "|-";
 
-		for (var i = 0; i < this.childs - 1; i++) {
+		for (var i = 0; i < this.child - 1; i++) {
 			println(t + sym + this.payload + s+" (deepth= " + d+")");
-			this.childs[i].inOrder(t + s, s, d + 1, sym);
-			this.childs[i].inOrder(t + s, s, d + 1, sym);
+			this.child[i].inOrder(t + s, s, d + 1, sym);
+			this.child[i].inOrder(t + s, s, d + 1, sym);
 			Essence.addToPrinter("\r\n");
 		}
 	};
@@ -5287,20 +5281,20 @@ function NTreeNode (pl, ch) {
 		if (!d) d = 0;
 		if (!sym) sym = "|-";
 
-		for (var i = 0; i < this.childs - 1; i++) {
-			this.childs[i].inOrder(t + s, s, d + 1, sym);
-			this.childs[i].inOrder(t + s, s, d + 1, sym);
+		for (var i = 0; i < this.child - 1; i++) {
+			this.child[i].inOrder(t + s, s, d + 1, sym);
+			this.child[i].inOrder(t + s, s, d + 1, sym);
 			println(t + sym + this.payload + s+" (deepth = " + d+")");
 			Essence.addToPrinter("\r\n");
 		}
 	};
 	//Getter
 	this.getOrder = function (sym) {
-		return this.childs.join(sym || "->");
+		return this.child.join(sym || "->");
 	};
 
 	this.isLeaf = function () { //Is it an end of branch ?
-		return !isNon(this.childs)
+		return !isNon(this.child)
 	};
 
 	this.find = function (n, method) {
@@ -5309,8 +5303,8 @@ function NTreeNode (pl, ch) {
 	this.dfs = function (n, d, td) { //Deepth First Search
 		if (!d) d = 0; //Deepth
 		if (!td) td = 0; //Total deepth
-		for (var c in this.childs) {
-			if (this.childs.hasOwnProperty(c)) c.dfs(n, d + 1, td++);
+		for (var c in this.child) {
+			if (this.child.hasOwnProperty(c)) c.dfs(n, d + 1, td++);
 		}
 		return [-1, td]
 	};
@@ -5332,29 +5326,29 @@ function NTreeNode (pl, ch) {
 	};
 	this.sum = function () {
 		var s = this.payload;
-		for (var c in this.childs) {
-			if (this.childs.hasOwnProperty(c)) s += c.payload;
+		for (var c in this.child) {
+			if (this.child.hasOwnProperty(c)) s += c.payload;
 		}
 		return s
 	};
 	this.min = function () {
 		var m = this.payload;
-		for (var c in this.childs) {
-			if (this.childs.hasOwnProperty(c)) m = Math.min(m, c.payload);
+		for (var c in this.child) {
+			if (this.child.hasOwnProperty(c)) m = Math.min(m, c.payload);
 		}
 		return m
 	};
 	this.max = function () {
 		var m = this.payload;
-		for (var c in this.childs) {
-			if (this.childs.hasOwnProperty(c)) m = Math.max(m, c.payload);
+		for (var c in this.child) {
+			if (this.child.hasOwnProperty(c)) m = Math.max(m, c.payload);
 		}
 		return m
 	};
 	this.nbOfBranches = function (n) {
 		if (!n) n = 0;
-		for (var c in this.childs) {
-			if (this.childs.hasOwnProperty(c)) n = c.nbOfBranches(n + 1);
+		for (var c in this.child) {
+			if (this.child.hasOwnProperty(c)) n = c.nbOfBranches(n + 1);
 		}
 		return n
 	};
@@ -5368,8 +5362,8 @@ function NTreeNode (pl, ch) {
 			var cur = new TreeNode(queue.pop()); //Get the first element of the queue
 			println(tab + ">" + cur.payload);
 			tab += "-";
-			for (var c in this.childs) {
-				if (this.childs.hasOwnProperty(c)) queue.unshift(c);
+			for (var c in this.child) {
+				if (this.child.hasOwnProperty(c)) queue.unshift(c);
 			}
 		}
 	};
@@ -5378,16 +5372,16 @@ function NTreeNode (pl, ch) {
 		this.printInOrder();
 		return "Tree(" + Essence.txt2print + ")" */
 		var str = "TreeNode(payload= " + this.payload + ", ";
-		for (var c in this.childs) {
-			if (this.childs.hasOwnProperty(c)) str += c.toString();
+		for (var c in this.child) {
+			if (this.child.hasOwnProperty(c)) str += c.toString();
 		}
 		return str.substring(0, str.length) + ")"
 	};
 	this.toArray = function (singly) {
 		var arr = [];
 		arr.push(this.payload);
-		for (var c in this.childs) {
-			if (this.childs.hasOwnProperty(c)) singly? arr.push(c.toArray().toString().split(",")): arr.push(c.toArray());
+		for (var c in this.child) {
+			if (this.child.hasOwnProperty(c)) singly? arr.push(c.toArray().toString().split(",")): arr.push(c.toArray());
 		}
 		return singly? arr.toString().split(","): arr
 	};
@@ -5418,8 +5412,8 @@ function Set (arr) {
 	this.remove = function (item) {
 		if (this.value.indexOf(item) !== -1) {
 			if (isType(item, "array")) {
-				for(var i = 0; i < item.length; i++) this.remove(item[i]);
-			} else this.value = this.value.remove(item)
+				for(var i = 0; i < item.length; i++) this.remove();
+			} else this.value = this.value.remove()
 		}
 	};
 
@@ -5907,8 +5901,8 @@ function Astar (start, goal) {
 						l = l[0];
 						//If the current node is better then continue
 						if (nodeCurrent.f < openList[l] || (lookfor(nodeSuccessor, closedList) != -1 && nodeCurrent.f < openList[lookfor(nodeSuccessor, closedList)][0])) continue;
-						openList = openList.remove(nodeSuccessor);
-						closedList = closedList.remove(nodeSuccessor);
+						openList = openList.remove();
+						closedList = closedList.remove();
 						nodeSuccessor.parent = nodeCurrent;
 						_h = h(nodeSuccessor, nodeGoal);
 						openList.push(nodeSuccessor);
@@ -5935,7 +5929,7 @@ function A(start, goal, grid) { //JS version of https://en.wikipedia.org/wiki/A*
 	while (openSet.length > 0) {
 		var current = openSet[fScore.indexOf(fScore.min())];
 		if (current === goal) return reconPath(cameFrom, current, grid);
-		openSet = openSet.remove(current);
+		openSet = openSet.remove();
 		closedSet.push(current);
 		var n = grid.neighbour(current[0], current[1]);
 		Essence.say("neighbour of " + current + ":\n" + n.toStr(true), "info");
@@ -6023,7 +6017,7 @@ function rmDuplicates (arr) {
 			if (i != j && out[i] === out[j]) out[j] = undefined;
 		}
 	}
-	return out.remove(undefined)
+	return out.remove()
 }
 
 /**
@@ -6130,7 +6124,7 @@ function Box (x, y, z, w, h, d, bsz, bclr, bgclr, brd) {
 	this.borderColor = bclr || "#000";
 	this.borderRadius = brd || 0;
 	this.backgroundColor = bgclr || "#fff";
-	this.ratio = (this.height/this.width).toNDigits(4);
+	this.ratio = (this.height/this.width).toNDigits();
 	this.ratio3d = [this.ratio, this.height/non0(this.deepth), this.width/non0(this.deepth)].mean(4);
 	this.draw = function () {
 
@@ -6656,7 +6650,7 @@ function database (name, headR, cells, headC, admin, ver) { //Local database
 		localStorage[this.name] = JSON.stringify(this.val)
 	};
 	this.html = complexTable(this.name, this.headerRow, this.content, this.headerCol, name);
-	this.css = "<style>*{font-family:Consolas,Segoe UI,Tahoma;}table{background: #000;}table,td,th{border:1px solid #000;color:#000;background:#fff;}tr:nth-child(even) td,tr:nth-child(even) th{background:#eee;}</style>";
+	this.css = "<style>*{font-family:Consolas,Segoe UI,Tahoma,sans-serif;}table{background: #000;}table,td,th{border:1px solid #000;color:#000;background:#fff;}tr:nth-child(even) td,tr:nth-child(even) th{background:#eee;}</style>";
 	this.disp = function (elmId) {
 		var place = (elmId)? "#" + elmId: "body";
 		$e(place).write(this.html + this.css, true);
@@ -6701,7 +6695,7 @@ function DB (name, headers, rows, headerRows) {
 	this.name = name || "DB";
 	this.head = headers || ["Index", "Value"];
 	this.val = rows || [range(1), new Array(range(1).length).fill("...")].translate();
-	this.css = "<style>*{font-family:Consolas,Segoe UI,Tahoma;}table{background: #000;}table,td,th{border:1px solid #000;color:#000;background:#fff;}tr:nth-child(even) td,tr:nth-child(even) th{background:#eee;}</style>";
+	this.css = "<style>*{font-family:Consolas,Segoe UI,Tahoma,sans-serif;}table{background: #000;}table,td,th{border:1px solid #000;color:#000;background:#fff;}tr:nth-child(even) td,tr:nth-child(even) th{background:#eee;}</style>";
 	this.html = "";
 	this.rows = headerRows || false;
 	this.build = function () {
@@ -7481,7 +7475,7 @@ function CETimer (id, img, nb, delay, maxDelay, size) {
 		if (img.complete) {
 			$G["t2"] = new Date().getTime();
 			$e("#" + id).write(evalDownload(size / ($G["t2"] - $G["t1"])));
-			Essence.time("Connexion: " + (size / ($G["t2"] - $G["t1"]).toNDigits(3) + " kbps"));
+			Essence.time("Connexion: " + (size / ($G["t2"] - $G["t1"]).toNDigits() + " kbps"));
 		} else setTimeout("CETimer(" + id + ", " + img + ", " + nb + ", " + delay + ", " + maxDelay + ", " + size + ")", delay);
 	}
 }
@@ -7526,7 +7520,7 @@ function evalDownload (kbps) {
 	else if (kbps > 2e4 && kbps <= 5e4) res = "wire";
 	else if (kbps > 5e4 && kbps <= 1e5) res = "optical fibre";
 	else res = "Ethernet";
-	return res + " (" + kbps.toNDigits(3) +" kbps)"
+	return res + " (" + kbps.toNDigits() +" kbps)"
 }
 
 /**
@@ -7541,7 +7535,7 @@ function evalUpload (kbps) {
 	else if (kbps > 56 && kbps <= 1e3) res = "ADSL + ";
 	else if (kbps > 1e3 && kbps <= 5e3) res = "wire";
 	else res = "Ethernet";
-	return res + " (" + kbps.toNDigits(3) +" kbps)"
+	return res + " (" + kbps.toNDigits() +" kbps)"
 }
 
 /**
@@ -7563,7 +7557,7 @@ function evalPing (ms) {
 
 /**
  * @description Base64
- * Source: {@link Somewhere}
+ * Source: Somewhere
  * @type {{PADCHAR: string, ALPHA: string, getbyte64: base64.getbyte64, decode: base64.decode, getbyte: base64.getbyte, encode: base64.encode}}
  */
 var base64 = {
@@ -7782,8 +7776,8 @@ function genPassword () {
 	for (var i = 65; i < 123; i++) {
 		if (i <= 90 || i >= 97) chars[i-65] = String.fromCharCode(i);
 	}
-	chars = chars.concat(sym, range(0, 1, 9)).remove(undefined);
-	if (chars.indexOf(undefined) > -1) chars = chars.concat(sym, range(0, 1, 9)).remove(undefined);
+	chars = chars.concat(sym, range(0, 1, 9)).remove();
+	if (chars.indexOf(undefined) > -1) chars = chars.concat(sym, range(0, 1, 9)).remove();
 	while (word.length < 20) word += chars[randTo(chars.length-1)];
 	if (word.length < 20) word += chars[randTo(chars.length-1)];
 	return word
@@ -7797,11 +7791,11 @@ function genPassword () {
  * @see genPassword
  */
 function genHash (password) {
-	var hash = "", k = (821 - password.sum()) / password.prod() * password.charCodeAt(0).toNDigits(1), rest, c;
+	var hash = "", k = (821 - password.sum()) / password.prod() * password.charCodeAt(0).toNDigits(), rest, c;
 	for (var i = 0; i < password.length; i++) {
-		rest = password.charCodeAt(i) + k.toNDigits(1) % 255;
+		rest = password.charCodeAt(i) + k.toNDigits() % 255;
 		//c = clamp(password.charCodeAt(i) + k, 32, 126);
-		c = Math.abs(password.charCodeAt(i) + k).toNDigits(1);
+		c = Math.abs(password.charCodeAt(i) + k).toNDigits();
 		if (c < 32) c += 48;
 		//console.log("k= " + k + "\trest (" + password.charCodeAt(i) + " + " + k + ")=" + rest + "\tc=" + c);
 		//console.log("Adjust: " + parseInt(48 + Math.round(password.charCodeAt(password.length - 1) / 10 + rest)));
@@ -7912,7 +7906,7 @@ function GET (name) { //HTTP GET request, method <=> parseURL(name, function (x)
 
 /**
  * @description HTTP POST request
- * Source: {@link StackOverflow}
+ * Source: {@link http://stackoverflow.com/|StackOverflow}
  * @param {string} path Path of the file to post to
  * @param {Object} params Parameters
  * @returns {undefined}
@@ -8021,8 +8015,8 @@ function occurrenceSort(arr) {
 		for (i = 0; i < tmp.length; i++) {
 			if (counts[i] === counts.max()) {
 				res.push(tmp[i]);
-				counts = counts.remove(counts[i]);
-				tmp = tmp.remove(tmp[i]);
+				counts = counts.remove();
+				tmp = tmp.remove();
 			}
 		}
 	}
@@ -8225,7 +8219,7 @@ function Machine (name, ver, cpy, type) {
 		var nd = JSON.stringify(data), res = "", codes = [];
 		for (var i = 0; i < nd.length; i++) {
 			codes[i] = nd.charCodeAt(i);
-			res += this.base === 2? conv(nd.charCodeAt(i).toNDigits(8), 10, this.base): conv(nd.charCodeAt(i), 10, this.base);
+			res += this.base === 2? conv(nd.charCodeAt(i).toNDigits(), 10, this.base): conv(nd.charCodeAt(i), 10, this.base);
 		}
 		//Essence.say("\'" + data + "\'= " + codes, "info");
 		return noArr? res: (this.base === 2? res.divide(8): res.divide(2));
@@ -8278,7 +8272,7 @@ function Memory (cpy, type, prefix) {
 	};
 
 	this.remove = function (data) {
-		this.slots.remove(JSON.stringify(data));
+		this.slots.remove();
 		if (this.type === "local") localStorage.setItem(this.getLocation(data), undefined);
 		else sessionStorage.setItem(this.getLocation(data), undefined);
 	};
@@ -9281,7 +9275,7 @@ var Sys = { //System
 
 /**
  * @description Start the keystroke recording
- * @param {keyStroke} keyStroke Keystroke
+ * @param {Event|keyStroke} keyStroke Keystroke
  * @returns {undefined}
  */
 window.onkeypress = function (keyStroke) {
@@ -9306,7 +9300,7 @@ function RegExpify (str) {
  * @see RegExpify
  */
 function unRegExpify (re) { //Turn a regular expression into a string
-	return re.toString().get(1, re.toString().lastIndexOf("/") - 1).remove("\\");
+	return re.toString().get(1, re.toString().lastIndexOf("/") - 1).remove();
 }
 
 /**
@@ -9381,7 +9375,7 @@ function Stream (initVal, formula, nbVals) {
 			[/(pow|max|min)\((.*?),(| )(.*?)\)/, "Math.$1($2, $3)"],
 			[/(sqrt|cbrt|cos|sin|tan|acos|asin|cosh|sinh|tanh|acosh|asinh|atanh|exp|abs)\((.*?)\)/, "Math.$1($2)"],
 			[/(ln|log|nthroot|clampTop|clampBottom)\((.*?),(| )(.*?)\)/, "$1($2, $3)"],
-			[/(clamp)\((.*?),(| )(.*?),(| )(.*?)\)/, "$1($2, $3, $)"],
+			[/(clamp)\((.*?),(| )(.*?),(| )(.*?)\)/, "$1($2, $3, $)"]
 		])));
 	};
 
@@ -9508,6 +9502,7 @@ function Equation (formula) {
  * @returns {*} Type
  */
 function name2type(name, param) {
+	//noinspection JSPotentiallyInvalidConstructorUsage
 	switch(name) {
 		case "Number": return Number(param);
 		case "String": return String(param);
@@ -9778,7 +9773,7 @@ function getTrace () {
  * @see getTrace
  */
 function getLineNum (noCols) {
-	return noCols? getTrace().split(":")[1]: getTrace().get(getTrace().indexOf(":") + 1).remove(")");
+	return noCols? getTrace().split(":")[1]: getTrace().get(getTrace().indexOf(":") + 1).remove();
 }
 
 /**

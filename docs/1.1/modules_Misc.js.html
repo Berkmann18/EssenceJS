@@ -34,7 +34,7 @@
  * @license MIT
  * @author Maximilian Berkmann &lt;maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
- * @requires essence
+ * @requires module:essence
  * @requires Files
  * @type {Module}
  * @exports Misc
@@ -51,25 +51,25 @@ var Misc = new Module("Misc", "Miscellaneous", ["Files", "DataStruct"]);
  * @func
  */
 function asciiTable (start, end) {
-    if (start === "A-Z" &amp;&amp; !end) {
-        start = 65;
-        end = 90;
-    } else if (start === "a-z" &amp;&amp; !end) {
-        start = 97;
-        end = 122;
-    } else if (start === "A-z" &amp;&amp; !end) {
-        start = 65;
-        end = 122;
-    } else if (start === "printable" &amp;&amp; !end) {
-        start = 32;
-        end = 126;
-    }
-    if (!start) start = 0;
-    if (!end) end = 255;
-    var res = [];
+	if (start === "A-Z" &amp;&amp; !end) {
+		start = 65;
+		end = 90;
+	} else if (start === "a-z" &amp;&amp; !end) {
+		start = 97;
+		end = 122;
+	} else if (start === "A-z" &amp;&amp; !end) {
+		start = 65;
+		end = 122;
+	} else if (start === "printable" &amp;&amp; !end) {
+		start = 32;
+		end = 126;
+	}
+	if (!start) start = 0;
+	if (!end) end = 255;
+	var res = [];
 
-    for (var i = start; i &lt;= end; i++) res.push(String.fromCharCode(i));
-    return res;
+	for (var i = start; i &lt;= end; i++) res.push(String.fromCharCode(i));
+	return res;
 }
 
 /**
@@ -115,46 +115,46 @@ function asciiTable (start, end) {
  * @property {function(): string} Person.getFullName Full name getter
  */
 function Person (fname, sname, lname, title, nickname, num, country, city, sex, bday, jobs, activities, websites, quote) {
-    this.firstName = fname || "";
-    this.secondName = sname || "";
-    this.lastName = lname || "";
-    this.title = title || "";
-    this.nickname = nickname || "";
-    this.phoneNum = num || "none";
-    this.country = country || "";
-    this.city = city || "";
-    this.sex = (sex.toLowerCase() === "male" || sex.toLowerCase() === "female")? sex: "other";
-    this.birthday = bday || "01/01/2000";
-    this.deathday = null;
-    this.jobs = jobs || "unemployed";
-    this.activities = activities || "none";
-    this.websites = websites || "none";
-    this.quote = quote || "";
-    this.toString = function () { //Weirdly showing "getName" which isn't the case of toLocaleString()
-        var str = "Person(";
-        for (var p in this) {
-            if (this.hasOwnProperty(p) &amp;&amp; p != "toString" &amp;&amp; p != "toName") str += p + "=" + this[p] + ", ";
-        }
-        return str.substring(0, str.length-2) + ")"
-    };
+	this.firstName = fname || "";
+	this.secondName = sname || "";
+	this.lastName = lname || "";
+	this.title = title || "";
+	this.nickname = nickname || "";
+	this.phoneNum = num || "none";
+	this.country = country || "";
+	this.city = city || "";
+	this.sex = (sex.toLowerCase() === "male" || sex.toLowerCase() === "female")? sex: "other";
+	this.birthday = bday || "01/01/2000";
+	this.deathday = null;
+	this.jobs = jobs || "unemployed";
+	this.activities = activities || "none";
+	this.websites = websites || "none";
+	this.quote = quote || "";
+	this.toString = function () { //Weirdly showing "getName" which isn't the case of toLocaleString()
+		var str = "Person(";
+		for (var p in this) {
+			if (this.hasOwnProperty(p) &amp;&amp; p != "toString" &amp;&amp; p != "toName") str += p + "=" + this[p] + ", ";
+		}
+		return str.substring(0, str.length-2) + ")"
+	};
 
-    this.genID = function () {
-        return (this.lastName.get(0, 3) + this.birthday.split("/")[1] + this.firstName.get(0, 1) + this.secondName.get(0, 1) + this.birthday.split("/")[2] + this.sex[0]).toUpperCase();
-    };
+	this.genID = function () {
+		return (this.lastName.get(0, 3) + this.birthday.split("/")[1] + this.firstName.get(0, 1) + this.secondName.get(0, 1) + this.birthday.split("/")[2] + this.sex[0]).toUpperCase();
+	};
 
-    this.getAge = function () {
-        return (date2num(getDate()) - date2num(this.birthday)).toNDec(2);
-    };
+	this.getAge = function () {
+		return (date2num(getDate()) - date2num(this.birthday)).toNDec(2);
+	};
 
-    this.isMajor = function () {
-        return ((this.country.get(0, 1) === "UN" || this.country.toLowerCase() === "united states") &amp;&amp; this.getAge() > 20) || ((this.country.get(0, 1) != "UN" || this.country.toLowerCase() != "united states") &amp;&amp; this.getAge() > 17);
-    };
+	this.isMajor = function () {
+		return ((this.country.get(0, 1) === "UN" || this.country.toLowerCase() === "united states") &amp;&amp; this.getAge() > 20) || ((this.country.get(0, 1) != "UN" || this.country.toLowerCase() != "united states") &amp;&amp; this.getAge() > 17);
+	};
 
-    this.getFullName = function () {
-        return this.firstName + " " + this.secondName + (this.nickname != ""? " \"" + this.nickname + "\" ": " ") + this.lastName;
-    };
+	this.getFullName = function () {
+		return this.firstName + " " + this.secondName + (this.nickname != ""? " \"" + this.nickname + "\" ": " ") + this.lastName;
+	};
 
-    return this
+	return this
 }
 
 /**
@@ -180,27 +180,27 @@ function Person (fname, sname, lname, title, nickname, num, country, city, sex, 
  * @property {function(): string} Item.toString String representation
  */
 function Item (name, cat, price, amr, nb) { //An item like the ones that can be bought/sold/traded/used
-    this.name = name || "unknown";
-    this.category = cat || "unknown";
-    this.price = price || 0;
-    this.ageMinRequired = amr || .25; //3 months old+
-    this.quantity = nb || 1;
-    this.firstMade = new Date().toLocaleString();
+	this.name = name || "unknown";
+	this.category = cat || "unknown";
+	this.price = price || 0;
+	this.ageMinRequired = amr || .25; //3 months old+
+	this.quantity = nb || 1;
+	this.firstMade = new Date().toLocaleString();
 
-    this.duplicate = function (n, dest) {
-        for (var i = 0; i &lt; n; i++) dest.push(new Item(this.name, this.category, this.price, this.ageMinRequired, this.quantity));
-    };
-    this.remove = function (dest) {
-        isType(dest, "Array")? dest = dest.remove(this): dest.remove(this)
-    };
-    this.toString = function () {
-        var str = "";
-        for (var p in this) {
-            if (this.hasOwnProperty(p) &amp;&amp; p != "toString" &amp;&amp; !isType(p, "function")) str += p + "=" + this[p] + ", ";
-        }
-        return str.substring(0, str.length-2)
-    };
-    return this
+	this.duplicate = function (n, dest) {
+		for (var i = 0; i &lt; n; i++) dest.push(new Item(this.name, this.category, this.price, this.ageMinRequired, this.quantity));
+	};
+	this.remove = function (dest) {
+		isType(dest, "Array")? dest = dest.remove(): dest.remove()
+	};
+	this.toString = function () {
+		var str = "";
+		for (var p in this) {
+			if (this.hasOwnProperty(p) &amp;&amp; p != "toString" &amp;&amp; !isType(p, "function")) str += p + "=" + this[p] + ", ";
+		}
+		return str.substring(0, str.length-2)
+	};
+	return this
 }
 
 /**
@@ -212,16 +212,16 @@ function Item (name, cat, price, amr, nb) { //An item like the ones that can be 
  * @func
  */
 function letterArray (first, last) { //A letter pair array
-    var f = first.charCodeAt(0) || 97, l = last.charCodeAt(0) || 122, arr = [], letterPair = "";
-    for (var firstLetter = f; firstLetter &lt;= l; firstLetter++) {
-        for (var secondLetter = f; secondLetter &lt;= l; secondLetter++) {
-            if (firstLetter != secondLetter) {
-                letterPair = String.fromCharCode(firstLetter) + String.fromCharCode(secondLetter);
-                arr.push(letterPair);
-            }
-        }
-    }
-    return arr
+	var f = first.charCodeAt(0) || 97, l = last.charCodeAt(0) || 122, arr = [], letterPair = "";
+	for (var firstLetter = f; firstLetter &lt;= l; firstLetter++) {
+		for (var secondLetter = f; secondLetter &lt;= l; secondLetter++) {
+			if (firstLetter != secondLetter) {
+				letterPair = String.fromCharCode(firstLetter) + String.fromCharCode(secondLetter);
+				arr.push(letterPair);
+			}
+		}
+	}
+	return arr
 }
 
 /**
@@ -233,16 +233,16 @@ function letterArray (first, last) { //A letter pair array
  * @func
  */
 function rmConsecDuplicates (arr) {
-    var out = [];
-    var j = 0;
-    for (var i = 0; i &lt; arr.length; i++) {
-        if (i === 0 || arr[i] != arr[i - 1]) out[j++] = arr[i];
-    }
-    j = 0;
-    for (i = 0; i &lt; arr.length - 1; i++) { //Double enforced check
-        if (arr[i] != arr[i + 1]) out[j++] = arr[i];
-    }
-    return out
+	var out = [];
+	var j = 0;
+	for (var i = 0; i &lt; arr.length; i++) {
+		if (i === 0 || arr[i] != arr[i - 1]) out[j++] = arr[i];
+	}
+	j = 0;
+	for (i = 0; i &lt; arr.length - 1; i++) { //Double enforced check
+		if (arr[i] != arr[i + 1]) out[j++] = arr[i];
+	}
+	return out
 }
 
 /**
@@ -258,12 +258,12 @@ function rmConsecDuplicates (arr) {
  * rmDuplicates([4, 10, 1, 9, 10, 10, 10, 3, 4, 2]); //[4, 10, 1, 9, 3, 2]
  */
 function rmDuplicates (arr) {
-    if (!arr.isIterable()) throw new TypeError("It's not possible to remove duplicates of a non iterable object.");
-    var uniques = [];
-    for (var i = 0; i &lt; arr.length; i++) {
-        if (!uniques.has(arr[i])) uniques.push(arr[i]);
-    }
-    return isType(arr, "Array")? uniques: uniques.join("");
+	if (!arr.isIterable()) throw new TypeError("It's not possible to remove duplicates of a non iterable object.");
+	var uniques = [];
+	for (var i = 0; i &lt; arr.length; i++) {
+		if (!uniques.has(arr[i])) uniques.push(arr[i]);
+	}
+	return isType(arr, "Array")? uniques: uniques.join("");
 }
 
 /**
@@ -281,111 +281,111 @@ function rmDuplicates (arr) {
  * @property {function(string): string} base64.encoder Base64 encoder
  */
 var base64 = {
-    /**
-     * @readonly
-     * @instance
-     */
-    PADCHAR: "=",
-    /**
-     * @readonly
-     * @instance
-     */
-    ALPHA: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
-    /**
-     * @throws Invalid character error: DOM Exception 5
-     * @param {String} s String to use
-     * @param {number} [i=0] Index
-     * @returns {undefined}
-     */
-    getbyte64: function (s, i) {
-        /* "This is oddly fast, except on Chrome/V8.
-         Minimal or no improvement in performance by using an
-         object with properties mapping chars to value (eg. 'A': 0)" */
-        i = base64.ALPHA.indexOf(s.charAt(i || 0));
-        if (i === -1) throw "Cannot decode base64";
-        return i
-    },
-    /**
-     * @throws Cannot decode base64
-     * @param {String} s String to decode
-     * @returns {String} Decoded base64 code
-     */
-    decode: function (s) {
-        s += "";
-        var pads, i, b10;
-        var imax = s.length;
-        if (imax === 0) return s;
-        else if (imax % 4 != 0) throw "Cannot decode base64";
+	/**
+	 * @readonly
+	 * @instance
+	 */
+	PADCHAR: "=",
+	/**
+	 * @readonly
+	 * @instance
+	 */
+	ALPHA: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
+	/**
+	 * @throws Invalid character error: DOM Exception 5
+	 * @param {String} s String to use
+	 * @param {number} [i=0] Index
+	 * @returns {undefined}
+	 */
+	getbyte64: function (s, i) {
+		/* "This is oddly fast, except on Chrome/V8.
+		 Minimal or no improvement in performance by using an
+		 object with properties mapping chars to value (eg. 'A': 0)" */
+		i = base64.ALPHA.indexOf(s.charAt(i || 0));
+		if (i === -1) throw "Cannot decode base64";
+		return i
+	},
+	/**
+	 * @throws Cannot decode base64
+	 * @param {String} s String to decode
+	 * @returns {String} Decoded base64 code
+	 */
+	decode: function (s) {
+		s += "";
+		var pads, i, b10;
+		var imax = s.length;
+		if (imax === 0) return s;
+		else if (imax % 4 != 0) throw "Cannot decode base64";
 
-        pads = 0;
-        if (s.charAt(imax - 1) === this.PADCHAR) {
-            pads = 1;
-            if (s.charAt(imax - 2) === this.PADCHAR) pads = 2;
-            //Either way, we want to ignore this last block
-            imax -= 4;
-        }
+		pads = 0;
+		if (s.charAt(imax - 1) === this.PADCHAR) {
+			pads = 1;
+			if (s.charAt(imax - 2) === this.PADCHAR) pads = 2;
+			//Either way, we want to ignore this last block
+			imax -= 4;
+		}
 
-        var x = [];
-        for (i = 0; i &lt; imax; i += 4) {
-            b10 = (this.getbyte64(s, i) &lt;&lt; 18) | (this.getbyte64(s, i + 1) &lt;&lt; 12) | (this.getbyte64(s, i + 2) &lt;&lt; 6) | this.getbyte64(s, i + 3);
-            x.push(String.fromCharCode(b10 >> 16, (b10 >> 8) &amp; 0xff, b10 &amp; 0xff));
-        }
+		var x = [];
+		for (i = 0; i &lt; imax; i += 4) {
+			b10 = (this.getbyte64(s, i) &lt;&lt; 18) | (this.getbyte64(s, i + 1) &lt;&lt; 12) | (this.getbyte64(s, i + 2) &lt;&lt; 6) | this.getbyte64(s, i + 3);
+			x.push(String.fromCharCode(b10 >> 16, (b10 >> 8) &amp; 0xff, b10 &amp; 0xff));
+		}
 
-        switch (pads) {
-            case 1:
-                b10 = (this.getbyte64(s, i) &lt;&lt; 18) | (this.getbyte64(s, i + 1) &lt;&lt; 12) | (this.getbyte64(s, i + 2) &lt;&lt; 6);
-                x.push(String.fromCharCode(b10 >> 16, (b10 >> 8) &amp; 0xff));
-                break;
-            case 2:
-                b10 = (this.getbyte64(s, i) &lt;&lt; 18) | (this.getbyte64(s, i + 1) &lt;&lt; 12);
-                x.push(String.fromCharCode(b10 >> 16));
-                break;
-        }
-        return x.join("")
-    },
-    /**
-     * @throws Invalid character error: DOM Exception 5
-     * @param {String} s String to use
-     * @param {number} [i=0] Index
-     * @returns {undefined}
-     */
-    getbyte: function (s, i) {
-        var x = s.charCodeAt(i || 0);
-        if (x > 255) throw "INVALID_CHARACTER_ERR: DOM Exception 5";
-        return x
-    },
-    /**
-     * @throws {SyntaxError} Only one argument needed
-     * @param {string} s String to encode
-     * @returns {undefined}
-     */
-    encode: function (s) {
-        if (arguments.length != 1) throw new SyntaxError("Only one argument please !");
+		switch (pads) {
+			case 1:
+				b10 = (this.getbyte64(s, i) &lt;&lt; 18) | (this.getbyte64(s, i + 1) &lt;&lt; 12) | (this.getbyte64(s, i + 2) &lt;&lt; 6);
+				x.push(String.fromCharCode(b10 >> 16, (b10 >> 8) &amp; 0xff));
+				break;
+			case 2:
+				b10 = (this.getbyte64(s, i) &lt;&lt; 18) | (this.getbyte64(s, i + 1) &lt;&lt; 12);
+				x.push(String.fromCharCode(b10 >> 16));
+				break;
+		}
+		return x.join("")
+	},
+	/**
+	 * @throws Invalid character error: DOM Exception 5
+	 * @param {String} s String to use
+	 * @param {number} [i=0] Index
+	 * @returns {undefined}
+	 */
+	getbyte: function (s, i) {
+		var x = s.charCodeAt(i || 0);
+		if (x > 255) throw "INVALID_CHARACTER_ERR: DOM Exception 5";
+		return x
+	},
+	/**
+	 * @throws {SyntaxError} Only one argument needed
+	 * @param {string} s String to encode
+	 * @returns {undefined}
+	 */
+	encode: function (s) {
+		if (arguments.length != 1) throw new SyntaxError("Only one argument please !");
 
-        var i, b10, x = [];
-        s += "";
-        var imax = s.length - s.length % 3;
+		var i, b10, x = [];
+		s += "";
+		var imax = s.length - s.length % 3;
 
-        if (s.length === 0) return s;
-        for (i = 0; i &lt; imax; i += 3) {
-            b10 = (this.getbyte(s, i) &lt;&lt; 16) || (this.getbyte(s, i + 1) &lt;&lt; 8) || this.getbyte(s, i + 2);
-            x.push(this.ALPHA.charAt(b10 >> 18));
-            x.push(this.ALPHA.charAt((b10 >> 12) &amp; 0x3F));
-            x.push(this.ALPHA.charAt((b10 >> 6) &amp; 0x3f));
-            x.push(this.ALPHA.charAt(b10 &amp; 0x3f));
-        }
-        switch (s.length - imax) {
-            case 1:
-                b10 = this.getbyte(s, i) &lt;&lt; 16;
-                x.push(this.ALPHA.charAt(b10 >> 18) + this.ALPHA.charAt((b10 >> 12) &amp; 0x3F) + this.PADCHAR.repeat(2));
-                break;
-            case 2:
-                b10 = (this.getbyte(s, i) &lt;&lt; 16) || (this.getbyte(s, i + 1) &lt;&lt; 8);
-                x.push(this.ALPHA.charAt(b10 >> 18) + this.ALPHA.charAt((b10 >> 12) &amp; 0x3F) + this.ALPHA.charAt((b10 >> 6) &amp; 0x3f) + this.PADCHAR);
-                break;
-        }
-        return x.join("")
-    }
+		if (s.length === 0) return s;
+		for (i = 0; i &lt; imax; i += 3) {
+			b10 = (this.getbyte(s, i) &lt;&lt; 16) || (this.getbyte(s, i + 1) &lt;&lt; 8) || this.getbyte(s, i + 2);
+			x.push(this.ALPHA.charAt(b10 >> 18));
+			x.push(this.ALPHA.charAt((b10 >> 12) &amp; 0x3F));
+			x.push(this.ALPHA.charAt((b10 >> 6) &amp; 0x3f));
+			x.push(this.ALPHA.charAt(b10 &amp; 0x3f));
+		}
+		switch (s.length - imax) {
+			case 1:
+				b10 = this.getbyte(s, i) &lt;&lt; 16;
+				x.push(this.ALPHA.charAt(b10 >> 18) + this.ALPHA.charAt((b10 >> 12) &amp; 0x3F) + this.PADCHAR.repeat(2));
+				break;
+			case 2:
+				b10 = (this.getbyte(s, i) &lt;&lt; 16) || (this.getbyte(s, i + 1) &lt;&lt; 8);
+				x.push(this.ALPHA.charAt(b10 >> 18) + this.ALPHA.charAt((b10 >> 12) &amp; 0x3F) + this.ALPHA.charAt((b10 >> 6) &amp; 0x3f) + this.PADCHAR);
+				break;
+		}
+		return x.join("")
+	}
 };
 
 /**
@@ -415,112 +415,112 @@ var base64 = {
  * @property {function(*, number): NumberLike} Machine.conv Data converter
  */
 function Machine (name, ver, cpy, type) {
-    //ver (basis) := 1: binary, 2: ternary, 3: octal, 4: decimal, 5: hexadecimal, 6: base 36
-    this.capacity = cpy || 1024; //pow(2, 10) bits = 128B
-    this.version = ver || 5;
-    this.name = name || "Machine_" + this.version;
+	//ver (basis) := 1: binary, 2: ternary, 3: octal, 4: decimal, 5: hexadecimal, 6: base 36
+	this.capacity = cpy || 1024; //pow(2, 10) bits = 128B
+	this.version = ver || 5;
+	this.name = name || "Machine_" + this.version;
 
-    switch (this.version) {
-        case 1: this.base = 2; break;
-        case 2: this.base = 3; break;
-        case 3: this.base = 8; break;
-        case 4: this.base = 10; break;
-        case 5: this.base = 16; break;
-        case 6: this.base = 36; break;
-        default: this.base = 16; break;
-    }
+	switch (this.version) {
+		case 1: this.base = 2; break;
+		case 2: this.base = 3; break;
+		case 3: this.base = 8; break;
+		case 4: this.base = 10; break;
+		case 5: this.base = 16; break;
+		case 6: this.base = 36; break;
+		default: this.base = 16; break;
+	}
 
-    this.operation = function (a, b, op) {
-        switch (op.normal()) {
-            case "+": return a + b;
-            case "-": return a - b;
-            case "*": return a * b;
-            case "/": return a / b;
-            case "%": return a % b;
-            case ">>": return a >> b;
-            case "&lt;&lt;": return a &lt;&lt; b;
-            case ">>>": return a >>> b;
-            case ">": return a > b;
-            case "&lt;": return a &lt; b;
-            case "|": return a | b;
-            case "&amp;": return a &amp; b;
-            case "^": return a ^ b;
-            case "=": return a === b;
-            case "!=": return a != b;
-            case ">=": return a >= b;
-            case "&lt;=": return a &lt;= b;
-            case "||": return a || b;
-            case "&amp;&amp;": return a &amp;&amp; b;
-            case "e": return a * Math.pow(10, b);
-            case "e^": case "exp":
-            return [Math.exp(a), Math.exp(b)];
-            case "log": return log(a, b);
-            case "++": return [a++, b++];
-            case "--": return [a--, b--];
-            case "+=": return a += b;
-            case "-=": return a -= b;
-            case "*=": return a *= b;
-            case "/=": return a /= b;
-            case "%=": return a %= b;
-            case ".=": return a.concat(b);
-            default: return a + "" + b;
-        }
-    };
+	this.operation = function (a, b, op) {
+		switch (op.normal()) {
+			case "+": return a + b;
+			case "-": return a - b;
+			case "*": return a * b;
+			case "/": return a / b;
+			case "%": return a % b;
+			case ">>": return a >> b;
+			case "&lt;&lt;": return a &lt;&lt; b;
+			case ">>>": return a >>> b;
+			case ">": return a > b;
+			case "&lt;": return a &lt; b;
+			case "|": return a | b;
+			case "&amp;": return a &amp; b;
+			case "^": return a ^ b;
+			case "=": return a === b;
+			case "!=": return a != b;
+			case ">=": return a >= b;
+			case "&lt;=": return a &lt;= b;
+			case "||": return a || b;
+			case "&amp;&amp;": return a &amp;&amp; b;
+			case "e": return a * Math.pow(10, b);
+			case "e^": case "exp":
+			return [Math.exp(a), Math.exp(b)];
+			case "log": return log(a, b);
+			case "++": return [a++, b++];
+			case "--": return [a--, b--];
+			case "+=": return a += b;
+			case "-=": return a -= b;
+			case "*=": return a *= b;
+			case "/=": return a /= b;
+			case "%=": return a %= b;
+			case ".=": return a.concat(b);
+			default: return a + "" + b;
+		}
+	};
 
-    this.inv = function (data) {
-        if (!isType(data, "String")) data += "";
-        for(var i = 0; i &lt; data.length; i++) data[i] = parseInt(this.base) - 1 - parseFloat(data[i]);
-        return data
-    };
+	this.inv = function (data) {
+		if (!isType(data, "String")) data += "";
+		for(var i = 0; i &lt; data.length; i++) data[i] = parseInt(this.base) - 1 - parseFloat(data[i]);
+		return data
+	};
 
-    this.memory = new Memory(this.capacity, type || "", this.name);
-    this.send = function (msg, to) {
-        POST(to, "msg=" + this.parse(msg));
-    };
+	this.memory = new Memory(this.capacity, type || "", this.name);
+	this.send = function (msg, to) {
+		POST(to, "msg=" + this.parse(msg));
+	};
 
-    this.parse = function (data) { //Turn the machine string into a human readable one
-        if (!isType(data, "Array")) data = this.base === 2? data.divide(8): data.divide(2);
-        var res = "", deconvs = [];
-        for (var i = 0; i &lt; data.length; i++) {
-            deconvs[i] = conv(data[i], this.base);
-            res += String.fromCharCode(conv(data[i], this.base));
-        }
-        Essence.say(deconvs);
-        return JSON.parse(res); //prone to errors when this.base != 16
-    };
+	this.parse = function (data) { //Turn the machine string into a human readable one
+		if (!isType(data, "Array")) data = this.base === 2? data.divide(8): data.divide(2);
+		var res = "", deconvs = [];
+		for (var i = 0; i &lt; data.length; i++) {
+			deconvs[i] = conv(data[i], this.base);
+			res += String.fromCharCode(conv(data[i], this.base));
+		}
+		Essence.say(deconvs);
+		return JSON.parse(res); //prone to errors when this.base != 16
+	};
 
-    this.unparse = function (data, noArr) { //Turn the data into a machine readable string
-        var nd = JSON.stringify(data), res = "", codes = [];
-        for (var i = 0; i &lt; nd.length; i++) {
-            codes[i] = nd.charCodeAt(i);
-            res += this.base === 2? conv(nd.charCodeAt(i).toNDigits(8), 10, this.base): conv(nd.charCodeAt(i), 10, this.base);
-        }
-        //Essence.say("\'" + data + "\'= " + codes, "info");
-        return noArr? res: (this.base === 2? res.divide(8): res.divide(2));
-    };
+	this.unparse = function (data, noArr) { //Turn the data into a machine readable string
+		var nd = JSON.stringify(data), res = "", codes = [];
+		for (var i = 0; i &lt; nd.length; i++) {
+			codes[i] = nd.charCodeAt(i);
+			res += this.base === 2? conv(nd.charCodeAt(i).toNDigits(), 10, this.base): conv(nd.charCodeAt(i), 10, this.base);
+		}
+		//Essence.say("\'" + data + "\'= " + codes, "info");
+		return noArr? res: (this.base === 2? res.divide(8): res.divide(2));
+	};
 
-    this.store = function (data) {
-        this.memory.add(this.unparse(data));
-        this.memory.save();
-    };
+	this.store = function (data) {
+		this.memory.add(this.unparse(data));
+		this.memory.save();
+	};
 
-    this.show = function () {
-        for(var i = 0; i &lt; this.memory.slots.length; i++) Essence.say(this.memory.slots[i]);
-    };
+	this.show = function () {
+		for(var i = 0; i &lt; this.memory.slots.length; i++) Essence.say(this.memory.slots[i]);
+	};
 
-    this.specs = function () { //Specifications about the machine
-        return "Name: " + this.name + "\nCapacity: " + this.capacity + " bits\nMemory: \n" + this.memory.toString()
-    };
+	this.specs = function () { //Specifications about the machine
+		return "Name: " + this.name + "\nCapacity: " + this.capacity + " bits\nMemory: \n" + this.memory.toString()
+	};
 
-    this.toString = function () {
-        return "Machine("+ this.specs() + ")";
-    };
+	this.toString = function () {
+		return "Machine("+ this.specs() + ")";
+	};
 
-    this.conv = function (data, base) {
-        return conv(data, base || 36, this.base);
-    };
+	this.conv = function (data, base) {
+		return conv(data, base || 36, this.base);
+	};
 
-    return this;
+	return this;
 }
 
 /**
@@ -547,77 +547,77 @@ function Machine (name, ver, cpy, type) {
  * @property {function(): string} Machine.toString String representation
  */
 function Memory (cpy, type, prefix) {
-    this.capacity = cpy || 1024;
-    this.slots = new Array(this.capacity);
-    this.type = type === "local"? "local": "session";
-    this.name = prefix? prefix + "_" + this.type + "M" + log(this.capacity): this.type + "M" + log(this.capacity);
-    this.free = 0;
-    this.save = function () {
-        for (var i = 0; i &lt; this.slots.length; i++) {
-            if (this.type === "local") localStorage.setItem(this.name + "#" + i, this.slots[i]);
-            else sessionStorage.setItem(this.name + "#" + i, this.slots[i]);
-        }
-    };
+	this.capacity = cpy || 1024;
+	this.slots = new Array(this.capacity);
+	this.type = type === "local"? "local": "session";
+	this.name = prefix? prefix + "_" + this.type + "M" + log(this.capacity): this.type + "M" + log(this.capacity);
+	this.free = 0;
+	this.save = function () {
+		for (var i = 0; i &lt; this.slots.length; i++) {
+			if (this.type === "local") localStorage.setItem(this.name + "#" + i, this.slots[i]);
+			else sessionStorage.setItem(this.name + "#" + i, this.slots[i]);
+		}
+	};
 
-    this.remove = function (data) {
-        this.slots.remove(JSON.stringify(data));
-        if (this.type === "local") localStorage.setItem(this.getLocation(data), undefined);
-        else sessionStorage.setItem(this.getLocation(data), undefined);
-    };
+	this.remove = function (data) {
+		this.slots.remove();
+		if (this.type === "local") localStorage.setItem(this.getLocation(data), undefined);
+		else sessionStorage.setItem(this.getLocation(data), undefined);
+	};
 
-    this.getLocation = function (data) { //Get the memory location of a data
-        if (this.type === "local") {
-            for (var i in localStorage) {
-                if (localStorage.hasOwnProperty(i) &amp;&amp; localStorage[i] === JSON.stringify(data)) return i
-            }
-        } else {
-            for (i in sessionStorage) {
-                if (sessionStorage.hasOwnProperty(i) &amp;&amp; sessionStorage[i] === JSON.stringify(data)) return i
-            }
-        }
-        return -1
-    };
+	this.getLocation = function (data) { //Get the memory location of a data
+		if (this.type === "local") {
+			for (var i in localStorage) {
+				if (localStorage.hasOwnProperty(i) &amp;&amp; localStorage[i] === JSON.stringify(data)) return i
+			}
+		} else {
+			for (i in sessionStorage) {
+				if (sessionStorage.hasOwnProperty(i) &amp;&amp; sessionStorage[i] === JSON.stringify(data)) return i
+			}
+		}
+		return -1
+	};
 
-    this.clear = function () {
-        this.slots = new Array(this.capacity);
-        this.free = 0;
-        if (this.type === "local") {
-            for (var i in localStorage) {
-                if (localStorage.hasOwnProperty(i) &amp;&amp; i.has(this.name)) localStorage.removeItem(i);
-            }
-        } else {
-            for (i in sessionStorage) {
-                if (sessionStorage.hasOwnProperty(i) &amp;&amp; i.has(this.name)) sessionStorage.removeItem(i);
-            }
-        }
-    };
+	this.clear = function () {
+		this.slots = new Array(this.capacity);
+		this.free = 0;
+		if (this.type === "local") {
+			for (var i in localStorage) {
+				if (localStorage.hasOwnProperty(i) &amp;&amp; i.has(this.name)) localStorage.removeItem(i);
+			}
+		} else {
+			for (i in sessionStorage) {
+				if (sessionStorage.hasOwnProperty(i) &amp;&amp; i.has(this.name)) sessionStorage.removeItem(i);
+			}
+		}
+	};
 
-    this.add = function (data) { //Added but not saved
-        this.slots[this.free++] = JSON.stringify(data);
-    };
+	this.add = function (data) { //Added but not saved
+		this.slots[this.free++] = JSON.stringify(data);
+	};
 
-    this.print = function () {
-        Essence.say(this.name + "\'s slots: ", "info");
-        for (var i = 0; i &lt; this.slots.length; i++) {
-            try {
-                Essence.say(i + ": " + JSON.parse(this.slots[i]))
-            } catch(err) {
-                Essence.say(i + ": ")
-            }
-        }
-    };
+	this.print = function () {
+		Essence.say(this.name + "\'s slots: ", "info");
+		for (var i = 0; i &lt; this.slots.length; i++) {
+			try {
+				Essence.say(i + ": " + JSON.parse(this.slots[i]))
+			} catch(err) {
+				Essence.say(i + ": ")
+			}
+		}
+	};
 
-    this.pop = function () {
-        (this.type === "local")? localStorage.removeItem(this.getLocation(this.slots.last())): sessionStorage.removeItem(this.getLocation(this.slots.last()));
-        this.free--;
-        this.slots.pop();
-    };
+	this.pop = function () {
+		(this.type === "local")? localStorage.removeItem(this.getLocation(this.slots.last())): sessionStorage.removeItem(this.getLocation(this.slots.last()));
+		this.free--;
+		this.slots.pop();
+	};
 
-    this.toString = function () {
-        return this.type.capitalize() + " memory " + this.name + ": " + this.slots.toStr(true)
-    };
+	this.toString = function () {
+		return this.type.capitalize() + " memory " + this.name + ": " + this.slots.toStr(true)
+	};
 
-    return this;
+	return this;
 }
 
 /**
@@ -627,8 +627,8 @@ function Memory (cpy, type, prefix) {
  * @since 1.0
  * @property {Object} Sys.in Input
  * @property {boolean} Sys.in.recording Recording flag
- * @property {function(keyStroke)} Sys.in.record Input recorder
- * @property {function(keyStroke)} Sys.in.startRecording Record starter
+ * @property {function((Event|keyStroke))} Sys.in.record Input recorder
+ * @property {function((Event|keyStroke))} Sys.in.startRecording Record starter
  * @property {function(): string} Sys.in.stopRecording Record stopper
  * @property {function(*)} Sys.log Logger
  * @property {function(Function)} Sys.debug Debugger
@@ -636,38 +636,38 @@ function Memory (cpy, type, prefix) {
  * @property {function(): string} Sys.toString() String representation
  */
 var Sys = { //System
-    in: {
-        recording: false,
-        record: function (keyStroke) { //Record the user input
-            if (this.recording) this.data.push(getKey(keyStroke)[0]);
-        },
-        startRecording: function (keyStroke) {
-            this.recording = true;
-            this.record(keyStroke);
-        },
-        stopRecording: function () {
-            this.recording = false;
-            return this.data.last()
-        }, data: []//Slot data containing the data typed in the window and not the console
-    },
-    log: function (data) {
-        console.log("[System]  " + data);
-    },
-    debug: function (cb) {
-        this.log("Debugging: " + cb.name);
-        console.group();
-        console.time("debug");
-        cb(Array.from(arguments).get(1));
-        console.timeEnd("Time");
-        console.trace();
-        console.groupEnd();
-    },
-    out: function () {
-        Essence.print("\b" + this.in.data);
-        return Essence.txt2print;
-    }, toString: function () {
-        return "[object System]";
-    }
+	in: {
+		recording: false,
+		record: function (keyStroke) { //Record the user input
+			if (this.recording) this.data.push(getKey(keyStroke)[0]);
+		},
+		startRecording: function (keyStroke) {
+			this.recording = true;
+			this.record(keyStroke);
+		},
+		stopRecording: function () {
+			this.recording = false;
+			return this.data.last()
+		}, data: []//Slot data containing the data typed in the window and not the console
+	},
+	log: function (data) {
+		console.log("[System]  " + data);
+	},
+	debug: function (cb) {
+		this.log("Debugging: " + cb.name);
+		console.group();
+		console.time("debug");
+		cb(Array.from(arguments).get(1));
+		console.timeEnd("Time");
+		console.trace();
+		console.groupEnd();
+	},
+	out: function () {
+		Essence.print("\b" + this.in.data);
+		return Essence.txt2print;
+	}, toString: function () {
+		return "[object System]";
+	}
 };
 
 /**
@@ -679,14 +679,14 @@ var Sys = { //System
  * @listens window.onkeypress
  */
 window.onkeypress = function (keyStroke) {
-    Sys.in.record(keyStroke);
-    $G["lastKeyPair"] = getKey(keyStroke);
+	Sys.in.record(keyStroke);
+	$G["lastKeyPair"] = getKey(keyStroke);
 };
 
 /**
  * @description Typing recorder
  * @deprecated
- * @param {function(function(string))} [cb] Callback
+ * @param {function(string)} [cb] Callback
  * @returns {string} Recorded keystrokes
  * @ignore
  * @see module:Misc~Sys
@@ -694,19 +694,19 @@ window.onkeypress = function (keyStroke) {
  * @func
  */
 function stup (cb) {
-    alert("You have 10s to type something !");
-    Sys.in.recording = true;
-    Sys.in.data = [];
-    setTimeout(function () {
-        Sys.in.recording = false;
-        alert("Stop !!");
-        if(cb) cb(Sys.in.data.join(""));
-        return Sys.in.data.join("");
-    }, 1e4);
-    while(Sys.in.data.length === 0 || $G["las"]) {
-        if(!Sys.in.recording) break;
-    }
-    return Sys.in.data.join("");
+	alert("You have 10s to type something !");
+	Sys.in.recording = true;
+	Sys.in.data = [];
+	setTimeout(function () {
+		Sys.in.recording = false;
+		alert("Stop !!");
+		if(cb) cb(Sys.in.data.join(""));
+		return Sys.in.data.join("");
+	}, 1e4);
+	while(Sys.in.data.length === 0 || $G["las"]) {
+		if(!Sys.in.recording) break;
+	}
+	return Sys.in.data.join("");
 }
 
 /**
@@ -718,7 +718,7 @@ function stup (cb) {
  * @func
  */
 function RegExpify (str) {
-    return new RegExp(str.replace(/[|\\{}()[\]^$+*?.:'%]/g, "\\$&amp;"), "gm");
+	return new RegExp(str.replace(/[|\\{}()[\]^$+*?.:'%]/g, "\\$&amp;"), "gm");
 }
 
 /**
@@ -730,7 +730,7 @@ function RegExpify (str) {
  * @func
  */
 function unRegExpify (re) {
-    return re.toString().get(1, re.toString().lastIndexOf("/") - 1).remove("\\");
+	return re.toString().get(1, re.toString().lastIndexOf("/") - 1).remove();
 }
 
 /**
@@ -743,9 +743,9 @@ function unRegExpify (re) {
  * @func
  */
 function Objectify (keyArr, valArr) {
-    var res = {};
-    for (var i = 0; i &lt; keyArr.length; i++) res[keyArr[i]] = valArr[i] || null;
-    return res;
+	var res = {};
+	for (var i = 0; i &lt; keyArr.length; i++) res[keyArr[i]] = valArr[i] || null;
+	return res;
 }
 
 /**
@@ -758,9 +758,9 @@ function Objectify (keyArr, valArr) {
  * @func
  */
 function Tablify (keyArr, val) {
-    return Objectify(keyArr, new Array(keyArr.length).fill(arguments.toArray().length > 0? val: []).map(function () {
-        return arguments.toArray().length > 1? val: [];
-    }));
+	return Objectify(keyArr, new Array(keyArr.length).fill(arguments.toArray().length > 0? val: []).map(function () {
+		return arguments.toArray().length > 1? val: [];
+	}));
 }
 
 /* eslint no-array-constructor: 0 */
@@ -773,66 +773,66 @@ function Tablify (keyArr, val) {
  * @func
  */
 function name2type (name, param) {
-    switch(name) {
-        case "Number": return Number(param);
-        case "String": return String(param);
-        case "Boolean": return Boolean(param);
-        case "Function": return Function(param, arguments.toArray().get(2));
-        case "Object": return Object(param, arguments.toArray().get(2));
-        case "Date": return new Date(param, arguments.toArray().get(2));
-        case "Array": return [param, arguments.toArray().get(2)];
-        case "RegExp": return new RegExp(param, arguments.toArray().get(2).toString());
-        case "Error": return Error(param, arguments.toArray().get(2));
-        case "File": return File(param, arguments.toArray().get(2));
-        case "URL": return URL(param, arguments.toArray().get(2));
-        case "FileReader": return FileReader(param, arguments.toArray().get(2));
-        case "FileWriter": return FileWriter(param, arguments.toArray().get(2));
-        case "Blob": return Blob(param, arguments.toArray().get(2));
-        case "Element": return Element(param, arguments.toArray().get(2));
-        case "Person": return Person(param, arguments.toArray().get(2));
-        case "Item": return Item(param, parseFloat(arguments.toArray().get(2)));
-        case "Colour": return Colour(param, arguments.toArray().get(2));
-        case "LinkedList": return LinkedList(param, arguments.toArray().get(2));
-        case "TreeNode": return TreeNode(param, arguments.toArray().get(2));
-        case "Node": return Node(param, arguments.toArray().get(2));
-        case "PathNode": return PathNode(param, arguments.toArray().get(2));
-        case "NTreeNode": return NTreeNode(param, arguments.toArray().get(2));
-        case "Set": return Set(param, arguments.toArray().get(2));
-        case "SortedSet": return SortedSet(param, arguments.toArray().get(2));
-        case "Stack": return Stack(param, arguments.toArray().get(2));
-        case "StackArray": return Stack(param, arguments.toArray().get(2));
-        case "StackList": return StackList(param, arguments.toArray().get(2));
-        case "Queue": return Queue(param, arguments.toArray().get(2));
-        case "QueueArray": return QueueArray(param, arguments.toArray().get(2));
-        case "QueueList": return QueueList(param, arguments.toArray().get(2));
-        case "Shape": return Shape(param, arguments.toArray().get(2));
-        case "Box": return Box(param, arguments.toArray().get(2));
-        case "AABB": return AABB(param, arguments.toArray().get(2));
-        case "Circ": return Circ(param, arguments.toArray().get(2));
-        case "Pt": return Pt(param, arguments.toArray().get(2));
-        case "Line": return Line(param, arguments.toArray().get(2));
-        case "Vector": return Vector(param, arguments.toArray().get(2));
-        case "Polygon": return Polygon(param, arguments.toArray().get(2));
-        case "database": return database(param, arguments.toArray().get(2));
-        case "process": return process(param, arguments.toArray().get(2));
-        case "server": return server(param, arguments.toArray().get(2));
-        case "Archive": return Archive(param, arguments.toArray().get(2));
-        case "Machine": return Machine(param, arguments.toArray().get(2).toString());
-        case "Memory": return Memory(param, arguments.toArray()[2], arguments.toArray()[3]);
-        case "WebPage": return WebPage(param, arguments.toArray().get(2));
-        case "WebApp": return WebApp(param, arguments.toArray().get(2));
-        case "virtualHistory": return virtualHistory(param, arguments.toArray().get(2));
-        case "Editor": return Editor(param, arguments.toArray().get(2));
-        case "Preview": return Preview(param, arguments.toArray().get(2));
-        case "Debugger": return Debugger(param, arguments.toArray().get(2));
-        case "Parser": return Parser(param, arguments.toArray().get(2));
-        case "Toolbar": return Toolbar(param, arguments.toArray().get(2));
-        case "IDE": return IDE(param, arguments.toArray().get(2));
-        case "Template": return Template(param, arguments.toArray().get(2));
-        case "Stream": return Stream(param, arguments.toArray().get(2));
-        case "MultiStream": return MultiStream(param, arguments.toArray().get(2));
-        default: return name;
-    }
+	switch(name) {
+		case "Number": return Number(param);
+		case "String": return String(param);
+		case "Boolean": return Boolean(param);
+		case "Function": return Function(param, arguments.toArray().get(2));
+		case "Object": return Object(param, arguments.toArray().get(2));
+		case "Date": return new Date(param, arguments.toArray().get(2));
+		case "Array": return [param, arguments.toArray().get(2)];
+		case "RegExp": return new RegExp(param, arguments.toArray().get(2).toString());
+		case "Error": return Error(param, arguments.toArray().get(2));
+		case "File": return File(param, arguments.toArray().get(2));
+		case "URL": return URL(param, arguments.toArray().get(2));
+		case "FileReader": return FileReader(param, arguments.toArray().get(2));
+		case "FileWriter": return FileWriter(param, arguments.toArray().get(2));
+		case "Blob": return Blob(param, arguments.toArray().get(2));
+		case "Element": return Element(param, arguments.toArray().get(2));
+		case "Person": return Person(param, arguments.toArray().get(2));
+		case "Item": return Item(param, parseFloat(arguments.toArray().get(2)));
+		case "Colour": return Colour(param, arguments.toArray().get(2));
+		case "LinkedList": return LinkedList(param, arguments.toArray().get(2));
+		case "TreeNode": return TreeNode(param, arguments.toArray().get(2));
+		case "Node": return Node(param, arguments.toArray().get(2));
+		case "PathNode": return PathNode(param, arguments.toArray().get(2));
+		case "NTreeNode": return NTreeNode(param, arguments.toArray().get(2));
+		case "Set": return Set(param, arguments.toArray().get(2));
+		case "SortedSet": return SortedSet(param, arguments.toArray().get(2));
+		case "Stack": return Stack(param, arguments.toArray().get(2));
+		case "StackArray": return Stack(param, arguments.toArray().get(2));
+		case "StackList": return StackList(param, arguments.toArray().get(2));
+		case "Queue": return Queue(param, arguments.toArray().get(2));
+		case "QueueArray": return QueueArray(param, arguments.toArray().get(2));
+		case "QueueList": return QueueList(param, arguments.toArray().get(2));
+		case "Shape": return Shape(param, arguments.toArray().get(2));
+		case "Box": return Box(param, arguments.toArray().get(2));
+		case "AABB": return AABB(param, arguments.toArray().get(2));
+		case "Circ": return Circ(param, arguments.toArray().get(2));
+		case "Pt": return Pt(param, arguments.toArray().get(2));
+		case "Line": return Line(param, arguments.toArray().get(2));
+		case "Vector": return Vector(param, arguments.toArray().get(2));
+		case "Polygon": return Polygon(param, arguments.toArray().get(2));
+		case "database": return database(param, arguments.toArray().get(2));
+		case "process": return process(param, arguments.toArray().get(2));
+		case "server": return server(param, arguments.toArray().get(2));
+		case "Archive": return Archive(param, arguments.toArray().get(2));
+		case "Machine": return Machine(param, arguments.toArray().get(2).toString());
+		case "Memory": return Memory(param, arguments.toArray()[2], arguments.toArray()[3]);
+		case "WebPage": return WebPage(param, arguments.toArray().get(2));
+		case "WebApp": return WebApp(param, arguments.toArray().get(2));
+		case "virtualHistory": return virtualHistory(param, arguments.toArray().get(2));
+		case "Editor": return Editor(param, arguments.toArray().get(2));
+		case "Preview": return Preview(param, arguments.toArray().get(2));
+		case "Debugger": return Debugger(param, arguments.toArray().get(2));
+		case "Parser": return Parser(param, arguments.toArray().get(2));
+		case "Toolbar": return Toolbar(param, arguments.toArray().get(2));
+		case "IDE": return IDE(param, arguments.toArray().get(2));
+		case "Template": return Template(param, arguments.toArray().get(2));
+		case "Stream": return Stream(param, arguments.toArray().get(2));
+		case "MultiStream": return MultiStream(param, arguments.toArray().get(2));
+		default: return name;
+	}
 }
 
 /* eslint no-array-constructor: 2 */
@@ -851,14 +851,14 @@ function name2type (name, param) {
  * @func
  */
 function FA (re) {
-    this.regexp = re;
-    this.states = [];
+	this.regexp = re;
+	this.states = [];
 
-    return this;
+	return this;
 }
 
 /**
- * @description Human RegExp to dictionnary (language)
+ * @description Human RegExp to dictionary (language)
  * @param {string} exp Human RegExp (simplified RegExp)
  * @todo Work on it
  * @returns {Array} Dictionary
@@ -866,14 +866,14 @@ function FA (re) {
  * @func
  */
 function exp2dict (exp) {
-    var re = RegExpify(exp), res = [], grp = [
-        /([a-z]+\|[a-z]+)+/gm, //...|...
-        /([a-z]+)\*/gm, //...*
-        /([a-z]+)\+/gm, //...+
-        /([a-z]+)\?/gm //...?
-    ];
-    //matches: re.exec(str).last()
-    return res;
+	var re = RegExpify(exp), res = [], grp = [
+		/([a-z]+\|[a-z]+)+/gm, //...|...
+		/([a-z]+)\*/gm, //...*
+		/([a-z]+)\+/gm, //...+
+		/([a-z]+)\?/gm //...?
+	];
+	//matches: re.exec(str).last()
+	return res;
 }
 /* eslint no-unused-vars: 2 */
 
@@ -886,7 +886,7 @@ function exp2dict (exp) {
  * @func
  */
 function arrayLiteral (arr, cjt) {
-    return arr.length > 1? arr.get(-1).toStr(true) + " " + (cjt || "and") + " " + arr.last(): arr[0];
+	return arr.length > 1? arr.get(-1).toStr(true) + " " + (cjt || "and") + " " + arr.last(): arr[0];
 }
 
 /**
@@ -897,12 +897,12 @@ function arrayLiteral (arr, cjt) {
  * @since 1.1
  */
 function moduleList (extended) {
-    var table = [["Name", "Version", "Description", "Dependencies"]];
-    if (extended) table[0].push("Weight");
-    Essence.loadedModules.map(function (m) {
-        extended? table.push([m.name, m.version, m.description, m.dependency.toStr(true), m.getWeight()]): table.push([m.name, m.version, m.description, m.dependency.toStr(true)]);
-    });
-    return table;
+	var table = [["Name", "Version", "Description", "Dependencies"]];
+	if (extended) table[0].push("Weight");
+	Essence.loadedModules.map(function (m) {
+		extended? table.push([m.name, m.version, m.description, m.dependency.toStr(true), m.getWeight()]): table.push([m.name, m.version, m.description, m.dependency.toStr(true)]);
+	});
+	return table;
 }
 
 /**
@@ -927,56 +927,56 @@ function moduleList (extended) {
  * @property {function(): string} Scoreboard.toString String representation of the Scoreboard
  */
 function Scoreboard (name, members, events, maxScore) {
-    this.name = name || "Scoreboard";
-    this.participants = members;
-    this.maxScore = maxScore || 10;
-    this.events = events;
-    this.build = function () {
-        this.table = [];
-        this.table.push([""].append(this.participants));
-        for (var i = 1; i &lt;= this.events.length; i++) this.table.push([this.events[i - 1]].append(new Array(this.participants.length).fill(0)));
-        this.table.push(["Total"].append(new Array(this.participants.length).fill(0)));
-    };
-    this.build();
-    this.addPoint = function (participant, event, score) {
-        this.table[lookfor(event, this.table)[0]][lookfor(participant, this.table)[1]] = score || 0;
-        this.table[lookfor("Total", this.table)[0]][lookfor(participant, this.table)[1]] = this.table.line(lookfor(participant, this.table)[1]).get(1, -1).sum();
-    };
+	this.name = name || "Scoreboard";
+	this.participants = members;
+	this.maxScore = maxScore || 10;
+	this.events = events;
+	this.build = function () {
+		this.table = [];
+		this.table.push([""].append(this.participants));
+		for (var i = 1; i &lt;= this.events.length; i++) this.table.push([this.events[i - 1]].append(new Array(this.participants.length).fill(0)));
+		this.table.push(["Total"].append(new Array(this.participants.length).fill(0)));
+	};
+	this.build();
+	this.addPoint = function (participant, event, score) {
+		this.table[lookfor(event, this.table)[0]][lookfor(participant, this.table)[1]] = score || 0;
+		this.table[lookfor("Total", this.table)[0]][lookfor(participant, this.table)[1]] = this.table.line(lookfor(participant, this.table)[1]).get(1, -1).sum();
+	};
 
-    this.getPoint = function (participant, event) {
-        return this.table[lookfor(event, this.table)[0]][lookfor(participant, this.table)[1]];
-    };
-    this.getTotal = function (participant) {
-        return this.table[lookfor("Total", this.table)[0]][lookfor(participant, this.table)[1]];
-    };
+	this.getPoint = function (participant, event) {
+		return this.table[lookfor(event, this.table)[0]][lookfor(participant, this.table)[1]];
+	};
+	this.getTotal = function (participant) {
+		return this.table[lookfor("Total", this.table)[0]][lookfor(participant, this.table)[1]];
+	};
 
-    this.podium = function () {
-        var scores = this.table.last().get(1), first, second, third;
-        first = this.table[0][this.table.last().indexOf(scores.max())];
-        scores = scores.removeFirst(scores.max());
-        second = this.table[0][this.table.last().indexOf(scores.max())];
-        scores = scores.removeFirst(scores.max());
-        third = this.table[0][this.table.last().indexOf(scores.max())];
-        return [first, second, third];
-    };
+	this.podium = function () {
+		var scores = this.table.last().get(1), first, second, third;
+		first = this.table[0][this.table.last().indexOf(scores.max())];
+		scores = scores.removeFirst(scores.max());
+		second = this.table[0][this.table.last().indexOf(scores.max())];
+		scores = scores.removeFirst(scores.max());
+		third = this.table[0][this.table.last().indexOf(scores.max())];
+		return [first, second, third];
+	};
 
-    this.avgScore = function () {
-        return this.table.last().mean(2, 1);
-    };
+	this.avgScore = function () {
+		return this.table.last().mean(2, 1);
+	};
 
-    this.getFormatted = function (nbDec) {
-        if (!nbDec) nbDec = 2;
-        var sb = Copy(this);
-        for (var p = 0; p &lt; this.participants.length; p++) {
-            for (var e = 0; e &lt; this.events.length; e++) sb.table[e + 1][p + 1] = (sb.table[e + 1][p + 1] / this.maxScore).toNDec(nbDec);//this.addPoint(this.participants[p], this.events[e], this.getFormated(this.participants[p], this.events[e]) / this.maxScore);
-            sb.table[sb.events.length + 1][p + 1] = sb.table.line(p + 1).get(1, -1).sum().toNDec(nbDec);
-        }
-        return sb;
-    };
+	this.getFormatted = function (nbDec) {
+		if (!nbDec) nbDec = 2;
+		var sb = Copy(this);
+		for (var p = 0; p &lt; this.participants.length; p++) {
+			for (var e = 0; e &lt; this.events.length; e++) sb.table[e + 1][p + 1] = (sb.table[e + 1][p + 1] / this.maxScore).toNDec(nbDec);//this.addPoint(this.participants[p], this.events[e], this.getFormated(this.participants[p], this.events[e]) / this.maxScore);
+			sb.table[sb.events.length + 1][p + 1] = sb.table.line(p + 1).get(1, -1).sum().toNDec(nbDec);
+		}
+		return sb;
+	};
 
-    this.toString = function () {
-        return "Scoreboard(name=" + this.name + ", participants=" + this.participants.toStr(true) + "; maxScore=" + this.maxScore + ", events=" + this.events.toStr(true) + ")";
-    }
+	this.toString = function () {
+		return "Scoreboard(name=" + this.name + ", participants=" + this.participants.toStr(true) + "; maxScore=" + this.maxScore + ", events=" + this.events.toStr(true) + ")";
+	}
 }
 
 /**
@@ -993,32 +993,32 @@ function Scoreboard (name, members, events, maxScore) {
  * @todo Improve/fix the ending
  */
 function anim (msg, startTime, max, step, tuxStyle, stop) {
-    if (!msg) msg = "Loading";
-    if (!startTime) startTime = 0;
-    if (!max) max = 10e3;
-    if (!step) step = 800;
-    var waits = tuxStyle? ["-", "\\", "|", "/"]: ["", ".", "..", "..."], j = 0, tw = [], done = function () {
-        tw.map(function (t) {
-            clearTimeout(t);
-        });
-        console.clear();
-        console.log("Done !");
-        return true;
-    };
+	if (!msg) msg = "Loading";
+	if (!startTime) startTime = 0;
+	if (!max) max = 10e3;
+	if (!step) step = 800;
+	var waits = tuxStyle? ["-", "\\", "|", "/"]: ["", ".", "..", "..."], j = 0, tw = [], done = function () {
+		tw.map(function (t) {
+			clearTimeout(t);
+		});
+		console.clear();
+		console.log("Done !");
+		return true;
+	};
 
-    if (!stop) waits.map(function (c) {
-        tw.push(setTimeout(function () {
-            console.clear();
-            console.log(msg + " " + c);
-        }, startTime + j * step));
-        j++;
-    });
-    else return done();
-    startTime += 2 * step;
-    if (startTime &lt;= max || !stop) setTimeout(function () {
-        anim(msg, startTime, max, step, tuxStyle, startTime > max);
-    }, 2 * step);
-    else return done();
+	if (!stop) waits.map(function (c) {
+		tw.push(setTimeout(function () {
+			console.clear();
+			console.log(msg + " " + c);
+		}, startTime + j * step));
+		j++;
+	});
+	else return done();
+	startTime += 2 * step;
+	if (startTime &lt;= max || !stop) setTimeout(function () {
+		anim(msg, startTime, max, step, tuxStyle, startTime > max);
+	}, 2 * step);
+	else return done();
 }
 
 //AI system that stores it's rules in a database and update it after learning
@@ -1030,40 +1030,40 @@ function anim (msg, startTime, max, step, tuxStyle, stop) {
  * @since 1.1
  */
 function AI (rules) {
-    this.rules = rules || [[0, "", null]];
-    this.db = new DB("AI rules", ["Index", "Rules", "Precision"], this.rules);
-    this.db.init();
-    this.updateRule = function (rule, val, newRule) { //rule can be the id/rank of the row
-        var pos = this.db.find(rule);
-        this.db.set(val, pos[0], pos[1] + (isType(rule, "Number")? 2: 1));
-        if (newRule) this.db.set(newRule, pos[0], pos[1]);
-        this.rules = this.db.val;
-    };
-    this.addRule = function (name, val) {
-        this.db.add([name, val]);
-        this.rules = this.db.val;
-    };
-    this.removeRule = function (name) {
-        this.db.remove(this.db.find(name));
-        this.rules = this.db.val;
-    };
-    this.update = function () {
-        this.db.update();
-        this.db.build();
-        this.rules = this.db.val;
-    };
-    this.save = function () {
-        this.db.save();
-        this.rules = this.db.val;
-    };
-    this.findRule = function (rule) {
-        return this.db.find(rule);
-    };
-    this.verify = function (rule, val) {
-        var pos = this.findRule(rule);
-        return eval(this.rules[pos[0]][pos[1] + 1].replace("x", val));
-    };
-    return this;
+	this.rules = rules || [[0, "", null]];
+	this.db = new DB("AI rules", ["Index", "Rules", "Precision"], this.rules);
+	this.db.init();
+	this.updateRule = function (rule, val, newRule) { //rule can be the id/rank of the row
+		var pos = this.db.find(rule);
+		this.db.set(val, pos[0], pos[1] + (isType(rule, "Number")? 2: 1));
+		if (newRule) this.db.set(newRule, pos[0], pos[1]);
+		this.rules = this.db.val;
+	};
+	this.addRule = function (name, val) {
+		this.db.add([name, val]);
+		this.rules = this.db.val;
+	};
+	this.removeRule = function (name) {
+		this.db.remove();
+		this.rules = this.db.val;
+	};
+	this.update = function () {
+		this.db.update();
+		this.db.build();
+		this.rules = this.db.val;
+	};
+	this.save = function () {
+		this.db.save();
+		this.rules = this.db.val;
+	};
+	this.findRule = function (rule) {
+		return this.db.find(rule);
+	};
+	this.verify = function (rule, val) {
+		var pos = this.findRule(rule);
+		return eval(this.rules[pos[0]][pos[1] + 1].replace("x", val));
+	};
+	return this;
 }
 
 /**
@@ -1073,8 +1073,8 @@ function AI (rules) {
  * @returns {undefined}
  */
 function clearEnv () {
-    $e("body").write("");
-    console.clear();
+	$e("body").write("");
+	console.clear();
 }</code></pre>
         </article>
     </section>
@@ -1085,13 +1085,13 @@ function clearEnv () {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="external-String.html">String</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#DocTemplate">DocTemplate</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="external-String.html">String</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#Buffer">Buffer</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#DocTemplate">DocTemplate</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Sun Oct 23 2016 01:02:59 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Mon Oct 24 2016 23:18:54 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -22,7 +22,7 @@
 		} catch (e) {
 			Essence.say("Hum !!");
 		}
-		lr = $G["lorem"].replace(/(\.|!|\?|;|:|"|,|\t|\n|\f|\r|\v|\{|})+/gm, " ").split(" ").remove("");
+		lr = $G["lorem"].replace(/(\.|!|\?|;|:|"|,|\t|\n|\f|\r|\v|\{|})+/gm, " ").split(" ").remove();
 		writeMsg2($G["lorem"].chunk(0, 7), "#test", false, 50);
 		daynightMode(true);
 		$e("title").write("EssenceJS v" + Essence.version + " test");
@@ -66,28 +66,9 @@
 		$e("#g").setCSS("color", g.hex);
 		$e("#b").setCSS("color", b.hex);
 	}
-	var root, root0, root1, root2;
+	//var root, root0, root1, root2;
 	function simpleNodes () {
-		/*var base = null, tmp = new intNode(5, base);
-		base = tmp;
-		//head insert a new node
-		tmp = new intNode(7, base);
-		base = tmp;
-		
-		Essence.say(base.show());
-		tmp = new intNode(5, base);
-		base = tmp;
-		Essence.say(base.show());
-		
-		var aList = null;
-		tmp = new intLinkedList(10, aList, "aList");
-		aList = tmp;
-		Essence.say(aList.show());
-		tmp = new intLinkedList(6, aList, "aList");
-		aList = tmp;
-		Essence.say(aList.show());
-		*/
-		root = new TreeNode(0, new TreeNode(1, new TreeNode(3, new TreeNode(7), new TreeNode(8)), new TreeNode(4, new TreeNode(9), new TreeNode(10))),
+		/*root = new TreeNode(0, new TreeNode(1, new TreeNode(3, new TreeNode(7), new TreeNode(8)), new TreeNode(4, new TreeNode(9), new TreeNode(10))),
 			new TreeNode(2, new TreeNode(5, new TreeNode(11), new TreeNode(12)), new TreeNode(6, new TreeNode(13), new TreeNode(14))));
 		root0 =  new TreeNode(0, new TreeNode(1, new TreeNode(2, new TreeNode(3), new TreeNode(4)), new TreeNode(5, new TreeNode(6), new TreeNode(7))),
 			new TreeNode(8, new TreeNode(9, new TreeNode(10), new TreeNode(11)), new TreeNode(12, new TreeNode(13), new TreeNode(14))));
@@ -120,7 +101,7 @@
 		root2.inOrder();
 		println("Post order: ("+root2.getPostOrder()+")");
 		root2.postOrder();
-		print("</fieldset>", true);
+		print("</fieldset>", true);*/
 	}
 	
 	function postHTMLinit () {
