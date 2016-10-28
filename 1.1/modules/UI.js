@@ -1270,3 +1270,22 @@ function htmlDate (id, minYear, maxYear) {
 	for (i = (minYear || y - 80); i < (maxYear || y - 2); i++) year += "<option value=" + i + ">" + i + "</option>";
 	return day + "</select>" + month + "</select>" + year + "</select>";
 }
+
+/**
+ * @description Initialise the canvas.
+ * @param {number} [width=500] Width
+ * @param {number} [height=500] Height
+ * @returns undefined
+ * @since 1.1
+ * @func
+ */
+function initCanvas (width, height) {
+	if (!width) width = 500;
+	if (!height) height = 500;
+	//There's no <canvas id="essenceCanvas"></canvas> in the document
+	if ($n("canvas#essenceCanvas", true) === null) print("<canvas id='essenceCanvas' width='" + width + "' height='" + height + "'>Canvas isn't supported by this browser</canvas>", true);
+	else {
+		$n("canvas#essenceCanvas").width = width;
+		$n("canvas#essenceCanvas").height = height;
+	}
+}

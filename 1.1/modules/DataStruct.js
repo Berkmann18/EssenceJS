@@ -399,20 +399,27 @@ function Node (pl, nx, pv) {
 
 /**
  * @description Path node
- * @param {number} g Total current cost
- * @param {number} h Total current heuristic
+ * @param {number} g Current total cost
+ * @param {number} h Current total heuristic
+ * @param {number[]} [pos=[0, 0]] 2D position of the node
  * @returns {PathNode} Path node
  * @this PathNode
  * @constructor
  * @since 1.0
+ * @property {number} PathNode.g Cost of the path to that node
+ * @property {number} PathNode.h Heuristic to get to that node.
  * @property {number} PathNode.f Cost of the path (g) + heuristic estimate
+ * @property {number[]} PathNode.pos Position of the node
  * @property {?PathNode} PathNode.parent Parent of the path-node
  * @property {function(number): PathNode} PathNode.back Go n path-nodes back
  * @property {function(PathNode): boolean} PathNode.isCloser Check if the current path-node is closer than the other one
  * @property {function(): string} Node.toString String representation
  */
-function PathNode (g, h) { //Nodes for path finding algs
-	this.f = g + h || 1;
+function PathNode (g, h, pos) { //Nodes for path finding algs
+	this.g = g || 0;
+	this.h = h || 0;
+	this.f = this.g + this.h || 1;
+	this.pos = pos || [0, 0];
 	this.parent = null;
 
 	this.back = function (n) {
@@ -424,7 +431,7 @@ function PathNode (g, h) { //Nodes for path finding algs
 	};
 
 	this.toString = function () {
-		return "PathNode(f=" + this.f + ", parent=" + this.parent.toString() + ")";
+		return "PathNode(f=" + this.f + ", pos=[" + this.pos.toStr(true) + "], parent=" + this.parent.toString() + ")";
 	};
 	return this;
 }
@@ -474,7 +481,7 @@ function NTreeNode (pl, ch) {
 		this.child.push(c);
 	};
 	this.remove = function (c) {
-		this.child.remove();
+		this.child.remove(c);
 	};
 	this.traverse = function () {
 		for (var c in this.child) {
@@ -1368,49 +1375,65 @@ function Astar (start, goal) {
 /**
  * @description A* algorithm v2.<br />
  * JS version of: {@link https://en.wikipedia.org/wiki/A*_search_algorithm}
- * @param {number[]} start Starting node
- * @param {number[]} goal Ending node
- * @param {Array} grid Grid
+ * @param {PathNode} start Starting node
+ * @param {PathNode} goal Ending node
+ * @param {PathNode[]} grid Grid
  * @returns {?Array} Optimal Path
  * @since 1.0
  * @func
+ * @throws {InvalidParamError} Not a PathNode object
  */
-function A(start, goal, grid) {
-	var closedSet = [], openSet = [start], cameFrom = [], gScore = [0], fScore = [euclidianDist(start, goal)];
+function A (start, goal, grid) {
+	if (!isCustomType(start, "PathNode") || !isCustomType(goal, "PathNode")) throw new InvalidParamError("The boundary nodes needs to be PathNode objects !");
+	/*
+	closedSet: The set of nodes already evaluated
+	openSet: The set of currently discovered nodes still to be evaluated (where only the start node is known)
+	 */
+	var closedSet = [], openSet = [start], cameFrom = {}, gScore = {}, fScore = {}, current;
+	gScore[start] = 0; //cost of going from start to start
+	//Heuristic for the start node
+	start.f = euclidianDist(start.pos, goal.pos);
+	fScore[start] = euclidianDist(start.pos, goal.pos);
 
-	while (openSet.length > 0) {
-		var current = openSet[fScore.indexOf(fScore.min())];
-		if (current === goal) return reconPath(cameFrom, current, grid);
-		openSet = openSet.remove();
+	while (!openSet.isEmpty()) {
+		current = openSet.filter(function (node) { //node in openSet which has the lowest fScore
+			return node.f === openSet.map(function (node) {
+					return node.f
+				}).min();
+		});
+
+		if (current.equals(goal)) return reconPath(cameFrom, current, grid);
+		openSet.remove(current);
 		closedSet.push(current);
-		var n = grid.neighbour(current[0], current[1]);
-		Essence.say("neighbour of " + current + ":\n" + n.toStr(true), "info");
-		for (var i = 0; i < n; i++) {
-			if (closedSet.has(n[i])) continue;
-			var tentativeGScore = gScore[closedSet.indexOf(current)] + 1;
-			if (closedSet.indexOf(n[i]) === -1) openSet.push(n[i]);
-			else if (tentativeGScore >= gScore[i]) break;
-		}
 
-		cameFrom[i] = current;
-		gScore[i] = tentativeGScore;
-		fScore[i] = gScore[i] + euclidianDist(n[i], goal);
+		var currentPos = lookfor(current, grid), tentativeGScore = 0; //position of the current node and the gScore of the path from start to the neighbour
+		grid.neighbour(currentPos[0], currentPos[1]).map(function (neighbour) { //Goes through each neighbours of the current neighbour
+			//if (closedSet.has(neighbour)) continue;
+			tentativeGScore = current.g + manhattanDist(currentPos, neighbour.pos); //Distance from start to a neighbour
+			if (!openSet.has(neighbour)) openSet.push(neighbour); //Discover a new neighbour
+			//else if (tentativeGScore >= neighbour.g) continue;
+			cameFrom[neighbour] = current;
+			neighbour.g = gScore[neighbour] = tentativeGScore;
+			neighbour.f = fScore[neighbour] = neighbour.g + euclidianDist(neighbour.pos, goal.pos);
+		});
 	}
+
+	return null;
 }
 
 /**
  * @description Path reconstructor
  * @param {Array} cameFrom List of visited nodes
  * @param {Array} current Current node
- * @param {Array} grid Grid
+ * param {Array} grid Grid
  * @returns {Array} Reconstructed path
  * @since 1.0
  * @func
  */
-function reconPath(cameFrom, current, grid) {
+function reconPath(cameFrom, current/*, grid*/) {
 	var totalPath = [current];
 	while (current in keyList(cameFrom)) {
-		current = cameFrom[grid.lookFor(current)];
+		current = cameFrom[current];
 		totalPath.append(current);
 	}
 	return totalPath;

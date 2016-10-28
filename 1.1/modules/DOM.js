@@ -19,29 +19,30 @@ var DOM = new Module("DOM", "DOM stuff", ["Misc", "Files"], 1, function () {
 
 /**
  * @description Print onto something
- * @param {*} st Data to be printed
+ * @param {*} text Data to be printed
  * @param {boolean} [isHTML=false] Has to be formatted as an HTML code or not
- * @param {string} [sw="body"] Place to print <code>st</code>
+ * @param {string} [place="body"] Place to print <code>text</code>
  * @returns {undefined}
  * @see module:DOM~println
  * @since 1.0
  * @func
  */
-function print (st, isHTML, sw) {
-	$e(sw || "body").isEmpty()? $e(sw || "body").write(st, isHTML): $e(sw || "body").after(st, isHTML)
+function print (text, isHTML, place) {
+	$e(place || "body").isEmpty()? $e(place || "body").write(text, isHTML): $e(place || "body").after(text, isHTML)
 }
 
 /**
  * @description Print-line onto something
- * @param {*} st Data to be printed
- * @param {string} [sw="body"] Place to print <code>st</code>
+ * @param {*} text Data to be printed
+ * @param {boolean} [isHTML=false] Has to be formatted as an HTML code or not
+ * @param {string} [place="body"] Place to print <code>text</code>
  * @returns {undefined}
  * @see module:DOM~print
  * @since 1.0
  * @func
  */
-function println (st, sw) {
-	$e(sw || "body").isEmpty()? $e(sw || "body").write(st + "<br />", isHTML): $e(sw || "body").after(st + "<br />", true)
+function println (text, isHTML, place) {
+	$e(place || "body").isEmpty()? $e(place || "body").write(text + "<br />", isHTML): $e(place || "body").after(text + "<br />", true)
 }
 
 /**

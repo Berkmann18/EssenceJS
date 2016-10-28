@@ -2104,8 +2104,8 @@ Array.prototype.quickSort = function (left, right) {
 				j--;
 			}
 		}
-		if (left < i-1) this.quickSort();
-		if (i < right) this.quickSort();
+		if (left < i - 1) this.quickSort(left, i - 1);
+		if (i < right) this.quickSort(i, right);
 	}
 	return this
 };
@@ -3645,6 +3645,7 @@ String.prototype.sameLast = function (str) {
  * @since 1.1
  * @method
  * @external String
+ * @this String
  */
 String.prototype.map = function (cb, sep) {
 	return this.split(sep || "").map(cb).join(sep || "");
@@ -3658,6 +3659,7 @@ String.prototype.map = function (cb, sep) {
  * @method
  * @since 1.1
  * @external String
+ * @this String
  */
 String.prototype.reverse = function (splitter) {
 	return this.split(splitter || "").reverse().join(splitter || "");
@@ -4357,7 +4359,7 @@ function toSameLength (a, b, cr) {
 function lookfor (x, mtx, toCoord) {
 	for (var i = 0; i < mtx.length; i++) {
 		for (var j = 0; j < mtx[i].length; j++) {
-			if (mtx[i][j] === x) return toCoord? [j, i]: [i, j]; //I is the row number and j the column which oppose j being the x-coord and i the y-coord
+			if (mtx[i][j] === x || mtx[i][j].equals(x)) return toCoord? [j, i]: [i, j]; //I is the row number and j the column which oppose j being the x-coord and i the y-coord
 		}
 	}
 	return -1

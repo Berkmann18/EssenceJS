@@ -8,6 +8,7 @@
 -   Rewrite README.md
 -   Test DES() (see [Security])
 -   Add an URL (or any good) pipeline to BuddyGit to send updates to the github website for each releases.
+-   Add tutorials and a demo.
 
 # To add:
 -   Having a dynamic real-time table/update (e.g: news feeds)
@@ -18,7 +19,6 @@
 -	Password checker
 -	History (event history, command history, viewed pages, ...)
 -	Colour.getColourName() (prototype already placed)
--	Heap ?
 -	greyish hover effect for rows/columns headers that would highlight the whole row/column
 -	select, datetime, datetime-local, time, month, range, search, week, url; to validate() (see [DOM]~validate)
 -	Prim's alg (already there as A* ?!)
@@ -52,7 +52,7 @@
 -   PUT() and DELETE() (see [Ajax])
 
 # To fix:
--	Array.getOccurences() (see [essence]~Array.getOccurences)
+-	Array.getOccurrences() (see [essence]~Array.getOccurrences)
 -	Array.revSort() which leaves a few elements unsorted (see [essence]~Array.revSort)
 -	Machine.parse() for other bases than base 16 which tries to get string with a code "out of the visible" (see [Misc]~Machine.parse)
 -	QueueList (see [DataStruct]~QueueList)
