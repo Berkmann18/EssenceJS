@@ -26,7 +26,7 @@
 + 
 
 ## [UI](modules/UI.js)
-+ \+ initCanvas()
++ \+ initCanvas(), runCanvas()
 
 ## [Web](modules/Web.js)
 + 

@@ -1289,3 +1289,36 @@ function initCanvas (width, height) {
 		$n("canvas#essenceCanvas").height = height;
 	}
 }
+
+/**
+ * @description Run HTML5 canvas commands in a simpler and easier way.
+ * @param {function(CanvasRenderingContext2D)} commands Commands to execute on the canvas
+ * @param {string} [dimension="2d"] Dimension
+ * @param {number} [stackLayer=0] Stack layer
+ * @returns undefined
+ * @since 1.1
+ * @func
+ * @example
+ * runCanvas(function (context) {
+ * 	   context.fillStyle = "#000";
+ * 	   context.strokeStyle = "#0f0";
+ * 	   context.fill();
+ * 	   context.stroke();
+ * 	   context.beginPath();
+ * 	   context.moveTo(0, 100);
+ * 	   context.lineTo(50, 0);
+ * 	   context.lineTo(100, 100);
+ * 	   context.lineTo(0, 100);
+ * 	   context.closePath()
+ * });
+ * //This will draw a black triangle with green borders
+ */
+function runCanvas (commands, dimension, stackLayer) {
+	//var context = $n("canvas#essenceCanvas").getContext(dimension || "2d"), instructions = commands.toString(), funcDef, startOfFunc;
+	//funcDef = instructions.match(/function\s*\w*\(\)\s*\{\n*/)[0];
+	/*startOfFunc = instructions.indexOf(funcDef);
+	instructions = instructions.get(instructions.indexOf(startOfFunc) + funcDef.length).replace(/(?:.*?)}/, "");*/
+	if (!stackLayer) stackLayer = 0;
+	commands($n("canvas#essenceCanvas").getContext(dimension || "2d"));
+	if (stackLayer < 1) runCanvas(commands, dimension, stackLayer + 1);
+}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Canvas test</title>
+    <meta charset="UTF-8"/>
+    <meta name="author" content="Maximilian Berkmann"/>
+    <meta name="description" content=""/>
+    <meta name="pragma" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="keywords" content="Canvas, test, EssenceJS"/>
+    <script type="text/javascript" src="../1.1/essence.js"></script>
+    <script type="text/javascript" defer>
+        var canvas;
+        function Init(stackLayer) {
+            if (typeof Essence !== "undefined") {
+                initCanvas(1e3, 1e3);
+                canvas = $n("canvas#essenceCanvas");
+                sandbox();
+            } else if (stackLayer > 3) {
+                console.log("Wow, hold on ! %d stack layers down !!", stackLayer);
+            } else {
+                console.warn("EssenceJS is not currently available !");
+                Init(stackLayer ? stackLayer + 1 : 1);
+            }
+        }
+        
+        function sandbox (stackLayer) {
+            if (!stackLayer) stackLayer = 1;
+            var contxt = canvas.getContext("2d");
+            contxt.fillStyle = "#000";
+            contxt.strokeStyle = "#0f0";
+            contxt.fill();
+            contxt.stroke();
+            contxt.beginPath();
+            contxt.moveTo(0, 100);
+            contxt.lineTo(50, 0);
+            contxt.lineTo(100, 100);
+            contxt.lineTo(0, 100);
+            contxt.closePath();
+            if (stackLayer < 2) sandbox(stackLayer + 1);
+        }
+    </script>
+</head>
+<body onpageshow="Init()">
+
+</body>
+</html>
