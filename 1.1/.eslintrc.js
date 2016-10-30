@@ -68,10 +68,10 @@ module.exports = {
         "jsx-quotes": 2,
         "key-spacing": 2,
         "keyword-spacing": 0,
-        "linebreak-style": 0/*[
+        "linebreak-style": [
             2,
             "windows"
-        ]*/,
+        ],
         "lines-around-comment": 0,
         "max-depth": 0,
         "max-len": 0,
@@ -155,7 +155,6 @@ module.exports = {
         "no-trailing-spaces": 0,
         "no-undef-init": 2,
         "no-undefined": 0,
-        "no-undef": 0,
         "no-underscore-dangle": 0,
         "no-unmodified-loop-condition": 0,
         "no-unneeded-ternary": 0,
@@ -188,7 +187,7 @@ module.exports = {
         "one-var": 0,
         "one-var-declaration-per-line": 0,
         "operator-assignment": 0,
-        "operator-linebreak": 0,
+        "operator-linebreak": 2,
         "padded-blocks": 0,
         "prefer-arrow-callback": 0,
         "prefer-const": 2,

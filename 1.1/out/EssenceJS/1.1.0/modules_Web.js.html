@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: modules/Web.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: modules/Web.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @module Web
+ * @description Web stuff
+ * @version 1.0
+ * @since 1.1
+ * @license MIT
+ * @author Maximilian Berkmann &lt;maxieberkmann@gmail.com>
+ * @copyright Maximilian Berkmann 2016
+ * @requires essence
+ * @requires DataStruct
+ * @namespace
+ * @type {Module}
+ * @since 1.1
+ * @exports Web
+ */
+var Web = new Module("Web", "Web stuff", ["DataStruct"]);
+
+/* eslint no-undef: 0 */
+
+/**
+ * @description Gather the cookie named $c_name
+ * @param {string} c_name Cookie name
+ * @returns {undefined|string} Cookie
+ * @see setCookie
+ * @since 1.0
+ * @func
+ */
+function getCookie (c_name) {
+    var x, y, cookies = document.cookie.split(";");
+    for (var i = 0; i &lt; cookies.length;i++) {
+        x = cookies[i].substr(0, cookies[i].indexOf("="));
+        y = cookies[i].substr(cookies[i].indexOf("=") + 1);
+        x = x.replace(/^\s+|\s+$/g, "");
+        if (x === c_name) return decodeURIComponent(y)
+    }
+}
+
+/**
+ * @description Create a cookie
+ * @param {string} c_name Cookie name
+ * @param {*} value Cookie value
+ * @param {number} exdays Expiration days
+ * @returns {undefined}
+ * @see getCookie
+ * @since 1.0
+ * @func
+ */
+function setCookie (c_name, value, exdays) {
+    exdays? exdays %= 99983489: exdays = 99983488; //As 99983488 is the maximum value
+    var exdate = new Date();
+    exdate.setDate(exdate.getDate() + exdays);
+    var c_value = encodeURIComponent(value) + ((exdays === null) ? "" : "; expires = " + exdate.toUTCString());
+    document.cookie = c_name + "=" + c_value
+}
+
+/**
+ * @description Local/session database
+ * @param {string} [name="Database"] Database name
+ * @param {Array|boolean} [headR=range(100)] Header rows
+ * @param {Array} [cells=[].fill("...")] Cells
+ * @param {Array|boolean} [headC=["Index", "Value"]] Header columns
+ * @param {string} [admin="Anonymous"] Admin's name
+ * @param {number} [ver=1.0] Version
+ * @this database
+ * @returns {database} Database
+ * @property {string} database.name Name
+ * @property {NumberLike[]} database.headerRow Row headers
+ * @property {NumberLike[]} database.headerCol Column headers
+ * @property {Array[]} database.content Content
+ * @property {string} database.admin Administrator
+ * @property {number} database.version Version
+ * @property {Array[]} database.val Value (extended content) of the database
+ * @property {Function} database.setStorage Store the database
+ * @property {Code} database.html HTML code
+ * @property {string} database.css CSS code
+ * @property {function(?string)} database.disp Display the database
+ * @property {Function} database.update Update the database
+ * @property {function(*)} database.searchAndRemove Search and remove a value
+ * @property {function(number, number)} database.remove Remove a cell from the database
+ * @property {function(): string} database.toString String representation
+ */
+function database (name, headR, cells, headC, admin, ver) { //Local database
+    this.name = name || "Database";
+    this.headerRow = (isNon(headR))? range(100): headR;
+    this.headerCol = headC || ["Index", "Value"];
+    this.content = (isNon(cells))? new Array(this.headerCol.length).fill("..."): cells;
+    this.admin = admin || "Anonymous";
+    this.version = ver || 1.0;
+    this.val = new Array(this.headerRow.length);
+    for (var i = 0; i &lt; this.val.length; i++) this.val[i] = new Array(this.headerCol.length).fill(" ");
+    for (i = 0; i &lt; this.headerCol.length; i++) this.val[0][i] = this.headerCol[i];
+    for (i = 0; i &lt; this.content.length; i++) {
+        this.val[i][0] = (this.headerRow)? this.headerRow[i]: i;
+        for (var j = 0; j &lt; this.content[i].length; j++) {
+            this.val[i][j + 1] = this.content[i][j];
+            //console.log("Processing " + this.content[i][j] + " at ", i, j);
+        }
+    }
+    this.setStorage = function () {
+        localStorage[this.name] = JSON.stringify(this.val)
+    };
+    this.html = complexTable(this.name, this.headerRow, this.content, this.headerCol, name);
+    this.css = "&lt;style>*{font-family:Consolas,Segoe UI,Tahoma;}table{background: #000;}table,td,th{border:1px solid #000;color:#000;background:#fff;}tr:nth-child(even) td,tr:nth-child(even) th{background:#eee;}&lt;/style>";
+    this.disp = function (elmId) {
+        $e(elmId? "#" + elmId: "body").write(this.html + this.css, true);
+        this.setStorage();
+    };
+    this.update = function () {
+        if (localStorage[this.name]) this.val = JSON.parse(localStorage[this.name]);
+        else this.setStorage();
+        this.html = complexTable(this.name, this.headerRow, this.content, this.headerCol, name);
+    };
+    this.searchAndRemove = function (vals) { //Vals = range|..
+        for (var n = 0; n &lt; vals.length; n++) {
+            for (var i = 0; i &lt; this.val.length; i++) {
+                for (var j = 0; j &lt; this.val.length; j++) {
+                    if (this.val[i][j] == vals[n]) this.val[i][j] = null;
+                }
+            }
+        }
+    };
+    this.remove = function (xs, ys) { //Vals = range|..
+        for (var i = 0; i &lt; xs.length; i++) {
+            for (var j = 0; j &lt; ys.length; j++) {
+                this.val[ys[j]][xs[i]] = null;
+            }
+        }
+    };
+
+    this.toString = function () {
+        return "database(name=" + this.name + ", headerRow=" + this.headerRow + ", headerCol=" + this.headerCol + ", content=" + this.content + ", admin=" + this.admin + ", version=" + this.version + ")";
+    };
+
+    return this;
+}
+
+/**
+ * @description Database
+ * @param {string} [name="DB"] Name
+ * @param {Array} [headers=["Index", "Value"]] Column headers
+ * @param {Array} [rows=[range(1), new Array(range(1).length).fill("...")].translate()] Rows
+ * @param {Array} [headerRows] Rows headers
+ * @return {DB} DB
+ * @this DB
+ * @constructor
+ * @property {string} DB.name Name
+ * @property {NumberLike[]} DB.rows Row headers
+ * @property {NumberLike[]} DB.headers Column headers
+ * @property {Array} DB.val Content of the database
+ * @property {Code} DB.html HTML code
+ * @property {string} DB.css CSS code
+ * @property {Function} DB.build Build the database
+ * @property {function(number)} DB.fill Fill-in the database
+ * @property {Function} DB.save Save the database
+ * @property {Function} DB.update Update the database
+ * @property {function(*, number, number)} DB.set Change the value of a cell
+ * @property {function(number, number): *} DB.get Get the value of a cell
+ * @property {function(*): number} DB.find Look for an item
+ * @property {function(): Array} DB.see Get a viewable copy of the database
+ * @property {function(?string)} DB.view Display the database
+ * @property {function(Array)} database.add Add a cell to the database
+ * @property {Function} DB.init Initialise the database
+ * @property {function(): string} database.toString String representation
+ */
+function DB (name, headers, rows, headerRows) {
+    this.name = name || "DB";
+    this.head = headers || ["Index", "Value"];
+    this.val = rows || [range(1), new Array(range(1).length).fill("...")].translate();
+    this.css = "&lt;style>*{font-family:Consolas,Segoe UI,Tahoma,sans-serif;}table{background: #000;}table,td,th{border:1px solid #000;color:#000;background:#fff;}tr:nth-child(even) td,tr:nth-child(even) th{background:#eee;}&lt;/style>";
+    this.html = "";
+    this.rows = headerRows || false;
+    this.build = function () {
+        this.html = isNon(this.rows)? complexTable("", this.val.line(), this.val.block(1), this.head, this.name, true, this.css): complexTable("", this.rows, this.val, this.head, this.name, true, this.css);
+    };
+    this.fill = function (len) {
+        this.val = [];
+        for (var i = 0; i &lt; len; i++) {
+            this.val[i] = [i].append(new Array(range(len - 1 || 1).length).fill("..."));
+        }
+        return this.val;
+    };
+    this.save = function () {
+        localStorage[this.name] = JSON.stringify(this.val);
+        localStorage[this.name + "_head"] = JSON.stringify(this.head);
+        localStorage[this.name + "_html"] = this.html;
+        localStorage[this.name + "_rows"] = this.rows;
+    };
+    this.update = function () {
+        if (localStorage[this.name]) {
+            this.val = JSON.parse(localStorage[this.name]);
+            this.head = JSON.parse(localStorage[this.name + "_head"]);
+            this.html = localStorage[this.name + "_html"];
+            this.rows = localStorage[this.name + "_rows"].split(","); //JSON.parse(localStorage[this.name + "_rows"]);
+        } else this.save();
+    };
+    this.set = function (nval, i, j) {
+        if ( j === -1) {
+            for (var k = 0; k &lt; nval.length; k++) this.val[i || 0][k] = nval[k];
+        } else this.val[i || 0][j || 0] = nval || null;
+    };
+    this.get = function (i, j) {
+        return isNon(j)? this.val[i || 0]: this.val[i || 0][j];
+    };
+    this.find = function (val) {
+        return lookfor(val, this.val);
+    };
+    this.see = function () {
+        return copy(this.val).prepend(copy(this.head).reverse());
+    };
+    this.view = function (id) {
+        $e(id? "#" + id: "body").write(this.html + this.css, true);
+    };
+    this.add = function (vals) {
+        this.val.append(vals.unshift(parseInt(this.val.last()[0]) + 1));
+    };
+    this.init = function () {
+        this.build();
+        this.update();
+        console.table(this.see());
+    };
+
+    this.toString = function () {
+        return "DB(name=" + this.name + ", head=" + this.head + ", val=" + this.val + ", rows=" + this.rows + ")";
+    };
+
+    return this;
+}
+
+/**
+ * @description Process
+ * @param {string} name Name of the process
+ * @param {string} [auth="Anonymous"] Author
+ * @param {string} [summup=""] Summary
+ * @param {string} [ctt=""] Content
+ * @returns {process} Process
+ * @since 1.0
+ * @property {string} process.name Name
+ * @property {string} process.author Author
+ * @property {number} process.bitsize Size in bits
+ * @property {string} process.description Description
+ * @property {string} process.content Content
+ * @property {Function} process.update Update the process
+ * @property {function(server)} process.askPermission Ask the permission to integrate a particular server
+ * @property {Function} process.destroy Self-destruction
+ * @todo Add a customisable run method ?
+ */
+function process (name, auth, summup, ctt) {
+    this.name = name;
+    this.author = auth || "Anonymous";
+    this.bitsize = 0; //Size in binary unit
+    this.description = summup || "";
+    this.content = ctt || "";
+    this.sig = this.name[0] + this.name[this.name.length - 1] + this.name.prod() + this.author.slice(0, 2) + "-" + (getType(this.content))[0];
+    //Rights/privileges ?!
+    this.update = function () {
+        if (this.author != auth || this.author === "Anonymous" || isNon(this.author)) this.sig = this.name[0] + this.name[this.name.length-1] + "-" + this.name.prod() + this.author.slice(0, 2) + "-" + getType(this.content)[0]//H4ck
+        else this.sig = this.name[0] + this.name[this.name.length - 1] + this.name.prod() + this.author.slice(0, 2) + "-" + (getType(this.content))[0];;
+        if (this.sig[this.sig.length - 1] === "N") this.bitsize = 8 * conv(this.content, 10, 2).sum();
+        else if (this.sig[this.sig.length - 1] === "B") this.bitsize = 8;
+        else if (this.sig[this.sig.length - 1] === "A") this.bitsize = (is2dArray(this.content))? 8 * this.content.numElm(): 8 * this.content.length;
+        else if (this.sig[this.sig.length - 1] === "O") this.bitsize = 0;
+        else if (this.sig[this.sig.length - 1] === "S") this.bitsize = 8 * this.content.length;
+        else this.bitsize = null;
+    };
+    this.update();
+    this.askPermission = function (serv) {
+        this.update();
+        serv.add(this);
+    };
+    this.destroy = function () {
+        Essence.say("The process named " + this.name + " (created by " + this.author + ") has been destroyed !", "info");
+        this.delete();
+        Essence.processList = Essence.processList.remove(this);
+    };
+    Essence.addProcess(this);
+
+    return this;
+}
+
+/**
+ * @description Server
+ * @param {string} [name="Server" Name
+ * @param {string} [admin=""] Admin
+ * @param {string} [type="data"] Type (data, process, storage, authentification, register, location)
+ * @param {number} [ver=1.0] Version
+ * @param {number} [mxsz=2⁶] Maximum size of the server's database
+ * @returns {server} Server
+ * @see DB
+ * @since 1.0
+ * @throws {Error} Invalid server type
+ * @property {string} server.name Name
+ * @property {string} server.admin Administrator
+ * @property {number} server.version Version
+ * @property {number} server.maxsize Maximum size
+ * @property {number} server.nb_slots Number of Slots
+ * @property {Array} server.slots Slots
+ * @property {string} server.type Server type
+ * @property {DB} server.data Database
+ * @property {function(process)} server.addProcess Process adder (only useful for process servers)
+ * @property {function(*)} server.add Data adder (useless for process servers)
+ * @property {function(number)} server.rm Remove a data from the server
+ * @property {Function} server.store Store the server
+ * @property {Function} server.update Update the server
+ * @property {function(process)} server.fire Remove a process from the server
+ * @property {Function} server.reset Reset the server
+ * @property {function(): string} server.toString String representation
+ */
+function server (name, admin, type, ver, mxsz) {
+    this.name = name || "Server";
+    this.admin = admin || "";
+    this.version = ver || 1.0;
+    this.maxsize = mxsz || Math.pow(2, 14);
+    this.nb_slots = Math.pow(2, 6);
+    this.slots = mkArray(this.nb_slots, 1, "empty");
+    this.type = (type || "data").toLowerCase();
+    if (this.type === "data") this.data = new DB("db_" + this.name, ["Index", "Value"], this.slots, range(1, 1, this.maxsize));//database(this.name, range(1, 1, this.maxsize), this.slots, ["Index", "Value"], this.admin, this.version);
+    else if (this.type === "process") this.data = new DB("db_" + this.name, ["N°", "Name", "Author", "Description", "Content", "Bit size"], this.slots, range(1, 1, this.maxsize)); //database(this.name, range(1, 1, this.maxsize), this.slots, ["N°", "Name", "Author", "Description", "Content", "Bit size"], this.admin, this.version);
+    else if (this.type === "storage") this.data = new DB("db_" + this.name, ["Key", "Value"], this.slots, range(1, 1, this.maxsize));//database(this.name, range(1, 1, this.maxsize), this.slots, ["Key", "Value"], this.admin, this.version);
+    else if (this.type === "authentification") this.data = new DB("db_" + this.name, ["Username", "Password", "Email"], this.slots, range(1, 1, this.maxsize));//database(this.name, range(1, 1, this.maxsize), this.slots, ["Username", "Password", "Email", "Hash"], this.admin, this.version);
+    else if (this.type === "register" || this.type =="details") this.data = new DB("db_" + this.name, ["First name", "Last Name", "Title", "Email", "Phone", "Sex", "City/Country", "Birthday", "Websites", "Job", "Quote"], this.slots, range(1, 1, this.maxsize));//database(this.name, range(1, 1, this.maxsize), this.slots, ["First name", "Last Name", "Title", "Email", "Phone", "Sex", "City/Country", "Birthday", "Websites", "Job", "Quote"], this.admin, this.version);
+    else if (this.type === "location") this.data = new DB("db_" + this.name, ["Name", "Longitude", "Latitude"], this.slots, range(1, 1, this.maxsize));//database(this.name, range(1, 1, this.maxsize), this.slots, ["Name", "Longitude", "Latitude"], this.admin, this.version);
+    else throw new Error(this.type + " is an invalid server type.");
+    this.addProcess = function (pcs) {
+        if (pcs.sig.last() === "-" || pcs.bitsize > this.maxsize/this.nb_slots) console.log("[Server:" + name + "] The process named " + pcs.name + " has been rejected");
+        else {
+            var pos;
+            for (var i = 0; i &lt; this.nb_slots; i++) {
+                if (isNon(this.slots[i])) {
+                    this.slots[i] = [pcs.name, pcs.author, pcs.description, pcs.content, pcs.bitsize];
+                    pos = i;
+                    i = this.nb_slots;
+                    break;
+                }
+            }
+            if (this.slots[pos] != [pcs.name, pcs.author, pcs.description, pcs.content, pcs.bitsize] &amp;&amp; this.nb_slots &lt; this.maxsize) { //Check if the process was added to the server
+                this.nb_slots += this.maxsize / this.nb_slots; //Extend by one slot
+                this.slots[this.nb_slots] = [pcs.name, pcs.author, pcs.description, pcs.content, pcs.bitsize];
+            }
+        }
+    };
+    this.add = function (data) {
+        var pos;
+        for (var i = 0; i &lt; this.nb_slots; i++) {
+            if (isNon(this.slots[i]) || this.slots[i].equals([])) {
+                this.slots[i] = JSON.stringify(data);
+                pos = i;
+                i = this.nb_slots;
+                break;
+            }
+        }
+        if (this.slots[pos] != data &amp;&amp; this.nb_slots &lt; this.maxsize) { //Check if the process was added to the server
+            this.nb_slots += this.maxsize / this.nb_slots; //Extend by one slot
+            this.slots[this.nb_slots] = JSON.stringify(data);
+        }
+    };
+    this.rm = function (n) {
+        this.slots[n] = null
+    };
+    this.store = function () {
+        localStorage["server_" + this.name] = JSON.stringify(this)
+    };
+    this.update = function () {
+        if (localStorage["server_" + this.name]) {
+            var self = JSON.parse(localStorage["server_" + this.name]);
+            this.name = self.name;
+            this.admin = self.admin;
+            this.version = self.version;
+            this.maxsize = self.maxsize;
+            this.nb_slots = self.nb_slots;
+            this.slots = self.slots;
+            this.data = new DB(self.data.name, self.data.head, self.data.val, self.data.rows) || self.data;
+        }else this.store()
+    };
+    this.fire = function (pcs) {
+        for (var i in this.slots) {
+            if (this.slots.hasOwnProperty(i) &amp;&amp; this.slots[i][0] === pcs.name &amp;&amp; this.slots[i][1] === pcs.author) this.rm(i);
+        }
+    };
+    this.reset = function () {
+        for(var i in this.slots) {
+            if(this.slots.hasOwnProperty(i)) this.rm(i)
+        }
+    };
+
+    this.toString = function () {
+        return "server(name=" + this.name + ", admin=" + this.admin + ", type=" + this.type + ", version=" + this.version + ", maxsize=" + this.maxsize +", slots=[" + this.slots.toStr(true) + "])";
+    };
+
+    Essence.addServer(this);
+
+    return this;
+}
+
+/**
+ * @description Launch the verification of the connection
+ * @param {string} id ID of the element to be used
+ * @param {string} [src="../img/random2000x2000.jpg"] Source of the image to use for the test
+ * @param {number} [sz=61784] Size of the image (in kb)
+ * @param {number} [delay=100] Delay (in ms)
+ * @param {number} [maxDelay=2e4] Maximum delay
+ * @returns {undefined}
+ * @see CETimer
+ * @since 1.0
+ * @func
+ */
+function CECheck (id, src, sz, delay, maxDelay) {
+    window.defaultStatus = "Evalue the connexion and see the downloading speed";
+    if (!src) src = "../img/random2000x2000.jpg";
+    if (!sz) sz = 61784; //7.723kB -> kb
+    if (!delay) delay = 100; //ms
+    if (!maxDelay) maxDelay = 2e4;
+    var img = new Image();
+    $G["t1"] = new Date().getTime();
+    $G["t2"] = 0;
+    img.src = src + "?t1=" + $G["t1"]; //To prevent the browser to load a cached version of the image
+
+    $e("#" + id).write("Verification in progress...");
+    setTimeout("CETimer('" + id + "', '" + img + "', 0, " + delay + ", " + maxDelay + ", " + sz + ")", delay); //Uncaught SyntaxError: Unexpected identifier
+}
+
+/**
+ * @description Connection evaluation timer
+ * @param {string} id ID of the element to be used
+ * @param {string} img Image to use for the test
+ * @param {number} nb Number of attempts done
+ * @param {number} [delay=100] Delay (in ms)
+ * @param {number} [maxDelay=2e4] Maximum delay
+ * @param {number} size Size of the image (in kb)
+ * @returns {undefined}
+ * @see CECheck
+ * @since 1.0
+ * @func
+ */
+function CETimer (id, img, nb, delay, maxDelay, size) {
+    nb++;
+    $e("#" + id).write("Verification in progress...");
+    if (nb * delay >= maxDelay) $e("#" + id).write(evalDownload(0)); //End of the maximimun delay
+    else {
+        if (img.complete) {
+            $G["t2"] = new Date().getTime();
+            $e("#" + id).write(evalDownload(size / ($G["t2"] - $G["t1"])));
+            Essence.time("Connexion: " + (size / ($G["t2"] - $G["t1"]).toNDigits(3) + " kbps"));
+        } else setTimeout("CETimer(" + id + ", " + img + ", " + nb + ", " + delay + ", " + maxDelay + ", " + size + ")", delay);
+    }
+}
+/*
+ ping (ms)
+ &lt;0, 30>: excellent
+ >30, 60>: really good
+ >60, 100>: good
+ >100, 200>: okay
+ >200, 300>: poor
+ >300: bad
+ latency is the client-server packet transmit when ping is the go and return of that
+
+ gigue (ms): connexion fluctuation
+ &lt;5: synchronized connexion
+
+ download speed (kbps/Mbps):
+ &lt;0, 56>: low debit
+ >56, 8M>: ADSL debit
+ >8M, 20M>: ADSL2+
+ >20M, 50M>: wire
+ >50M, 100M>: optical fibre
+ >100M: Ethernet
+
+ upload speed:
+ &lt;0, 56>: low debit
+ >56, 1M>: ADSL+
+ >1M, 5M>: wire
+ >5M, 100M>: Ethernet
+ */
+/**
+ * @description Evaluate the download speed
+ * @param {number} kbps Speed (in kb/s)
+ * @returns {string} Result
+ * @since 1.0
+ * @func
+ */
+function evalDownload (kbps) {
+    var res = "";
+    if (kbps === 0) res = "No connexion";
+    else if (kbps > 0 &amp;&amp; kbps &lt;= 56) res = "Low debit";
+    else if (kbps > 56 &amp;&amp; kbps &lt;= 8e3) res = "ADSL debit";
+    else if (kbps > 8e3 &amp;&amp; kbps &lt;= 2e4) res = "ADSL2 + ";
+    else if (kbps > 2e4 &amp;&amp; kbps &lt;= 5e4) res = "wire";
+    else if (kbps > 5e4 &amp;&amp; kbps &lt;= 1e5) res = "optical fibre";
+    else res = "Ethernet";
+    return res + " (" + kbps.toNDigits(3) +" kbps)"
+}
+
+/**
+ * @description Evaluate the upload speed
+ * @param {number} kbps Speed (in kb/s)
+ * @returns {string} Result
+ * @since 1.0
+ */
+function evalUpload (kbps) {
+    var res = "";
+    if (kbps === 0) res = "No connexion";
+    else if (kbps > 0 &amp;&amp; kbps &lt;= 56) res = "Low debit";
+    else if (kbps > 56 &amp;&amp; kbps &lt;= 1e3) res = "ADSL + ";
+    else if (kbps > 1e3 &amp;&amp; kbps &lt;= 5e3) res = "wire";
+    else res = "Ethernet";
+    return res + " (" + kbps.toNDigits(3) +" kbps)"
+}
+
+/**
+ * @description Evaluate the ping speed
+ * @param {number} ms Number of milliseconds
+ * @returns {string} Result
+ * @since 1.0
+ * @func
+ */
+function evalPing (ms) {
+    var res = "";
+    if (ms > 0 &amp;&amp; ms &lt;= 30) res = "Excellent";
+    else if (ms > 30 &amp;&amp; ms &lt;= 60) res = "Really good";
+    else if (ms > 60 &amp;&amp; ms &lt;= 100) res = "Good";
+    else if (ms > 100 &amp;&amp; ms &lt;= 200) res = "Okay";
+    else if (ms > 200 &amp;&amp; ms &lt;= 300) res = "Poor";
+    else if (ms > 300 &amp;&amp; ms &lt;= 400) res = "Bad";
+    else res = "Really bad";
+    return res + " (" + ms +" ms)"
+}
+
+/**
+ * @description Getting the URL parameters just like in PHP.
+ * @param {Str} p Parameter(s)
+ * @param {function(...string)} action Action to be done with the value(s) of the parameter(s)
+ * @returns {undefined}
+ * @since 1.0
+ * @func
+ */
+function parseURL (p, action) { //Doing some PHP without PHP :) !!
+    var urlQuery = location.href.split("?");
+    if (urlQuery.length > 1) {
+        var urlTerms = urlQuery[1].split("&amp;");
+        if (isType(p, "Array")) { //Multi parameter parsing
+            for (var j = 0; j &lt; p.length; j++) {
+                for (var i = 0; i &lt; urlTerms.length; i++) {
+                    var param = urlTerms[i].split("=");
+                    if (param[0] === p[j]) {
+                        if (isType(action, "Array")) action[j](param[1], param[0]);
+                        else action(param[1], param[0]);
+                    }
+                }
+            }
+        } else {
+            for (i = 0; i &lt; urlTerms.length; i++) {
+                param = urlTerms[i].split("=");
+                if (param[0] === p) action(param[1]);
+            }
+        }
+    }
+}
+
+/**
+ * @description Web page builder.
+ * Structure components:
+ - header: header with a title and a logo
+ - h-menu: horizontal menu with icons
+ - v-menu: vertical menu
+ - content: "welcome to " + this.title
+ - aside: side section for news feed or anything you want to use it for
+ - footer: footer with the sponsors (if there's at least one), name of the author(s)
+ - article: new paper article like section
+ - search: search bar
+ Structuration:
+ ! : new line (header!h-menu means that the h-menu is under the header)
+ | : at the right (content|aside means that the aside section is placed on the right of the content section)
+ * @param {string} [title="My web page"] Title
+ * @param {string} [name="index.html"] Name
+ * @param {string} [path="index.html"] Path
+ * @param {string} [author="Maximilian Berkmann"] Author
+ * @param {number} [ver=1.0] Version
+ * @param {string} [stct="header!h-menu!content|aside!footer"] Structure
+ * @param {string} [type="html"] Type
+ * @param {string} [subtitle="A simple web page"] Subtitle
+ * @constructor
+ * @this {WebPage}
+ * @returns {WebPage} Web page
+ * @see WebApp
+ * @since 1.0
+ * @property {string} WebPage.title Title
+ * @property {string} WebPage.subtitle Subtitle
+ * @property {string} WebPage.type Document type
+ * @property {string} WebPage.name Name of the file
+ * @property {string} WebPage.path Path of the file
+ * @property {string} WebPage.author Author
+ * @property {number} WebPage.version Version
+ * @property {string} WebPage.structure Page structure
+ * @property {Code} WebPage.code Code
+ * @property {Code} WebPage.template Code template
+ * @property {Template|?string} WebPage.page Page
+ * @property {function(string): (Code)} WebPage.word2code Word (components) to template code
+ * @property {function(): (Code)} WebPage.genTemplate Transform the structure into a template
+ * @property {function(Object): (Code)} WebPage.genPage Transform the template into a page
+ */
+function WebPage (title, name, path, author, ver, stct, type, subtitle) {
+    this.title = title || "My web page";
+    this.subtitle = subtitle || "A simple web page";
+    this.type = type.normal() || "html";
+    this.name = name + this.type || "index." + this.type;
+    this.path = path + "/" + this.name || this.name;
+    this.author = author || "Maximilian Berkmann";
+    this.version = ver || 1.0;
+    this.structure = stct || "header!h-menu!content|aside!footer";
+    this.code = "";
+    this.template = "";
+    this.page = null;
+    /* Structure:
+     Components:
+     - header: header with a title and a logo
+     - h-menu: horizontal menu with icons
+     - v-menu: vertical menu
+     - content: "welcome to " + this.title
+     - aside: side section for news feed or anything you want to use it for
+     - footer: footer with the sponsors (if there's at least one), name of the author(s)
+     - article: new paper article like section
+     - search: search bar
+     Structuration:
+     ! : new line (header!h-menu means that the h-menu is under the header)
+     | : at the right (content|aside means that the aside section is placed on the right of the content section)
+     */
+    //Templating /(\{\{)\w * (\}\}) */g
+
+    this.word2code = function (word) {
+        switch (word.normal()) {
+            case "header": return "&lt;header>&lt;img src='img/icon.png' />&lt;hgroup>&lt;h1>{{title}}&lt;/h1>&lt;h3>{{subtitle}}&lt;/h3>&lt;/hgroup>&lt;/header>";
+            case "h-menu": return "&lt;menu class='h-menu'>&lt;li onClick=''>{{0}}&lt;/li>&lt;li onClick=''>{{1}}&lt;/li>&lt;li onClick=''>{{2}}&lt;/li>&lt;/menu>";
+            case "v-menu": return "&lt;menu class='v-menu'>&lt;li onClick=''>{{0}}&lt;/li>&lt;li onClick=''>{{1}}&lt;/li>&lt;li onClick=''>{{2}}&lt;/li>&lt;/menu>";
+            case "content": return "&lt;div id='content'>{{content}}&lt;/div>";
+            case "aside": return "&lt;aside>{{aside}}&lt;/aside>";
+            case "footer": return "&lt;footer>{{footer}}&lt;/footer>";
+            case "article": return "&lt;article id='{{article_title}}'>&lt;header>{{article_title}}&lt;/header>{{article_content}}&lt;footer>{{article_footer}}&lt;/footer>&lt;/div>";
+            case "search": return "&lt;form action='search.php' method='post'>&lt;input type='search' name='search' />&lt;input type='image' src='img/search.png' alt='?' />&lt;/form>";
+            default: return word
+        }
+    };
+
+    this.genTemplate = function () {
+        var cpnt = this.structure.split("!");
+        this.template = "&lt;table class='none'>";
+        for (var i = 0; i &lt; cpnt.length; i++) {
+            this.template += "&lt;tr>";
+            var sct = cpnt.split("|");
+            for(var j = 0; j &lt; sct.length; i++) this.template += this.word2code(sct[i]);
+            this.template += "&lt;/tr>";
+        }
+        this.template += "&lt;/table>";
+
+        return this.template
+    };
+
+    this.genPage = function (params) {
+        this.page = new Template(this.title, this.name, this.template, ["title", "subtitle", "content", "aside", "footer", "0", "1", "2", "article_title", "article_content", "article_footer"]);
+        this.page = this.page.gen({
+            title: this.title,
+            subtitle: this.subtitle,
+            content: params.content || $G["lorem"],
+            aside: params.aside || "At the side",
+            footer: params.footer || "An EssenceJS powered web page",
+            article_content: params.articleContent || "Bla bla bla",
+            article_title: params.articleTitle || "An article",
+            article_footer: params.articleFooter || "By John Doe",
+            0: "Home",
+            1: "About us",
+            2: "Contact us"
+        });
+        return this.page;
+    };
+
+    return this;
+}
+
+/**
+ * @description Web application
+ * @param {string} [name="Web App"] Name
+ * @param {string} [path=""] Path
+ * @param {string} [author="Maximilian Berkmann"] Author
+ * @param {number} [ver=1.0] Version
+ * @param {string} [stct] Structure
+ * @returns {WebApp} Web app
+ * @this {WebApp}
+ * @constructor
+ * @see WebPage
+ * @since 1.0
+ * @property {string} WebApp.name Name of the app
+ * @property {string} WebPage.path Path of the file
+ * @property {string} WebPage.author Author
+ * @property {number} WebPage.version Version
+ * @property {string[]} WebPage.dirs List of directories
+ * @property {Template} WebPage.pages Pages
+ * @property {Function} WebPage.build Build the pages
+ */
+function WebApp (name, path, author, ver, stct) {
+    this.name = name || "Web App";
+    this.path = path || "";
+    this.author = author || "Maximilian Berkmann";
+    this.version = ver || 1.0;
+    this.dirs = ["img", "script", "style"]; //All dirs which are subdirectories of the path
+    this.pages = [new WebPage(this.name, "index", this.path, this.author, this.ver, stct), new WebPage("Contact us", "contact", this.path, this.author, this.ver, stct), new WebPage("About us", "about", this.path, this.author, this.ver, stct)];
+
+    this.build = function () { //Generate
+        for(var i = 0; i &lt; this.pages.length; i++) this.pages[i].genPage();
+    };
+
+    return this;
+}
+
+/**
+ * @description Editor
+ * @param {string} [id="#editor"] ID of the container
+ * @param {string} [lang="none"] Language
+ * @param {Preview} prev Preview
+ * @param {Parser} [parser] Parser
+ * @param {Toolbar} [tb=new Toolbar()] Toolbar
+ * @this {Editor}
+ * @returns {Editor} Editor
+ * @todo Fill up the synthax highlighting list
+ * @constructor
+ * @since 1.0
+ * @property {string} Editor.id ID of the element
+ * @property {HTMLElement} Editor.node Node
+ * @property {string} Editor.linesId ID of the lines' element
+ * @property {number} Editor.nbLines Number of lines
+ * @property {string} Editor.language Language
+ * @property {?Preview} Editor.previewer Previewer
+ * @property {?Parser} Editor.parser Parser
+ * @property {Code} Editor.code Code
+ * @property {virtualHistory} Editor.codeHistory Historic of the code
+ * @property {Toolbar} Editor.toolbar Toolbar
+ * @property {Editor} Editor.toolbar.for This editor
+ * @property {function(string)} Editor.toggleLine Toggle line (when marked)
+ * @property {function(number)} Editor.update Update
+ * @property {Function} Editor.clear Clear the editor
+ * @property {function(string)} Editor.write Clear the editor
+ * @property {Function} Editor.undo Undo the editor
+ * @property {Function} Editor.redo Redo the editor
+ * @property {Function} Editor.save Save the code
+ * @property {Function} Editor.select Select the code
+ * @property {Function} Editor.copy Copy the code
+ * @property {function(boolean)} Editor.paste Paste the code to the editor
+ * @property {Function} Editor.load Load a file into the editor
+ * @property {Function} Editor.generate Save the parsed code
+ * @property {Function} Editor.view See the result
+ * @property {function((Code), string): (Code)} Editor.highlightSynthax Highlight the synthax
+ * @property {function(): string} Editor.toString String representation
+ */
+function Editor (id, lang, prev, parser, tb) {
+    this.id = id || "#editor";
+    this.node = $n(this.id);
+    this.linesId = "#lines";
+    this.linesNode = $n(this.linesId);
+    this.nbLines = 0;
+    this.language = lang || "none";
+    this.previewer = prev;
+    this.parser = parser || (prev? this.previewer.associatedParser: null); //Sort of temporarily uncommented for linting sake
+    this.code = $e(this.id).val();
+    this.codeHistory = new virtualHistory(this.code);
+    this.toolbar = tb || new Toolbar();
+    this.toolbar.for = this;
+    this.toggleLine = function (id) {
+        $e("#" + id).toggleCSS("background", ["rgba(0, 0, 0, 0)", "red"]);
+    };
+    this.update = function (n) {
+        if (this.node != $n(this.id)) this.node = $n(this.id);
+        if (this.linesNode != $n(this.linesId)) this.linesNode = $n(this.linesId);
+        if (this.code != $e(this.id).val()) this.code = $e(this.id).val();
+
+        n = n || (toPixel($e(this.id).css("height"))/(toPixel($e(this.id).css("fontSize")) * 1.12));
+        $e(this.linesId).write("", true);
+        this.nbLines = Math.round(n);
+        for (var i = 1; i &lt;= this.nbLines; i++) {
+            $e(this.linesId).after("&lt;span id = 'l_" + i+"' style = 'color: black;'>" + i+"&lt;/span>&lt;br />");
+        }
+        this.codeHistory.update(this.code);
+        this.toolbar.update();
+        for(i = 0; i &lt; this.toolbar.tools.length; i++) this.toolbar.fn[i] = this[this.toolbar.tools[i]]
+    };
+    this.write = function (txt) {
+        $e(this.id).after(txt);
+        this.codeHistory.update(this.code); //To avoid adding code states that are the same even if the set will take care of duplicates
+    };
+    this.clear = function () {
+        $e(this.id).write("");
+        this.codeHistory.reset()
+    };
+    this.undo = function () {
+        this.codeHistory.undo();
+        $e(this.id).write(this.codeHistory.src)
+    };
+    this.redo = function () {
+        this.codeHistory.redo();
+        $e(this.id).write(this.codeHistory.src)
+    };
+    this.save = function () {
+        save($e(this.id).val(), "script" + getTimestamp() + ".ws", "webscript")
+    };
+    this.select = function () {
+        this.node.select()
+    };
+    this.copy = function () {
+        copyToClipboard($e(this.id).val(), "webscript")
+    };
+    this.paste = function (override) {
+        override? $e(this.id).write(clipboardData.getData("webscript")): this.write(clipboardData.getData("webscript"))
+    };
+    this.load = function () {
+        var file = prompt("File: ", ".ws");
+        this.clear();
+        $e(this.id).write(getFileContent(file));
+    };
+    this.generate = function () { //Save the parsed code
+        if (this.previewer) /&lt;\?php([\s\S] * ?)\?>/.test($e(this.id).val())? save($e(this.previewer.id).val(true), "script" + getTimestamp() + ".php", "php"): save($e(this.previewer.id).val(true), "script" + getTimestamp() + ".html", "html");
+        else /&lt;\?php([\s\S] * ?)\?>$/g.test($e(this.id).val())? save($e("#preview").val(true), "script" + getTimestamp() + ".php", "php"): save($e(prev.id).val(true), "script" + getTimestamp() + ".html", "html")
+    };
+    this.view = function () {
+        this.previewer.run($e(this.id).val(), true)
+    };
+    this.highlightSynthax = function (code, lang) { //Highlight in the corresponding language and return an HTML result
+        switch (lang.normal()) {
+            case "html":
+                //HTML synthax highlighting rules
+                break;
+            case "javascript":
+                //JavaScript synthax highlighting rules
+                break;
+            case "css":
+                //CSS synthax highlighting rules
+                break;
+            case "php":
+                //PHP synthax highlighting rules
+                break;
+            case "mips":
+                //MIPS synthax highlighting rules
+                break;
+            case "batch":
+                //Batch synthax highlighting rules
+                break;
+            case "bash":
+                //Bash synthax highlighting rules
+                break;
+            case "java":
+                //Java synthax highlighting rules
+                break;
+            case "c++":
+                //C/C++ synthax highlighting rules
+                break;
+            case "python":
+                //Python synthax highlighting rules
+                break;
+            case "xml":
+                //XML synthax highlighting rules
+                break;
+            case "webscript":
+                code = code.replace(/(\&lt;|\>|\/\>)([A-Za-z]*|)(\&lt;|\>|\/\>)/g, "&lt;span class = 'code-tag'>$1&lt;/span>");
+                code = code.replace(/(\"|\')(.*)(\"|\')/g, "&lt;span class = 'code-str'>$1&lt;/span>");
+                code = code.replace(/(?!\"|\')(\d+)(?!\"|\')/g, "&lt;span class = 'code-num'>$1&lt;/span>");
+                code = code.replace(/([\s\S] * ?)(=)/g, "&lt;span class = 'code-attr'>$1&lt;/span>");
+                code = code.replace(/\&lt;\!--([\s\S]*)--\>/g, "&lt;span class = 'code-cmt'>$1&lt;/span>");
+                code = code.replace(/\/\/(.*?)/g, "&lt;span class = 'code-cmt'>$1&lt;/span>");
+                code = code.replace(/=[A-Za-z0-9\.]+(| )/g, "&lt;span class = 'code-val'>$1&lt;/span>");
+                code = code.replace(/[=\{\}\[\]\(\)\;]/g, "&lt;span class = 'code-op'>$1&lt;/span>");
+                break;
+            case "markdown":
+                //Markdown synthax highlighting rules
+                break;
+            default: //Normal text
+        }
+        return code
+    };
+
+    this.toString = function () {
+        return "Editor(id=" + this.id + ", linesId=" + this.linesId + ", nbLines=" + this.nbLines + ", language=" + this.language + ", previewer=" + this.previewer + ", parser=" + this.parser + ", code=" + this.code + ", toolbar=" + this.toolbar + ")";
+    };
+
+    return this;
+}
+
+/**
+ * @description Previewer for IDEs.
+ * @param {string} [id="#preview"] ID of the container
+ * @param {string} [lang="none"] Language
+ * @param {Parser} [parser=new Parser()"] Parser
+ * @param {Editor} [editor=new Editor()"] Editor
+ * @this {Preview}
+ * @returns {Preview} Previewer
+ * @constructor
+ * @since 1.0
+ * @property {string} Preview.id ID of the element
+ * @property {HTMLElement} Preview.node Node
+ * @property {string} Preview.language Language
+ * @property {Parser} Preview.associatedParser Associated parser
+ * @property {Editor} Preview.associatedEditor Associated editor
+ * @property {Function} Preview.update Update
+ * @property {function(string, boolan)} Preview.run Run the code
+ * @property {Function} Preview.viewCode See the code
+ * @property {function(): string} Preview.toString String representation
+ */
+function Preview (id, lang, parser, editor) {
+    this.id = id || "#preview";
+    this.node = $n(this.id);
+    this.language = lang || "none";
+    this.associatedParser = parser || new Parser();
+    this.associatedEditor = editor || new Editor();
+    this.update = function () {
+        if (this.node != $n(this.id)) this.node = $n(this.id);
+    };
+    this.run = function (txt, parseFirst) {
+        $e(this.id).write(parseFirst? this.associatedParser.run(txt): txt, true)
+    };
+    this.viewCode = function () {
+        var win = open("", "Resulting code", "width = 800,height = 600,location = no,menubar = yes,scrollbars = yes,status = no,toolbar = yes"), code = escapeHTML($e(this.id).val(true));
+        code = code.replace(/\n/g, "&lt;br />");
+        code = code.replace(/\t/g, "&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;");
+        win.document.write(this.associatedEditor.highlightSynthax(code, this.language));
+        win.document.write("&lt;style>" + Essence.css + "&lt;/style>")
+    };
+
+    this.toString = function () {
+        return "Preview(id=" + this.id + ", language=" + this.language + ", associatedParser=" + this.associatedParser + ", associatedEditor=" + this.associatedEditor + ")";
+    };
+
+    return this;
+}
+
+/**
+ * @description Debugger
+ * @todo Work on it
+ * @param {string} [id="#debugger"] ID of the container
+ * @param {string} [lang="none"] Language
+ * @returns {Debugger} Debugger
+ * @this {Debugger}
+ * @constructor
+ * @since 1.0
+ * @property {string} Debugger.id ID of the element
+ * @property {HTMLElement} Debugger.node Node
+ * @property {string} Debugger.language Language
+ * @property {function((Code))} Debugger.update Update
+ * @property {Function} Debugger.run Run the code
+ * @property {function(): string} Preview.toString String representation
+ */
+function Debugger (id, lang) {
+    this.id = id || "#debugger";
+    this.node = $n(this.id);
+    this.language = lang || "none";
+    this.update = function () {
+        if (this.node != $n(this.id)) this.node = $n(this.id);
+    };
+    this.run = function (code) {
+        //Useful node stuff: reportValidity(), validity{}, setCustomValidity()
+    };
+    this.toString = function () {
+        return "Debugger(id=" + this.id + ", language=" + this.language + ")";
+    };
+    return this;
+}
+
+/**
+ * @description Dummy text
+ * @type {string}
+ * @returns {undefined}
+ * @external module:essence~$G
+ * @since 1.0
+ * @memberof external:essence~$G
+ * @default
+ * @readonly
+ */
+$G["lorem"] = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,";
+
+
+/**
+ * @description Language parser
+ * @param {string} [from="WebScript"] Parsed language
+ * @param {string} [to="DHTML"] Resulting language
+ * @param {function(Code): Code} [customParse=function(code){...}] Custom parsing
+ * @this {Parser}
+ * @constructor
+ * @since 1.0
+ * @property {string} Parser.from Origin language
+ * @property {string} Parser.to Destination language
+ * @property {function(Code): Code} Parser.run Run the code
+ * @property {function(): string} Parser.toString String representation
+ */
+function Parser (from, to, customParse) {
+    this.from = from || "WebScript";
+    this.to = to || "DHTML";
+    /**
+     * @param {Code} code Code to parse
+     * @type {Function}
+     * @returns {Code} Parsed code
+     */
+    this.run = customParse || function (code) {
+        var res = code;
+        res = res.replace(/&lt;tab \/>/gm, "&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;");
+        res = res.replace(/\{\{tab}}/gm, "\t");
+        res = res.replace(/&lt;info>(.*?)&lt;\/info>/gm, "&lt;span class='block info'>$1&lt;/span>");
+        res = res.replace(/&lt;question>(.*?)&lt;\/question>/gm, "&lt;span class='block question'>$1&lt;/span>");
+        res = res.replace(/&lt;error>(.*?)&lt;\/error>/gm, "&lt;span class='block error'>$1&lt;/span>");
+        res = res.replace(/&lt;warning>(.*?)&lt;\/warning>/gm, "&lt;span class='block warning'>$1&lt;/span>");
+        res = res.replace(/&lt;success>(.*?)&lt;\/success>/gm, "&lt;span class='block success'>$1&lt;/span>");
+        res = res.replace(/(\{\{)LOREM(}})/ig, $G["lorem"]);
+        res = res.replace(/(?:\{\{)LOREM\x7c(\d+)-(\d+)(?:}})/ig, $G["lorem"].chunk("$1", "$2"));
+        res = res.replace(/(?:\{\{)HW(?:}})/ig, "Hello World !");
+        res = res.replace(/&lt;icon \/>/gm, "&lt;img src='img/icon.png' class='icon'/>");
+        res = res.replace(/&lt;icon size=(?:"|')(\w+)(?:"|') \/>/gm, "&lt;img src='img/icon.png' class='icon' style='width: $1; height: $1;' />");
+        res = res.replace(/&lt;icon name=(?:"|')(\w+)(?:"|') \/>/gm, "&lt;img src='img/$1.png' class='icon' />");
+        res = res.replace(/&lt;(s|m|l|xs|xl):icon name=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "&lt;img src='img/$2.png' class='$1-icon' />");
+        res = res.replace(/&lt;js>([\s\S]*?)&lt;\/js>/gm,"&lt;script type='text/javascript'>$1&lt;\/script>");
+        res = res.replace(/&lt;js src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"&lt;script type='text/javascript' src='$1'>&lt;\/script>");
+        res = res.replace(/&lt;vb>([\s\S]*?)&lt;\/vb>/gm, "&lt;script type='text/vbscript'>$1&lt;\/script>");
+        res = res.replace(/&lt;vb src=(?:\"|\')(\w+)(?:\"|\') \/>/gm,"&lt;script type = 'text/vbscript' src='$1'>&lt;\/script>");
+        res = res.replace(/&lt;css>([\s\S]*?)&lt;\/css>/gm, "&lt;style type='text/css'>$1&lt;/style>");
+        res = res.replace(/&lt;css href=(?:\"|\')([A-Za-z_ -\.]+)(?:\"|\') \/>/gm, "&lt;link rel='stylesheet' type='text/css' href='$1' />");
+        res = res.replace(/&lt;charset=(?:\"|\')(\w + )(?:\"|\') \/>/gm, "&lt;meta charset='$1' />");
+        res = res.replace(/&lt;author name=(?:\"|\')(\w + )(?:\"|\') href=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "&lt;meta name='author' content='$1' />&lt;link rel='author' href='$2' />");
+        res = res.replace(/&lt;desc>(.*?)&lt;\/desc>/gm, "&lt;meta name='description' content='$1' />");
+        res = res.replace(/&lt;copy>(.*?)&lt;\/copy>/gm, "&lt;meta name='copyrights' content='$1' />");
+        res = res.replace(/&lt;lbl>(.*?)&lt;\/lbl>/gm, "&lt;label>$1&lt;/label>");
+        res = res.replace(/&lt;submit \/>/gm, "&lt;input type='submit' />");
+        res = res.replace(/&lt;submit val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "&lt;input type='submit' value='$1' />");
+        res = res.replace(/&lt;reset \/>/gm, "&lt;input type='reset' />");
+        res = res.replace(/&lt;reset val=(?:\"|\')(\w+)(?:\"|\') \/>/gm, "&lt;input type='reset' value = '$1' />");
+        res = res.replace(/&lt;hdn name=(?:\"|\')(\w+)(?:\"|\')>(.*?)&lt;\/hdn>/gm, "&lt;input type='hidden' name='$1' value='$2' />");
+        res = res.replace(/&lt;hdn name=(?:\"|\')(\w+)(?:\"|\') id=(?:\"|\')(\w+)(?:\"|\')>(.*?)&lt;\/hdn>/gm, "&lt;input type='hidden' name='$1' value='$3' id='$2' />");
+        res = res.replace(/&lt;txt ((?:id|name|class)(\=(?:\"|\')(\w+)(?:\"|\'))(| ))\/>/gm, "&lt;input type='text' />");
+        res = res.replace(/&lt;sql query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "&lt;\?php\n\tif (mysqli_ping($$dbc)) {\n\t\t$r = mysqli_query($$dbc, '$1');\n\t}else printMsg('error', 'No ping');\n\?>");
+        res = res.replace(/&lt;sqlt table=(?:\"|\')(\w+)(?:\"|\') query=(?:\"|\')(.*?)(?:\"|\') \/>/gm, "&lt;\?php\n\tif (mysqli_ping($$dbc)) {\n\t\techo 'Last updated at '._time().\"&lt;br />\";selectTable($dbc, '$1', '$2');\n\t}else printMsg('error', 'No ping');\n\?>");
+        return res
+    };
+
+    this.toString = function () {
+        return "Parser(" + this.from + "->" + this.to + ")";
+    };
+}
+
+/**
+ * @description Toolbar
+ * @param {string} [id="#toolbar"] ID of the container
+ * @param {string[]} [tools=["undo", "redo", "clear", "save", "select", "copy", "paste", "load", "generate", "view"]] Tools
+ * @param {*} mdl Module that is going to use it
+ * @this {Toolbar}
+ * @returns {Toolbar} Toolbar
+ * @constructor
+ * @since 1.0
+ * @property {string} Toolbar.id ID of the element
+ * @property {HTMLElement} Toolbar.node Node
+ * @property {string[]} Toolbar.tools Tools
+ * @property {string[]} Toolbar.fn Function associated with each tools
+ * @property {*} Toolbar.for Owner of the toolbar (generally Editors or Preview)
+ * @property {Function} Toolbar.update Update
+ * @property {function(): string} Toolbar.toString String representation
+ */
+function Toolbar (id, tools, mdl) {
+    this.id = id || "#toolbar";
+    this.node = $n(this.id);
+    this.tools = tools || ["undo", "redo", "clear", "save", "select", "copy", "paste", "load", "generate", "view"];
+    this.fn = [];
+    this.for = mdl;
+    this.update = function () {
+        if (this.node != $n(this.id)) this.node = $n(this.id);
+        for(var i = 0; i &lt; this.tools.length; i++) this.fn[i] = this.for[this.tools[i]]//Doesn't work out of Editor's scope
+        /* $e(this.id).write("");
+         for (var i = 0; i &lt; this.tools.length; i++) {
+         $e(this.id).after("&lt;img src = 'img/" + this.tools[i] + ".png' title = '" + this.tools[i].capitalize() + "' alt = '" + this.tools[i] + "' onClick = '" + this[this.tools[i]] + "' class = 'tbicon' id = 'tool" + i+"' />", true);
+         } */
+    };
+
+    this.toString = function () {
+        return "Toolbar(id=" + this.id + ", tools=" + this.tools.toStr(true) + ", fn=" + this.fn + ", for=" + this.for + ")";
+    };
+
+    return this;
+}
+
+/**
+ * @description Integrated Development Environment
+ * @param {string} [lang="none"] Language
+ * @param {Editor} [edt=new Editor()] Editor
+ * @param {Preview} [prev=new Preview()] Previewer
+ * @param {Parser} [ps=new Parser()] Parser
+ * @param {Debugger} [dbg=new Debugger()] Debugger
+ * @param {Toolbar} [tb=new Toolbar()] Toolbar
+ * @this {IDE}
+ * @returns {IDE} IDE
+ * @constructor
+ * @see Editor Preview Parser Debugger
+ * @since 1.0
+ * @property {string} IDE.language Language
+ * @property {Editor} IDE.editor Editor
+ * @property {Parser} IDE.parser Parser
+ * @property {Preview} IDE.preview Previewer
+ * @property {Parser} IDE.preview.associatedParser Parser
+ * @property {Preview} IDE.editor.previewer Previewer
+ * @property {Parser} IDE.editor.parser Parser
+ * @property {Debugger} IDE.debugger Debugger
+ * @property {function(string, string)} IDE.init Initialiser
+ * @property {Toolbar} IDE.toolbar Toolbar
+ * @property {Function} IDE.update Update
+ * @property {function(): string} IDE.toString String representation
+ */
+function IDE (lang, edt, prev, ps, dbg, tb) {
+    this.editor = edt || new Editor();
+    this.parser = ps || new Parser();
+    this.preview = prev || new Preview();
+    this.preview.associatedParser = this.parser;
+    this.editor.previewer = this.preview;
+    this.editor.parser = this.parser;
+    this.debugger = dbg || new Debugger();
+    this.language = lang || "none";
+    this.init = function (to, l) {
+        if (this.language != "none") l? this.editor.language = this.debugger.language = this.parser.from = this.language = l: this.editor.language = this.debugger.language = this.parser.from = this.language;
+        if (to) {
+            this.parser.to = to;
+            this.preview.language = to;
+        }
+    };
+    this.toolbar = tb || this.editor.toolbar;
+    this.update = function (l) {
+        this.editor.update(l);
+        this.preview.update();
+        this.debugger.update();
+    };
+
+    this.toString = function () {
+        return "IDE(editor=" + this.editor + ", parser=" + this.parser + ", preview=" + this.preview + ", debugger=" + this.debugger + ", language=" + this.language + ")";
+    };
+
+    return this;
+}
+
+/**
+ * @description Loading percentage
+ * @type {number}
+ * @external module:essence~$G
+ * @default
+ * @since 1.0
+ * @memberof external:essence~$G
+ */
+$G["i"] = 0;
+/**
+ * @description Loading bar
+ * @param {string} [dlb="#dlb"] ID of the container
+ * @param {Function} cb Callback
+ * @param {number} [delay=30] Delay (in ms)
+ * @returns {undefined}
+ * @since 1.0
+ * @func
+ */
+function loadBar (dlb, cb, delay) {
+    if (!dlb) dlb = "#dlb";
+    Essence.addCSS(dlb + " {border: none;background: #0F0;max-width: 200px;text-align: center;font-size: 28px;padding: 2px;}#bar {border: 1px ridge #CCC;text-align: center;width: 201px;});");
+    if (!delay) delay = 30;
+    $e(dlb).setCSS("position", "relative");
+    $e(dlb).setCSS("width", $e(dlb).css("width") + $G["i"]);
+    //or use a progress tag
+    $e(dlb).write($G["i"] + "%");
+    $G["i"]++;
+    $G["timer"] = setTimeout("loadBar(" + dlb + ", " + cb + ", " + delay + ")", delay);
+    if ($G["i"] >= 100) {
+        clearTimeout($G["timer"]);
+        $G["i"] = 0;
+        $e(dlb).write("Download finished");
+        cb();
+    }
+}
+
+/**
+ * @description Console (like the terminal but on a webpage)
+ * @param {string} [title="Console"] Title
+ * @param {*} [entry=""] Entry on the console at first use
+ * @param {string} [usr="User"] User
+ * @constructor
+ * @this {Console}
+ * @returns {Console} Console
+ * @since 1.1
+ * @todo Add more commands ?
+ */
+function Console (title, entry, usr) {
+    this.title = title || "Console";
+    this.val = entry || "";
+    this.history = new virtualHistory(this.val);
+    this.user = usr || "User";
+    this.exec = function (ins) {
+        if (ins[0] != "/") this.out("&lt;span class='error'>Invalid command&lt;/span>");
+        else this.val = ins;
+        this.history.add(ins);
+        var cmd = ins.split(" ")[0].get(1).toLowerCase(), params = ins.split(" ").get(1);
+        switch (cmd) {
+            case "say":
+                this.out(params.join(" "), "&amp;lt" + this.user + "&amp;gt;");
+                break;
+            case "help":
+                this.out("&lt;b>Help: &lt;/b>&lt;br />/say [text]" + tabs() + "Let the user say something on the console&lt;br />/help" + tabs() + "Show this&lt;br />/reload" + tabs() + "Reload the console&lt;br />/title [title]" + tabs() + "/$" + tabs() + "Display EssenceJS's version&lt;br />/exp [...]" + tabs() + "Evaluate an expression");
+                break;
+            case "reload":
+                this.val = "";
+                $e("#consoleOut").write("");
+                break;
+            case "title":
+                $e("#consoleTitle").write(params.join(" "));
+                break;
+            case "$":
+                this.out("Essence v" + Essence.version);
+                break;
+            case "exp": //Caution, this can be used for XSS attacks
+                this.out(eval(params.join(" ")), "$EXP&amp;gt;");
+                break;
+            default:
+                this.exec("/help");
+        }
+    };
+    this.html = "&lt;table id='console' cellpadding=0 cellspacing=0>&lt;thead>&lt;th id='consoleTitle'>" + this.title + "&lt;/th>&lt;/thead>&lt;tr>&lt;td>&lt;span id='consoleOut'>" + this.val + "&lt;/span>&lt;/td>&lt;/tr>&lt;tr>&lt;td>&lt;input id='consoleIn' />&lt;/td>&lt;/tr>&lt;/table>";
+
+    this.out = function (word, prefix) {
+        $e("#consoleOut").after((prefix? "&lt;span style='color: #0f0'>" + prefix + "&lt;/span> ": "") + word + "&lt;br />", true);
+    };
+
+    this.place = function (id) {
+        $e(id? "#" + id: "body").write(this.html, true);
+    };
+
+    this.init = function (id) {
+        this.place(id || "console");
+        $n("#consoleOut").innerHTML = (this.val || "Hello world !") + "&lt;br/>";
+        var self = this;
+
+        /** @listens $e("#consoleIn").onchange */
+        $e("#consoleIn").on("change", function () {
+            /** @this $n("#consoleIn") */
+            self.exec(this.value);
+            /** @this $n("#consoleIn") */
+            this.value = "";
+        });
+    };
+
+    return this;
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-File.html">File</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-File-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#getFileContent">getFileContent</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#UnitTest">UnitTest</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Aug 18 2016 22:33:13 GMT+0100 (GMT Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
