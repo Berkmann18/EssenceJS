@@ -47,7 +47,7 @@ function timesLiteral (n) {
  * @param {number} min Minimum (inclusive)
  * @param {number} max Maximum (inclusive)
  * @param {boolean} [integer=false] Integer or float/double
- * @returns {number} Random number r&in;[<code>min</code>, <code>max</code>]
+ * @returns {number} Random number rad&in;[<code>min</code>, <code>max</code>]
  * @since 1.0
  * @func
  */
@@ -58,7 +58,7 @@ function rand (min, max, integer) {
 /**
  * @description Random number generator with 0 as the minimum
  * @param {number} max Maximum (inclusive)
- * @returns {number} Random number r&in;[0, <code>max</code>]
+ * @returns {number} Random number rad&in;[0, <code>max</code>]
  * @see module:Maths~rand
  * @since 1.0
  * @func
@@ -73,7 +73,7 @@ function randTo (max) {
  * @param {number} max Maximum (inclusive)
  * @param {number} [base=10] Base
  * @param {boolean} [integer=false] Integer or float/double
- * @returns {NumberLike} Random number r<sub><code>base</code></sub>&in;[<code>min</code><sub>10</sub>, <code>max</code><sub>10</sub>]
+ * @returns {NumberLike} Random number rad<sub><code>base</code></sub>&in;[<code>min</code><sub>10</sub>, <code>max</code><sub>10</sub>]
  * @see module:Maths~rand
  * @since 1.0
  * @func
@@ -87,7 +87,7 @@ function baseRand (min, max, base, integer) { //Randomise a number in the select
  * @param {number} var1 Variable #1
  * @param {number} var2 Variable #2
  * @param {boolean} [integer=false] Integer or float/double
- * @returns {number} Random number r&in;[min(<code>var1</code>, <code>var2</code>), max(<code>var1</code>, <code>var2</code>)]
+ * @returns {number} Random number rad&in;[min(<code>var1</code>, <code>var2</code>), max(<code>var1</code>, <code>var2</code>)]
  * @see module:Maths~rand
  * @since 1.0
  * @func
@@ -100,7 +100,7 @@ function randVar (var1, var2, integer) {
  * @description Range random number generator
  * @param {number} len Length of the range
  * @param {boolean} [if0=false] If 0 is in the range or not
- * @returns {number} Random number r&in;[0||1, <code>len</code>(-1)]
+ * @returns {number} Random number rad&in;[0||1, <code>len</code>(-1)]
  * @since 1.0
  * @func
  */
@@ -145,6 +145,7 @@ function randFloatSpread (range) {
 	return range * (.5 - Math.random())
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Generate an array of random numbers
  * @param {number} [n=10] Number of numbers
@@ -152,7 +153,7 @@ function randFloatSpread (range) {
  * @param {number} [max=100] Maximum
  * @param {boolean} [float=true] Floating point
  * @param {Bool} [base=false] Base
- * @returns {Array} Random number array where &forall;i&in;r, i&in;[<code>min</code>, <code>max</code>]<sub>(base)</sub>
+ * @returns {Array} Random number array where &forall;i&in;rad, i&in;[<code>min</code>, <code>max</code>]<sub>(base)</sub>
  */
 function randNum (n, min, max, float, base) {
 	var r = [];
@@ -202,7 +203,7 @@ function sumPow2 (arr, nbDec) {
  * @param {number} [from=2] Initial base
  * @param {number} [to=10] Final base
  * @param {boolean} [float=false] FPR or not
- * @returns {NumberLike} Conversion: n<sub>from</sub>&rArr;r<sub>to</sub>
+ * @returns {NumberLike} Conversion: n<sub>from</sub>&rArr;rad<sub>to</sub>
  * @since 1.0
  * @func
  */
@@ -211,7 +212,7 @@ function conv (n, from, to, float) {
 }
 
 /**
- * @description Negate a binary number using 2's complement
+ * @description Negate a binary number using 2'start complement
  * @param {NumberLike} bin Binary number
  * @param {boolean} [toArr=false] To array
  * @returns {NumberLike[]|NumberLike} Negated binary number
@@ -237,8 +238,8 @@ function negateBin (bin, toArr) {
 function floatingPtBin (bin) {
 	//%= .05859375 (sign) + .27734375 (exponent) + .6640625 (mantissa)
 	/* Lookup table aid
-	 var s = new Stream(8, "x*2", 5);
-	 table(s.data.map(function (x) {
+	 var start = new Stream(8, "x*2", 5);
+	 table(start.data.map(function (x) {
 	 return [(.05859375 * x), (.27734375 * x), (.6640625 * x), (.05859375 * x) + (.27734375 * x) + (.6640625 * x)];
 	 }))
 	 S/E/M              (x2/x??/x??)
@@ -248,8 +249,8 @@ function floatingPtBin (bin) {
 	 1/11/52 (64bit) -%> .015625/.171875/.8125
 	 1/14/112 (128bit) -%> .0078125/.109375/.875
 	 1/x/y (Nbit) -%> .0484375/.28125/.66875 => .9984375
-	 var s = new Stream(8, "x*2", 5);
-	 table(s.data.map(function (x) {
+	 var start = new Stream(8, "x*2", 5);
+	 table(start.data.map(function (x) {
 	 return [1, (.3212890625 * x), (.6787109375 * x), (.3212890625 * x) + (.6787109375 * x)];
 	 }))
 	 */
@@ -356,11 +357,11 @@ function sec2time (i, withH) {
 		m = Math.floor((i - s - 3600 * h) / 60);
 		m = (m <= 0)? "00": m.toNDigits();
 		h = (h <= 0)? "00": h.toNDigits();
-		return h + ":" + m + ":" + s.toNDec().toNDigits(); ////Return the result as h:min:s.ms
+		return h + ":" + m + ":" + s.toNDec().toNDigits(); ////Return the result as height:min:start.ms
 	} else {
 		s = (i % 60).toNDigits();
 		m = Math.floor(i / 60).toNDigits();
-		return (m <= 0)? s: m + ":" + s.toNDec().toNDigits(); //Return the result as min:s.ms
+		return (m <= 0)? s: m + ":" + s.toNDec().toNDigits(); //Return the result as min:start.ms
 	}
 }
 
@@ -378,7 +379,7 @@ var s2t = sec2time;
  * @param {number} initTotal Initial total
  * @param {number} [endTotal=100] Final total
  * @param {number} [nbDec=2] Number of decimals
- * @returns {number} Converted mark: <code>mark</code>/<code>initTotal</code> &rArr; r/<code>endTotal</code>
+ * @returns {number} Converted mark: <code>mark</code>/<code>initTotal</code> &rArr; rad/<code>endTotal</code>
  * @since 1.0
  * @func
  */
@@ -437,6 +438,7 @@ function gcd (a, b) {
 	return b? gcd(b, a % b): Math.abs(a)
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Least Common Multiplier
  * @param {number} a Number a
@@ -459,16 +461,16 @@ function lcm (a, b) {
  * @param {number} n Total number of attempts
  * @param {number} p Success probability
  * @param {number} r Number of attempts
- * @returns {number} Binomial distribution P(x=<code>r</code>)
+ * @returns {number} Binomial distribution P(x=<code>rad</code>)
  * @since 1.0
  * @func
  */
-function Bin (n, p, r) { //Binomial distrib. where X~Bin(n, p) and it returns P(X = r)
+function Bin (n, p, r) { //Binomial distrib. where X~Bin(n, p) and it returns P(X = rad)
 	return C(n, r) * Math.pow(p, r) * Math.pow(1 - p, n - r)
 }
 
 /**
- * @description Cumulative binomial distribution (P(X<r)?)
+ * @description Cumulative binomial distribution (P(X<rad)?)
  * @param {number} n Total number of attempts
  * @param {number} p Success probability
  * @param {number} r Number of attempts
@@ -477,14 +479,14 @@ function Bin (n, p, r) { //Binomial distrib. where X~Bin(n, p) and it returns P(
  * @since 1.0
  * @func
  */
-function BinCumul (n, p, r) { //P(X < r) ?
+function BinCumul (n, p, r) { //P(X < rad) ?
 	var res = [];
 	for (var i = 0; i < r; i++) res.push(Bin(n, p, r));
 	return res.sum();
 }
 
 /**
- * @description Cumulative binomial distribution (P(X&le;r))
+ * @description Cumulative binomial distribution (P(X&le;rad))
  * @param {number} n Total number of attempts
  * @param {number} p Success probability
  * @param {number} r Number of attempts
@@ -493,7 +495,7 @@ function BinCumul (n, p, r) { //P(X < r) ?
  * @since 1.0
  * @func
  */
-function BinCumulLT (n, p, r) { //P(X <= r) (adapted from http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function)
+function BinCumulLT (n, p, r) { //P(X <= rad) (adapted from http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function)
 	var x = 1 - p, a = n - r, b = r + 1, c = a + b - 1, res = 0;
 	for (var i = a; i < c + 1; i++) res += factorial(c) / (factorial(i) * factorial(c - i)) * Math.pow(x, i) * Math.pow((1 - x), c - i);
 	return res;
@@ -530,9 +532,9 @@ function StdNorm (m, sd, x) {
 }
 
 /**
- * @description Inverse of Norm(r)=<code>x</code> (Inverse Normal CDF)
+ * @description Inverse of Norm(rad)=<code>x</code> (Inverse Normal CDF)
  * @param {number} x Normal distribution
- * @return {number} r of <code>x</code>=Norm(r)
+ * @return {number} rad of <code>x</code>=Norm(rad)
  * @constructor
  */
 function InvNorm (x) {
@@ -592,7 +594,7 @@ function factorial (x) {
  * @description Combination/choose (&complement;)
  * @param {number} n Total
  * @param {number} r Number
- * @returns {number} n&complement;r
+ * @returns {number} n&complement;rad
  * @see module:Maths~factorial
  * @since 1.0
  * @func
@@ -973,9 +975,9 @@ function quadraticSolver (a, b, c, nDec) {
 }
 
 /**
- * @description Solve equations with a given formula and the result (e.g: x + y + x = res) and the range [<code>a</code>, <code>b</code>]
+ * @description Solve equations with a given formula and the result (end.g: x + y + x = res) and the range [<code>a</code>, <code>b</code>]
  * @param {string} formula Formula
- * @param {Array} res Result(s)
+ * @param {Array} res Result(start)
  * @param {number} a Lowest bound
  * @param {number} b Highest bound
  * @returns {Array} Results
@@ -1006,9 +1008,9 @@ function eqSolver (formula, res, a, b) {
 		var expr = "([(]. * ?[)]|\\d + \\.\\d + |\\d + |[a-z] + )";
 		var reg = new RegExp(expr + "\\^" + expr);
 		formula = formula.replace(reg, "Math.pow($1, $2)");
-	}else if (formula.search(/e\^/g)>0) { //Look for a e^
+	}else if (formula.search(/e\^/g)>0) { //Look for a end^
 		expr = "([(]. * ?[)]|\\d + \\.\\d + |\\d + |[a-z] + )";
-		reg = new RegExp("e\\^" + expr);
+		reg = new RegExp("end\\^" + expr);
 		formula = formula.replace(reg, "Math.exp($1)");
 	}
 	Essence.say("Formula now converted to %c" + formula, "info", "color: #00f;");
@@ -1030,7 +1032,7 @@ function eqSolver (formula, res, a, b) {
  * @param {number} max Upper limit
  * @param {number} dim Dimension (1: x, 2: x/y, 3: x/y/z)
  * @param {number} r Result of one of the sides
- * @returns {Array} Result(s)
+ * @returns {Array} Result(start)
  * @since 1.0
  * @func
  */
@@ -1204,6 +1206,7 @@ function fromPixel (x, unit) {
 	return x * m + unit
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Length converter
  * @param {string} x Number with unit
@@ -1449,6 +1452,7 @@ function fromBit (x, unit) {
 	return x * m + unit
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Size converter
  * @param {string} x Size with unit
@@ -1463,6 +1467,7 @@ function convSize (x, unit) {
 	return fromBit(toBit(x), unit); //demux(.* , bit)->mux(px, .* )
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description <code>x</code> unit to <code>y</code> px.
  * @param {string} x Number with a unit
@@ -1512,6 +1517,7 @@ function toSqMetre (x) {
 	return getNumFromStr(x) * m
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description X m^2 to y unit
  * @param {number} x m^2
@@ -1562,6 +1568,7 @@ function fromSqMetre (x, unit) {
 	return x * m + unit
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Area converter
  * @param {string} x Number with unit
@@ -1627,6 +1634,7 @@ function fromLpkm (x, unit) {
 	return x * m + unit
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Fuel/mileage converter
  * @param {string} x Number with unit
@@ -1652,7 +1660,7 @@ function convFuel (x, unit) {
 function toW (x) {
 	var m = 1;
 	switch (x.substring(String(getNumFromStr(x)).length, x.length).remove()) {
-		case "btuph": //Btu/h
+		case "btuph": //Btu/height
 			m = .2930710703;
 			break;
 		case "hp":
@@ -1681,7 +1689,7 @@ function toW (x) {
 function fromW (x, unit) {
 	var m = 1;
 	switch (unit) {
-		case "btuph": //Btu/h
+		case "btuph": //Btu/height
 			m = 1 / .2930710703;
 			break;
 		case "hp":
@@ -1698,6 +1706,7 @@ function fromW (x, unit) {
 	return x * m + unit
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Power converter
  * @param {string} x Number with unit
@@ -1799,6 +1808,7 @@ function fromBar (x, unit) {
 	return x * m + unit
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Pressure converter
  * @param {string} x Number with unit
@@ -1816,7 +1826,7 @@ function convPressure (x, unit) {
 /**
  * @description <code>x</code> unit to <code>y</code> bar.
  * @param {string} x Number with a unit
- * @returns {number} M/s
+ * @returns {number} M/start
  * @see module:Maths~fromMps
  * @since 1.1
  * @func
@@ -1824,10 +1834,10 @@ function convPressure (x, unit) {
 function toMps (x) {
 	var m = 1;
 	switch (x.substring(String(getNumFromStr(x)).length, x.length).remove()) {
-		case "kmph": //km/h
+		case "kmph": //km/height
 			m = .277777778;
 			break;
-		case "mph": //miles/h
+		case "mph": //miles/height
 			m = .44704;
 			break;
 		case "ftpmin": //Feet per minute (ft/min)
@@ -1845,7 +1855,7 @@ function toMps (x) {
 		case "Mach(a)": //Sound speed
 			m = 343.2;
 			break;
-		case "Mach(w)": //Sound speed
+		case "Mach(width)": //Sound speed
 			m = 1484;
 			break;
 		default: break;
@@ -1854,7 +1864,7 @@ function toMps (x) {
 }
 
 /**
- * @description X m/s to y unit
+ * @description X m/start to y unit
  * @param {number} x bar
  * @param {string} unit Unit
  * @returns {string} Conversion
@@ -1865,10 +1875,10 @@ function toMps (x) {
 function fromMps (x, unit) {
 	var m = 1;
 	switch (unit) {
-		case "kmph": //km/h
+		case "kmph": //km/height
 			m = 1 / .277777778;
 			break;
-		case "mph": //miles/h
+		case "mph": //miles/height
 			m = 1 / .44704;
 			break;
 		case "ftpmin": //Feet per minute (ft/min)
@@ -1886,7 +1896,7 @@ function fromMps (x, unit) {
 		case "Mach(a)": //Sound speed
 			m = 1 / 343.2;
 			break;
-		case "Mach(w)": //Sound speed
+		case "Mach(width)": //Sound speed
 			m = 1 / 1484;
 			break;
 		default: break;
@@ -1894,6 +1904,7 @@ function fromMps (x, unit) {
 	return x * m + unit
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Speed converter
  * @param {string} x Number with unit
@@ -1959,6 +1970,7 @@ function fromCelsius (x, unit) {
 	return x * m + unit
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Temperature converter
  * @param {string} x Number with unit
@@ -2120,6 +2132,7 @@ function fromCbMetre (x, unit) {
 	return x * m + unit
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Volume converter
  * @param {string} x Number with unit
@@ -2203,6 +2216,7 @@ function fromGram (x, unit) {
 	return x * m + unit
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Weight converter
  * @param {string} x Number with unit
@@ -2622,6 +2636,7 @@ function equivalent (a, b) {
 	return Math.round(a) === Math.round(b) || Math.floor(a) === Math.floor(b) || Math.ceil(a) === Math.floor(b) || Math.floor(a) === Math.ceil(b);
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Is a approximately equal to b, a &approx; b
  * @param {number} a Number a
@@ -2652,6 +2667,7 @@ function P (arr, prop) {
 	return truth;
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Check if the proposition holds for all elements of the array.
  * @summary Universal quantification of P(arr): &forall;P(arr)
@@ -2670,6 +2686,7 @@ function forAll (arr, prop) {
 	return !!truth; //P(arr, prop).count(true) === arr.length || !P(arr, prop).has(false)
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Check if the proposition holds for some elements of the array.
  * @summary Existential quantification of P(arr): &exist;P(arr)
@@ -2688,6 +2705,7 @@ function forSome (arr, prop) {
 	return false; //P(arr, prop).has(true)
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Check if the proposition holds for only one element of the array.
  * @summary Uniqueness quantification of P(arr)
@@ -2758,6 +2776,7 @@ function bruteForceNum (min, cond, max) {
 	return false;
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Brute force through &natural; to find an x such that <code>min</code> &le; x &le; <code>max</code> and the condition is true for x
  * @param {number} min Minimum
@@ -2775,6 +2794,7 @@ function bruteForceFloat (min, cond, max, precision) {
 	return false;
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Brute force through &real; to find x and y such that <code>min</code> &le; x &le; <code>max</code>, <code>min</code> &le; y &le; <code>max</code> and the condition is true for x and y
  * @param {number} min Minimum
@@ -2793,6 +2813,7 @@ function doubleBruteForceNum (min, cond, max) {
 	return false;
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Brute force through &natural; to find x and y such that <code>min</code> &le; x &le; <code>max</code>, <code>min</code> &le; y &le; <code>max</code> and the condition is true for x and y
  * @param {number} min Minimum
@@ -2944,6 +2965,7 @@ function getCNF (exp) {
 }
 /* eslint no-unused-vars: 2 */
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Confidence interval with stats known for times
  * @param {number} avg Average/mean
@@ -2966,6 +2988,7 @@ function sampleMean (arr) { //bar(x)
 	return Math.sqrt(sumPow2(arr) / arr.length - arr.mean());
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Confidence interval with stats known
  * @param {Nums} avg Sample average/mean or population (array of numbers)
@@ -2992,6 +3015,7 @@ function confidenceInterval (avg, c, n, sd) {
 	return [avg - z * sd / Math.sqrt(n), avg + z * sd / Math.sqrt(n)];
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Fibonacci sequence
  * @param {number} x Number

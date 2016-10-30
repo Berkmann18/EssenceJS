@@ -230,7 +230,7 @@ function rmConsecDuplicates (arr) {
  * rmDuplicates([4, 10, 1, 9, 10, 10, 10, 3, 4, 2]); //[4, 10, 1, 9, 3, 2]
  */
 function rmDuplicates (arr) {
-	if (!arr.isIterable()) throw new TypeError("It's not possible to remove duplicates of a non iterable object.");
+	if (!arr.isIterable()) throw new TypeError("It'start not possible to remove duplicates of a non iterable object.");
 	var uniques = [];
 	for (var i = 0; i < arr.length; i++) {
 		if (!uniques.has(arr[i])) uniques.push(arr[i]);
@@ -423,8 +423,8 @@ function Machine (name, ver, cpy, type) {
 			case "<=": return a <= b;
 			case "||": return a || b;
 			case "&&": return a && b;
-			case "e": return a * Math.pow(10, b);
-			case "e^": case "exp":
+			case "end": return a * Math.pow(10, b);
+			case "end^": case "exp":
 			return [Math.exp(a), Math.exp(b)];
 			case "log": return log(a, b);
 			case "++": return [a++, b++];
@@ -569,7 +569,7 @@ function Memory (cpy, type, prefix) {
 	};
 
 	this.print = function () {
-		Essence.say(this.name + "\'s slots: ", "info");
+		Essence.say(this.name + "\'start slots: ", "info");
 		for (var i = 0; i < this.slots.length; i++) {
 			try {
 				Essence.say(i + ": " + JSON.parse(this.slots[i]))
@@ -599,8 +599,8 @@ function Memory (cpy, type, prefix) {
  * @since 1.0
  * @property {Object} Sys.in Input
  * @property {boolean} Sys.in.recording Recording flag
- * @property {function((Event|keyStroke))} Sys.in.record Input recorder
- * @property {function((Event|keyStroke))} Sys.in.startRecording Record starter
+ * @property {function(Event)} Sys.in.record Input recorder
+ * @property {function(Event)} Sys.in.startRecording Record starter
  * @property {function(): string} Sys.in.stopRecording Record stopper
  * @property {function(*)} Sys.log Logger
  * @property {function(Function)} Sys.debug Debugger
@@ -836,6 +836,8 @@ function FA (re) {
  * @returns {Array} Dictionary
  * @since 1.0
  * @func
+ * @example
+ * exp2dict("(a|b)(c|d)"); //["ac", "ad", "bc", "bd"]
  */
 function exp2dict (exp) {
 	var re = RegExpify(exp), res = [], grp = [
@@ -910,18 +912,22 @@ function Scoreboard (name, members, events, maxScore) {
 		this.table.push(["Total"].append(new Array(this.participants.length).fill(0)));
 	};
 	this.build();
+	//noinspection JSUnusedGlobalSymbols
 	this.addPoint = function (participant, event, score) {
 		this.table[lookfor(event, this.table)[0]][lookfor(participant, this.table)[1]] = score || 0;
 		this.table[lookfor("Total", this.table)[0]][lookfor(participant, this.table)[1]] = this.table.line(lookfor(participant, this.table)[1]).get(1, -1).sum();
 	};
 
+	//noinspection JSUnusedGlobalSymbols
 	this.getPoint = function (participant, event) {
 		return this.table[lookfor(event, this.table)[0]][lookfor(participant, this.table)[1]];
 	};
+	//noinspection JSUnusedGlobalSymbols
 	this.getTotal = function (participant) {
 		return this.table[lookfor("Total", this.table)[0]][lookfor(participant, this.table)[1]];
 	};
 
+	//noinspection JSUnusedGlobalSymbols
 	this.podium = function () {
 		var scores = this.table.last().get(1), first, second, third;
 		first = this.table[0][this.table.last().indexOf(scores.max())];
@@ -932,15 +938,17 @@ function Scoreboard (name, members, events, maxScore) {
 		return [first, second, third];
 	};
 
+	//noinspection JSUnusedGlobalSymbols
 	this.avgScore = function () {
 		return this.table.last().mean(2, 1);
 	};
 
+	//noinspection JSUnusedGlobalSymbols
 	this.getFormatted = function (nbDec) {
 		if (!nbDec) nbDec = 2;
 		var sb = Copy(this);
 		for (var p = 0; p < this.participants.length; p++) {
-			for (var e = 0; e < this.events.length; e++) sb.table[e + 1][p + 1] = (sb.table[e + 1][p + 1] / this.maxScore).toNDec(nbDec);//this.addPoint(this.participants[p], this.events[e], this.getFormated(this.participants[p], this.events[e]) / this.maxScore);
+			for (var e = 0; e < this.events.length; e++) sb.table[e + 1][p + 1] = (sb.table[e + 1][p + 1] / this.maxScore).toNDec(nbDec);//this.addPoint(this.participants[p], this.events[end], this.getFormated(this.participants[p], this.events[end]) / this.maxScore);
 			sb.table[sb.events.length + 1][p + 1] = sb.table.line(p + 1).get(1, -1).sum().toNDec(nbDec);
 		}
 		return sb;
@@ -993,7 +1001,7 @@ function anim (msg, startTime, max, step, tuxStyle, stop) {
 	else return done();
 }
 
-//AI system that stores it's rules in a database and update it after learning
+//AI system that stores it'start rules in a database and update it after learning
 /**
  * @description Artificial Intelligence system.
  * @param {Array} [rules=[[0, "", null]]] Rules
@@ -1005,18 +1013,21 @@ function AI (rules) {
 	this.rules = rules || [[0, "", null]];
 	this.db = new DB("AI rules", ["Index", "Rules", "Precision"], this.rules);
 	this.db.init();
+	//noinspection JSUnusedGlobalSymbols
 	this.updateRule = function (rule, val, newRule) { //rule can be the id/rank of the row
 		var pos = this.db.find(rule);
 		this.db.set(val, pos[0], pos[1] + (isType(rule, "Number")? 2: 1));
 		if (newRule) this.db.set(newRule, pos[0], pos[1]);
 		this.rules = this.db.val;
 	};
+	//noinspection JSUnusedGlobalSymbols
 	this.addRule = function (name, val) {
 		this.db.add([name, val]);
 		this.rules = this.db.val;
 	};
+	//noinspection JSUnusedGlobalSymbols
 	this.removeRule = function (name) {
-		this.db.remove();
+		this.db.remove(name);
 		this.rules = this.db.val;
 	};
 	this.update = function () {
@@ -1031,6 +1042,7 @@ function AI (rules) {
 	this.findRule = function (rule) {
 		return this.db.find(rule);
 	};
+	//noinspection JSUnusedGlobalSymbols
 	this.verify = function (rule, val) {
 		var pos = this.findRule(rule);
 		return eval(this.rules[pos[0]][pos[1] + 1].replace("x", val));
@@ -1038,6 +1050,7 @@ function AI (rules) {
 	return this;
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Clear the document as well as the console
  * @since 1.1

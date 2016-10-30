@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--suppress ALL -->
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -1513,7 +1514,8 @@
     
         <p class="code-caption">Example 1:</p>
     
-    <pre class="prettyprint"><code>require("myModule"); //It will import the script located at "modules/myModule.js"require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js", "modules/moduleB.js" and "modules/moduleC.js"</code></pre>
+    <pre class="prettyprint"><code>require("myModule"); //It will import the script located at "modules/myModule.js"
+require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js", "modules/moduleB.js" and "modules/moduleC.js"</code></pre>
 
 
 
@@ -2828,7 +2830,8 @@
 
 
 <div class="description">
-    Date difference calculator.<br />Source: <a href="http://www.htmlgoodies.com/html5/javascript/calculating-the-difference-between-two-dates-in-javascript.html">http://www.htmlgoodies.com/html5/javascript/calculating-the-difference-between-two-dates-in-javascript.html</a>
+    Date difference calculator.<br />
+Source: <a href="http://www.htmlgoodies.com/html5/javascript/calculating-the-difference-between-two-dates-in-javascript.html">http://www.htmlgoodies.com/html5/javascript/calculating-the-difference-between-two-dates-in-javascript.html</a>
 </div>
 
 
@@ -3801,7 +3804,11 @@
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>var a = undefined, b, c = null;exist(a); //true because: a in window === trueexist(b); //true because: b in window === trueexist(c); //true because: (typeof c !== "undefined" &amp;&amp; c !== undefined) === trueexist(d); //false</code></pre>
+    <pre class="prettyprint"><code>var a = undefined, b, c = null;
+exist(a); //true because: a in window === true
+exist(b); //true because: b in window === true
+exist(c); //true because: (typeof c !== "undefined" &amp;&amp; c !== undefined) === true
+exist(d); //false</code></pre>
 
 
 
@@ -3892,7 +3899,11 @@
 
             
 
-            <td class="description last">Filter (specific character, no uppercase/lowercase, cumulative/no (sensitive) repeat){ name: "specificChar/noUpperCase/noLowerCase/cumulativeRepeat/cumulativeSensitiveRepeat/noRepeat", character: *}</td>
+            <td class="description last">Filter (specific character, no uppercase/lowercase, cumulative/no (sensitive) repeat)
+{
+ name: "specificChar/noUpperCase/noLowerCase/cumulativeRepeat/cumulativeSensitiveRepeat/noRepeat",
+ character: *
+}</td>
         </tr>
 
     
@@ -5518,7 +5529,8 @@
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>include("script.js"); //It will include the script.js just like include("script.js", "script");include("style.css"); //same as include("style.css", "link") and include("style.css", "stylesheet");</code></pre>
+    <pre class="prettyprint"><code>include("script.js"); //It will include the script.js just like include("script.js", "script");
+include("style.css"); //same as include("style.css", "link") and include("style.css", "stylesheet");</code></pre>
 
 
 
@@ -6118,11 +6130,19 @@
     
         <p class="code-caption">Example 1:</p>
     
-    <pre class="prettyprint"><code>init("myModule"); //Initiate the module myModuleinit(["moduleA", "moduleB"]); //Initiate the modules moduleA and moduleB</code></pre>
+    <pre class="prettyprint"><code>init("myModule"); //Initiate the module myModule
+init(["moduleA", "moduleB"]); //Initiate the modules moduleA and moduleB</code></pre>
 
         <p class="code-caption">Example 2:</p>
     
-    <pre class="prettyprint"><code>init("myModule", function () {}, function () {  Essence.say("myModule has been fully initiated !", "info");}, "alpha"); //Initiate the myModule.js module located at alpha/modules/ and with a callbackinit(["moduleA", "moduleB"], function (mdl) {  Essence.say("Midway through " + mdl, "info");}, function (mdl) {  Essence.say("Finished initiating " + mdl, "succ");});</code></pre>
+    <pre class="prettyprint"><code>init("myModule", function () {}, function () {
+  Essence.say("myModule has been fully initiated !", "info");
+}, "alpha"); //Initiate the myModule.js module located at alpha/modules/ and with a callback
+init(["moduleA", "moduleB"], function (mdl) {
+  Essence.say("Midway through " + mdl, "info");
+}, function (mdl) {
+  Essence.say("Finished initiating " + mdl, "succ");
+});</code></pre>
 
 
 
@@ -8564,7 +8584,8 @@
     
         <p class="code-caption">Example 1:</p>
     
-    <pre class="prettyprint"><code>require("myModule"); //It will import the script located at "modules/myModule.js"require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js", "modules/moduleB.js" and "modules/moduleC.js"</code></pre>
+    <pre class="prettyprint"><code>require("myModule"); //It will import the script located at "modules/myModule.js"
+require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js", "modules/moduleB.js" and "modules/moduleC.js"</code></pre>
 
         <p class="code-caption">Example 2:</p>
     
@@ -8768,7 +8789,8 @@
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>run("myModule"); //will run myModule.run()run(["moduleA", "moduleB"]); //will run moduleA.run() then moduleB.run() (unless module is a dependency of moduleA in which case it will be ran before)</code></pre>
+    <pre class="prettyprint"><code>run("myModule"); //will run myModule.run()
+run(["moduleA", "moduleB"]); //will run moduleA.run() then moduleB.run() (unless module is a dependency of moduleA in which case it will be ran before)</code></pre>
 
 
 

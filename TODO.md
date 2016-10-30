@@ -21,8 +21,6 @@
 -	Colour.getColourName() (prototype already placed)
 -	greyish hover effect for rows/columns headers that would highlight the whole row/column
 -	select, datetime, datetime-local, time, month, range, search, week, url; to validate() (see [DOM]~validate)
--	Prim's alg (already there as A* ?!)
--	Kruskal's alg
 -   Fully functional NoSQL/NoPHP server/database (with remote access, see [Web])
 -   Event listeners to server, DB, WebPage and WebApp (see [Web])
 -   double DES, triple (2/3-key) DES, MiTM attack
@@ -50,6 +48,7 @@
 -	exp2dict (see [Misc]~exp2dict)
 -	Alg formula to truth table (see [Maths]~truthTable, [Maths]~getDNF and [Maths]~getCNF)
 -   PUT() and DELETE() (see [Ajax])
+-   Kruskal, Dijkstra and Prim algs (see [DataStruct])
 
 # To fix:
 -	Array.getOccurrences() (see [essence]~Array.getOccurrences)

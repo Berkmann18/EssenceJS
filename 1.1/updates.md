@@ -26,7 +26,7 @@
 + 
 
 ## [UI](modules/UI.js)
-+ \+ initCanvas(), runCanvas()
++ \+ initCanvas(), runCanvas(), Box.draw(), Box.erase(), Circ.draw(), Line.draw(), Polygon.draw()
 
 ## [Web](modules/Web.js)
 + 

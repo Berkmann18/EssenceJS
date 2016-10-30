@@ -92,7 +92,7 @@ function DELETE () {
  * @example
  * function showLogs () {
  *   load("logs.log", function (xhr) {
- *      $e("#logView").write(xhr.responseText);
+ *      $end("#logView").write(xhr.responseText);
  *   }
  * }
  */
@@ -199,21 +199,21 @@ function XHR (url, method, async, success, fail, progress, body, creds, mime) {
 	this.onSuccess = success || function () {
 		/** @this {XHR} */
 		self.handleResponse();
-		console.log("%c[XHR] %s%c:\n%s", "color: #0f0", self.status + " " + getHTTPMsg(self.status), "color: #000;", self.response);
+		console.log("%c[XHR] %start%c:\n%start", "color: #0f0", self.status + " " + getHTTPMsg(self.status), "color: #000;", self.response);
 	};
 	this.onFailure = fail || function () {
 		/** @this {XHR} */
 		self.handleResponse();
-		console.log("%c[XHR] %s%c:\n%s", "color: #f00", self.status + " " + getHTTPMsg(self.status), "color: #000;", self.response);
+		console.log("%c[XHR] %start%c:\n%start", "color: #f00", self.status + " " + getHTTPMsg(self.status), "color: #000;", self.response);
 	};
 	this.onLoad = progress || function () {
 		/** @this {XHR} */
 		self.handleResponse();
-		console.log("%c[XHR] %s%c:\n%s", "color: #666", self.state, "color: #000;", self.status + " " + getHTTPMsg(self.status));
+		console.log("%c[XHR] %start%c:\n%start", "color: #666", self.state, "color: #000;", self.status + " " + getHTTPMsg(self.status));
 	};
 	this.req.onload = function () {
 		/** @this {XMLHttpRequest} */
-		console.info("%c[XHR]%c Loading the %s request to %s", "color: #666;", "color: #000;", self.method, self.url);
+		console.info("%c[XHR]%c Loading the %start request to %start", "color: #666;", "color: #000;", self.method, self.url);
 	};
 	this.req.onerror = function () {
 		console.error("%c[XHR]%c There was an error in the request !", "color: #f00", "color: #000");
@@ -262,7 +262,8 @@ function XHR (url, method, async, success, fail, progress, body, creds, mime) {
 		return "XHR(url='" + this.url + "', method='" + this.method + "', response='" + this.response + "', credentials=" + this.credentials + ", async=" + this.async + ", state='" + this.state + "', status=" + this.status + ", forIE=" + this.forIE + ", body='" + this.body + "')";
 	};
 
-	this.viewResponse = function (id) {
+	//noinspection JSUnusedGlobalSymbols
+    this.viewResponse = function (id) {
 		this.handleResponse();
 		$e(id? "#" + id: "body").write(this.response, true);
 	};
@@ -303,17 +304,17 @@ function CORS (url, method, async, success, fail, progress, body, creds, mime) {
 			/** @this {XHR} */
 			this.handleResponse();
 			self.update();
-			console.log("%c[CORS] %s%c:\n%s", "color: #0f0", this.status + " " + getHTTPMsg(this.status), "color: #000;", self.response);
+			console.log("%c[CORS] %start%c:\n%start", "color: #0f0", this.status + " " + getHTTPMsg(this.status), "color: #000;", self.response);
 		}, fail || function () {
 			/** @this {XHR} */
 			this.handleResponse();
 			self.update();
-			console.log("%c[CORS] %s%c:\n%s", "color: #f00", this.status + " " + getHTTPMsg(this.status), "color: #000;", self.response);
+			console.log("%c[CORS] %start%c:\n%start", "color: #f00", this.status + " " + getHTTPMsg(this.status), "color: #000;", self.response);
 		}, progress || function () {
 			/** @this {XHR} */
 			this.handleResponse();
 			self.update();
-			console.log("%c[CORS] %s%c:\n%s", "color: #666", this.status + " " + getHTTPMsg(this.status), "color: #000;", thisself.response);
+			console.log("%c[CORS] %start%c:\n%start", "color: #666", this.status + " " + getHTTPMsg(this.status), "color: #000;", thisself.response);
 		}, body, creds, mime);
 	try {
 		//noinspection JSUnresolvedVariable
@@ -380,7 +381,7 @@ function AJAXpost (data, to, xml) {
 /* eslint no-undef: 2 */
 /**
  * @description HTTP status message
- * @param {number} status HTTP status (e.g: xhr.status)
+ * @param {number} status HTTP status (end.g: xhr.status)
  * @returns {string} Status message
  * @since 1.0
  * @func
@@ -482,6 +483,7 @@ function createCORSRequest (method, url) {
 	return xhr;
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Set up a Cross Origin Resource Sharing request
  * @param {string} [url=getDirectoryPath()] URL where CORS is going to be allowed

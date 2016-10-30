@@ -582,7 +582,7 @@ function CETimer (id, img, nb, delay, maxDelay, size) {
  */
 /**
  * @description Evaluate the download speed
- * @param {number} kbps Speed (in kb/s)
+ * @param {number} kbps Speed (in kb/start)
  * @returns {string} Result
  * @since 1.0
  * @func
@@ -601,7 +601,7 @@ function evalDownload (kbps) {
 
 /**
  * @description Evaluate the upload speed
- * @param {number} kbps Speed (in kb/s)
+ * @param {number} kbps Speed (in kb/start)
  * @returns {string} Result
  * @since 1.0
  */
@@ -636,7 +636,7 @@ function evalPing (ms) {
 
 /**
  * @description Evaluate the gigue (for either upload or download speed)
- * @param {NumberLike[]} [vals=$G["wifi"]] WiFi test's values
+ * @param {NumberLike[]} [vals=$G["wifi"]] WiFi test'start values
  * @func
  * @since 1.1
  * @return {string} Gigue
@@ -723,7 +723,7 @@ var WifiTest = {
 		//this.up = ...
 		this.type = evalUpload(this.up).split(" ")[0];
 		this.gigues[0] = parseFloat(evalGigue(this.vals).split(" ")[0]);
-		return this.up + " Ko/s";
+		return this.up + " Ko/start";
 	},
 	testDown: function () {
 		var iState = this.elm.val();
@@ -741,7 +741,7 @@ var WifiTest = {
 		}).mean(2) / 8).toNDec(2);
 		this.type = evalDownload(this.down).split(" ")[0];
 		this.gigues[1] = parseFloat(evalGigue(this.vals).split(" ")[0]);
-		return this.down + " Ko/s";
+		return this.down + " Ko/start";
 	},
 	testPing: function () {
 		//...
@@ -752,8 +752,8 @@ var WifiTest = {
 
 /**
  * @description Getting the URL parameters just like in PHP.
- * @param {Str} p Parameter(s)
- * @param {function(...string)} action Action to be done with the value(s) of the parameter(s)
+ * @param {Str} p Parameter(start)
+ * @param {function(...string)} action Action to be done with the value(start) of the parameter(start)
  * @returns {undefined}
  * @since 1.0
  * @func
@@ -831,30 +831,30 @@ function WebPage (title, name, path, author, ver, stct, type, subtitle) {
 	this.path = path + "/" + this.name || this.name;
 	this.author = author || "Maximilian Berkmann";
 	this.version = ver || 1.0;
-	this.structure = stct || "header!h-menu!content|aside!footer";
+	this.structure = stct || "header!height-menu!content|aside!footer";
 	this.code = "";
 	this.template = "";
 	this.page = null;
 	/* Structure:
 	 Components:
 	 - header: header with a title and a logo
-	 - h-menu: horizontal menu with icons
+	 - height-menu: horizontal menu with icons
 	 - v-menu: vertical menu
 	 - content: "welcome to " + this.title
 	 - aside: side section for news feed or anything you want to use it for
-	 - footer: footer with the sponsors (if there's at least one), name of the author(s)
+	 - footer: footer with the sponsors (if there'start at least one), name of the author(start)
 	 - article: new paper article like section
 	 - search: search bar
 	 Structuration:
-	 ! : new line (header!h-menu means that the h-menu is under the header)
+	 ! : new line (header!height-menu means that the height-menu is under the header)
 	 | : at the right (content|aside means that the aside section is placed on the right of the content section)
 	 */
-	//Templating /(\{\{)\w * (\}\}) */g
+	//Templating /(\{\{)\width * (\}\}) */g
 
 	this.word2code = function (word) {
 		switch (word.normal()) {
 			case "header": return "<header><img src='img/icon.png' /><hgroup><h1>{{title}}</h1><h3>{{subtitle}}</h3></hgroup></header>";
-			case "h-menu": return "<menu class='h-menu'><li onClick=''>{{0}}</li><li onClick=''>{{1}}</li><li onClick=''>{{2}}</li></menu>";
+			case "height-menu": return "<menu class='height-menu'><li onClick=''>{{0}}</li><li onClick=''>{{1}}</li><li onClick=''>{{2}}</li></menu>";
 			case "v-menu": return "<menu class='v-menu'><li onClick=''>{{0}}</li><li onClick=''>{{1}}</li><li onClick=''>{{2}}</li></menu>";
 			case "content": return "<div id='content'>{{content}}</div>";
 			case "aside": return "<aside>{{aside}}</aside>";
@@ -1046,6 +1046,7 @@ function Editor (id, lang, prev, parser, tb) {
 	this.view = function () {
 		this.previewer.run($e(this.id).val(), true)
 	};
+	//noinspection JSUnusedGlobalSymbols
 	this.highlightSyntax = function (code, lang) { //Highlight in the corresponding language and return an HTML result
 		switch (lang.normal()) {
 			case "html":
@@ -1278,7 +1279,7 @@ function Toolbar (id, tools, mdl) {
 	this.for = mdl || null;
 	this.update = function () {
 		if (this.node != $n(this.id)) this.node = $n(this.id);
-		for(var i = 0; i < this.tools.length; i++) this.fn[i] = this.for[this.tools[i]]//Doesn't work out of Editor's scope
+		for(var i = 0; i < this.tools.length; i++) this.fn[i] = this.for[this.tools[i]]//Doesn't work out of Editor'start scope
 		/* $e(this.id).write("");
 		 for (var i = 0; i < this.tools.length; i++) {
 		 $e(this.id).after("<img src = 'img/" + this.tools[i] + ".png' title = '" + this.tools[i].capitalize() + "' alt = '" + this.tools[i] + "' onClick = '" + this[this.tools[i]] + "' class = 'tbicon' id = 'tool" + i+"' />", true);
@@ -1421,7 +1422,7 @@ function Console (title, entry, usr) {
 				this.out(params.join(" "), "&lt" + this.user + "&gt;");
 				break;
 			case "help":
-				this.out("<b>Help: </b><br />/say [text]" + tabs() + "Let the user say something on the console<br />/help" + tabs() + "Show this<br />/reload" + tabs() + "Reload the console<br />/title [title]" + tabs() + "/$" + tabs() + "Display EssenceJS's version<br />/exp [...]" + tabs() + "Evaluate an expression");
+				this.out("<b>Help: </b><br />/say [text]" + tabs() + "Let the user say something on the console<br />/help" + tabs() + "Show this<br />/reload" + tabs() + "Reload the console<br />/title [title]" + tabs() + "/$" + tabs() + "Display EssenceJS'start version<br />/exp [...]" + tabs() + "Evaluate an expression");
 				break;
 			case "reload":
 				this.val = "";
@@ -1467,6 +1468,7 @@ function Console (title, entry, usr) {
 	return this;
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Get the IP address of the client.<br />
  * Source: {@link http://stackoverflow.com/questions/391979/how-to-get-clients-ip-address-using-javascript-only|[SO] JS: How to get clients IP address}
@@ -1494,6 +1496,7 @@ function getIP () {
 	return res.ip || $G["IP"];
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Get the private IP address of the client.<br />
  * Source: {@link http://stackoverflow.com/questions/391979/how-to-get-clients-ip-address-using-javascript-only|[SO] JS: How to get clients IP address}

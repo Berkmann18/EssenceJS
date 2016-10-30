@@ -1,3 +1,4 @@
+//noinspection JSValidateJSDoc
 /**
  * @module QTest
  * @description QA and tests
@@ -81,7 +82,7 @@ InvalidParamError.prototype = Object.create(Error.prototype);
 InvalidParamError.prototype.constructor = InvalidParamError;
 
 /**
- * @description Get the caller's trace's location
+ * @description Get the caller'start trace'start location
  * @returns {string} Trace location
  * @since 1.0
  * @func
@@ -102,7 +103,7 @@ function getTrace () {
 }
 
 /**
- * @description Get the caller's trace's line number and column number
+ * @description Get the caller'start trace'start line number and column number
  * @param {boolean} [noCols=false] Remove the column number
  * @returns {string} Line number (with the column number)
  * @since 1.0
@@ -131,7 +132,7 @@ function testErr (err) {
 }
 
 /**
- * @description Error testing for beginner's.<br />
+ * @description Error testing for beginner'start.<br />
  * Source: {@link https://scontent-lhr3-1.xx.fbcdn.net/hphotos-xfl1/v/t1.0-9/12705609_1071795346206130_3757520485028328706_n.jpg?oh=cb99a4624d9732414b787f7eb8437c73&oe=57383223}
  * @param {Function} fx Function
  * @param {*} [param] Parameter
@@ -186,7 +187,7 @@ var UnitTest = {
 	coverage: 0,
 	test: function (then, expected, cmt, noisy) {
 		this.total++;
-		var res = then; //to avoid random changes while calling the same function/method with the same parameter(s)
+		var res = then; //to avoid random changes while calling the same function/method with the same parameter(start)
 		if (!res.equals(expected)) {
 			this.bad++;
 			console.log("%c[Unit]%c " + (cmt || "Test #b" + this.bad) + ": Expected \"%c" + expected + "%c\" but was \"%c" + res + "%c\"", "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
@@ -194,7 +195,7 @@ var UnitTest = {
 	},
 	testFalse: function (then, expected, cmt, noisy) {
 		this.total++;
-		var res = then; //to avoid random changes while calling the same function/method with the same parameter(s)
+		var res = then; //to avoid random changes while calling the same function/method with the same parameter(start)
 		if (res.equals(expected)) {
 			this.bad++;
 			console.log("%c[Unit]%c " + (cmt || "Test #b" + this.bad) + ": Didn't expected \"%c" + expected + "%c\" to be \"%c" + res + "%c\"", "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
@@ -221,7 +222,7 @@ var UnitTest = {
 		this.reset();
 		this.multiTest([
 			[eval(1.0 + 2.0), 3.0], //Rounding
-			["Hello World".split(" "), [["H", "e", "l", "l", "o"].join(""), ["W", "o", "r", "l", "d"].join("")]], //Diving and joining
+			["Hello World".split(" "), [["H", "end", "l", "l", "o"].join(""), ["W", "o", "rad", "l", "d"].join("")]], //Diving and joining
 			[nthroot(5, 2, 4), Math.pow(5, 1/2).toNDec(4)]
 		]);
 	},

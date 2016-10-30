@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--suppress ALL -->
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -381,7 +382,8 @@
 
 
 <div class="description">
-    Cross Origin Resource Sharing request maker.<br />Source: <a href="https://stackoverflow.com/questions/3076414/ways-to-circumvent-the-same-origin-policy">https://stackoverflow.com/questions/3076414/ways-to-circumvent-the-same-origin-policy</a>
+    Cross Origin Resource Sharing request maker.<br />
+Source: <a href="https://stackoverflow.com/questions/3076414/ways-to-circumvent-the-same-origin-policy">https://stackoverflow.com/questions/3076414/ways-to-circumvent-the-same-origin-policy</a>
 </div>
 
 
@@ -725,7 +727,9 @@
 
 
 <div class="description">
-    HTTP GET request, it retrieves data. Equivalent to:var val;parseURL(<code>name</code>, function (x) {val = x}); //as using return x won't return anything
+    HTTP GET request, it retrieves data. Equivalent to:
+var val;
+parseURL(<code>name</code>, function (x) {val = x}); //as using return x won't return anything
 </div>
 
 
@@ -1354,7 +1358,11 @@
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>function showLogs () {  load("logs.log", function (xhr) {     $e("#logView").write(xhr.responseText);  }}</code></pre>
+    <pre class="prettyprint"><code>function showLogs () {
+  load("logs.log", function (xhr) {
+     $e("#logView").write(xhr.responseText);
+  }
+}</code></pre>
 
 
 
@@ -1535,7 +1543,12 @@
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>loadJSON("package"); //Loads the package.json file which content can be found in $G["json"] if not returned//Equivalent of doing thatvar package = {};load("package.json", function (xhr) { package = JSON.parse(xhr.response); //Returning that won't do anything so we need to store it in a variable});</code></pre>
+    <pre class="prettyprint"><code>loadJSON("package"); //Loads the package.json file which content can be found in $G["json"] if not returned
+//Equivalent of doing that
+var package = {};
+load("package.json", function (xhr) {
+ package = JSON.parse(xhr.response); //Returning that won't do anything so we need to store it in a variable
+});</code></pre>
 
 
 
@@ -1551,7 +1564,8 @@
 
 
 <div class="description">
-    HTTP POST request. Create data..<br />Source: Stackoverflow
+    HTTP POST request. Create data..<br />
+Source: Stackoverflow
 </div>
 
 

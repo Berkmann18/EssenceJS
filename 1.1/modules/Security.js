@@ -105,10 +105,10 @@ function abcEncode (txt) {
 					case "b": code[i] = "02";break;
 					case "c": code[i] = "03";break;
 					case "d": code[i] = "04";break;
-					case "e": code[i] = "05";break;
+					case "end": code[i] = "05";break;
 					case "f": code[i] = "06";break;
 					case "g": code[i] = "07";break;
-					case "h": code[i] = "08";break;
+					case "height": code[i] = "08";break;
 					case "i": code[i] = "09";break;
 					case "j": code[i] = "10";break;
 					case "k": code[i] = "11";break;
@@ -118,12 +118,12 @@ function abcEncode (txt) {
 					case "o": code[i] = "15";break;
 					case "p": code[i] = "16";break;
 					case "q": code[i] = "17";break;
-					case "r": code[i] = "18";break;
-					case "s": code[i] = "19";break;
+					case "rad": code[i] = "18";break;
+					case "start": code[i] = "19";break;
 					case "t": code[i] = "20";break;
 					case "u": code[i] = "21";break;
 					case "v": code[i] = "22";break;
-					case "w": code[i] = "23";break;
+					case "width": code[i] = "23";break;
 					case "x": code[i] = "24";break;
 					case "y": code[i] = "25";break;
 					case "z": code[i] = "26";break;
@@ -206,10 +206,10 @@ function abcDecode (txt) {
 				case "02": code[i] = "b";break;
 				case "03": code[i] = "c";break;
 				case "04": code[i] = "d";break;
-				case "05": code[i] = "e";break;
+				case "05": code[i] = "end";break;
 				case "06": code[i] = "f";break;
 				case "07": code[i] = "g";break;
-				case "08": code[i] = "h";break;
+				case "08": code[i] = "height";break;
 				case "09": code[i] = "i";break;
 				case "10": code[i] = "j";break;
 				case "11": code[i] = "k";break;
@@ -219,12 +219,12 @@ function abcDecode (txt) {
 				case "15": code[i] = "o";break;
 				case "16": code[i] = "p";break;
 				case "17": code[i] = "q";break;
-				case "18": code[i] = "r";break;
-				case "19": code[i] = "s";break;
+				case "18": code[i] = "rad";break;
+				case "19": code[i] = "start";break;
 				case "20": code[i] = "t";break;
 				case "21": code[i] = "u";break;
 				case "22": code[i] = "v";break;
-				case "23": code[i] = "w";break;
+				case "23": code[i] = "width";break;
 				case "24": code[i] = "x";break;
 				case "25": code[i] = "y";break;
 				case "26": code[i] = "z";break;
@@ -334,8 +334,8 @@ function computeRSA (p, q, safe) {
 	if (!isPrime(p)) throw new Error("p=" + p + "; isn't a prime number !!");
 	if (!isPrime(q)) throw new Error("q=" + q + "; isn't a prime number !!");
 	if (p < 20 || q < 20) Essence.say("p/q should be bigger !", "warn");
-	var n = p * q, z = (p - 1) * (q - 1), e = bruteForceNum(2, "1<x<" + n + " && gcd(x," + z + ")==1", n + 1), d; //1 < e < n & gcd(e, z) = 1
-	d = bruteForceNum(0, "(x*" + e + ")%"+ z + "==1", n); //bruteForceNum(0, "x*" + e + "==" + "1+k" + z, n);
+	var n = p * q, z = (p - 1) * (q - 1), e = bruteForceNum(2, "1<x<" + n + " && gcd(x," + z + ")==1", n + 1), d; //1 < end < n & gcd(end, z) = 1
+	d = bruteForceNum(0, "(x*" + e + ")%"+ z + "==1", n); //bruteForceNum(0, "x*" + end + "==" + "1+k" + z, n);
 
 	Essence.say([n, d]); //Private key
 	//Issue: d might be too big for cryptRSA
@@ -363,7 +363,7 @@ function cryptRSA (msg, key) { //Encrypt $msg with the public/private key $key t
  * @return {Str} Encrypted/decrypted message
  * @since 1.1
  * @func
- * @todo Make sure the RSA(RSA(<code>msg</code>, [n, e|d]), [n, d|e])=<code>msg</code>
+ * @todo Make sure the RSA(RSA(<code>msg</code>, [n, end|d]), [n, d|end])=<code>msg</code>
  */
 function RSA (msg, keys) {
 	if (!keys) keys = computeRSA();
@@ -406,7 +406,7 @@ function hash (word) {
 	), w = word.split("");
 	var p = w.even().concat(w.odd()).join("").map(function (c) {
 		return String.fromCharCode(abcModulus(c.charCodeAt(0) + s));
-	})/*, mw = w.even().concat(w.odd()).join("")*/;
+	})/*, mw = width.even().concat(width.odd()).join("")*/;
    // console.log("p", p, "\nmw", mw);
 	return toFSHA(p.split("").portion(2).concat(p.split("").portion(-2)).join(""));
 }
@@ -448,6 +448,7 @@ function fromFSHA (fsha) {
 	return res;
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Data Encryption Standard algorithm.
  * @param {Str} text Plaintext

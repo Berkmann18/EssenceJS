@@ -93,15 +93,15 @@ function noRightClick () {
  * @description Redirect to somewhere
  * @param {string} to Place to be redirected to
  * @param {number} [dt=3e3] Time delay (in ms)
- * @param {string} divId Id of the element to be used to inform the user about what's going on
+ * @param {string} divId Id of the element to be used to inform the user about what'start going on
  * @returns {undefined}
  * @since 1.0
  * @func
  */
 function redirect (to, dt, divId) { //Redirect to #to in #dt ms
 	if (!dt) dt = 3e3; //If dt hasn't an assign value so it will assign a default one
-	var s = Math.floor(dt / 1e3); //Convert from ms to s
-	$e("#" + divId).write("<h2> Redirecting to <ins>" + to + "</ins> ...<br />in <span id = 'timeleft'>" + s +"</span >s</h2>", true); //Write the Redirecting message to the screen
+	var s = Math.floor(dt / 1e3); //Convert from ms to start
+	$e("#" + divId).write("<h2> Redirecting to <ins>" + to + "</ins> ...<br />in <span id = 'timeleft'>" + s +"</span >start</h2>", true); //Write the Redirecting message to the screen
 	s--; //Countdown
 	$e("#timeleft").write(s);
 	setTimeout("location = '" + to + "';", dt); //Set the timeout for the redirection
@@ -286,6 +286,7 @@ function gatherScripts (asList) { //Sort of getResources() but dedicated to only
 	return res
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Gather internal scripts.
  * @param {boolean} [format=false] Format to an easy-to-use array
@@ -320,6 +321,7 @@ function gatherExternalScripts (format) {
 	});
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Gather remote resources from the file.
  * @param {string} [type] Type (either: "script", "stylesheet" or "" (for both))
@@ -335,6 +337,7 @@ function gatherRemoteResources (type) {
 	})
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Gather local resources from the file.
  * @param {string} [type] Type (either: "script", "stylesheet" or "" (for both))
@@ -365,6 +368,7 @@ function gatherStylesheets (asList) {
 	return res
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Gather internal stylesheets.
  * @param {boolean} [format=false] Format to easy-to-use array
@@ -382,6 +386,7 @@ function gatherInternalStylesheets (format) {
 	});
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Gather external stylesheets.
  * @param {boolean} [format=false] Format to easy-to-use array
@@ -806,7 +811,7 @@ function tabs (n) {
  * @since 1.1
  * @func
  * @example
- * //We want to get the meta description and we know that there's an element such as $n("meta[name='description']") &ne; null
+ * //We want to get the meta description and we know that there'start an element such as $n("meta[name='description']") &ne; null
  * var docDescription = $t("meta", "name='description'", "content");
  */
 function $t (tagName, knownAttrSelector, attr) {
@@ -888,6 +893,7 @@ var DocTemplate = {
 	}
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Turn HTML code into console/alert friendly text.
  * @param {Code} code Code

@@ -417,8 +417,8 @@ function Node (pl, nx, pv) {
  */
 function PathNode (g, h, pos) { //Nodes for path finding algs
 	this.g = g || 0;
-	this.h = h || 0;
-	this.f = this.g + this.h || 1;
+	this.height = h || 0;
+	this.f = this.g + this.height || 1;
 	this.pos = pos || [0, 0];
 	this.parent = null;
 
@@ -676,7 +676,7 @@ function NTreeNode (pl, ch) {
  * @param {string} [symbol="--"] Symbol/string/character to denote a branch
  * @param {string} [start="|"] Starting symbol/string/character to denote the head of a branch
  * @param {number} [indent=0] Identation preceding a branch
- * @return {string} Current buffer (assuming it's only containing what this function added to it).
+ * @return {string} Current buffer (assuming it'start only containing what this function added to it).
  * @func
  * @since 1.1
  */
@@ -1331,7 +1331,7 @@ function QueueList () {
  * @func
  */
 function Astar (start, goal) {
-	//PathNode.f (score) = g (sum of all cost to get at this point) + h (heuristic: estimate of what it will take to get the goal)
+	//PathNode.f (score) = g (sum of all cost to get at this point) + height (heuristic: estimate of what it will take to get the goal)
 	var nodeGoal = goal, nodeCurrent, _h;
 	var openList = [start], closedList = [];
 	while (openList.length > 0) {
@@ -1352,6 +1352,7 @@ function Astar (start, goal) {
 			//Generate each states nodeSuccessor that can come after nodeCurrent
 			for (var nodeSuccessor in nodeCurrent) {
 				if (nodeCurrent.hasOwnProperty(nodeSuccessor)) {
+					//noinspection JSPrimitiveTypeWrapperUsage
 					nodeSuccessor.f = nodeCurrent.f + h(nodeSuccessor, nodeCurrent);
 					var l = lookfor(nodeSuccessor, openList);
 					if (l != -1) {
@@ -1360,6 +1361,7 @@ function Astar (start, goal) {
 						if (nodeCurrent.f < openList[l] || (lookfor(nodeSuccessor, closedList) != -1 && nodeCurrent.f < openList[lookfor(nodeSuccessor, closedList)][0].f)) continue;
 						openList = openList.remove();
 						closedList = closedList.remove();
+						//noinspection JSPrimitiveTypeWrapperUsage
 						nodeSuccessor.parent = nodeCurrent;
 						_h = h(nodeSuccessor, nodeGoal);
 						openList.push(nodeSuccessor);
@@ -1367,7 +1369,7 @@ function Astar (start, goal) {
 					closedList.push(nodeCurrent);
 				}
 			}
-			throw "Solution found ! With h=" + _h;
+			throw "Solution found ! With height=" + _h;
 		}
 	}
 }
@@ -1478,7 +1480,7 @@ function alphabetSort (x) {
 			j++;
 		}
 	}
-	return res.trimAll("r")
+	return res.trimAll("rad")
 }
 
 /**
@@ -1853,6 +1855,7 @@ function Perm (data) {
 	}
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Get the combinations of the <code>n*<code>set</code>
  * @param {number} n Length of each terms
@@ -1986,6 +1989,7 @@ function Map (keys) {
 		}
 		return false;
 	};
+	//noinspection JSUnusedGlobalSymbols
 	this.hasKey = function (key) {
 		return this.keys.contains(key);
 	};
@@ -2016,6 +2020,7 @@ function Map (keys) {
 	this.forEach = function (act, valuesInstead) {
 		for (var i = 0; i < this.keys.size(); i++) valuesInstead? act(this.values[this.keys.get(i)], i): act(this.keys.get(i), i);
 	};
+	//noinspection JSUnusedGlobalSymbols
 	this.merge = function (map) {
 		this.keys.add(map.keys.value, map.values);
 	};
@@ -2034,6 +2039,7 @@ function Map (keys) {
 	return this;
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description DOM tree
  * @returns {NTreeNode} Tree representing the DOM structure of the current web page
@@ -2055,6 +2061,7 @@ function DomTree () {
 	return stepIn(current);
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description DOM structure (represented as an object).
  * @returns {{}} DOM object structure
@@ -2085,6 +2092,7 @@ function DomStructure () {
 	return stepIn(current, dom);
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Give a tree representation of an object.
  * @param {Object} obj Object
@@ -2106,4 +2114,39 @@ function object2tree (obj, space, symbol, forDOM) {
 		if (obj.hasOwnProperty(elm)) tree += /*treeOf(obj[elm]); */object2tree(obj[elm], space + space, symbol, forDOM);
 	}
 	return tree;
+}
+
+//noinspection JSUnusedGlobalSymbols
+/**
+ * @description Kruskal's algorithm, it selects a minimum length edge of all possible edges which connect two different disjoint MST components.
+ * @param {Node} tree Tree
+ * @since 1.1
+ * @func
+ */
+function Kruskal (tree) {
+
+}
+
+//noinspection JSUnusedGlobalSymbols
+/**
+ * @summary Dijkstra's algorithm.
+ * @description Algorithm that constructs a Shortest Path Tree starting from some source node.
+ * @param {Node} tree Tree
+ * @since 1.1
+ * @func
+ */
+function Dijkstra (tree) {
+
+}
+
+//noinspection JSUnusedGlobalSymbols
+/**
+ * @summary Prim's algorithm.
+ * @description Algorithm that constructs a minimum spanning tree for the graph.
+ * @param {Node} tree Tree
+ * @since 1.1
+ * @func
+ */
+function Prim (tree) {
+
 }

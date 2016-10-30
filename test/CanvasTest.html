@@ -15,7 +15,7 @@
             if (typeof Essence !== "undefined") {
                 initCanvas(1e3, 1e3);
                 canvas = $n("canvas#essenceCanvas");
-                sandbox();
+                UIdraw();//easy();//sandbox();
             } else if (stackLayer > 3) {
                 console.log("Wow, hold on ! %d stack layers down !!", stackLayer);
             } else {
@@ -38,6 +38,28 @@
             contxt.lineTo(0, 100);
             contxt.closePath();
             if (stackLayer < 2) sandbox(stackLayer + 1);
+        }
+        
+        //noinspection JSUnusedLocalSymbols
+        function easy () {
+            runCanvas(function (ctt) {
+                ctt.fill();
+                ctt.stroke();
+                ctt.beginPath();
+                /*ctt.lineTo(0, 0);
+                ctt.lineTo(100, 0);
+                ctt.lineTo(100, 100);
+                ctt.lineTo(0, 100);*/
+                ctt.rect(0, 0, 100, 100);
+                ctt.closePath();
+            })
+        }
+        
+        function UIdraw () {
+            var box = new Box(10, 10, 0, 100, 100, 0);
+            box.draw();
+            //if (confirm("Delete the box ?")) box.erase();
+            box.rot(deg2rad(40));
         }
     </script>
 </head>

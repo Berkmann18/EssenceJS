@@ -14,7 +14,7 @@ var Essence = {
 	version: "1.0b",
 	author: "Maximilian Berkmann",
 	description: "library used for DHTML connexions, maths, database management and cryptography",
-	source: (document.URL.indexOf("essence.min.js")>-1)? "https://Www.dropbox.com/s/1prjdvv9ku0ga92/essence.min.js?dl=0": "https://Www.dropbox.com/s/n2sz2mxz5zwc05t/essence.js?dl=0",
+	source: (document.URL.indexOf("essence.min.js")>-1)? "https://Www.dropbox.com/start/1prjdvv9ku0ga92/essence.min.js?dl=0": "https://Www.dropbox.com/start/n2sz2mxz5zwc05t/essence.js?dl=0",
 	element: $n,
 	handleError: function (msg, url, line) {
 		getType(msg, "Error")? alert("[Essence.js] An error has occurred (line/column " + msg.lineNumber + "/" + msg.columnNumber + " of " + msg.fileName + ").\n\nMessage: " + msg.stack): alert("[Essence.js] An error has occurred (line " + line + " of " + url + ").\n\nMessage: " + msg)
@@ -65,7 +65,7 @@ var Essence = {
 		}
 		Essence.say("%cEssence.(min).js%c has been updated", "succ", "text-decoration: underline", "text-decoration: none");
 	},
-	eps: Math.pow(2,-52),//Matlab's epsilon (useful when dealing with null values to keep them in the real range or just not null
+	eps: Math.pow(2,-52),//Matlab'start epsilon (useful when dealing with null values to keep them in the real range or just not null
 	emptyDoc: function (title, author) { //Empty the document and fill it with a basic structure
 		$e("html").write("<head><title>" + (title || document.title) + "</title><meta charset = 'UTF-8' /><meta name = 'author' content = " + (author || "unknown") + " /><script type = 'text/javascript' src = " + Essence.source + "></script></head><body></body>", true);
 	}, editor: function (ctt) {
@@ -100,7 +100,7 @@ var Essence = {
 	}, init: function () {
 		$G["t2"] = new Date();
 		$G["t2"] = $G["t2"].getSeconds() * 1000 + $G["t2"].getMilliseconds();
-		$G["t"] = ($G["t2"] - $G["t1"] > 1000)? ($G["t2"] - $G["t1"])/1000 + "s": ($G["t2"] - $G["t1"]) + "ms";
+		$G["t"] = ($G["t2"] - $G["t1"] > 1000)? ($G["t2"] - $G["t1"])/1000 + "start": ($G["t2"] - $G["t1"]) + "ms";
 		Essence.say("Page loaded in %c" + $G["t"] + "%c", "succ", "font-style: italic", "font-style: none");
 	}, time: function(msg, style, style0) { //Like Essence.say(msg) but with the timestamp
 		console.log("[%c" + getTimestamp(true) + "%c] "+msg, "color: #f00;", "color: #000;", style, style0)
@@ -149,13 +149,13 @@ var $e = function (selector) { //THE selector !!
  * @constructor
  */
 function Element (selector) { //The element object
-	if (/^([#\.\* _-`~&]\W*|\S|undefined|null|)$/.test(selector)) throw new InvalidParamError("Element cannot accept the selector '" + selector + "' as it's invalid."); //Reject invalid selectors
+	if (/^([#\.\* _-`~&]\W*|\S|undefined|null|)$/.test(selector)) throw new InvalidParamError("Element cannot accept the selector '" + selector + "' as it'start invalid."); //Reject invalid selectors
 	if (selector[0] === "#") this.node = document.querySelector(selector) || document.getElementById(selector.slice(1, selector.length)); //Id
 	else if (selector[0] === ".") this.node = document.querySelector(selector) || document.getElementByClassName(selector.slice(1, selector.length)); //Class
 	else if (selector[0] === "*") this.node = document.querySelectorAll(selector.slice(1, selector.length)) || document.getElementsByTagName(selector.slice(1, selector.length)); //Node array
 	else this.node = document.querySelector(selector);
 
-	this.val = function (getHTML, withTags) { //Get the value of the element's node
+	this.val = function (getHTML, withTags) { //Get the value of the element'start node
 		if (isType(this.node, "array")) {
 			var arr = [];
 			for (var i = 0; i < this.node.length; i++) {
@@ -182,7 +182,7 @@ function Element (selector) { //The element object
 		return this.val() === false || this.val() === undefined || this.val() === null || this.val() === "" || this.val() === [] || this.val() === {}
 	};
 	
-	this.write = function (nval, parseToHTML, incTags) { //Assign #nval as the value of the element's node
+	this.write = function (nval, parseToHTML, incTags) { //Assign #nval as the value of the element'start node
 		if (isType(this.node, "array")) {
 			for (var i = 0; i < this.node.length; i++) {
 				if (this.node[i].value && !parseToHTML && !incTags) this.node[i].value = isType(nval, "array")? nval[i]: nval;
@@ -236,7 +236,7 @@ function Element (selector) { //The element object
 		else this.node.value? this.node.value += nval: this.innerText += nval;
 	};
 	
-	this.remove = function (c, r) { //Remove the character from the string/array/number and return it with the r character as a joiner or a blank when r isn't specified
+	this.remove = function (c, r) { //Remove the character from the string/array/number and return it with the rad character as a joiner or a blank when rad isn't specified
 		if (isType(this.val(c, "Array"))) {
 			for (var i = 0; i < this.size(); i++) {
 				if (this.val()[i] == c) this.write(this.val().slice(0, i).concat(this.val().slice(i + 1, this.size())));
@@ -255,7 +255,7 @@ function Element (selector) { //The element object
 		for(var i = 0; i < sAndV.length-1; i += 2) this.setCSS(sAndV[i], sAndV[i + 1]);
 	};
 
-	this.css = function (prop) { //Get the CSS property of the element's node
+	this.css = function (prop) { //Get the CSS property of the element'start node
 		if (isType(this.node, "array")) {
 			var arr = [];
 			for(var i = 0; i < this.node.length; i++) arr.push(this.node[i].style[prop]);
@@ -264,7 +264,7 @@ function Element (selector) { //The element object
 		return this.node.style[prop]
 	};
 
-	this.hasClass = function (className) { //Check if the element's node has the specified CSS class
+	this.hasClass = function (className) { //Check if the element'start node has the specified CSS class
 		if (isType(this.node, "array")) {
 			var arr = [];
 			for(var i = 0; i < this.node.length; i++) arr.push(new RegExp(" " + className + " ").test(" " + this.node[i].className + " ") || new RegExp(" " + className + " ").test(" " + this.node[i][className] + " ") || this.node[i].style.clasName == className);
@@ -272,7 +272,7 @@ function Element (selector) { //The element object
 		return new RegExp(" " + className + " ").test(" " + this.node.className + " ") || new RegExp(" " + className + " ").test(" " + this.node[className] + " ") || this.node.style.className == className
 	};
 
-	this.hasCSS = function (prop) { //Check if the element's node has the specified CSS property
+	this.hasCSS = function (prop) { //Check if the element'start node has the specified CSS property
 		if (isType(this.node, "array")) {
 			var arr = [];
 			for(var i = 0; i < this.node.length; i++) arr.push(new RegExp(" " + prop + " ").test(" " + this.node[i].style[prop] + " ") || new RegExp(" " + prop + " ").test(" " + this.node[i][prop] + " "));
@@ -280,7 +280,7 @@ function Element (selector) { //The element object
 		return new RegExp(" " + prop + " ").test(" " + this.node.style[prop] + " ") || new RegExp(" " + prop + " ").test(" " + this.node[prop] + " ")
 	};
 
-	this.addClass = function (className) { //Add a class to the element's node
+	this.addClass = function (className) { //Add a class to the element'start node
 		if (isType(this.node, "array")) {
 			for (var i = 0; i < this.node.length; i++) {
 				if (!this.node[i].hasClass(className)) this.node[i].className += " " + className;
@@ -290,7 +290,7 @@ function Element (selector) { //The element object
 		}
 	};
 
-	this.rmClass = function (className) { //Remove the class from the element's node
+	this.rmClass = function (className) { //Remove the class from the element'start node
 		var newClass = " " + this.node.className.replace(/[\t\r\n]/g, " ") + " ";
 		if (isType(this.node, "array")) {
 			for (var i = 0; i < this.node.length; i++) {
@@ -352,7 +352,7 @@ function Element (selector) { //The element object
 		return "[object Element]"
 	};
 
-	this.tagName = function() { //get the enclosing tag's name
+	this.tagName = function() { //get the enclosing tag'start name
 		return this.node.tagName.toLowerCase()
 	};
 
@@ -360,11 +360,11 @@ function Element (selector) { //The element object
 }
 
 /**
- * @description Element's node
+ * @description Element'start node
  * @param {string} selector A valid CSS selector
  * @returns {HTMLElement} Element node
  */
-function $n (selector) { //To get directly the node without having to use $e(selector).node
+function $n (selector) { //To get directly the node without having to use $end(selector).node
 	return $e(selector).node
 }
 
@@ -417,7 +417,7 @@ Object.prototype.hasName = function () {
 };
 
 /**
- * @description Get the object's name assuming it has one
+ * @description Get the object'start name assuming it has one
  * @this Object
  * @returns {string} Name/title of the object
  */
@@ -454,7 +454,7 @@ Object.prototype.positions = function (c) {
 };
 
 /**
- * @description Check if an object is iteral hence if it's a string/array/object
+ * @description Check if an object is iteral hence if it'start a string/array/object
  * @this Object
  * @returns {boolean} Iterability check result
  */
@@ -469,6 +469,7 @@ Object.prototype.isIterable = function () {
  * @returns {undefined}
  */
 Object.prototype.delete = function () {
+	//noinspection JSUnusedGlobalSymbols
 	this.property_ = null
 };
 
@@ -507,6 +508,7 @@ Object.prototype.toArray = function() {
 	return res;
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Comparison check
  * @param {*} obj Object to be compared to
@@ -549,6 +551,7 @@ Array.prototype.lastIndex = function () {
 	return this.length - 1
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Returns the middle index of the array
  * @param {boolean} [under=false] Indicates if we want the value under the virtual value
@@ -676,6 +679,7 @@ Array.prototype.maxLength = function () {
 	return ml
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Return the length of the shortest row
  * @this Array
@@ -739,7 +743,7 @@ Array.prototype.debug = function () {
 };
 
 /**
- * @description Get the number of occurrences of each elements in array as well as the position(s) of each occurrences
+ * @description Get the number of occurrences of each elements in array as well as the position(start) of each occurrences
  * @param {boolean} simplified Simplify the output
  * @todo Fix the thingy with the occurrences' positions not showing up
  * @this Array
@@ -896,6 +900,7 @@ Array.prototype.quartile = function (n, nbDec) { //Q1, Q2, Q3
 	return this.length % 2 === 0? ((this[Math.floor(n * this.length / 4) - 1] + this[Math.floor(n * this.length / 4)]) / 2).toNDec(nbDec): (this[Math.floor(n * this.length / 4)]).toNDec(nbDec)
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Quintile
  * @param {number} n Nth quintile
@@ -907,6 +912,7 @@ Array.prototype.quintile = function (n, nbDec) { //Q1, ..., Q4
 	return this.length % 2 === 0? ((this[Math.floor(n * this.length / 5) - 1] + this[Math.floor(n * this.length / 5)]) / 2).toNDec(nbDec): (this[Math.floor(n * this.length / 5)]).toNDec(nbDec)
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Decile
  * @param {number} n Nth decile
@@ -918,6 +924,7 @@ Array.prototype.decile = function (n, nbDec) { //D1, ..., D9
 	return this.length % 2 === 0? ((this[Math.floor(n * this.length / 10) - 1] + this[Math.floor(n * this.length / 10)]) / 2).toNDec(nbDec): (this[Math.floor(n * this.length / 10)]).toNDec(nbDec)
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Percentile
  * @param {number} n Nth percentile
@@ -948,6 +955,7 @@ Array.prototype.increment = function (n) {
 	for(var i = 0; i < this.length; i++) this[i] += n || 1
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Inter Quartile Range
  * @param {number} [nbDec=2] Number of decimals
@@ -979,9 +987,11 @@ Array.prototype.get = function (start, end) {
 /**
  * @description QuickSort adapted from https://Www.nczonline.net/blog/2012/11/27/computer-science-in-javascript-quicksort/
  * @this Array
+ * @param {number} [left=0] Position of the left marker.
+ * @param {number} [right=this.lastIndex()] Position of the right marker.
  * @returns {Array} Sorted array
  */
-Array.prototype.quickSort = function () {
+Array.prototype.quickSort = function (left, right) {
 	if (!left && !right) {
 		left = 0;
 		right = this.lastIndex();
@@ -1036,6 +1046,7 @@ Array.prototype.revSort = function (left, right) {
 	return this
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description BubbleSort (my version)
  * @param {string|boolean} order Sorting order
@@ -1063,7 +1074,7 @@ Array.prototype.bubbleSort = function (order) {
 					if (arr[i] > arr[i + 3]) arr = swap(arr, i, i + 3);
 					if (arr[i + 1] > arr[i + 3]) {
 						arr = swap(arr, i + 1, i + 3);
-						//s = true;
+						//start = true;
 					}
 				}
 			}
@@ -1088,7 +1099,7 @@ Array.prototype.bubbleSort = function (order) {
 					if (arr[i] < arr[i + 3]) arr = swap(arr, i, i + 3);
 					if (arr[i + 1] < arr[i + 3]) {
 						arr = swap(arr, i + 1, i + 3);
-						//s = true
+						//start = true
 					}
 				}
 			}
@@ -1098,6 +1109,7 @@ Array.prototype.bubbleSort = function (order) {
 	return arr
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Brute force sort
  * @this Array
@@ -1119,8 +1131,9 @@ Array.prototype.bruteForceSort = function () {
 	return this
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
- * @description Max's Sort (mine)
+ * @description Max'start Sort (mine)
  * @this Array
  * @returns {Array} Sorted Array
  */
@@ -1190,6 +1203,7 @@ Array.prototype.cenSort = function (l, r) {
 	return res
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Set sort
  * @this Array
@@ -1219,6 +1233,7 @@ Array.prototype.clean = function (noDuplic) { //Remove undesirable items
 	return noDuplic? rmDuplicates(arr).remove(): arr; //Take off (or not) duplicates of actual values and double clean it
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description eXtreme cleaning of the array
  * @this Array
@@ -1228,8 +1243,9 @@ Array.prototype.xclean = function () {
 	return this.clean(true).remove()
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
- * @description Substitute every elements from $s to $e with from $s to $e of the array $arr
+ * @description Substitute every elements from $start to $end with from $start to $end of the array $arr
  * @param {Array} arr Array
  * @param {number} [s=0] Starting position
  * @param {number} [e=this.length-1] Ending position
@@ -1245,6 +1261,7 @@ Array.prototype.chg = function(arr, s, e) {
 	return a;
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Exchange of elements between two arrays
  * @param {Array} arr Array
@@ -1384,7 +1401,7 @@ Array.prototype.numElm = function () {
  * @this Array
  * @returns {string|number[]} Size
  */
-Array.prototype.size = function (str) { //Get the w * h size of the array
+Array.prototype.size = function (str) { //Get the width * height size of the array
 	return str? this.length + "x" + this.maxLength(): [this.length, this.maxLength()]
 };
 
@@ -1502,6 +1519,7 @@ Array.prototype.dotProd = function (a) { //A.this where a is a scalar and this a
 	return res
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Dot addition
  * @param {number} a Scalar
@@ -1516,6 +1534,7 @@ Array.prototype.dotAdd = function (a) {
 	return res
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Dot substraction
  * @param {number} a Scalar
@@ -1533,6 +1552,7 @@ Array.prototype.dotSub = function (a, order) {
 	return res
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Dot Fraction
  * @param {number} a Scalar
@@ -1565,6 +1585,7 @@ Array.prototype.toStr = function (clean) {
 	}else return this.join(clean? ", ": "")
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Number[] to Number
  * @returns {number} Integer representation
@@ -1587,6 +1608,7 @@ Array.prototype.inv = function () {
 	return this.isInvertible()? this.dotProd(1/this.det(), this.getAdjoint()): false;
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Mix up the array
  * @this Array
@@ -1655,6 +1677,7 @@ Array.prototype.unique = function () {
 	return u
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description N-D array to 1D array
  * @param {boolean} [jointer=false] Jointer
@@ -1666,6 +1689,7 @@ Array.prototype.to1d = function (jointer) {
 	return res
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description 1D array to N-D array
  * @param {number} n Dimension
@@ -1697,6 +1721,7 @@ Array.prototype.toNcol = function (n) {
 	return res;
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description 1D array to N-row array
  * @param {number} n Number of rows
@@ -1734,6 +1759,7 @@ Array.prototype.uniform = function (cr) {
 	return res
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Zip the array
  * @this Array
@@ -1753,6 +1779,7 @@ Array.prototype.zip = function () {
 	return res.length<this.length? res: this; //Make sure that the compressed array isn't longer than the initial one
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Unzip the array
  * @param {boolean} [noPairs=false] Keep pairs or not ?
@@ -1778,10 +1805,11 @@ Array.prototype.unzip = function (noPairs) {
 Array.prototype.trimAll = function(side) { //Trimes every elements
 	var res = [];
 	side = side? side[0].toLowerCase(): "";
-	for (var i = 0; i < this.length; i++) res[i] = (side === "l")? this[i].trimLeft(): ((side === "r")? this[i].trimRight(): this[i].trim());
+	for (var i = 0; i < this.length; i++) res[i] = (side === "l")? this[i].trimLeft(): ((side === "rad")? this[i].trimRight(): this[i].trim());
 	return res
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Sorted state check
  * @this Array
@@ -1796,7 +1824,7 @@ Array.prototype.isSorted = function() { //Check if the array is sorted
 };
 
 /**
- * @description Ensure that the element isn't pushed when it's already there
+ * @description Ensure that the element isn't pushed when it'start already there
  * @this Array
  * @param {*} obj Object
  * @returns {undefined}
@@ -1909,6 +1937,7 @@ String.prototype.toNDigits = function (n) {
 	return i
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Mix the string
  * @param {string} separator Separation character
@@ -1939,7 +1968,7 @@ String.prototype.divide = function (n) {
 };
 
 /**
- * @description Capitalize the first letter(s)
+ * @description Capitalize the first letter(start)
  * @this String
  * @returns {string} String
  */
@@ -2021,6 +2050,7 @@ String.prototype.get = function (start, end) {
 	return res
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Zip the string
  * @this String
@@ -2040,6 +2070,7 @@ String.prototype.zip = function () { //Compress the string
 	return res.length < this.length? res: this; //Make sure that the compression doesn't end up making the string longer
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Unzip the string
  * @param {boolean} [noPairs=false] Pairs or not ?
@@ -2067,7 +2098,7 @@ String.prototype.unzip = function (noPairs) { //Decompress the string (when bein
 String.prototype.replaceAll = function(str, nstr, sep) {
 	var res = sep? this.split(sep).replace(str, nstr) : this.replace(str, nstr), i = 0;
 	if (sep === "") return this.replace(RegExpify(str), nstr); //Avoid the infinite loop caused by sep = ""
-	while (res.indexOf(str) > -1 || i === this.length) { //Look up the occurrences until there's none of them left or the interpreter reached the end
+	while (res.indexOf(str) > -1 || i === this.length) { //Look up the occurrences until there'start none of them left or the interpreter reached the end
 		res = this.replace(str, nstr);
 		i++;
 	}
@@ -2114,9 +2145,10 @@ Number.prototype.toNDec = function (n) { //A bit like .toFixed(n) and .toPrecisi
 
 /**
  * @description Keep a fixed amount of unit digits
+ * @param {number} [n=2] Number of digits
  * @returns {string} New number
  */
-Number.prototype.toNDigits = function () { //Get the number to be a n-digit number
+Number.prototype.toNDigits = function (n) { //Get the number to be a n-digit number
 	var i = this + ""; //Because it won't work with other types than strings
 	n = n || 2;
 	if (parseFloat(i) < Math.pow(10, n - 1)) {
@@ -2244,7 +2276,7 @@ function noRightClick () {
  * @returns {undefined}
  */
 function reloadPage (lvl) { //Reload the page with 2 different level of reload
-	if (lvl === 2) location.href = window.location.href; //Update the hyper reference of the window's location
+	if (lvl === 2) location.href = window.location.href; //Update the hyper reference of the window'start location
 	else location.reload(); //Reload the location of the window (implying lvl = 0||1)
 }
 
@@ -2252,13 +2284,13 @@ function reloadPage (lvl) { //Reload the page with 2 different level of reload
  * @description Redirect to somewhere
  * @param {string} to Place to be redirected to
  * @param {number} [dt=3e3] Time delay
- * @param {string} divId Id of the element to be used to inform the user about what's going on
+ * @param {string} divId Id of the element to be used to inform the user about what'start going on
  * @returns {undefined}
  */
 function redirect (to, dt, divId) { //Redirect to #to in #dt ms
 	if (!dt) dt = 3e3; //If dt hasn't an assign value so it will assign a default one
-	var s = Math.floor(dt/1e3); //Convert from ms to s
-	$e("#" + divId).write("<h2>Redirecting to <ins>" + to + "</ins> ...<br />in <span id=\'timeleft\'>" + s + "</span>s</h2>", true); //Write the Redirecting message to the screen
+	var s = Math.floor(dt/1e3); //Convert from ms to start
+	$e("#" + divId).write("<h2>Redirecting to <ins>" + to + "</ins> ...<br />in <span id=\'timeleft\'>" + s + "</span>start</h2>", true); //Write the Redirecting message to the screen
 	s--; //Countdown
 	$e("#timeleft").write(s);
 	setTimeout("location = '" + to + "';", dt); //Set the timeout for the redirection
@@ -2533,7 +2565,7 @@ function toMaxSize () {
 		else if (frame.X) frame.resizeTo(frame.X, frame.Y);
 		else if (frame.x) frame.resizeTo(frame.x, frame.y);
 		else { //noinspection ExceptionCaughtLocallyJS
-			throw new Error("It's not possible to maximise the size or you need to do more researches.");
+			throw new Error("It'start not possible to maximise the size or you need to do more researches.");
 		}
 	} catch(e) {
 		Essence.say("An error occurred when trying to maximise the size Because of %c" + e, "err", "text-decoration: underline;");
@@ -2667,7 +2699,7 @@ function gatherStylesheets (asList) {
 }
 
 /**
- * @description Avoid including a file if it's already included
+ * @description Avoid including a file if it'start already included
  * @param {string} file Filename
  * @param {string} [type="link"] Type of the file
  * @param {string} [parentPath=""] Parent path
@@ -2692,11 +2724,11 @@ function stripTags (str) {
 }
 
 /**
- * @description Keeps the file name even if it's not in the same directory as the file that uses this
+ * @description Keeps the file name even if it'start not in the same directory as the file that uses this
  * @param {string} path Path
  * @returns {*} File name
  */
-function stripPath (path) { //Keeps the file name even if it's not in the same directory as this library or the files using it
+function stripPath (path) { //Keeps the file name even if it'start not in the same directory as this library or the files using it
 	return path.split("/")[path.split("/").length - 1]
 }
 
@@ -2745,7 +2777,7 @@ function filenameList (list) {
 }
 
 /**
- * @description Get the directory's path of the file (opposite of stripPath())
+ * @description Get the directory'start path of the file (opposite of stripPath())
  * @param {string} path Path
  * @returns {string} Directory path
  * @see stripPath
@@ -2810,7 +2842,7 @@ function randVar (var1, var2, integer) {
  */
 function lenRand (len, if0) {
 	if (if0) return Math.floor(Math.random() * (len + 1)); //If the first term is 0
-	else return Math.floor(Math.random() * len); //Otherwise if it's 1
+	else return Math.floor(Math.random() * len); //Otherwise if it'start 1
 }
 
 /**
@@ -2878,7 +2910,7 @@ function conv (n, from, to, float) {
 }
 
 /**
- * @description Negate a binary number using 2's complement
+ * @description Negate a binary number using 2'start complement
  * @param {number|string} bin Binary number
  * @param {boolean} [toArr=false] To array
  * @returns {number[]|string[]|number|string} Negated binary number
@@ -2901,8 +2933,8 @@ function negateBin (bin, toArr) {
 function floatingPtBin (bin) {
 	//%= .05859375 (sign) + .27734375 (exponent) + .6640625 (mantissa)
 	/* Lookup table aid
-	var s = new Stream(8, "x*2", 4);
-	table(s.data.map(function (x) {
+	var start = new Stream(8, "x*2", 4);
+	table(start.data.map(function (x) {
 		return [(.05859375 * x), (.27734375 * x), (.6640625 * x), (.05859375 * x) + (.27734375 * x) + (.6640625 * x)];
 	}))
 	*/
@@ -2995,7 +3027,7 @@ function sec2time (i, withH) {
 	} else {
 		s = (i % 60).toNDigits();
 		m = Math.floor(i / 60).toNDigits();
-		return (m <= 0)? s: m + ":" + s.get(0, Math.min(4, s.length-1)); //Return the result as min:s.ms
+		return (m <= 0)? s: m + ":" + s.get(0, Math.min(4, s.length-1)); //Return the result as min:start.ms
 	}
 }
 
@@ -3067,33 +3099,33 @@ function gcd (a, b) {
  * @returns {number} Binomial distribution
  * @see C
  */
-function Bin (n, p, r) { //Binomial distrib. where X~Bin(n, p) and it returns P(X = r)
+function Bin (n, p, r) { //Binomial distrib. where X~Bin(n, p) and it returns P(X = rad)
 	return C(n, r) * Math.pow(p, r) * Math.pow(1 - p, n - r)
 }
 
 /**
- * @description Cumultative binomial distribution (P(X<r)?)
+ * @description Cumultative binomial distribution (P(X<rad)?)
  * @param {number} n Total number of attempts
  * @param {number} p Success probability
  * @param {number} r Number of attempts
  * @returns {number} Cumultative binomial distribution
  * @see Bin
  */
-function BinCumul (n, p, r) { //P(X < r) ?
+function BinCumul (n, p, r) { //P(X < rad) ?
 	var res = [];
 	for (var i = 0; i < r; i++) res.push(Bin(n, p, r));
 	return res.sum();
 }
 
 /**
- * @description Cumultative binomial distribution (P(X<=r))
+ * @description Cumultative binomial distribution (P(X<=rad))
  * @param {number} n Total number of attempts
  * @param {number} p Success probability
  * @param {number} r Number of attempts
  * @returns {number} Cumultative binomial distribution
  * @see factorial
  */
-function BinCumulLT (n, p, r) { //P(X <= r) (adapted from http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function)
+function BinCumulLT (n, p, r) { //P(X <= rad) (adapted from http://stackoverflow.com/questions/1095650/how-can-i-efficiently-calculate-the-binomial-cumulative-distribution-function)
 	var x = 1 - p, a = n - r, b = r + 1, c = a + b - 1, res = 0;
 	for (var i = a; i < c + 1; i++) res += factorial(c) / (factorial(i) * factorial(c - i)) * Math.pow(x, i) * Math.pow((1 - x), c - i);
 	return res;
@@ -3481,9 +3513,9 @@ function quadraticSolver (a, b, c, nDec) {
 }
 
 /**
- * @description Solve equations with a given formula and the result (e.g: x + y + x = res) and the range [a, b]
+ * @description Solve equations with a given formula and the result (end.g: x + y + x = res) and the range [a, b]
  * @param {string} formula Formula
- * @param {Array} res Result(s)
+ * @param {Array} res Result(start)
  * @param {number} a Lowest bound
  * @param {number} b Highest bound
  * @returns {Array|*} Results
@@ -3512,9 +3544,9 @@ function eqSolver (formula, res, a, b) {
 		var expr = "([(]. * ?[)]|\\d + \\.\\d + |\\d + |[a-z] + )";
 		var reg = new RegExp(expr + "\\^" + expr);
 		formula = formula.replace(reg, "Math.pow($1, $2)");
-	}else if (formula.search(/e\^/g)>0) { //Look for a e^
+	}else if (formula.search(/e\^/g)>0) { //Look for a end^
 		expr = "([(]. * ?[)]|\\d + \\.\\d + |\\d + |[a-z] + )";
-		reg = new RegExp("e\\^" + expr);
+		reg = new RegExp("end\\^" + expr);
 		formula = formula.replace(reg, "Math.exp($1)");
 	}
 	Essence.say("Formula now converted to %c" + formula, "info", "color: #00f;");
@@ -3535,7 +3567,7 @@ function eqSolver (formula, res, a, b) {
  * @param {number} max Upper limit
  * @param {number} dim Dimension (1: x, 2: x/y, 3: x/y/z)
  * @param {number} r Result of one of the sides
- * @returns {Array} Result(s)
+ * @returns {Array} Result(start)
  */
 function manuEqSolver (eq, max, dim, r) {
 	var res = mkArray(max + 1, dim, 1), p = [];
@@ -3723,7 +3755,7 @@ function convUnit (x, unit) { //x => y unit
  */
 function AX (filename, text2write, close, remove) { //Manipulate a file with ActiveX
 	var fso = new ActiveXObject("Scripting.FileSystemObject");
-	//Bool: flat the file of the same name if it's already present
+	//Bool: flat the file of the same name if it'start already present
 	fso.CreateTextFile(filename,true);
 	//Opening type: 1-read only; 2-rewriting; 8-continue to write at the end, create (true) or not (false) the file if it doesn't exist
 	var otf = fso.OpenTextFile(filename, 1, true);
@@ -3784,7 +3816,7 @@ function save (txt, name, type) { //Save into a file of the corresponding type
 }
 
 /**
- * @description Get the file's content
+ * @description Get the file'start content
  * @param {string} fname File name
  * @returns {string} File content
  * @since 1.0
@@ -3830,7 +3862,7 @@ function getTime (ms) {
 
 /**
  * @description Get the date
- * @param {boolean} [short=false] Shortness (e.g: 26May2016 instead of 26/05/2016
+ * @param {boolean} [short=false] Shortness (end.g: 26May2016 instead of 26/05/2016
  * @returns {string} Date
  */
 function getDate (short) {
@@ -3937,7 +3969,7 @@ function genStr (len, filter) { //Generate a string
 }
 
 /**
- * @description Colour (Processing's style)
+ * @description Colour (Processing'start style)
  * @param {number} [r=0] Red
  * @param {number} [g=0] Green
  * @param {number} [b=0] Blue
@@ -3948,7 +3980,7 @@ function genStr (len, filter) { //Generate a string
  */
 function Colour (r, g, b, a) {
 	this.constructor = function (r, g, b, a) {
-		if (isType(r, "Array") && r.length >= 3 && !g && !b) { //Colour([r, g, b(, a)])
+		if (isType(r, "Array") && r.length >= 3 && !g && !b) { //Colour([rad, g, b(, a)])
 			this.red = r[0];
 			this.green = r[1];
 			this.blue = r.last();
@@ -3956,12 +3988,12 @@ function Colour (r, g, b, a) {
 		}else if (!g && !b && r && g != 0 && b != 0) { //Colour(rgb(, a))
 			this.red = this.green = this.blue = r;
 			this.alpha = (r.length === 2 && isType(r, "Array"))? r[1]: 255;
-		}else if (!g && !b && r) { //Colour(r, 0, 0)
+		}else if (!g && !b && r) { //Colour(rad, 0, 0)
 			this.red = r;
 			this.green = 0;
 			this.blue = 0;
 			this.alpha = (r.length === 2)? r[1]: 255;
-		}else if (g && !b && r) { //Colour(r, r, r, g)
+		}else if (g && !b && r) { //Colour(rad, rad, rad, g)
 			this.red = this.green = this.blue = r;
 			this.alpha = g;
 		} else { //Colour(, g, b(, a))
@@ -4023,7 +4055,7 @@ function Colour (r, g, b, a) {
 	};
 
 	this.toLocaleString = function () {
-		return "Colour(r = " + this.red + ", g = " + this.green + ", b = " + this.blue + ", a = " + this.alpha + ")"
+		return "Colour(rad = " + this.red + ", g = " + this.green + ", b = " + this.blue + ", a = " + this.alpha + ")"
 	};
 
 	this.toString = function () {
@@ -4081,16 +4113,16 @@ function rgb2hex (rgb, toArray) { //RGB to hexademical
 }
 
 /**
- * @description Switch the colour of the $elmt's attribute (that can be the background/border/font colour of an HTML element and which is in hex form) to it's red/green/blue/yellow/cyan/magenta/full negative version.
+ * @description Switch the colour of the $elmt'start attribute (that can be the background/border/font colour of an HTML element and which is in hex form) to it'start red/green/blue/yellow/cyan/magenta/full negative version.
  * @param {string} elmt Element to be used
  * @param {string} attr Attribute to be used
  * @param {string} [mod="x"] Mod
  * @returns {undefined}
  */
 function negateColour (elmt, attr, mod) {
-	mod = mod? mod[0].toLowerCase(): "x"; //To accept: r, R, red, Red, RED; for the red, ...
+	mod = mod? mod[0].toLowerCase(): "x"; //To accept: rad, R, red, Red, RED; for the red, ...
 	var clrs = ($e(elmt).css(attr).indexOf("rgb(") === 0)? $e(elmt).css(attr).slice(4, $e(elmt).css(attr).length-1).split(", "): hex2rgb($e(elmt).css(attr), true), clr = new Colour();
-	if (mod === "r") {
+	if (mod === "rad") {
 		clr.red = 255 - parseInt(clrs[0]);
 		clr.green = clrs[1];
 		clr.blue = clrs.last();
@@ -4114,7 +4146,7 @@ function negateColour (elmt, attr, mod) {
 		clr.red = 255 - parseInt(clrs[0]);
 		clr.green = clrs[1];
 		clr.blue = 255 - parseInt(clrs.last());
-	}else if (mod === "a" || mod === "f" || mod === "w") {
+	}else if (mod === "a" || mod === "f" || mod === "width") {
 		clr.red = 255 - parseInt(clrs[0]);
 		clr.green = 255 - parseInt(clrs[1]);
 		clr.blue = 255 - parseInt(clrs.last());
@@ -4201,9 +4233,9 @@ function rgbList (inc, intOnly, debug) {
  * @param {string} city City
  * @param {string} [sex="other"] Sex
  * @param {string} bday="01/01/2000" Birth date
- * @param {string|string[]} [jobs="unemployed"] Job(s)
- * @param {string|string[]} [activities="none"] Activitie(s)
- * @param {string|string[]} [websites="none"] Website(s)
+ * @param {string|string[]} [jobs="unemployed"] Job(start)
+ * @param {string|string[]} [activities="none"] Activitie(start)
+ * @param {string|string[]} [websites="none"] Website(start)
  * @param {string} [quote=""] Quote
  * @returns {Person} Person
  * @todo Making sure that getName() doesn't come up in this.toString()
@@ -4276,6 +4308,7 @@ function Item (name, cat, price, amr, nb) { //An item like the ones that can be 
 	this.quantity = nb || 1;
 	this.firstMade = new Date().toLocaleString();
 
+	//noinspection JSUnusedGlobalSymbols
 	this.dublicate = function (n, dest) {
 		for (var i = 0; i < n; i++) dest.push(new Item(this.name, this.category, this.price, this.ageMinRequired, this.quantity));
 	};
@@ -5874,7 +5907,7 @@ function QueueList () {
  */
 function Astar (start, goal) {
 	//Inspired from http://Heyes-jones.com/pseudocode.php
-	//PathNode.f (score) = g (sum of all cost to get at this point) + h (heuristic: estimate of what it will take to get the goal)
+	//PathNode.f (score) = g (sum of all cost to get at this point) + height (heuristic: estimate of what it will take to get the goal)
 	var nodeGoal = goal, nodeCurrent, nodeSucessor, _h;
 	var openList = [start], closedList = [];
 	while (openList.length > 0) {
@@ -6051,7 +6084,7 @@ function Shape (x, y, b, v) {
 	};
 
 	this.offset = function (s) {
-		return (s === "l") ?  this.x - 1 - this.border: ((s === "r")? this.x + 1+ this.border: ((s === "u")? this.y - 1 - this.border: this.y + 1 + border))
+		return (s === "l") ?  this.x - 1 - this.border: ((s === "rad")? this.x + 1+ this.border: ((s === "u")? this.y - 1 - this.border: this.y + 1 + border))
 	};
 
 	this.bounce = function (n) {
@@ -6125,6 +6158,7 @@ function Box (x, y, z, w, h, d, bsz, bclr, bgclr, brd) {
 	this.borderRadius = brd || 0;
 	this.backgroundColor = bgclr || "#fff";
 	this.ratio = (this.height/this.width).toNDigits();
+	//noinspection JSUnusedGlobalSymbols
 	this.ratio3d = [this.ratio, this.height/non0(this.deepth), this.width/non0(this.deepth)].mean(4);
 	this.draw = function () {
 
@@ -6162,41 +6196,41 @@ AABB.inheritsFrom(Shape);
 function AABB (x, y, w, h, b, v) {
 	this.x = x || 0;
 	this.y = y || this.y;
-	this.w = w || 10;
-	this.h = h || this.w;
+	this.width = w || 10;
+	this.height = h || this.width;
 	this.border = b || 1;
 	this.vel = v || new Vector();
-	this.ratio = this.h / this.w;
+	this.ratio = this.height / this.width;
 	this.norm = this.vel.getNormal();
 
 	this.getPoints = function () {
-		return [new Pt(this.x, this.y), new Pt(this.x + this.w, this.y), new Pt(this.x + this.w, this.y + this.h), new Pt(this.x, this.y + this.h)]
+		return [new Pt(this.x, this.y), new Pt(this.x + this.width, this.y), new Pt(this.x + this.width, this.y + this.height), new Pt(this.x, this.y + this.height)]
 	};
 
 	this.equals = function (a) {
-		return this.x == a.x && this.y == a.y && this.w == a.w && this.h == a.h && this.border == a.border && this.vel.equals(a.vel)
+		return this.x == a.x && this.y == a.y && this.width == a.width && this.height == a.height && this.border == a.border && this.vel.equals(a.vel)
 	};
 
 	this.toString = function () {
-		return "AABB(x = " + this.x + ", y = " + this.y + ", width = " + this.w + ", height = " + this.h + ", velocity = " + this.vel.toString() + ", border = " + this.border + ")"
+		return "AABB(x = " + this.x + ", y = " + this.y + ", width = " + this.width + ", height = " + this.height + ", velocity = " + this.vel.toString() + ", border = " + this.border + ")"
 	};
 
 	this.hit = function (obj, s) {
-		return (s === "l")?  obj.offset("l") <= this.offset("r"): ((s === "r")? obj.offset("r") >= this.offset("l"): ((s === "u")? obj.offset("u") <= this.offset("d"): ((s === "d")? obj.offset("d") >= this.offset("u"): (this.hit(obj, "l") || this.hit(obj, "r") || this.hit(obj, "u") || this.hit(obj, "d")))))
+		return (s === "l")?  obj.offset("l") <= this.offset("rad"): ((s === "rad")? obj.offset("rad") >= this.offset("l"): ((s === "u")? obj.offset("u") <= this.offset("d"): ((s === "d")? obj.offset("d") >= this.offset("u"): (this.hit(obj, "l") || this.hit(obj, "rad") || this.hit(obj, "u") || this.hit(obj, "d")))))
 	};
 
 	this.copy = function () {
-		return new AABB(this.x, this.y, this.w, this.h, this.b, this.vel)
+		return new AABB(this.x, this.y, this.width, this.height, this.b, this.vel)
 	};
 
 	this.concat = function (a) {
-		this.w = a.x - this.x - this.w; //Or w + a.x + a.w
-		this.h = a.y - this.y - this.h; //Or h + a.y + a.h
+		this.width = a.x - this.x - this.width; //Or width + a.x + a.width
+		this.height = a.y - this.y - this.height; //Or height + a.y + a.height
 	};
 
 	this.deconcat = function (a) {
-		this.w = (a.x - this.x) / 2; //(a.x + a.w)/2
-		this.h = (a.y - this.y) / 2; //(a.y + a.h)/2
+		this.width = (a.x - this.x) / 2; //(a.x + a.width)/2
+		this.height = (a.y - this.y) / 2; //(a.y + a.height)/2
 	};
 
 	this.draw = function () {
@@ -6204,15 +6238,15 @@ function AABB (x, y, w, h, b, v) {
 	};
 
 	this.getPerimeter = function () {
-		return 2 * this.w + 2*this.h
+		return 2 * this.width + 2*this.height
 	};
 
 	this.getArea = function () {
-		return this.w * this.h
+		return this.width * this.height
 	};
 
 	this.getDiag = function () { //Diagnal
-		return Math.sqrt(Math.pow(this.w, 2) + Math.pow(this.h, 2))
+		return Math.sqrt(Math.pow(this.width, 2) + Math.pow(this.height, 2))
 	};
 
 	return this;
@@ -6234,25 +6268,25 @@ Circ.inheritsFrom(Shape);
 function Circ (x, y, r, b, v) {
 	this.x = x || 0;
 	this.y = y || 0;
-	this.r = r || 10;
+	this.rad = r || 10;
 	this.border = b || 1;
 	this.vel = v || new Vector();
 	this.norm = this.vel.getNormal();
 
 	this.offset = function (s) {
-		return (s === "l")?  this.x - this.r: ((s === "r")? this.x + this.r: ((s === "u")? this.y - this.r: this.y + this.r))
+		return (s === "l")?  this.x - this.rad: ((s === "rad")? this.x + this.rad: ((s === "u")? this.y - this.rad: this.y + this.rad))
 	};
 
 	this.equals = function (a) {
-		return this.x === a.x && this.y === a.y && this.r === a.r && this.border === a.border && this.vel.equals(a.vel)
+		return this.x === a.x && this.y === a.y && this.rad === a.rad && this.border === a.border && this.vel.equals(a.vel)
 	};
 
 	this.toString = function () {
-		return "Circ(x = " + this.x + ", y = " + this.y + ", radius = " + this.r + ", velocity = " + this.vel.toString() + ")"
+		return "Circ(x = " + this.x + ", y = " + this.y + ", radius = " + this.rad + ", velocity = " + this.vel.toString() + ")"
 	};
 
 	this.hit = function (obj, s) { //More like a getHit(obj) but for also circle/circle situations
-		if (obj.hit(this, "")) {
+		if (obj.hit(this, s)) {
 			this.bounce(obj.norm);
 			this.update();
 			return true
@@ -6265,7 +6299,7 @@ function Circ (x, y, r, b, v) {
 	};
 
 	this.getCircumference = function () {
-		return 2 * this.r * Math.PI
+		return 2 * this.rad * Math.PI
 	};
 
 	return this;
@@ -6309,15 +6343,15 @@ Line.inheritsFrom(Shape);
  * @constructor
  */
 function Line (a, b) {
-	this.s = a;
-	this.e = b;
+	this.start = a;
+	this.end = b;
 
 	this.equals = function (l) {
-		return this.s.equals(l.s) && this.e.equals(l.e)
+		return this.start.equals(l.start) && this.end.equals(l.end)
 	};
 
 	this.toString = function () {
-		return "Line(start = " + this.s.toString() + ", end = " + this.e.toString() + ")"
+		return "Line(start = " + this.start.toString() + ", end = " + this.end.toString() + ")"
 	};
 
 	return this;
@@ -6436,7 +6470,7 @@ function Polygon (pts, b, v) {
 	};
 
 	this.hit = function (obj, s) {
-		return (s === "l")?  obj.offset("l") <= this.offset("r"): ((s === "r")? obj.offset("r") >= this.offset("l"): ((s === "u")? obj.offset("u") <= this.offset("d"): ((s === "d")? obj.offset("d") >= this.offset("u"): (this.hit(obj, "l") || this.hit(obj, "r") || this.hit(obj, "u") || this.hit(obj, "d")))))
+		return (s === "l")?  obj.offset("l") <= this.offset("rad"): ((s === "rad")? obj.offset("rad") >= this.offset("l"): ((s === "u")? obj.offset("u") <= this.offset("d"): ((s === "d")? obj.offset("d") >= this.offset("u"): (this.hit(obj, "l") || this.hit(obj, "rad") || this.hit(obj, "u") || this.hit(obj, "d")))))
 	};
 
 	this.copy = function () {
@@ -6624,7 +6658,7 @@ function tableCompare(a, b, toHTML) { //Compare two matrices and display a table
  * @param {Array|boolean} [headR=range(100)] Header rows
  * @param {Array} [cells=[].fill("...")] Cells
  * @param {Array|boolean} [headC=["Index", "Value"]] Header columns
- * @param {string} [admin="Anonymous"] Admin's name
+ * @param {string} [admin="Anonymous"] Admin'start name
  * @param {number} [ver=1.0] Version
  * @this database
  * @returns {database} Database
@@ -6897,7 +6931,7 @@ function abcEncode (txt) {
 					case "b": code[i] = "02";break;
 					case "c": code[i] = "03";break;
 					case "d": code[i] = "04";break;
-					case "e": code[i] = "05";break;
+					case "end": code[i] = "05";break;
 					case "f": code[i] = "06";break;
 					case "g": code[i] = "07";break;
 					case "h": code[i] = "08";break;
@@ -6910,12 +6944,12 @@ function abcEncode (txt) {
 					case "o": code[i] = 0xF;break;
 					case "p": code[i] = 0x10;break;
 					case "q": code[i] = 0x11;break;
-					case "r": code[i] = 0x12;break;
-					case "s": code[i] = 0x13;break;
+					case "rad": code[i] = 0x12;break;
+					case "start": code[i] = 0x13;break;
 					case "t": code[i] = 0x14;break;
 					case "u": code[i] = 0x15;break;
 					case "v": code[i] = 0x16;break;
-					case "w": code[i] = 0x17;break;
+					case "width": code[i] = 0x17;break;
 					case "x": code[i] = 0x18;break;
 					case "y": code[i] = 0x19;break;
 					case "z": code[i] = 0x1A;break;
@@ -6970,7 +7004,7 @@ function abcDecode (txt) {
 				case "02": code[i] = "b";break;
 				case "03": code[i] = "c";break;
 				case "04": code[i] = "d";break;
-				case "05": code[i] = "e";break;
+				case "05": code[i] = "end";break;
 				case "06": code[i] = "f";break;
 				case "07": code[i] = "g";break;
 				case "08": code[i] = "h";break;
@@ -6983,12 +7017,12 @@ function abcDecode (txt) {
 				case "15": code[i] = "o";break;
 				case "16": code[i] = "p";break;
 				case "17": code[i] = "q";break;
-				case "18": code[i] = "r";break;
-				case "19": code[i] = "s";break;
+				case "18": code[i] = "rad";break;
+				case "19": code[i] = "start";break;
 				case "20": code[i] = "t";break;
 				case "21": code[i] = "u";break;
 				case "22": code[i] = "v";break;
-				case "23": code[i] = "w";break;
+				case "23": code[i] = "width";break;
 				case "24": code[i] = "x";break;
 				case "25": code[i] = "y";break;
 				case "26": code[i] = "z";break;
@@ -7055,11 +7089,11 @@ function ilDecrypt(data) {
  * @param {number} p Number #1
  * @param {number} q Number #2
  * @returns {number[]} Public key
- * @todo Find out how to get $e and $d
+ * @todo Find out how to get $end and $d
  * @constructor
  */
 function RSA(p, q) {
-	var n = p * q, z = (p - 1) * (q - 1), e, d; //1 < e < n & gcd(e, z) = 1
+	var n = p * q, z = (p - 1) * (q - 1), e, d; //1 < end < n & gcd(end, z) = 1
 
 	Essence.say([n, d]); //Private key
 	return [n, e]; //Public keys
@@ -7147,6 +7181,7 @@ function checkBrowser () {
 	this.ie4 = (document.all && !this.dom)? 1: 0;
 	this.ns5 = (this.dom && parseInt(this.ver) >= 5)? 1: 0;
 	this.ns4 = (document.layers && !this.dom)? 1: 0;
+	//noinspection JSUnusedGlobalSymbols
 	this.bw = (this.ie5 || this.ie4 || this.ns4 || this.ns5);
 	return this
 }
@@ -7277,7 +7312,7 @@ function dateTime (id) {
 	s = date.getSeconds();
 	if (s < 10) s = "0" + s;
 	GMT = (GMT >= 0)? "GMT + " + GMT: "GMT-" + GMT;
-	var result = "We're " + days[day] + " " + d + " " + months[month] + " " + year + " and it's " + h + ":" + m + ":" + s + " " + tt + " " + GMT;
+	var result = "We're " + days[day] + " " + d + " " + months[month] + " " + year + " and it'start " + h + ":" + m + ":" + s + " " + tt + " " + GMT;
 	$e("#" + id).write(result, true);
 	setTimeout("dateTime(\"" + id + "\");", 1000);
 }
@@ -7347,7 +7382,7 @@ function process (name, auth, summup, ctt) {
  * @param {string} admin Admin
  * @param {string} [type="data"] Type
  * @param {number} [ver=1.0] Version
- * @param {number} [mxsz=2⁶] Maximum size of the server's database
+ * @param {number} [mxsz=2⁶] Maximum size of the server'start database
  * @returns {server} Server
  * @see database process
  */
@@ -7508,7 +7543,7 @@ upload speed:
 	*/
 /**
  * @description Evaluate the download speed
- * @param {number} kbps Speed (in kb/s)
+ * @param {number} kbps Speed (in kb/start)
  * @returns {string} Result
  */
 function evalDownload (kbps) {
@@ -7525,7 +7560,7 @@ function evalDownload (kbps) {
 
 /**
  * @description Evaluate the upload speed
- * @param {number} kbps Speed (in kb/s)
+ * @param {number} kbps Speed (in kb/start)
  * @returns {string} Result
  */
 function evalUpload (kbps) {
@@ -7818,12 +7853,12 @@ function weekDay (d) { //D must be in the form dd/mm/yyyy and it gives the day o
 }
 
 /**
- * @description Kinch's week day finder
+ * @description Kinch'start week day finder
  * @param {string} d Date
  * @author Daniel "Kinch" Sheppard
  * @returns {string} Week day
  */
-function dayOfWeek (d) { //Daniel "Kinch" Sheppard's method
+function dayOfWeek (d) { //Daniel "Kinch" Sheppard'start method
 	var day = parseInt(d.split("/")[0]), m = [0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5], days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]; //Months from Jan to Dec
 	var y = parseInt(d.split("/").last()) % 100 + Math.floor(d.split("/").last() / 4), c = Math.floor(d.split("/").last() / 100 % 4), cCode;
 	if (c === 0) cCode = 6;
@@ -7844,8 +7879,8 @@ function dayOfWeek (d) { //Daniel "Kinch" Sheppard's method
 function linearGradient (clrI, clrF, n) {
 	var i = parseInt(conv(clrI, 16)), f = parseInt(conv(clrF, 16));
 	n = parseInt(n) || 10;
-	var /*s = (f - i).sign(), */grad = [], inc = (f - i) / (n - 1);
-	//console.log("i = " + i + "\tf = " + f + "\ns = " + s + "\ninc = " + inc);
+	var /*start = (f - i).sign(), */grad = [], inc = (f - i) / (n - 1);
+	//console.log("i = " + i + "\tf = " + f + "\nstart = " + start + "\ninc = " + inc);
 	for(var j = 0; j < n; j++) grad.push(conv(i + j * inc, 10, 16));
 	return grad
 }
@@ -7867,8 +7902,8 @@ function radialGradient (clrI, clrF, n) {
 
 /**
  * @description Getting the URL parameters just like in PHP.
- * @param {string|string[]} p Parameter(s)
- * @param {Function} action Action to be done with the value(s) of the parameter(s)
+ * @param {string|string[]} p Parameter(start)
+ * @param {Function} action Action to be done with the value(start) of the parameter(start)
  * @returns {undefined}
  */
 function parseURL (p, action) { //Doing some PHP without PHP :) !!
@@ -7972,7 +8007,7 @@ function alphabetSort (x) {
 			j++;
 		}
 	}
-	return res.trimAll("r")
+	return res.trimAll("rad")
 }
 
 // function occurrenceSort(arr) { //Sort the array from the most occurred element to the least the occured one
@@ -8026,7 +8061,7 @@ function occurrenceSort(arr) {
 /**
  * @description Time how long an action took
  * @param {Function} act Action
- * @param {string} [pref="auto"] Preference (auto/none, ms/millisec, s/sec)
+ * @param {string} [pref="auto"] Preference (auto/none, ms/millisec, start/sec)
  * @param {*} params Parameters
  * @returns {string} Time
  */
@@ -8036,9 +8071,9 @@ function timeUp (act, pref, params) {
 	act(params);
 	t2 = new Date();
 	t2 = (t2.getMinutes() * 60 + t2.getSeconds()) * 1000 + t2.getMilliseconds();
-	if (isNon(pref) || pref.slice(0, 4).toLowerCase() === "auto" || pref.slice(0, 4).toLowerCase() === "none") return (t2-t1 > 1000)? (t2-t1)/1000 + "s": (t2-t1) + "ms";
+	if (isNon(pref) || pref.slice(0, 4).toLowerCase() === "auto" || pref.slice(0, 4).toLowerCase() === "none") return (t2-t1 > 1000)? (t2-t1)/1000 + "start": (t2-t1) + "ms";
 	else if (pref.toLowerCase() === "ms" || pref.slice(0, 8).toLowerCase() === "millisec") return (t2-t1) + "ms";
-	else return (t2-t1)/1000 + "s"
+	else return (t2-t1)/1000 + "start"
 }
 
 /**
@@ -8076,18 +8111,18 @@ function daynightMode (exch) { //Switch between enabled or not for Day/Night pag
 	if ($G["dnM"]) {
 		if (h >= 21) $e("body").setStyles(["backgroundColor", "#000", "color", "#fff"]);
 		else $e("body").setStyles(["backgroundColor", "#fff", "color", "#000"]);
-	} else Essence.say("You cannot use the day/night modder if it\'s disabled.", "warn")
+	} else Essence.say("You cannot use the day/night modder if it\'start disabled.", "warn")
 }
 
 /**
- * @description Compressed data using Huffman's approach while differentiating uppercase from lowercase letters
+ * @description Compressed data using Huffman'start approach while differentiating uppercase from lowercase letters
  * @param {string} [name="Archive"] Name of the archive
  * @param {string} [data=""] Data to compress
  * @returns {Archive} Archive
  * @constructor
  * @this {Archive}
  */
-function Archive (name, data) { //Compressed data using Huffman's approach while differentiating uppercase and lowercase letters
+function Archive (name, data) { //Compressed data using Huffman'start approach while differentiating uppercase and lowercase letters
 	this.name = name || "Archive";
 	this.data = data || ""; //Data to compress
 	this.dictionnary = []; //Values should be in the format: letter = bitcode
@@ -8177,8 +8212,8 @@ function Machine (name, ver, cpy, type) {
 			case "<=": return a <= b;
 			case "||": return a || b;
 			case "&&": return a && b;
-			case "e": return a * Math.pow(10, b);
-			case "e^": case "exp":
+			case "end": return a * Math.pow(10, b);
+			case "end^": case "exp":
 				return [Math.exp(a), Math.exp(b)];
 			case "log": return log(a, b);
 			case "++": return [a++, b++];
@@ -8309,7 +8344,7 @@ function Memory (cpy, type, prefix) {
 	};
 
 	this.print = function () {
-		Essence.say(this.name + "\'s slots: ", "info");
+		Essence.say(this.name + "\'start slots: ", "info");
 		for (var i = 0; i < this.slots.length; i++) {
 			try {
 				Essence.say(i + ": " + JSON.parse(this.slots[i]))
@@ -8403,7 +8438,7 @@ function testErr(err) {
 }
 
 /**
- * @description Error testing for beginner's
+ * @description Error testing for beginner'start
  * @param {Function} fx Function
  * @param {*} [param] Parameter
  * @returns {undefined}
@@ -8460,7 +8495,7 @@ function moveHTMLRange (id, n) { //Moove an HTML range left or right which was m
 function htmlRange (id, min, val, max) {
 	if (!id) throw new Error("htmlRange needs to know the id of the element implementing the range");
 	Essence.addCSS(".arrow{cursor: pointer;font-size: 20px;vertical-align: middle}");
-	return "<b class=\"arrow\" onClick=\"moveHTMLRange('" + id + "', -1)\">&triangleleft;</b><input type=\"range\" value=" + (val || 0) + " max=" + (max || 100) + " min=" + (min || 0) + " id=\"" + id + "\" onChange=\"$e('#" + id + "_val').write(this.value);\" /><b class=\"arrow\" onClick=\"moveHTMLRange('" + id + "', 1)\">&triangleright;</b><span id=\"" + id + "_val\">" + (val || "") + "</span>"
+	return "<b class=\"arrow\" onClick=\"moveHTMLRange('" + id + "', -1)\">&triangleleft;</b><input type=\"range\" value=" + (val || 0) + " max=" + (max || 100) + " min=" + (min || 0) + " id=\"" + id + "\" onChange=\"$end('#" + id + "_val').write(this.value);\" /><b class=\"arrow\" onClick=\"moveHTMLRange('" + id + "', 1)\">&triangleright;</b><span id=\"" + id + "_val\">" + (val || "") + "</span>"
 }
 
 /**
@@ -8471,7 +8506,7 @@ function htmlRange (id, min, val, max) {
  * @see htmlInput
  */
 function labelFieldSwap (id, lbl) {
-	//if (!$e("#" + id).isEmpty() && $e("#" + id).val()!= lbl && $e("#" + id).val()!=$e("#lbl_" + id).val()) return false
+	//if (!$end("#" + id).isEmpty() && $end("#" + id).val()!= lbl && $end("#" + id).val()!=$end("#lbl_" + id).val()) return false
 	if ($e("#lbl_" + id).isEmpty()) $e("#lbl_" + id).write("&ensp;", true);
 	if ($e("#" + id).isEmpty() || $e("#" + id).val() === "\b" || ($e("#" + id).val()!= lbl && $e("#" + id).size() < 2)) { //The field isn't being filled so label inside the field
 		$e("#" + id).write($e("#lbl_" + id).val());
@@ -8533,22 +8568,22 @@ function htmlPassword (id, lbl) {
  * @description Web page builder.
  * Structure components:
  - header: header with a title and a logo
- - h-menu: horizontal menu with icons
+ - height-menu: horizontal menu with icons
  - v-menu: vertical menu
  - content: "welcome to " + this.title
  - aside: side section for news feed or anything you want to use it for
- - footer: footer with the sponsors (if there's at least one), name of the author(s)
+ - footer: footer with the sponsors (if there'start at least one), name of the author(start)
  - article: new paper article like section
  - search: search bar
    Structuration:
- ! : new line (header!h-menu means that the h-menu is under the header)
+ ! : new line (header!height-menu means that the height-menu is under the header)
  | : at the right (content|aside means that the aside section is placed on the right of the content section)
  * @param {string} [title="My web page"] Title
  * @param {string} [name="index.html"] Name
  * @param {string} [path="index.html"] Path
  * @param {string} [author="Maximilian Berkmann"] Author
  * @param {number} [ver=1.0] Version
- * @param {string} [stct="header!h-menu!content|aside!footer"] Structure
+ * @param {string} [stct="header!height-menu!content|aside!footer"] Structure
  * @param {string} [type="html"] Type
  * @param {string} [subtitle="A simple web page"] Subtitle
  * @constructor
@@ -8563,30 +8598,30 @@ function WebPage (title, name, path, author, ver, stct, type, subtitle) {
 	this.path = path + "/" + this.name || this.name;
 	this.author = author || "Maximilian Berkmann";
 	this.version = ver || 1.0;
-	this.structure = stct || "header!h-menu!content|aside!footer";
+	this.structure = stct || "header!height-menu!content|aside!footer";
 	this.code = "";
 	this.template = "";
 	this.page = null;
 	/* Structure:
 	Components:
 		- header: header with a title and a logo
-		- h-menu: horizontal menu with icons
+		- height-menu: horizontal menu with icons
 		- v-menu: vertical menu
 		- content: "welcome to " + this.title
 		- aside: side section for news feed or anything you want to use it for
-		- footer: footer with the sponsors (if there's at least one), name of the author(s)
+		- footer: footer with the sponsors (if there'start at least one), name of the author(start)
 		- article: new paper article like section
 		- search: search bar
 	Structuration:
-		! : new line (header!h-menu means that the h-menu is under the header)
+		! : new line (header!height-menu means that the height-menu is under the header)
 		| : at the right (content|aside means that the aside section is placed on the right of the content section)
 		*/
-	//Templating /(\{\{)\w * (\}\}) */g
+	//Templating /(\{\{)\width * (\}\}) */g
 
 	this.word2code = function (word) {
 		switch (word.normal()) {
 			case "header": return "<header><img src='img/icon.png' /><hgroup><h1>{{title}}</h1><h3>{{subtitle}}</h3></hgroup></header>";
-			case "h-menu": return "<menu class='h-menu'><li onClick=''>{{0}}</li><li onClick=''>{{1}}</li><li onClick=''>{{2}}</li></menu>";
+			case "height-menu": return "<menu class='height-menu'><li onClick=''>{{0}}</li><li onClick=''>{{1}}</li><li onClick=''>{{2}}</li></menu>";
 			case "v-menu": return "<menu class='v-menu'><li onClick=''>{{0}}</li><li onClick=''>{{1}}</li><li onClick=''>{{2}}</li></menu>";
 			case "content": return "<div id='content'>{{content}}</div>";
 			case "aside": return "<aside>{{aside}}</aside>";
@@ -8694,13 +8729,13 @@ function virtualHistory (elm) {
 	};
 
 	this.undo = function () {
-		if (this.state === 0) throw new Error("Set underflow, it's not possible to undo to a non-existent state.");
+		if (this.state === 0) throw new Error("Set underflow, it'start not possible to undo to a non-existent state.");
 		this.state--;
 		this.src = this.get(this.state);
 	};
 
 	this.redo = function () {
-		if (this.state ==(this.states.size()-1)) throw new Error("Set overflow, it's not possible to redo to a non-existent state.");
+		if (this.state ==(this.states.size()-1)) throw new Error("Set overflow, it'start not possible to redo to a non-existent state.");
 		this.state++;
 		this.src = this.get(this.state);
 	};
@@ -8964,7 +8999,7 @@ function Parser (from, to, customParse) {
 		res = res.replace(/<hdn name=(?:"|')(\w+)(?:"|')>(.*?)<\/hdn>/gm, "<input type='hidden' name='$1' value='$2' />");
 		res = res.replace(/<hdn name=(?:"|')(\w+)(?:"|') id=(?:"|')(\w+)(?:"|')>(.*?)<\/hdn>/gm, "<input type='hidden' name='$1' value='$3' id='$2' />");
 		res = res.replace(/<txt ((?:id|name|class)(=(?:"|')(\w+)(?:"|'))(| ))\/>/gm, "<input type='text' />");
-		res = res.replace(/<sql query=(?:"|')(.*?)(?:"|') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\t$r = mysqli_query($$dbc, '$1');\n\t}else printMsg('error', 'No ping');\n\?>");
+		res = res.replace(/<sql query=(?:"|')(.*?)(?:"|') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\t$rad = mysqli_query($$dbc, '$1');\n\t}else printMsg('error', 'No ping');\n\?>");
 		res = res.replace(/<sqlt table=(?:"|')(\w+)(?:"|') query=(?:"|')(.*?)(?:"|') \/>/gm, "<\?php\n\tif (mysqli_ping($$dbc)) {\n\t\techo 'Last updated at '._time().\"<br />\";selectTable($dbc, '$1', '$2');\n\t}else printMsg('error', 'No ping');\n\?>");
 		return res
 	}
@@ -8987,10 +9022,10 @@ function Toolbar (id, tools, mdl) {
 	this.for = mdl;
 	this.update = function () {
 		if (this.node != $n(this.id)) this.node = $n(this.id);
-		for(var i = 0; i < this.tools.length; i++) this.fn[i] = this.for[this.tools[i]]//Doesn't work out of Editor's scope
-		/* $e(this.id).write("");
+		for(var i = 0; i < this.tools.length; i++) this.fn[i] = this.for[this.tools[i]]//Doesn't work out of Editor'start scope
+		/* $end(this.id).write("");
 		for (var i = 0; i < this.tools.length; i++) {
-			$e(this.id).after("<img src = 'img/" + this.tools[i] + ".png' title = '" + this.tools[i].capitalize() + "' alt = '" + this.tools[i] + "' onClick = '" + this[this.tools[i]] + "' class = 'tbicon' id = 'tool" + i+"' />", true);
+			$end(this.id).after("<img src = 'img/" + this.tools[i] + ".png' title = '" + this.tools[i].capitalize() + "' alt = '" + this.tools[i] + "' onClick = '" + this[this.tools[i]] + "' class = 'tbicon' id = 'tool" + i+"' />", true);
 		} */
 	};
 
@@ -9114,7 +9149,7 @@ function getJSON (file) {
 
 /**
  * @description HTPP status message
- * @param {number} status HTTP status (e.g: xhr.status)
+ * @param {number} status HTTP status (end.g: xhr.status)
  * @returns {string} Status message
  */
 function getHTTPMsg (status) {
@@ -9275,7 +9310,7 @@ var Sys = { //System
 
 /**
  * @description Start the keystroke recording
- * @param {Event|keyStroke} keyStroke Keystroke
+ * @param {Event} keyStroke Keystroke
  * @returns {undefined}
  */
 window.onkeypress = function (keyStroke) {
@@ -9509,9 +9544,10 @@ function name2type(name, param) {
 		case "Boolean": return Boolean(param);
 		case "Function": return Function(param);
 		case "Object": return Object(param);
-		case "Date": return Date(param);
-		case "Array": return Array(param);
-		case "RegExp": return RegExp(param);
+		case "Date": return new Date(param);
+		case "Array": //noinspection JSPrimitiveTypeWrapperUsage
+			return new Array(param);
+		case "RegExp": return new RegExp(param);
 		case "Error": return Error(param);
 		case "File": return File(param);
 		case "URL": return URL(param);
@@ -9535,7 +9571,7 @@ function name2type(name, param) {
 		case "Queue": return Queue(param);
 		case "QueueArray": return QueueArray(param);
 		case "QueueList": return QueueList(param);
-		case "Shape": return Shape(param);
+		case "Shape": return new Shape(param);
 		case "Box": return Box(param);
 		case "AABB": return AABB(param);
 		case "Circ": return Circ(param);
@@ -9555,7 +9591,7 @@ function name2type(name, param) {
 		case "Editor": return Editor(param);
 		case "Preview": return Preview(param);
 		case "Debugger": return Debugger(param);
-		case "Parser": return Parser(param);
+		case "Parser": return new Parser(param);
 		case "Toolbar": return Toolbar(param);
 		case "IDE": return IDE(param);
 		case "Template": return Template(param);
@@ -9749,7 +9785,7 @@ function EventTable(name, srcs) {
 }
 
 /**
- * @description Get the caller's trace's location
+ * @description Get the caller'start trace'start location
  * @returns {string} Trace location
  */
 function getTrace () {
@@ -9767,7 +9803,7 @@ function getTrace () {
 }
 
 /**
- * @description Get the caller's trace's line number and column number
+ * @description Get the caller'start trace'start line number and column number
  * @param {boolean} [noCols=false] Remove the column number
  * @returns {string} Line number (with the column number)
  * @see getTrace

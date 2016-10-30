@@ -1,6 +1,7 @@
 /* JSDoc prettify.js theme */
 
 /* plain text */
+/*noinspection ALL*/
 .pln {
   color: #000000;
   font-weight: normal;
@@ -15,6 +16,7 @@
 }
 
 /* a keyword */
+/*noinspection ALL*/
 .kwd {
   color: #000000;
   font-weight: bold;
@@ -28,6 +30,7 @@
 }
 
 /* a type name */
+/*noinspection ALL*/
 .typ {
   color: #000000;
   font-weight: normal;
@@ -35,6 +38,7 @@
 }
 
 /* a literal value */
+/*noinspection ALL*/
 .lit {
   color: #006400;
   font-weight: normal;
@@ -42,6 +46,7 @@
 }
 
 /* punctuation */
+/*noinspection ALL*/
 .pun {
   color: #000000;
   font-weight: bold;
@@ -49,6 +54,7 @@
 }
 
 /* lisp open bracket */
+/*noinspection ALL*/
 .opn {
   color: #000000;
   font-weight: bold;
@@ -56,6 +62,7 @@
 }
 
 /* lisp close bracket */
+/*noinspection ALL*/
 .clo {
   color: #000000;
   font-weight: bold;
@@ -70,6 +77,7 @@
 }
 
 /* a markup attribute name */
+/*noinspection ALL*/
 .atn {
   color: #006400;
   font-weight: normal;
@@ -77,6 +85,7 @@
 }
 
 /* a markup attribute value */
+/*noinspection ALL*/
 .atv {
   color: #006400;
   font-weight: normal;
@@ -98,6 +107,7 @@
 }
 
 /* a function name */
+/*noinspection ALL*/
 .fun {
   color: #000000;
   font-weight: bold;

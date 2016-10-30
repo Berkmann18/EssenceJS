@@ -6,6 +6,7 @@
 .pln {
   color: #4d4d4c; }
 
+/*noinspection CssUnusedSymbol,CssUnusedSymbol,CssUnusedSymbol,CssUnusedSymbol,CssUnusedSymbol,CssUnusedSymbol,CssUnusedSymbol,CssUnusedSymbol,CssUnusedSymbol*/
 @media screen {
   /* string content */
   .str {
@@ -111,6 +112,7 @@ ol.linenums {
   margin-bottom: 0; }
 
 /* IE indents via margin-left */
+/*noinspection ALL*/
 li.L0,
 li.L1,
 li.L2,
@@ -124,6 +126,7 @@ li.L9 {
   /* */ }
 
 /* Alternate shading for lines */
+/*noinspection ALL*/
 li.L1,
 li.L3,
 li.L5,

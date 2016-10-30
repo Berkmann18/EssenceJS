@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--suppress ALL -->
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -90,7 +91,11 @@
         
             <h3>Example</h3>
             
-    <pre class="prettyprint"><code>var a = "Hello", b = "hello", c = ["h", "e", "l", "l", "o"];a.equals(b); //falsea.toLowerCase().equals(b); //truec.join("").equals(a); //truec.equals(a); //false</code></pre>
+    <pre class="prettyprint"><code>var a = "Hello", b = "hello", c = ["h", "e", "l", "l", "o"];
+a.equals(b); //false
+a.toLowerCase().equals(b); //true
+c.join("").equals(a); //true
+c.equals(a); //false</code></pre>
 
         
     
@@ -189,7 +194,8 @@
         
             <h3>Example</h3>
             
-    <pre class="prettyprint"><code>"Hello world".count("o"); //2[4, 2, 0, -4, 1, 2, 3].count(0); //1</code></pre>
+    <pre class="prettyprint"><code>"Hello world".count("o"); //2
+[4, 2, 0, -4, 1, 2, 3].count(0); //1</code></pre>
 
         
     
@@ -481,7 +487,11 @@
         
             <h3>Example</h3>
             
-    <pre class="prettyprint"><code>var a = {name: "A", size: 8}, b = ["1", "4", "9", "h", "w", "_"];a.has("name"); //truea.has("value"); //falseb.has("w"); //trueb.has(" "); //false</code></pre>
+    <pre class="prettyprint"><code>var a = {name: "A", size: 8}, b = ["1", "4", "9", "h", "w", "_"];
+a.has("name"); //true
+a.has("value"); //false
+b.has("w"); //true
+b.has(" "); //false</code></pre>
 
         
     
@@ -621,7 +631,8 @@
     <div class="container-overview">
     
         
-            <div class="description">Self-destruction of the object.Source: <a href="https://Google.github.io/styleguide/javascriptguide.xml?showone=delete#delete">https://Google.github.io/styleguide/javascriptguide.xml?showone=delete#delete</a></div>
+            <div class="description">Self-destruction of the object.
+Source: <a href="https://Google.github.io/styleguide/javascriptguide.xml?showone=delete#delete">https://Google.github.io/styleguide/javascriptguide.xml?showone=delete#delete</a></div>
         
 
         
@@ -867,7 +878,12 @@
         
             <h3>Example</h3>
             
-    <pre class="prettyprint"><code>var myStr = "Hello", myNum = 1.4142, myBool = true, myArr = range(3), myObj = {a: 0, b: 1};myStr.isIterable(); //truemyNum.isIterable(); //falsemyBool.isIterable(); //falsemyArr.isIterable(); //truemyObj.isIterable(); //true</code></pre>
+    <pre class="prettyprint"><code>var myStr = "Hello", myNum = 1.4142, myBool = true, myArr = range(3), myObj = {a: 0, b: 1};
+myStr.isIterable(); //true
+myNum.isIterable(); //false
+myBool.isIterable(); //false
+myArr.isIterable(); //true
+myObj.isIterable(); //true</code></pre>
 
         
     

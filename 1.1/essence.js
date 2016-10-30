@@ -113,17 +113,17 @@ var Essence = {
 		},
 		applyCSS: function (nonMinify) {
 			include_once(getExtPath(getDirectoryPath(gatherScripts()[gatherScripts()["essence.min.js"]? "essence.min.js": "essence.js"])) + (nonMinify? "essence.css": "essence.min.css"), "link", getDirectoryPath());
-			/*if ($e("html").val(true).indexOf("<body></body>") > -1) { //A bit of cleaning
-			 var ix = $e("html").val(true).indexOf("<body></body>");
-			 var bfr = $e("html").val(true).slice(0, ix), aft = $e("html").val(true).slice(ix + 13, $e("html").val(true).length);
-			 $e("html").write(bfr + aft, true);
+			/*if ($end("html").val(true).indexOf("<body></body>") > -1) { //A bit of cleaning
+			 var ix = $end("html").val(true).indexOf("<body></body>");
+			 var bfr = $end("html").val(true).slice(0, ix), aft = $end("html").val(true).slice(ix + 13, $end("html").val(true).length);
+			 $end("html").write(bfr + aft, true);
 			 }*/
 		},
 		addCSS: function (nstyle) {
 			if ($n("style", true) === null) {
 				var s = document.createElement("style");
 				s.innerText = nstyle;
-				//s.media = "all";
+				//start.media = "all";
 				s.type = "text/css";
 				s.id = "EssenceCSS";
 				$n("head").appendChild(s);
@@ -147,7 +147,7 @@ var Essence = {
 			Essence.say("%cEssence(.min).js%c has been updated", "succ", "text-decoration: underline", "text-decoration: none");
 		},
 		/** @const {number} Essence.eps Epsilon */
-		eps: Math.pow(2, -52), //Matlab's epsilon (useful when dealing with null values to keep them in the real range or just not null
+		eps: Math.pow(2, -52), //Matlab'start epsilon (useful when dealing with null values to keep them in the real range or just not null
 		emptyDoc: function (title, author) { //Empty the document and fill it with a basic structure
 			$e("html").write("<head><title>" + (title || document.title) + "</title><meta charset='UTF-8' /><meta name='author' content=" + (author || "unknown") + " /><script type='text/javascript' src=" + Essence.source + "></script></head><body></body>", true);
 		}, editor: function (ctt) {
@@ -182,7 +182,7 @@ var Essence = {
 		}, init: function () {
 			$G["t2"] = new Date();
 			$G["t2"] = $G["t2"].getSeconds() * 1000 + $G["t2"].getMilliseconds();
-			$G["t"] = ($G["t2"] - $G["t1"] > 1000)? ($G["t2"] - $G["t1"]) / 1000 + "s": ($G["t2"] - $G["t1"]) + "ms";
+			$G["t"] = ($G["t2"] - $G["t1"] > 1000)? ($G["t2"] - $G["t1"]) / 1000 + "start": ($G["t2"] - $G["t1"]) + "ms";
 			Essence.say("Page loaded in %c" + $G["t"] + "%c", "succ", "font-style: italic", "font-style: none");
 		}, time: function(msg, style, style0) { //Like Essence.say(msg) but with the timestamp
 			console.log("[%c" + getTimestamp(true) + "%c] "+msg, "color: #00f;", "color: #000;", style || "", style0 || "")
@@ -348,8 +348,8 @@ function require (mdl, ver, extpath) {
 	} else if (modules.indexOf(mdl) === -1) {
 		include_once((ver? ver + "/": "") + "modules/" + mdl + ".js", "script", extpath || getDirectoryPath());
 		modules.push(mdl);
-		if (debugging) console.log("The module %c%s%c is now included into %c%s    " + getTimestamp(true), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFilename());
-	} else if (debugging) console.log("The module %c%s%c is already included into %c%s    " + getTimestamp(true), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFilename());
+		if (debugging) console.log("The module %c%start%c is now included into %c%start    " + getTimestamp(true), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFilename());
+	} else if (debugging) console.log("The module %c%start%c is already included into %c%start    " + getTimestamp(true), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFilename());
 }
 
 /**
@@ -394,8 +394,8 @@ function $require (mdl) {
 	} else if (modules.indexOf(mdl) === -1) {
 		gatherScripts()["essence.min.js"]? include_once(getExtPath(getDirectoryPath(gatherScripts()["essence.min.js"])) + "modules/" + mdl + ".min.js", "script"): include_once(getExtPath(getDirectoryPath(gatherScripts()["essence.js"])) + "modules/" + mdl + ".js", "script");
 		modules.push(mdl);
-		if (debugging) console.log("The module %c%s%c is now included into %c%s    " + getT(), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFn());
-	} else if (debugging) console.log("The module %c%s%c is already included into %c%s    " + getT(), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFn());
+		if (debugging) console.log("The module %c%start%c is now included into %c%start    " + getT(), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFn());
+	} else if (debugging) console.log("The module %c%start%c is already included into %c%start    " + getT(), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFn());
 }
 
 /**
@@ -423,13 +423,13 @@ function run (module, ver) {
 			try {
 				if (debugging) Essence.say("Running " + module + "    " + getTimestamp(true), "info");
 				/*init(window[module].dependency, false, function (x) {
-				 if (debugging) Essence.say("%c" + x + "%c from %c" + module + "%c's dependency has been initiated !!    " + getTimestamp(true), "info", "color: #c0f", "color: #000", "color: #f0c", "color: #000");
+				 if (debugging) Essence.say("%c" + x + "%c from %c" + module + "%c'start dependency has been initiated !!    " + getTimestamp(true), "info", "color: #c0f", "color: #000", "color: #f0c", "color: #000");
 				 //console.info("")
 				 }, ver);*/
 				if (!window[module].loaded) window[module].load();
 				window[module].run();
 			} catch (e) {
-				Essence.time("The module %c" + module + "%c have problems regarding it's run method.", "color: #c0f", "color: #000");
+				Essence.time("The module %c" + module + "%c have problems regarding it'start run method.", "color: #c0f", "color: #000");
 			}
 		}, /**
 		 * @description Retry to get the module to be usable and launch go()
@@ -444,7 +444,7 @@ function run (module, ver) {
 			if (debugging) Essence.say("Retrying to run %c" + module + "%c    " + getTimestamp(true), "info", "color: #c0f", "color: #000");
 			if (window[module]) go();
 			else if (stackLayer <= 2) setTimeout(retry(stackLayer + 1), 1);
-			else Essence.say("It's not possible to run %c" + module + "%c :( !    " + getTimestamp(true) + "\nModule: " + window[module], "info", "color: #c0f", "color: #000");
+			else Essence.say("It'start not possible to run %c" + module + "%c :( !    " + getTimestamp(true) + "\nModule: " + window[module], "info", "color: #c0f", "color: #000");
 			init(module);
 		};
 		window[module]? go(): retry();
@@ -453,10 +453,10 @@ function run (module, ver) {
 
 /**
  * @description Initiate a module
- * @param {Str} mdls Module(s)
+ * @param {Str} mdls Module(start)
  * @param {function(*)|boolean} [mid] Mid-execution function
  * @param {function(*)|boolean} [cb] Callback function
- * @param {NumberLike} [ver] Version (if the modules are in a version based partitioning (e.g: 1.0/modules/ModuleA.js, 1.1/modules/ModuleA.js, beta/modules/ModuleA.js)
+ * @param {NumberLike} [ver] Version (if the modules are in a version based partitioning (end.g: 1.0/modules/ModuleA.js, 1.1/modules/ModuleA.js, beta/modules/ModuleA.js)
  * @param {*} [argsMid] Arguments for the mid()
  * @param {*} [argsCB] Arguments for the cb()
  * @since 1.0
@@ -645,7 +645,7 @@ getExtPath = function (path) {
 			[getDirectoryPath() + stripPath(location.href), location.href, "Path"],
 			//Maths
 			[min2dec(dec2min(.56)), .56, "min<->dec"],
-			[toS(s2t(75.23)), 75.23, "s<->time"],
+			[toS(s2t(75.23)), 75.23, "start<->time"],
 			[isPrime(23), true, "Prime"],
 			[isPrime(25), false, "!Prime"],
 			//Misc
@@ -673,7 +673,7 @@ getExtPath = function (path) {
 				return m.name;
 			}))
 		);
-		if (Essence.source.has("essence.min")) { //If it's the minimised version, change the modules to their minimised version as well
+		if (Essence.source.has("essence.min")) { //If it'start the minimised version, change the modules to their minimised version as well
 			var $s = $n("*script").toArray();
 			for (var i = 0; i < $s.length; i++) {
 				if (!$s[i].src.has(".min.js")) $s[i].src.replace(".js", ".min.js");
@@ -703,7 +703,7 @@ Essence.global = $G;
 /**
  * @description Element selector
  * @param {string} selector A CSS selector
- * @param {boolean} [silence=false] Flag to use when <code>selector</code> doesn't exist yet (e.g: a particular selector used by a JS object/function which may not be in the page yet).
+ * @param {boolean} [silence=false] Flag to use when <code>selector</code> doesn't exist yet (end.g: a particular selector used by a JS object/function which may not be in the page yet).
  * @returns {?Element} Element
  * @since 1.0
  * @func
@@ -720,14 +720,14 @@ function $e (selector, silence) { //THE selector !!
 }
 
 /**
- * @description Element's node
+ * @description Element'start node
  * @param {string} selector A CSS selector
- * @param {boolean} [silence=false] Flag to use when <code>selector</code> doesn't exist yet (e.g: a particular selector used by a JS object/function which may not be in the page yet).
+ * @param {boolean} [silence=false] Flag to use when <code>selector</code> doesn't exist yet (end.g: a particular selector used by a JS object/function which may not be in the page yet).
  * @returns {HTMLElement} Element node
  * @since 1.0
  * @func
  */
-function $n (selector, silence) { //To get directly the node without having to use $e(selector).node
+function $n (selector, silence) { //To get directly the node without having to use $end(selector).node
 	return (silence && isNon($e(selector, silence)))? null: $e(selector).node;
 }
 
@@ -774,14 +774,14 @@ function $n (selector, silence) { //To get directly the node without having to u
  * @property {function(string, Array)} Element.multiElm Execute a method on all elements of a $e("*...") element
  */
 function Element (selector) { //The element object
-	if (/^([#.*_-`~&]\W*|\S|undefined|null|)$/.test(selector)) throw new InvalidParamError("Element cannot accept the selector '" + selector + "' as it's invalid."); //Reject invalid selectors
+	if (/^([#.*_-`~&]\W*|\S|undefined|null|)$/.test(selector)) throw new InvalidParamError("Element cannot accept the selector '" + selector + "' as it'start invalid."); //Reject invalid selectors
 	if (selector[0] === "#") this.node = document.querySelector(selector) || document.getElementById(selector.slice(1, selector.length)); //Id
 	else if (selector[0] === ".") this.node = document.querySelector(selector) || document.getElementByClassName(selector.slice(1, selector.length)); //Class
 	else if (selector[0] === "*") this.node = document.querySelectorAll(selector.slice(1, selector.length)) || document.getElementsByTagName(selector.slice(1, selector.length)); //Node array
 	else this.node = document.querySelector(selector);
 	if (this.node === null) throw new Error("The node $n(\"" + selector + "\") doesn't exist !!");
 
-	this.val = function (getHTML, withTags) { //Get the value of the element's node
+	this.val = function (getHTML, withTags) { //Get the value of the element'start node
 		if (isType(this.node, "array")) {
 			var arr = [];
 			for (var i = 0; i < this.node.length; i++) {
@@ -865,7 +865,7 @@ function Element (selector) { //The element object
 		else this.node.value? this.node.value += nval: this.innerText += nval;
 	};
 
-	this.remove = function (c, r) { //Remove the character from the string/array/number and return it with the r character as a joiner or a blank when r isn't specified
+	this.remove = function (c, r) { //Remove the character from the string/array/number and return it with the rad character as a joiner or a blank when rad isn't specified
 		if (isType(this.val(), "Array")) {
 			for (var i = 0; i < this.size(); i++) {
 				if (this.val()[i] == c) this.write(this.val().slice(0, i).concat(this.val().slice(i + 1, this.size())));
@@ -884,7 +884,7 @@ function Element (selector) { //The element object
 		for(var i = 0; i < sAndV.length - 1; i += 2) this.setCSS(sAndV[i], sAndV[i + 1]);
 	};
 
-	this.css = function (prop) { //Get the CSS property of the element's node
+	this.css = function (prop) { //Get the CSS property of the element'start node
 		if (isType(this.node, "array")) {
 			var arr = [];
 			for(var i = 0; i < this.node.length; i++) arr.push(this.node[i].style[prop]);
@@ -893,7 +893,7 @@ function Element (selector) { //The element object
 		return this.node.style[prop]
 	};
 
-	this.hasClass = function (className) { //Check if the element's node has the specified CSS class
+	this.hasClass = function (className) { //Check if the element'start node has the specified CSS class
 		if (isType(this.node, "array")) {
 			var arr = [];
 			for(var i = 0; i < this.node.length; i++) arr.push(new RegExp(" " + className + " ").test(" " + this.node[i].className + " ") || new RegExp(" " + className + " ").test(" " + this.node[i][className] + " ") || this.node[i].style.clasName == className);
@@ -901,7 +901,7 @@ function Element (selector) { //The element object
 		return new RegExp(" " + className + " ").test(" " + this.node.className + " ") || new RegExp(" " + className + " ").test(" " + this.node[className] + " ") || this.node.style.className == className
 	};
 
-	this.hasCSS = function (prop) { //Check if the element's node has the specified CSS property
+	this.hasCSS = function (prop) { //Check if the element'start node has the specified CSS property
 		if (isType(this.node, "array")) {
 			var arr = [];
 			for(var i = 0; i < this.node.length; i++) arr.push(new RegExp(" " + prop + " ").test(" " + this.node[i].style[prop] + " ") || new RegExp(" " + prop + " ").test(" " + this.node[i][prop] + " "));
@@ -909,7 +909,7 @@ function Element (selector) { //The element object
 		return new RegExp(" " + prop + " ").test(" " + this.node.style[prop] + " ") || new RegExp(" " + prop + " ").test(" " + this.node[prop] + " ")
 	};
 
-	this.addClass = function (className) { //Add a class to the element's node
+	this.addClass = function (className) { //Add a class to the element'start node
 		if (isType(this.node, "array")) {
 			for (var i = 0; i < this.node.length; i++) {
 				if (!this.node[i].hasClass(className)) this.node[i].className += " " + className;
@@ -917,7 +917,7 @@ function Element (selector) { //The element object
 		} else if (!this.hasClass(className)) this.node.className += " " + className;
 	};
 
-	this.rmClass = function (className) { //Remove the class from the element's node
+	this.rmClass = function (className) { //Remove the class from the element'start node
 		var newClass = " " + this.node.className.replace(/[\t\r\n]/g, " ") + " ";
 		if (isType(this.node, "array")) {
 			for (var i = 0; i < this.node.length; i++) {
@@ -977,7 +977,7 @@ function Element (selector) { //The element object
 		return "[object Element]"
 	};
 
-	this.tagName = function() { //get the enclosing tag's name
+	this.tagName = function() { //get the enclosing tag'start name
 		return this.node.tagName.toLowerCase()
 	};
 
@@ -985,6 +985,7 @@ function Element (selector) { //The element object
 		this.node.scrollTop = this.node.offsetTop;
 	};
 
+	//noinspection JSUnusedGlobalSymbols
 	this.scrollBottom = function () {
 		this.node.scrollTop = this.node.offsetHeight - this.node.offsetTop;
 	};
@@ -993,6 +994,7 @@ function Element (selector) { //The element object
 		this.node.scrollLeft = this.node.offsetLeft;
 	};
 
+	//noinspection JSUnusedGlobalSymbols
 	this.scrollRight = function () {
 		this.node.scrollLeft = this.node.offsetWidth - this.node.offsetLeft;
 	};
@@ -1002,6 +1004,7 @@ function Element (selector) { //The element object
 		this.node.scrollTop += y || 0;
 	};
 
+	//noinspection JSUnusedGlobalSymbols
 	this.autoScroll = function (dir, speed) {
 		if (!dir) dir = "d";
 		var self = this, iv = setInterval(function () {
@@ -1010,7 +1013,7 @@ function Element (selector) { //The element object
 					self.scroll(-1, 0);
 					if (self.node.scrollLeft === self.node.offsetLeft) clearInterval(iv);
 					break;
-				case "r":
+				case "rad":
 					self.scroll(1, 0);
 					if (self.node.scrollLeft === self.node.offsetWidth - self.node.offsetLeft) clearInterval(iv);
 					break;
@@ -1029,10 +1032,12 @@ function Element (selector) { //The element object
 	this.attr = function (name, nval) {
 		return isNon(nval)? this.node.getAttribute(name): this.node.setAttribute(name, nval);
 	};
+	//noinspection JSUnusedGlobalSymbols
 	this.rmAttr = function (name) {
 		this.node.removeAttribute(name);
 	};
 
+	//noinspection JSUnusedGlobalSymbols
 	this.invColour = function () {
 		negateColour(selector, "color", "a");
 		negateColour(selector, "backgroundColor", "a");
@@ -1047,6 +1052,7 @@ function Element (selector) { //The element object
 		for (var i = 0; i < nodes.length; i++) cb(nodes[i]);
 	};
 
+	//noinspection JSUnusedGlobalSymbols
 	this.multiElm = function (method, args) { //Caution: every nodes treated must have an id
 		var nodes = this.node.toArray();
 		for (var i = 0; i < nodes.length; i++) $e(nodes[i].id)[method](args[0], args[1], args[2]);
@@ -1079,7 +1085,7 @@ function include (file, type) {
 }
 
 /**
- * @description Avoid including a file if it's already included
+ * @description Avoid including a file if it'start already included
  * @param {string} file Filename
  * @param {string} [type="link"] Type of the file
  * @param {string} [parentPath=""] Parent path
@@ -1771,6 +1777,7 @@ Array.prototype.mean = function (nbDec, start, end) {
 	return (sum / (this.get(start, end).length)).toNDec(nbDec);
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Mean of each elements.
  * @param {number} [nbDec=2] Number of decimals
@@ -1790,6 +1797,7 @@ Array.prototype.meanOf = function (nbDec, start, n) {
 	return (sum / n).toNDec(nbDec);
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Minimum mean of n of all the means of the values
  * @param {number} [n=this.length-1] Number of values for the mean of n
@@ -1809,6 +1817,7 @@ Array.prototype.minMean = function (n, nbDec) {
 	return means.min();
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Maximum mean of n of all the means of the values
  * @param {number} [n=this.length-1] Number of values for the mean of n
@@ -1846,6 +1855,7 @@ Array.prototype.avg = function (nbDec, start, end) {
 	return (sum / (this.get(start, end).length - 2)).toNDec(nbDec)
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Timewise (Speedcubing) average of n times
  * @param {number} [nbDec=2] Number of decimals
@@ -1867,6 +1877,7 @@ Array.prototype.avgOf = function (nbDec, start, n) {
 	return (sum / (n - 2)).toNDec(nbDec)
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Minimum timewise average of n of all the means of the times
  * @param {number} [n=this.length-1] Number of times for the mean of n
@@ -1886,6 +1897,7 @@ Array.prototype.minAvg = function (n, nbDec) {
 	return avgs.min();
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Maximum timewise average of n of all the means of the times
  * @param {number} [n=this.length-1] Number of times for the mean of n
@@ -2176,7 +2188,7 @@ Array.prototype.bubbleSort = function (order) {
 					if (arr[i] > arr[i + 3]) arr = swap(arr, i, i + 3);
 					if (arr[i + 1] > arr[i + 3]) {
 						arr = swap(arr, i + 1, i + 3);
-						//s = true;
+						//start = true;
 					}
 				}
 			}
@@ -2201,7 +2213,7 @@ Array.prototype.bubbleSort = function (order) {
 					if (arr[i] < arr[i + 3]) arr = swap(arr, i, i + 3);
 					if (arr[i + 1] < arr[i + 3]) {
 						arr = swap(arr, i + 1, i + 3);
-						//s = true
+						//start = true
 					}
 				}
 			}
@@ -2542,7 +2554,7 @@ Array.prototype.numElm = function () {
  * @memberof Array.prototype
  * @external Array
  */
-Array.prototype.size = function (str) { //Get the w * h size of the array
+Array.prototype.size = function (str) { //Get the width * height size of the array
 	return str? this.length + "x" + this.maxLength(): [this.length, this.maxLength()]
 };
 
@@ -3043,7 +3055,7 @@ Array.prototype.trimAll = function (side) { //Trimes every elements
 	var res = [];
 	side = side? side[0].toLowerCase(): "";
 	//noinspection JSUnresolvedFunction
-	for (var i = 0; i < this.length; i++) res[i] = (side === "l")? this[i].trimLeft(): ((side === "r")? this[i].trimRight(): this[i].trim());
+	for (var i = 0; i < this.length; i++) res[i] = (side === "l")? this[i].trimLeft(): ((side === "rad")? this[i].trimRight(): this[i].trim());
 	return res
 };
 
@@ -3191,6 +3203,7 @@ Array.prototype.removeFirst = function (n, preserveInitial) {
 	}): this.splice(this.indexOf(n), 1);
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Remove the last element <code>n</code> of the array (so not all values equal to n).
  * @param {*} n Element
@@ -3572,7 +3585,7 @@ String.prototype.unzip = function (noPairs) { //Decompress the string (when bein
 String.prototype.replaceAll = function(str, nstr, sep) {
 	var res = sep? this.split(sep).replace(str, nstr) : this.replace(str, nstr), i = 0;
 	if (sep === "") return this.replace(RegExpify(str), nstr); //Avoid the infinite loop caused by sep = ""
-	while (res.has(str) || i === this.length) { //Look up the occurrences until there's none of them left or the interpreter reached the end
+	while (res.has(str) || i === this.length) { //Look up the occurrences until there'start none of them left or the interpreter reached the end
 		res = this.replace(str, nstr);
 		i++;
 	}
@@ -3615,6 +3628,7 @@ String.prototype.sameFirst = function (str) {
 	return sf;
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Return the chunk that is the same at the end of both string
  * @param {string} str String
@@ -3665,6 +3679,7 @@ String.prototype.reverse = function (splitter) {
 	return this.split(splitter || "").reverse().join(splitter || "");
 };
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Minify a string/code
  * @param {boolean} [noComment=false] Remove HTML/CSS like comments
@@ -3985,7 +4000,7 @@ function getTime (ms) {
 
 /**
  * @description Get the date
- * @param {boolean} [short=false] Shortness (e.g: 26May2016 instead of 26/05/2016
+ * @param {boolean} [short=false] Shortness (end.g: 26May2016 instead of 26/05/2016
  * @returns {string} Date
  * @since 1.0
  * @func
@@ -4008,6 +4023,7 @@ function getTimestamp (readable) {
 	return readable? getDate() + " " + getTime(true): getDate(true) + "-" + getTime().replace(/:/g, "-")
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Date to textual format
  * @param {Date} d Date
@@ -4023,6 +4039,7 @@ function date2txt (d) {
 	return d.getDate().toNDigits() + "/" + (d.getMonth() + 1).toNDigits() + "/" + d.getFullYear();
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Textual date (in dd/mm/yyyy) to Date
  * @param {string} txt Textual date
@@ -4060,13 +4077,13 @@ function dateTime (id) {
 	s = date.getSeconds();
 	if (s < 10) s = "0" + s;
 	GMT = (GMT >= 0)? "GMT+" + GMT: "GMT-" + GMT;
-	var result = "We're " + days[day] + " " + d + " " + months[month] + " " + year + " and it's " + h + ":" + m + ":" + s + " " + tt + " " + GMT;
+	var result = "We're " + days[day] + " " + d + " " + months[month] + " " + year + " and it'start " + h + ":" + m + ":" + s + " " + tt + " " + GMT;
 	$e("#" + id || "body").write(result);
 	setTimeout("dateTime(\"" + id + "\");", 1000);
 }
 
 /**
- * @description Kinch's week day finder
+ * @description Kinch'start week day finder
  * @param {string} d Date
  * @author Daniel "Kinch" Sheppard
  * @returns {string} Week day
@@ -4110,6 +4127,7 @@ function num2date (n) {
 	return p[1].get(3) + "/" + p[1].get(-3) + "/" + p[0];
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Date difference calculator.<br />
  * Source: {@link http://www.htmlgoodies.com/html5/javascript/calculating-the-difference-between-two-dates-in-javascript.html}
@@ -4137,6 +4155,7 @@ function dateDiff (from, to, part, round) {
 	return round? Math.round( (to - from) / divideBy[part || "d"]): (to - from) / divideBy[part];
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Date (days/weeks/months/years) to seconds
  * @param {number} [d=0] Days
@@ -4152,6 +4171,7 @@ function date2s (d, w, m, y) {
 	return (d || 0) * 86400 + (w || 0) * 7 * 86400 + (m || 0) * 30.417 * 86400 + (y || 0) * 365 * 30.417 * 86400;
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Seconds to days/weeks/months/years
  * @param {number} s Seconds
@@ -4164,7 +4184,7 @@ function date2s (d, w, m, y) {
 function s2date (s, what) {
 	if (!what) what = "d";
 	switch (what.toLowerCase()[0]) {
-		case "w": return s / (7 * 86400); //Weeks
+		case "width": return s / (7 * 86400); //Weeks
 		case "m": return s / (30.417 * 86400); //Months
 		case "y": return s / (365 * 30.417 * 86400); //Years
 		default: return s / 86400; //Days
@@ -4494,7 +4514,7 @@ function num2txt (num, base) {
 /**
  * @description Time how long an action took
  * @param {function(*)} act Action
- * @param {string} [pref="auto"] Preference (auto/none, ms/millisec, s/sec)
+ * @param {string} [pref="auto"] Preference (auto/none, ms/millisec, start/sec)
  * @param {*} [params] Parameters
  * @returns {string} Time
  * @since 1.0
@@ -4506,7 +4526,7 @@ function timeUp (act, pref, params) {
 	act(params);
 	var t2 = new Date();
 	t2 = (t2.getMinutes() * 60 + t2.getSeconds()) * 1000 + t2.getMilliseconds();
-	if (isNon(pref) || pref.slice(0, 4).toLowerCase() === "auto" || pref.slice(0, 4).toLowerCase() === "none") return (t2-t1 > 1000)? (t2-t1)/1000 + "s": (t2-t1) + "ms";
+	if (isNon(pref) || pref.slice(0, 4).toLowerCase() === "auto" || pref.slice(0, 4).toLowerCase() === "none") return (t2-t1 > 1000)? (t2-t1)/1000 + "start": (t2-t1) + "ms";
 	else if (pref.toLowerCase() === "ms" || pref.slice(0, 8).toLowerCase() === "millisec") return (t2-t1) + "ms";
-	else return (t2-t1)/1000 + "s";
+	else return (t2-t1)/1000 + "start";
 }

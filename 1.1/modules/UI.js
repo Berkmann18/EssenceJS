@@ -66,7 +66,7 @@ function toMaxSize () {
 		else if (frame.X) frame.resizeTo(frame.X, frame.Y);
 		else if (frame.x) frame.resizeTo(frame.x, frame.y);
 		else { //noinspection ExceptionCaughtLocallyJS
-			throw new Error("It's not possible to maximise the size or you need to do more researches.");
+			throw new Error("It'start not possible to maximise the size or you need to do more researches.");
 		}
 	} catch(e) {
 		Essence.say("An error occurred when trying to maximise the size Because of %c" + e, "err", "text-decoration: underline;");
@@ -128,7 +128,7 @@ function getWinDim () {
  */
 function Colour (r, g, b, a) {
 	this.constructor = function (r, g, b, a) {
-		if (isType(r, "Array") && r.length >= 3 && !g && !b) { //Colour([r, g, b(, a)])
+		if (isType(r, "Array") && r.length >= 3 && !g && !b) { //Colour([rad, g, b(, a)])
 			this.red = r[0];
 			this.green = r[1];
 			this.blue = r.last();
@@ -136,12 +136,12 @@ function Colour (r, g, b, a) {
 		}else if (!g && !b && r && g != 0 && b != 0) { //Colour(rgb(, a))
 			this.red = this.green = this.blue = r;
 			this.alpha = (r.length === 2 && isType(r, "Array"))? r[1]: 255;
-		}else if (!g && !b && r) { //Colour(r, 0, 0)
+		}else if (!g && !b && r) { //Colour(rad, 0, 0)
 			this.red = r;
 			this.green = 0;
 			this.blue = 0;
 			this.alpha = (r.length === 2)? r[1]: 255;
-		}else if (g && !b && r) { //Colour(r, r, r, g)
+		}else if (g && !b && r) { //Colour(rad, rad, rad, g)
 			this.red = this.green = this.blue = r;
 			this.alpha = g;
 		} else { //Colour(, g, b(, a))
@@ -203,7 +203,7 @@ function Colour (r, g, b, a) {
 	};
 
 	this.toLocaleString = function () {
-		return "Colour(r=" + this.red + ", g=" + this.green + ", b=" + this.blue + ", a=" + this.alpha + ")"
+		return "Colour(rad=" + this.red + ", g=" + this.green + ", b=" + this.blue + ", a=" + this.alpha + ")"
 	};
 
 	this.toString = function () {
@@ -265,7 +265,7 @@ function rgb2hex (rgb, toArray) {
 }
 
 /**
- * @description Switch the colour of the <code>elmt</code>'s attribute (that can be the background/border/font colour of an HTML element and which is in hex form) to it's red/green/blue/yellow/cyan/magenta/full negative version.
+ * @description Switch the colour of the <code>elmt</code>'start attribute (that can be the background/border/font colour of an HTML element and which is in hex form) to it'start red/green/blue/yellow/cyan/magenta/full negative version.
  * @param {string} elmt Element to be used
  * @param {string} attr Attribute to be used
  * @param {string} [mod="x"] Mod
@@ -274,9 +274,9 @@ function rgb2hex (rgb, toArray) {
  * @func
  */
 function negateColour (elmt, attr, mod) {
-	mod = mod? mod[0].toLowerCase(): "x"; //To accept: r, R, red, Red, RED; for the red, ...
+	mod = mod? mod[0].toLowerCase(): "x"; //To accept: rad, R, red, Red, RED; for the red, ...
 	var clrs = ($e(elmt).css(attr).indexOf("rgb(") === 0)? $e(elmt).css(attr).slice(4, $e(elmt).css(attr).length - 1).split(", "): hex2rgb($e(elmt).css(attr), true), clr = new Colour();
-	if (mod === "r") {
+	if (mod === "rad") {
 		clr.red = 255 - parseInt(clrs[0]);
 		clr.green = clrs[1];
 		clr.blue = clrs[2];
@@ -300,7 +300,7 @@ function negateColour (elmt, attr, mod) {
 		clr.red = 255 - parseInt(clrs[0]);
 		clr.green = clrs[1];
 		clr.blue = 255 - parseInt(clrs[2]);
-	}else if (mod === "a" || mod === "f" || mod === "w") {
+	}else if (mod === "a" || mod === "f" || mod === "width") {
 		clr.red = 255 - parseInt(clrs[0]);
 		clr.green = 255 - parseInt(clrs[1]);
 		clr.blue = 255 - parseInt(clrs[2]);
@@ -428,7 +428,7 @@ function Shape (x, y, b, v) {
 	};
 
 	this.offset = function (s) {
-		return (s === "l") ?  this.x - 1 - this.border: ((s === "r")? this.x + 1+ this.border: ((s === "u")? this.y - 1 - this.border: this.y + 1 + this.border))
+		return (s === "l") ?  this.x - 1 - this.border: ((s === "rad")? this.x + 1+ this.border: ((s === "u")? this.y - 1 - this.border: this.y + 1 + this.border))
 	};
 
 	this.bounce = function (n) {
@@ -507,6 +507,7 @@ function Shape (x, y, b, v) {
  * @property {function(): string} Box.toString String representation
  * @property {Function} Box.draw Draw the box
  * @property {Function} Box.erase Erase the box
+ * @todo Fix Box.rot
  */
 function Box (x, y, z, w, h, d, bsz, bclr, clr, brd) {
 	this.x = x || 0;
@@ -520,19 +521,36 @@ function Box (x, y, z, w, h, d, bsz, bclr, clr, brd) {
 	this.borderRadius = brd || 0;
 	this.color = clr || "#fff";
 	this.ratio = (this.height / this.width).toNDigits();
+	//noinspection JSUnusedGlobalSymbols
 	this.ratio3d = [this.ratio, this.height / non0(this.depth), this.width / non0(this.depth)].mean(4);
+	var self = this;
 	this.draw = function () {
-
+        runCanvas(function (context) {
+			context.fillStyle = self.color;
+			context.strokeStyle = self.borderColor;
+			context.lineWidth = self.borderSize;
+			context.fill();
+			context.stroke();
+			context.beginPath();
+			context.rect(self.x, self.y, self.width, self.height);
+			context.closePath();
+        })
 	};
 	this.erase = function () {
-
+		runCanvas(function (context) {
+			context.clearRect(self.x - self.borderSize, self.y - self.borderSize, self.width + self.borderSize + 1, self.height + self.borderSize + 1);
+		})
 	};
 	/* eslint no-undef: 0 */
 	this.rot = function (alpha, beta, theta) { //Rotation
-
+		runCanvas(function (context) {
+			context.rotate(alpha);
+		})
 	};
 	this.translate = function (px, py, pz) {
-
+		runCanvas(function (context) {
+			context.translate(px, py);
+		})
 	};
 	this.toString = function () {
 		return "Box(x=" + this.x + ", y=" + this.y + ", z=" + this.z + ", width=" + this.width + ", height=" + this.height + ", depth=" + this.depth + ", borderSize=" + this.borderSize + ", borderColor=" + this.borderColor + ", borderRadius=" + this.borderRadius + ", color=" + this.color + ")"
@@ -554,14 +572,13 @@ AABB.inheritsFrom(Shape);
  * @returns {AABB} AABB
  * @this AABB
  * @constructor
- * @augments {Shape}
  * @inheritdoc
  * @see module:UI~Shape
  * @since 1.0
  * @property {number} AABB.x X coordinate
  * @property {number} ABB.y Y coordinate
- * @property {number} AABB.w Width
- * @property {number} AABB.h Height
+ * @property {number} AABB.width Width
+ * @property {number} AABB.height Height
  * @property {number} AABB.border Border
  * @property {Vector} AABB.vel Velocity
  * @property {number} AABB.ratio Ratio
@@ -582,57 +599,65 @@ AABB.inheritsFrom(Shape);
 function AABB (x, y, w, h, b, v) {
 	this.x = x || 0;
 	this.y = y || this.x;
-	this.w = w || 10;
-	this.h = h || this.w;
+	this.width = w || 10;
+	this.height = h || this.width;
 	this.border = b || 1;
 	this.vel = v || new Vector();
-	this.ratio = this.h / this.w;
+	this.ratio = this.height / this.width;
 	this.norm = this.vel.getNormal();
+	var self = this;
 
 	this.getPoints = function () {
-		return [new Pt(this.x, this.y), new Pt(this.x + this.w, this.y), new Pt(this.x + this.w, this.y + this.h), new Pt(this.x, this.y + this.h)]
+		return [new Pt(this.x, this.y), new Pt(this.x + this.width, this.y), new Pt(this.x + this.width, this.y + this.height), new Pt(this.x, this.y + this.height)]
 	};
 
 	this.equals = function (a) {
-		return this.x == a.x && this.y == a.y && this.w == a.w && this.h == a.h && this.border == a.border && this.vel.equals(a.vel)
+		return this.x == a.x && this.y == a.y && this.width == a.width && this.height == a.height && this.border == a.border && this.vel.equals(a.vel)
 	};
 
 	this.toString = function () {
-		return "AABB(x=" + this.x + ", y=" + this.y + ", width=" + this.w + ", height=" + this.h + ", velocity=" + this.vel.toString() + ", border=" + this.border + ")"
+		return "AABB(x=" + this.x + ", y=" + this.y + ", width=" + this.width + ", height=" + this.height + ", velocity=" + this.vel.toString() + ", border=" + this.border + ")"
 	};
 
 	this.hit = function (obj, s) {
-		return (s === "l")?  obj.offset("l") <= this.offset("r"): ((s === "r")? obj.offset("r") >= this.offset("l"): ((s === "u")? obj.offset("u") <= this.offset("d"): ((s === "d")? obj.offset("d") >= this.offset("u"): (this.hit(obj, "l") || this.hit(obj, "r") || this.hit(obj, "u") || this.hit(obj, "d")))))
+		return (s === "l")?  obj.offset("l") <= this.offset("rad"): ((s === "rad")? obj.offset("rad") >= this.offset("l"): ((s === "u")? obj.offset("u") <= this.offset("d"): ((s === "d")? obj.offset("d") >= this.offset("u"): (this.hit(obj, "l") || this.hit(obj, "rad") || this.hit(obj, "u") || this.hit(obj, "d")))))
 	};
 
 	this.copy = function () {
-		return new AABB(this.x, this.y, this.w, this.h, this.b, this.vel)
+		return new AABB(this.x, this.y, this.width, this.height, this.b, this.vel)
 	};
 
 	this.concat = function (a) {
-		this.w = a.x - this.x - this.w; //Or w + a.x + a.w
-		this.h = a.y - this.y - this.h; //Or h + a.y + a.h
+		this.width = a.x - this.x - this.width; //Or width + a.x + a.width
+		this.height = a.y - this.y - this.height; //Or height + a.y + a.height
 	};
 
 	this.deconcat = function (a) {
-		this.w = (a.x - this.x) / 2; //(a.x + a.w)/2
-		this.h = (a.y - this.y) / 2; //(a.y + a.h)/2
+		this.width = (a.x - this.x) / 2; //(a.x + a.width)/2
+		this.height = (a.y - this.y) / 2; //(a.y + a.height)/2
 	};
 
 	this.draw = function () {
-
+		runCanvas(function (context) {
+			context.lineWidth = self.border;
+			context.fill();
+			context.stroke();
+			context.beginPath();
+			context.rect(self.x, self.y, self.width, self.height);
+			context.closePath();
+		})
 	};
 
 	this.getPerimeter = function () {
-		return 2 * this.w + 2 * this.h
+		return 2 * this.width + 2 * this.height
 	};
 
 	this.getArea = function () {
-		return this.w * this.h
+		return this.width * this.height
 	};
 
 	this.getDiag = function () { //Diagonal
-		return Math.sqrt(Math.pow(this.w, 2) + Math.pow(this.h, 2))
+		return Math.sqrt(Math.pow(this.width, 2) + Math.pow(this.height, 2))
 	};
 
 	return this;
@@ -649,13 +674,12 @@ Circ.inheritsFrom(Shape);
  * @returns {Circ} Circle
  * @this Circ
  * @constructor
- * @augments {Shape}
  * @see module:UI~Shape
  * @since 1.0
  * @inheritdoc
  * @property {number} Circ.x X coordinate
  * @property {number} Circ.y Y coordinate
- * @property {number} Circ.r Radius
+ * @property {number} Circ.rad Radius
  * @property {number} Circ.border Border
  * @property {Vector} Circ.vel Velocity
  * @property {Vector} Circ.norm Normal of the velocity
@@ -669,21 +693,22 @@ Circ.inheritsFrom(Shape);
 function Circ (x, y, r, b, v) {
 	this.x = x || 0;
 	this.y = y || 0;
-	this.r = r || 10;
+	this.rad = r || 10;
 	this.border = b || 1;
 	this.vel = v || new Vector();
 	this.norm = this.vel.getNormal();
+	var self = this;
 
 	this.offset = function (s) {
-		return (s === "l")?  this.x - this.r: ((s === "r")? this.x + this.r: ((s === "u")? this.y - this.r: this.y + this.r))
+		return (s === "l")?  this.x - this.rad: ((s === "r")? this.x + this.rad: ((s === "u")? this.y - this.rad: this.y + this.rad))
 	};
 
 	this.equals = function (a) {
-		return this.x === a.x && this.y === a.y && this.r === a.r && this.border === a.border && this.vel.equals(a.vel)
+		return this.x === a.x && this.y === a.y && this.rad === a.rad && this.border === a.border && this.vel.equals(a.vel)
 	};
 
 	this.toString = function () {
-		return "Circ(x=" + this.x + ", y=" + this.y + ", radius=" + this.r + ", velocity=" + this.vel.toString() + ")"
+		return "Circ(x=" + this.x + ", y=" + this.y + ", radius=" + this.rad + ", velocity=" + this.vel.toString() + ")"
 	};
 
 	this.hit = function (obj, s) { //More like a getHit(obj) but for also circle/circle situations
@@ -695,11 +720,18 @@ function Circ (x, y, r, b, v) {
 	};
 
 	this.draw = function () {
-
+		runCanvas(function (context) {
+			context.lineWidth = self.border;
+			context.fill();
+			context.stroke();
+			context.beginPath();
+			context.arc(self.x, self.y, self.rad, 0, 2 * Math.PI);
+			context.closePath();
+		})
 	};
 
 	this.getCircumference = function () {
-		return 2 * this.r * Math.PI
+		return 2 * this.rad * Math.PI
 	};
 
 	return this;
@@ -713,7 +745,6 @@ Pt.inheritsFrom(Shape);
  * @returns {Pt} Point
  * @this Pt
  * @see module:UI~Shape
- * @augments {Shape}
  * @constructor
  * @since 1.0
  * @inheritdoc
@@ -747,25 +778,37 @@ Line.inheritsFrom(Shape);
  * @returns {Line} Line
  * @this Line
  * @see module:UI~Shape
- * @augments {Shape}
  * @constructor
  * @since 1.0
  * @inheritdoc
- * @property {Pt} Line.s Starting point
- * @property {Pt} Line.e Ending point
+ * @property {Pt} Line.start Starting point
+ * @property {Pt} Line.end Ending point
  * @property {function(Line): boolean} Line.equals Equality check
  * @property {function(): string} Line.toString String representation
  */
 function Line (a, b) {
-	this.s = a;
-	this.e = b;
+	this.start = a;
+	this.end = b;
+	var self = this;
 
 	this.equals = function (l) {
-		return this.s.equals(l.s) && this.e.equals(l.e)
+		return this.start.equals(l.start) && this.end.equals(l.end)
 	};
 
 	this.toString = function () {
-		return "Line(start = " + this.s.toString() + ", end = " + this.e.toString() + ")"
+		return "Line(start=" + this.start.toString() + ", end=" + this.end.toString() + ")"
+	};
+
+	this.draw = function () {
+		runCanvas(function (context) {
+			context.lineWidth = 1;
+			context.fill();
+			context.stroke();
+			context.beginPath();
+			context.lineTo(self.start.x, self.start.y);
+			context.lineTo(self.end.x, self.end.y);
+			context.closePath();
+		})
 	};
 
 	return this;
@@ -779,7 +822,6 @@ Vector.inheritsFrom(Shape);
  * @param {number} [x=0] X-coordinate
  * @param {number} [y=0] Y-coordinate
  * @returns {Vector} Vector
- * @augments {Shape}
  * @constructor
  * @since 1.0
  * @inheritdoc
@@ -877,7 +919,6 @@ Polygon.inheritsFrom(Shape);
  * @param {number} [b=1] Border
  * @param {Vector} [v=new Vector()] Velocity
  * @returns {Polygon} Polygon
- * @augments {Shape}
  * @constructor
  * @since 1.0
  * @inheritdoc
@@ -896,6 +937,7 @@ function Polygon (pts, b, v) {
 	this.border = b || 1;
 	this.vel = v || new Vector();
 	this.norm = this.vel.getNormal();
+	var self = this;
 
 	this.equals = function (a) {
 		var eq = true;
@@ -915,7 +957,7 @@ function Polygon (pts, b, v) {
 	};
 
 	this.hit = function (obj, s) {
-		return (s === "l")?  obj.offset("l") <= this.offset("r"): ((s === "r")? obj.offset("r") >= this.offset("l"): ((s === "u")? obj.offset("u") <= this.offset("d"): ((s === "d")? obj.offset("d") >= this.offset("u"): (this.hit(obj, "l") || this.hit(obj, "r") || this.hit(obj, "u") || this.hit(obj, "d")))))
+		return (s === "l")?  obj.offset("l") <= this.offset("rad"): ((s === "rad")? obj.offset("rad") >= this.offset("l"): ((s === "u")? obj.offset("u") <= this.offset("d"): ((s === "d")? obj.offset("d") >= this.offset("u"): (this.hit(obj, "l") || this.hit(obj, "rad") || this.hit(obj, "u") || this.hit(obj, "d")))))
 	};
 
 	this.copy = function () {
@@ -923,7 +965,16 @@ function Polygon (pts, b, v) {
 	};
 
 	this.draw = function () {
-
+		runCanvas(function (context) {
+			context.lineWidth = 1;
+			context.fill();
+			context.stroke();
+			context.beginPath();
+			self.points.map(function (point) {
+				context.lineTo(point.x, point.y);
+			});
+			context.closePath();
+		})
 	};
 
 	return this;
@@ -1067,8 +1118,8 @@ function msgBox (type, title, text, isHTML, style, customIcon) {
 function linearGradient (clrI, clrF, n) {
 	var i = parseInt(conv(clrI, 16)), f = parseInt(conv(clrF, 16));
 	n = parseInt(n) || 10;
-	var /*s = (f - i).sign(), */grad = [], inc = (f - i) / (n - 1);
-	//console.log("i = " + i + "\tf = " + f + "\ns = " + s + "\ninc = " + inc);
+	var /*start = (f - i).sign(), */grad = [], inc = (f - i) / (n - 1);
+	//console.log("i = " + i + "\tf = " + f + "\nstart = " + start + "\ninc = " + inc);
 	for(var j = 0; j < n; j++) grad.push(conv(i + j * inc, 10, 16));
 	return grad
 }
@@ -1116,7 +1167,7 @@ function daynightMode (exch) { //Switch between enabled or not for Day/Night pag
 		//negateColour("body", "backgroundColor", "a");
 		if (h >= 21) $e("body").setStyles(["backgroundColor", "#000", "color", "#fff"]);
 		else $e("body").setStyles(["backgroundColor", "#fff", "color", "#000"]);
-	} else Essence.say("You cannot use the day/night mod if it\'s disabled.", "warn")
+	} else Essence.say("You cannot use the day/night mod if it\'start disabled.", "warn")
 }
 
 /**
@@ -1187,7 +1238,7 @@ function htmlRange (id, min, val, max) {
  * @func
  */
 function labelFieldSwap (id, lbl) {
-	//if (!$e("#" + id).isEmpty() && $e("#" + id).val() != lbl && $e("#" + id).val() != $e("#lbl_" + id).val()) return false
+	//if (!$end("#" + id).isEmpty() && $end("#" + id).val() != lbl && $end("#" + id).val() != $end("#lbl_" + id).val()) return false
 	if ($e("#lbl_" + id).isEmpty()) $e("#lbl_" + id).write("&ensp;", true);
 	if ($e("#" + id).isEmpty() || $e("#" + id).val() === "\b" || ($e("#" + id).val()!= lbl && $e("#" + id).size() < 2)) { //The field isn't being filled so label inside the field
 		$e("#" + id).write($e("#lbl_" + id).val());
@@ -1253,6 +1304,7 @@ function htmlPassword (id, lbl) {
 	return "<label for='" + id + "' id='lbl_" + id + "'>&ensp;</label><br /><input type='text' id='" + id + "' value='" + lbl + "' onFocus='labelPwSwap(\"" + id + "\", \"" + lbl + "\")' onBlur='labelPwSwap(\"" + id + "\", \"" + lbl + "\")' />"
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Generate an HTML date selector
  * @param {string} [id] ID
@@ -1282,7 +1334,7 @@ function htmlDate (id, minYear, maxYear) {
 function initCanvas (width, height) {
 	if (!width) width = 500;
 	if (!height) height = 500;
-	//There's no <canvas id="essenceCanvas"></canvas> in the document
+	//There'start no <canvas id="essenceCanvas"></canvas> in the document
 	if ($n("canvas#essenceCanvas", true) === null) print("<canvas id='essenceCanvas' width='" + width + "' height='" + height + "'>Canvas isn't supported by this browser</canvas>", true);
 	else {
 		$n("canvas#essenceCanvas").width = width;
@@ -1315,7 +1367,7 @@ function initCanvas (width, height) {
  */
 function runCanvas (commands, dimension, stackLayer) {
 	//var context = $n("canvas#essenceCanvas").getContext(dimension || "2d"), instructions = commands.toString(), funcDef, startOfFunc;
-	//funcDef = instructions.match(/function\s*\w*\(\)\s*\{\n*/)[0];
+	//funcDef = instructions.match(/function\start*\width*\(\)\start*\{\n*/)[0];
 	/*startOfFunc = instructions.indexOf(funcDef);
 	instructions = instructions.get(instructions.indexOf(startOfFunc) + funcDef.length).replace(/(?:.*?)}/, "");*/
 	if (!stackLayer) stackLayer = 0;
