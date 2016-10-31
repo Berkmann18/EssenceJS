@@ -399,8 +399,8 @@ function Node (pl, nx, pv) {
 
 /**
  * @description Path node
- * @param {number} g Current total cost
- * @param {number} h Current total heuristic
+ * @param {number} [g=0] Current total cost
+ * @param {number} [h=0] Current total heuristic
  * @param {number[]} [pos=[0, 0]] 2D position of the node
  * @returns {PathNode} Path node
  * @this PathNode
@@ -417,8 +417,8 @@ function Node (pl, nx, pv) {
  */
 function PathNode (g, h, pos) { //Nodes for path finding algs
 	this.g = g || 0;
-	this.height = h || 0;
-	this.f = this.g + this.height || 1;
+	this.h = h || 0;
+	this.f = this.g + this.h || 1;
 	this.pos = pos || [0, 0];
 	this.parent = null;
 
@@ -431,7 +431,7 @@ function PathNode (g, h, pos) { //Nodes for path finding algs
 	};
 
 	this.toString = function () {
-		return "PathNode(f=" + this.f + ", pos=[" + this.pos.toStr(true) + "], parent=" + this.parent.toString() + ")";
+		return "PathNode(g=" + this.g + "h=" + this.h + "f=" + this.f + ", pos=[" + this.pos.toStr(true) + "], parent=" + (this.parent === null? null: this.parent.toString()) + ")";
 	};
 	return this;
 }
@@ -1331,7 +1331,7 @@ function QueueList () {
  * @func
  */
 function Astar (start, goal) {
-	//PathNode.f (score) = g (sum of all cost to get at this point) + height (heuristic: estimate of what it will take to get the goal)
+	//PathNode.f (score) = g (sum of all cost to get at this point) + h (heuristic: estimate of what it will take to get the goal)
 	var nodeGoal = goal, nodeCurrent, _h;
 	var openList = [start], closedList = [];
 	while (openList.length > 0) {
@@ -1369,7 +1369,7 @@ function Astar (start, goal) {
 					closedList.push(nodeCurrent);
 				}
 			}
-			throw "Solution found ! With height=" + _h;
+			throw "Solution found ! With h=" + _h;
 		}
 	}
 }

@@ -2,13 +2,13 @@
 + 
 
 ## [essence](essence.js)
-+ ^ lookfor now support any object types, Array.quickSort()
++
 
 ## [Ajax](modules/Ajax.js)
 + 
 
 ## [DataStruct](modules/DataStruct.js)
-+ ^ PathNode, A(), reconPath()
++ ^ PathNode.toString()
 
 ## [DOM](modules/DOM.js)
 + 
@@ -20,13 +20,13 @@
 + 
 
 ## [Misc](modules/Misc.js)
-+ 
++ \+ Calendar
 
 ## [Security](modules/Security.js)
 + 
 
 ## [UI](modules/UI.js)
-+ \+ initCanvas(), runCanvas(), Box.draw(), Box.erase(), Circ.draw(), Line.draw(), Polygon.draw()
++ 
 
 ## [Web](modules/Web.js)
 + 

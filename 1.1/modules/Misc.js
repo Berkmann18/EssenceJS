@@ -1061,3 +1061,56 @@ function clearEnv () {
 	$e("body").write("");
 	console.clear();
 }
+
+var Calendar = {
+	element: $e("#calendar", true),
+	leapYear: function (year) {
+		return year % 4 == 0
+	},
+	getDays: function (month, year) {
+		return [31, (this.leapYear(year)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
+	},
+	getMonthName: function (month) {
+		return ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][month]
+	},
+	set: function () {
+		var now = new Date();
+		var year = now.getYear(), month = now.getMonth(), date = now.getDate();
+		if (year < 1000) year += 1900;
+		var monthName = this.getMonthName(month), days = this.getDays(month, year);
+
+		var firstDayInstance = new Date(year, month, 1);
+		var firsDay = firstDayInstance.getDay();
+		if (this.element === null) {
+			print("<div id='calendar'></div>", true);
+			this.element = $e("#calendar");
+		}
+		this.draw(firsDay + 1, days, date, monthName, year)
+	},
+	draw: function (firstDay, lastDay, date, monthName, year) {
+		var text = "<table cellspacing=4><th colspan=7>" + monthName + " " + year + "</th>", weekDay = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], digit = 1, curCell = 1;
+
+		text += "<tr align='center' valign='center'>";
+		for (var dayNum = 0; dayNum < 7; dayNum++) text += "<td>" + weekDay[dayNum] + "</td>";
+		text += "</tr>";
+
+		for (var row = 1; row <= Math.ceil((firstDay + firstDay - 1) / 7); row++) {
+			text += "<tr align='right' valign='top'>";
+			for (var col = 1; col <= 7; col++) {
+				if (digit > firstDay) break;
+				if (curCell < firstDay) {
+					text += "<td></td>";
+					curCell++
+				} else {
+					if (digit === date) { //Current cell represent today's date
+						text += "<td><span style='color: red'>" + digit + "</span></td>";
+					} else text += "<td>" + digit + "</td>";
+					digit++;
+				}
+			}
+			text += "</tr>";
+		}
+		text += "</table>";
+		this.element.write(text, true);
+	}
+};

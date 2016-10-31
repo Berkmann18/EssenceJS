@@ -9,10 +9,11 @@
 -   Test DES() (see [Security])
 -   Add an URL (or any good) pipeline to BuddyGit to send updates to the github website for each releases.
 -   Add tutorials and a demo.
+-   Add edges (object that could be used to show visual connections between nodes) (see [DataStruct])
+-   Test A in AlgTest.html
 
 # To add:
 -   Having a dynamic real-time table/update (e.g: news feeds)
--	Adding the Download bar and task progress list
 -	Having the real-time chat feature as well as the console one
 -	Currency conversion
 -	Calendar

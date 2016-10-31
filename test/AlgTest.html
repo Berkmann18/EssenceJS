@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Algorithm test</title>
+    <meta charset="UTF-8"/>
+    <meta name="author" content="Maximilian Berkmann"/>
+    <meta name="description" content=""/>
+    <meta name="pragma" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="keywords" content="Algorithm, test, EssenceJS, alg, A*"/>
+    <script type="text/javascript" src="../1.1/essence.js"></script>
+    <script type="text/javascript" defer>
+        var nodeSet = [];
+        function Init(stackLayer) {
+            if (typeof Essence !== "undefined") {
+                nodeSet = [new PathNode(0, 0, [10, 10]), new PathNode(1, 0, [200, 100]), new PathNode(2, 0, [100, 150]), new PathNode(1, 0, [100, 300]), new PathNode(3, 0, [200, 240]), new PathNode(2, 0, [220, 290])];
+                for (var i = 1; i < nodeSet.length; i++) nodeSet[i].parent = nodeSet[i - 1];
+                console.log(drawPathNode(nodeSet));
+                console.log(A(nodeSet[0], nodeSet.last(), nodeSet));
+            } else if (stackLayer > 3) {
+                console.log("Wow, hold on ! %d stack layers down !!", stackLayer);
+            } else {
+                console.warn("EssenceJS is not currently available !");
+                Init(stackLayer ? stackLayer + 1 : 1);
+            }
+        }
+
+        function drawPathNode (nodes) { //draw the path node on the screen
+            initCanvas(1e3, 1e3);
+            var nodeObj = nodes.map(function (node) {
+                return new Circ(node.pos[0], node.pos[1], 5);
+            });
+            nodeObj.map(function (circle) {
+                circle.draw();
+            });
+            return nodeObj;
+        }
+    </script>
+</head>
+<body onpageshow="Init()">
+
+</body>
+</html>

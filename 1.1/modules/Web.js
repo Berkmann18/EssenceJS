@@ -1363,27 +1363,27 @@ function IDE (lang, edt, prev, ps, dbg, tb) {
 $G["i"] = 0;
 /**
  * @description Loading bar
- * @param {string} [dlb="#dlb"] ID of the container
+ * @param {string} [loadbar="#dlb"] ID of the container
  * @param {Function} cb Callback
  * @param {number} [delay=30] Delay (in ms)
  * @returns {undefined}
  * @since 1.0
  * @func
  */
-function loadBar (dlb, cb, delay) {
-	if (!dlb) dlb = "#dlb";
-	Essence.addCSS(dlb + " {border: none;background: #0F0;max-width: 200px;text-align: center;font-size: 28px;padding: 2px;}#bar {border: 1px ridge #CCC;text-align: center;width: 201px;});");
+function loadBar (loadbar, cb, delay) {
+	if (!loadbar) loadbar = "#lb";
+	Essence.addCSS(loadbar + " {border: none;background: #0F0;max-width: 200px;text-align: center;font-size: 28px;padding: 2px;}#bar {border: 1px ridge #CCC;text-align: center;width: 201px;});");
 	if (!delay) delay = 30;
-	$e(dlb).setCSS("position", "relative");
-	$e(dlb).setCSS("width", $e(dlb).css("width") + $G["i"]);
+	$e(loadbar).setCSS("position", "relative");
+	$e(loadbar).setCSS("width", $e(loadbar).css("width") + $G.i);
 	//or use a progress tag
-	$e(dlb).write($G["i"] + "%");
-	$G["i"]++;
-	$G["timer"] = setTimeout("loadBar(" + dlb + ", " + cb + ", " + delay + ")", delay);
-	if ($G["i"] >= 100) {
+	$e(loadbar).write($G["i"] + "%");
+	$G.i++;
+	$G["timer"] = setTimeout("loadBar(" + loadbar + ", " + cb + ", " + delay + ")", delay);
+	if ($G.i >= 100) {
 		clearTimeout($G["timer"]);
-		$G["i"] = 0;
-		$e(dlb).write("Download finished");
+		$G.i = 0;
+		$e(loadbar).write("Loading finished");
 		cb();
 	}
 }
