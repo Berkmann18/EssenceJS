@@ -11,7 +11,6 @@
 -   Add tutorials and a demo.
 -   Add edges (object that could be used to show visual connections between nodes) (see [DataStruct])
 -   Test A in AlgTest.html
--   Improve the deployer by exploring git commit [options] (e.g: -a, --signedoff)
 
 # To add:
 -   Having a dynamic real-time table/update (e.g: news feeds)
