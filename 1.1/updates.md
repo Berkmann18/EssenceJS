@@ -8,7 +8,7 @@
 + 
 
 ## [DataStruct](modules/DataStruct.js)
-+ ^ PathNode.toString()
++ 
 
 ## [DOM](modules/DOM.js)
 + 
@@ -20,7 +20,7 @@
 + 
 
 ## [Misc](modules/Misc.js)
-+ \+ Calendar
++ 
 
 ## [Security](modules/Security.js)
 + 

@@ -88,6 +88,8 @@ function update {
 		git commit -F "$version/updates.md" -m "$1"
 	fi
 	git push origin $branch
+	echo -e "\n\t\tGit status\n"
+	git status
 }
 
 function download {
@@ -124,4 +126,4 @@ function log {
 	fi
 }
 
-st $1 $2 $3
+st "$1" "$2" "$3"
