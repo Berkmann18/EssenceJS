@@ -452,7 +452,7 @@ NTreeNode.inheritsFrom(TreeNode);
  * @property {function(NTreeNode)} NTreeNode.remove Child remove
  * @property {function(): NTreeNode} NTreeNode.traverse Tree traversal
  * @property {Function} NTreeNode.printInOrder Console in-order printing
- * @property {Function} NTreeNode.printPreOrder Console pre-order printing
+ * @property {Function} NTreeNode.printPreOrder Console pre-o 	rder printing
  * @property {Function} NTreeNode.printPostOrder Console post-order printing
  * @property {Function} NTreeNode.printInOrder Console in-order printing
  * @property {function(number, string, number, string)} NTreeNode.inOrder Window in-order printing
