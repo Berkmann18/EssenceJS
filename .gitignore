@@ -34,8 +34,8 @@ jspm_packages
 *.bak
 
 # IDE
-.idea
-idea
+*.idea
+idea*
 .project
 .classpath
 .settings
