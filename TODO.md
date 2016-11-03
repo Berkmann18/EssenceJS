@@ -11,12 +11,13 @@
 -   Add tutorials and a demo.
 -   Add edges (object that could be used to show visual connections between nodes) (see [DataStruct])
 -   Test A in AlgTest.html
+-   Add a commit-only deployment option with a command line editor (git ... --edit)
+-   Make a better ToDo list with a table listing everything, priorities(, assignment to x?), status (in progress, not done, to check, ...)
 
 # To add:
 -   Having a dynamic real-time table/update (e.g: news feeds)
 -	Having the real-time chat feature as well as the console one
 -	Currency conversion
--	Calendar
 -	Password checker
 -	History (event history, command history, viewed pages, ...)
 -	Colour.getColourName() (prototype already placed)
@@ -50,6 +51,7 @@
 -	Alg formula to truth table (see [Maths]~truthTable, [Maths]~getDNF and [Maths]~getCNF)
 -   PUT() and DELETE() (see [Ajax])
 -   Kruskal, Dijkstra and Prim algs (see [DataStruct])
+-	Calendar
 
 # To fix:
 -	Array.getOccurrences() (see [essence]~Array.getOccurrences)
