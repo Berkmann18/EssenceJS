@@ -43,7 +43,7 @@ function st {
 	elif [ "$1" == "-l" -o "$1" == "--log" ]; then
 		log $2
 	else
-		update $1
+		commit $2
 	fi
 }
 
@@ -54,19 +54,20 @@ function depHelp {
 	echo -e "\tdep [-u|-a [file]] [comment] [-b branch|-v version]"
 	echo -e "\tdep [comment] [-b branch|-v version]"
 	echo -e "\tdep [-r file|-l [all|change]]\n"
-	echo  "  -h, --help                  Display this help section."
-	echo  "  -i, --init                  Initialise and deploy"
-	echo  "  -u, --update                Update the Github repo"
-	echo  "  project                     Name of the project"
-	echo  "  -d, --download              Download the project from Github"
-	echo  "  username@host:/path/to/repo Place to get it"
-	echo  "  -a [file] [comment]         Add a file with the corresponding commit message"
-	echo  "  --add ..."
-	echo  "  -b branch, --branch branch  Branch to deploy at"
-	echo  "  -v version, --version ver   Version deployed (e.g: 1.1)"
-	echo  "  -r file, --restore file     File to restore from HEAD"
-	echo  "  -l [|all|change]          Log, all logs or logs on the changes"
-	echo  "  --list ..."
+	echo "  -h, --help                  Display this help section."
+	echo "  -i, --init                  Initialise and deploy"
+	echo "  -u, --update                Update the Github repo"
+	echo "  project                     Name of the project"
+	echo "  -d, --download              Download the project from Github"
+	echo "  username@host:/path/to/repo Place to get it"
+	echo "  -a [file] [comment]         Add a file with the corresponding commit message"
+	echo "  --add ..."
+	echo "  -b branch, --branch branch  Branch to deploy at"
+	echo "  -v version, --version ver   Version deployed (e.g: 1.1)"
+	echo "  -r file, --restore file     File to restore from HEAD"
+	echo "  -l [|all|change]          Log, all logs or logs on the changes"
+	echo "  --list ..."
+	echo "If no parameters are specified, it will commit the changes (without pushing) while asking for commit details on the editor."
 	echo  -e "\nIf you want to fill the body of the commit message, make sure that a markdown (.md) file (containing the body of the commit message) named either: update, updates, commit or message; is present on the current directory."
 }
 
@@ -126,4 +127,12 @@ function log {
 	fi
 }
 
+function commit {
+    git add *
+	if [ "$1" == "" -o -z "$1" ]; then
+		git commit -F "$version/updates.md" -e
+	else
+		git commit -F "$version/updates.md" -e
+	fi
+}
 st "$1" "$2" "$3"
