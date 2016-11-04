@@ -39,7 +39,7 @@ function st {
 	elif [ "$1" == "-a" -o "$1" == "--add" ]; then
 		add $2 $3
 	elif [ "$1" == "-r" -o "$1" == "--restore" ]; then
-		restore
+		restore $2
 	elif [ "$1" == "-l" -o "$1" == "--log" ]; then
 		log $2
 	else
