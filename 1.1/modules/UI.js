@@ -233,7 +233,7 @@ function Colour (r, g, b, a) {
 
 /**
  * @description Hexadecimal to RGB
- * @param {string} hex Hexadecimal
+ * @param {Str} hex Hexadecimal
  * @param {boolean} [toArray=false] Result as an array
  * @returns {?(number[]|string)} RGB equivalent
  * @see module:UI~rgb2hex
@@ -241,18 +241,16 @@ function Colour (r, g, b, a) {
  * @func
  */
 function hex2rgb (hex, toArray) {
-	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-	if (result) {
-		return toArray? [parseInt(result[1], 16), parseInt(result.last(), 16), parseInt(result[3], 16)]: parseInt(result[1], 16) + ", " + parseInt(result.last(), 16) + ", " + parseInt(result[3], 16)
-	}else if (/^#?([a-f\d]{1})([a-f\d]{1})([a-f\d]{1})$/i.exec(hex)) {
-		result = /^#?([a-f\d]{1})([a-f\d]{1})([a-f\d]{1})$/i.exec(hex);
-		return (toArray)? [parseInt(result[1], 16), parseInt(result.last(), 16), parseInt(result[3], 16)]: parseInt(result[1] + result[1], 16) + ", " + parseInt(result.last() + result.last(), 16) + ", " + parseInt(result[3] + result[3], 16)
-	}else return null
+    var _format = function (shade) {
+        return parseInt(shade, 16);
+    };
+	var rgb = isType(hex, "Array")? hex.map(_format): /^#?([a-f\d]{1,2})([a-f\d]{1,2})([a-f\d]{1,2})$/i.exec(hex).get(1).map(_format);
+    return toArray? rgb: "rgb(" + rgb.join(", ") + ")";
 }
 
 /**
  * @description RGB to hexadecimal
- * @param {string} rgb RGB colour
+ * @param {Str} rgb RGB colour
  * @param {boolean} [toArray=false] Result as an array
  * @returns {NumberLike[]|string} Hexadecimal colour
  * @see module:UI~hex2rgb
@@ -260,8 +258,174 @@ function hex2rgb (hex, toArray) {
  * @func
  */
 function rgb2hex (rgb, toArray) {
-	rgb = rgb.slice(4, rgb.length - 1).split(", ");
-	return toArray? [conv(rgb[0], 10, 16).toNDigits(), conv(rgb[1], 10, 16).toNDigits(), conv(rgb.last(), 10, 16).toNDigits()]: "#" + conv(rgb[0], 10, 16).toNDigits() + conv(rgb[1], 10, 16).toNDigits() + conv(rgb.last(), 10, 16).toNDigits()
+	var clr = isType(rgb, "Array")? rgb: rgb.slice(4, rgb.length - 1).split(", "), _format = function (shade) {
+		return conv(shade, 10, 16).toNDigits();
+    };
+	clr = clr.map(_format);
+	return toArray? clr: "#" + clr.join("");
+}
+
+/**
+ * @description RGB to HSL.<br />
+ * Inspired by {@link https://codepen.io/pankajparashar/pen/oFzIg|this}.
+ * @param {Str} rgb RGB colour
+ * @param {boolean} [toArray=false] Result as an array
+ * @returns {NumberLike[]|string} HSL colour
+ * @see module:UI~hsl2rgb
+ * @since 1.1
+ * @func
+ */
+function rgb2hsl (rgb, toArray) {
+	var clr = isType(rgb, "Array")? rgb: rgb.slice(4, rgb.length - 1).split(", "), h, s, l, _format = function (shade) {
+		return (shade * 100 + .5) | 0;
+    };
+	var r = clr[0] / 255, g = clr[1] / 255, b = clr[2] / 255, max = clr.max(), min = clr.min();
+	l = (max + min) / 2;
+	if (max === min) h = s = 0; //achromatic
+	else {
+		var delta = max - min;
+        s = l >= .5? delta / (2 - delta): delta / (max + min);
+
+        switch (max) {
+            case r: h = ((g - b) / delta) * 60; break;
+            case g: h = ((b - r) / delta + 2) * 60; break;
+            case b: h = ((r - g) / delta + 4) * 60; break;
+        }
+        h /= 6;
+	}
+    return toArray? [_format(h), _format(s) * 100, _format(l) * 100]: "hsl(" + _format(h) + ", " + (_format(s) * 100) + "%, " + (_format(l) * 100) + "%)";
+}
+
+/**
+ * @description HSL to RGB.<br />
+ * Inspired by {@link https://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion|Mohsen's}.
+ * @param {string} hsl RGB colour
+ * @param {boolean} [toArray=false] Result as an array
+ * @returns {NumberLike[]|string} HSL colour
+ * @see module:UI~rgb2hsl
+ * @since 1.1
+ * @func
+ */
+function hsl2rgb (hsl, toArray) {
+	var clr = hsl.slice(4, hsl.length - 1).split(", "), r, g, b, _format = function (shade) {
+        return ((shade - .5) / 100) | 0;
+    };
+	var h = _format(clr[0]), s = _format(clr[1]), l = _format(clr[2]);
+	if (s === 0) r = g = b = 1;
+	else {
+        var hue2rgb = function (p, q, t) {
+            if (t < 0) t += 1;
+            if (t > 1) t -= 1;
+            if (t < 1 / 6) return p + (q - p) * 6 * t;
+            if (t < .5) return q;
+            if (t < 2 / 3) return p + (q - p) * (2/3 - t) * 6;
+            return p;
+        };
+
+        var q = l<.5? l * (1 + s): l + s - l * s;
+        var p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1 / 3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1 / 3)
+	}
+
+	var rgb = [r, g, b].map(function (shade) {
+		return Math.min(Math.floor(shade * 256), 255); //Math.round(shade * 255) is less accurate
+    });
+
+	return toArray? rgb: "rgb(" + rgb.join(", ") + ")";
+}
+
+/**
+ * @description RGB to HSV.<br />
+ * Inspired by {@link https://web.archive.org/web/20081227003853/http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript|this}.
+ * @param {Str} rgb RGB colour
+ * @param {boolean} [toArray=false] Result as an array
+ * @returns {NumberLike[]|string} HSV colour
+ * @see module:UI~hsv2rgb
+ * @since 1.1
+ * @func
+ */
+function rgb2hsv (rgb, toArray) {
+    var clr = isType(rgb, "Array")? rgb: rgb.slice(4, rgb.length - 1).split(", ");
+    clr = clr.map(function (shade) {
+		return shade / 255;
+    });
+    var max = clr.max(), min = clr.min();
+    var h, s, v = max;
+
+    var delta = max - min;
+    s = max === 0? 0: delta / max;
+
+    if (max === min) h = 0; // achromatic
+    else {
+        switch (max) {
+            case r: h = (g - b) / delta + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / delta + 2; break;
+            case b: h = (r - g) / delta + 4; break;
+        }
+        h /= 6;
+    }
+
+    return toArray? [h, s, v]: "hsv(" + h + ", " + s + "%, " + v + "%)";
+}
+
+/**
+ * @description HSV to RGB.<br />
+ * Inspired by {@link https://web.archive.org/web/20081227003853/http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript|this}.
+ * @param {Str} hsv HSV colour
+ * @param {boolean} [toArray=false] Result as an array
+ * @returns {NumberLike[]|string} RGB colour
+ * @see module:UI~rgb2hsv
+ * @since 1.1
+ * @func
+ */
+function hsv2rgb (hsv, toArray) {
+    var clr = isType(hsv, "Array")? hsv: hsv.slice(4, hsv.length - 1).split(", "), r, g, b;
+
+    var i = Math.floor(clr[0] * 6);
+    var f = clr[0] * 6 - i, p = clr[2] * (1 - clr[1]);
+    var q = clr[2] * (1 - f * clr[1]);
+    var t = clr[2] * (1 - (1 - f) * clr[1]);
+
+    switch (i % 6) {
+		case 0:
+        	r = clr[2];
+        	g = t;
+        	b = p;
+        	break;
+        case 1:
+        	r = q;
+        	g = clr[2];
+        	b = p;
+        	break;
+        case 2:
+        	r = p;
+        	g = clr[2];
+        	b = t;
+        	break;
+        case 3:
+        	r = p;
+        	g = q;
+        	b = clr[2];
+        	break;
+        case 4:
+        	r = t;
+        	g = p;
+        	b = clr[2];
+        	break;
+        case 5:
+        	r = clr[2];
+        	g = p;
+        	b = q;
+        	break;
+    }
+
+    var rgb = [r, g, b].map(function (shade) {
+		return shade * 255;
+    });
+
+    return toArray? rgb: "rgb(" + rgb.join(", ") + ")";
 }
 
 /**

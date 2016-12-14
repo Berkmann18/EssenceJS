@@ -114,7 +114,7 @@ function lenRand (len, if0) {
  * @returns {number} Random float
  * @since 1.0
  * @func
- * @see modume:Maths~random
+ * @see module:Maths~random
  */
 function random16 () {
 	return (65280 * Math.random() + 255 * Math.random()) / 65535
@@ -366,12 +366,27 @@ function sec2time (i, withH) {
 }
 
 /**
- * Alias/Shortcut
+ * @description Alias/Shortcut
  * @alias sec2time
  * @since 1.0
  * @func
  */
 var s2t = sec2time;
+
+/**
+ * @description Calculate the difference between two times.
+ * @param {String} [start=getTime(true)] Starting time
+ * @param {String} end Ending time
+ * @since 1.1
+ * @func
+ * @returns {string}
+ */
+function timeDiff (start, end) {
+	var withH = end.count(":") === 2;
+	if (!start) start = getTime(true);
+	if (xor(start.count(":") === 2, end.count(":") === 2)) throw new Error("Both times needs to be in the same format");
+	return s2t(toS(end) - toS(start || getTime(true)), withH);
+}
 
 /**
  * @description Convert a mark (out of <code>initTotal</code>) to an other (out of <code>endTotal</code>)
@@ -2653,7 +2668,7 @@ function approxEqual (a, b, precision) {
 
 /**
  * @description Truthness of the proposition among all elements of the array.
- * @summary Propotional function P(arr)
+ * @summary Propositional function P(arr)
  * @param {number} arr Array
  * @param {string} prop Proposition
  * @return {boolean[]} P(arr)
@@ -2683,7 +2698,8 @@ function forAll (arr, prop) {
 		truth &= prop.replace(/x/gm, arr[i]);
 		if (!truth) return false;
 	}
-	return !!truth; //P(arr, prop).count(true) === arr.length || !P(arr, prop).has(false)
+	//noinspection PointlessBooleanExpressionJS
+    return !!truth; //P(arr, prop).count(true) === arr.length || !P(arr, prop).has(false)
 }
 
 //noinspection JSUnusedGlobalSymbols
@@ -3025,4 +3041,36 @@ function confidenceInterval (avg, c, n, sd) {
  */
 function Fibonacci (x) {
 	return (x <= 1)? x: Fibonacci(x - 1) + Fibonacci(x - 2);
+}
+
+/**
+ * @description Calculate expressions in RPN (Reverse Polish Notation).
+ * @param {string} exp Expression
+ * @return {number} Result
+ * @func
+ * @since 1.1
+ * @example
+ * revPolishCalc("1 4 + 2 *"); //equivalent to (1 + 4) * 2 = 10
+ */
+function revPolishCalc (exp) {
+	var values = new Stack(), chars = exp.split(" "), res = 0, nbOfNums = 0, signs = ["+", "-", "*", "/", "%", ">>", "<<", ">>>", "&", "|", "^"];
+
+    if (chars.length === 1) return parseFloat(chars[0]);
+    else if (chars.length === 2) throw new InvalidExpressionError("Unsufficient amount of values!");
+
+	for (var i = 0; i < chars.length; i++) {
+		if (isNaN(chars[i])) {
+			if (signs.has(chars[i])) { //The current is a sign
+				var num0 = values.pop(), num1 = values.pop();
+				res = eval(num1 + chars[i] + num0);
+				values.push(res);
+				nbOfNums = 0;
+			} else throw new InvalidExpressionError("WTF is the " + chars[i] + " character doing here?");
+		} else { //Number
+			values.push(parseFloat(chars[i]));
+			if (nbOfNums <= 2) nbOfNums++;
+			else throw new InvalidExpressionError("Too many numbers without operations!!");
+		}
+	}
+	return res;
 }

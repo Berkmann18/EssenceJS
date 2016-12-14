@@ -21,25 +21,25 @@ var Web = new Module("Web", "Web stuff", ["DataStruct", "Misc"], 1, function () 
 
 /**
  * @description Gather the cookie named $c_name
- * @param {string} c_name Cookie name
+ * @param {string} name Cookie name
  * @returns {undefined|string} Cookie
  * @see module:Web~setCookie
  * @since 1.0
  * @func
  */
-function getCookie (c_name) {
+function getCookie (name) {
 	var x, y, cookies = document.cookie.split(";");
 	for (var i = 0; i < cookies.length;i++) {
 		x = cookies[i].substr(0, cookies[i].indexOf("="));
 		y = cookies[i].substr(cookies[i].indexOf("=") + 1);
 		x = x.replace(/^\s+|\s+$/g, "");
-		if (x === c_name) return decodeURIComponent(y)
+		if (x === name) return decodeURIComponent(y)
 	}
 }
 
 /**
  * @description Create a cookie
- * @param {string} c_name Cookie name
+ * @param {string} name Cookie name
  * @param {*} value Cookie value
  * @param {number} [exdays] Expiration days
  * @returns {undefined}
@@ -47,12 +47,23 @@ function getCookie (c_name) {
  * @since 1.0
  * @func
  */
-function setCookie (c_name, value, exdays) {
+function setCookie (name, value, exdays) {
 	exdays? exdays %= 99983489: exdays = 99983488; //As 99983488 is the maximum value
 	var exdate = new Date();
 	exdate.setDate(exdate.getDate() + exdays);
 	var c_value = encodeURIComponent(value) + ((exdays === null) ? "" : "; expires = " + exdate.toUTCString());
-	document.cookie = c_name + "=" + c_value
+	document.cookie = name + "=" + c_value
+}
+
+/**
+ * @description Remove a cookie
+ * @param {string} name Cookie name
+ * @returns {undefined}
+ * @since 1.1
+ * @func
+ */
+function rmCookie(name) {
+    setCookie(name, "", -1);
 }
 
 /**

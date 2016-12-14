@@ -61,24 +61,28 @@ function POST (path, params) {
 
 /**
  * @description HTTP PUT request. Update/replace data.
+ * @param {*} data Date to place/update
+ * @param {String} url URL where the insertion/alternation is happening
  * @returns {undefined}
- * @todo Fill it
- * @since 1.0
+ * @since 1.1
  * @func
  */
-function PUT () {
-
+function PUT (data, url) {
+    var xhr = new XHR(url, "PUT", true, $f, $f, $f, data);
+    xhr.init();
 }
 
 /**
  * @description HTTP DELETE request. Delete data
+ * @param {*} data Date to delete
+ * @param {String} url URL where the deletion is happening
  * @returns {undefined}
- * @todo Fill it
- * @since 1.0
+ * @since 1.1
  * @func
  */
-function DELETE () {
-
+function DELETE (data, url) {
+    var xhr = new XHR(url, "DELETE", true, $f, $f, $f, data);
+    xhr.init();
 }
 
 /* eslint no-undef: 0 */
@@ -97,7 +101,7 @@ function DELETE () {
  * }
  */
 function load (url, cb) {
-	var xhr = new XHR(url, "get", true, cb);
+	var xhr = new XHR(url, "GET", true, cb);
 	xhr.init();
 }
 
@@ -457,11 +461,11 @@ function getXHRMsg (state) {
 /**
  * @description Cross Origin Resource Sharing request maker.<br />
  * Source: {@link https://stackoverflow.com/questions/3076414/ways-to-circumvent-the-same-origin-policy}
- * @param {string} [method="get"] Method
+ * @param {string} [method="GET"] Method
  * @param {string} [url=getDirectoryPath()] URL
  * @returns {XMLHttpRequest} CORS request
  * @example
- * var request = createCORSRequest("get", "http://www.stackoverflow.com/");
+ * var request = createCORSRequest("GET", "http://www.stackoverflow.com/");
  if (request) {
 	request.onload = function () {
 		//...
@@ -475,7 +479,7 @@ function getXHRMsg (state) {
  */
 function createCORSRequest (method, url) {
 	var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
-	if ("withCredentials" in xhr || xhr.withCredentials !== undefined) xhr.open(method || "get", url || getDirectoryPath(), true);
+	if ("withCredentials" in xhr || xhr.withCredentials !== undefined) xhr.open(method || "GET", url || getDirectoryPath(), true);
 	else if (typeof XDomainRequest != "undefined" || XDomainRequest) { //IE
 		xhr = new XDomainRequest();
 		xhr.open(method || "GET", url || getDirectoryPath());

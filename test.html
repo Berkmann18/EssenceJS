@@ -1,5 +1,7 @@
+<!--suppress XmlHighlighting -->
 <html>
 <head>
+	<title>EssenceJS test</title>
 	<meta charset="UTF-8" />
 	<meta name="author" content="Maximilian Berkmann" />
 	<meta http-equiv="pragma" content="no-cache" />
@@ -17,21 +19,21 @@
 		lr = $G["lorem"].replace(/(\.|!|\?|;|:|"|,|\t|\n|\f|\r|\v|\{|})+/gm, " ").split(" ").remove("");
 	}
 	setTimeout("start()", 180);
-	function effect(){
+	function effect () {
 		$e("body").setCSS("background", bodyBg.hex);
 		$e("#ba").setCSS("color", ba.hex);
 		$e("#r").setCSS("color", r.hex);
 		$e("#g").setCSS("color", g.hex);
 		$e("#b").setCSS("color", b.hex);
 	}
-	function effect3(){
+	function effect3 () {
 		$e("body").setCSS("background", "#fff");
 		$e("#ba").setCSS("color", "#000");
 		$e("#r").setCSS("color", "#000");
 		$e("#g").setCSS("color", "#000");
 		$e("#b").setCSS("color", "#000");
 	}
-	function effect2(){
+	function effect2 () {
 		bodyBg.negative();
 		ba.negative();
 		r.negative();
@@ -44,7 +46,7 @@
 		$e("#b").setCSS("color", b.hex);
 	}
 	var root, root0, root1, root2;
-	function simpleNodes(){
+	function simpleNodes () {
 		/*var base = null, tmp = new intNode(5, base);
 		base = tmp;
 		//head insert a new node
@@ -63,7 +65,7 @@
 		tmp = new intLinkedList(6, aList, "aList");
 		aList = tmp;
 		Essence.say(aList.show());
-		*/
+
 		root = new TreeNode(0, new TreeNode(1, new TreeNode(3, new TreeNode(7), new TreeNode(8)), new TreeNode(4, new TreeNode(9), new TreeNode(10))),
 			new TreeNode(2, new TreeNode(5, new TreeNode(11), new TreeNode(12)), new TreeNode(6, new TreeNode(13), new TreeNode(14))));
 		root0 =  new TreeNode(0, new TreeNode(1, new TreeNode(2, new TreeNode(3), new TreeNode(4)), new TreeNode(5, new TreeNode(6), new TreeNode(7))),
@@ -97,34 +99,35 @@
 		root2.inOrder();
 		println("Post order: ("+root2.getPostOrder()+")");
 		root2.postOrder();
-		print("</fieldset>", true);
+		print("</fieldset>", true);*/
 	}
 	
-	function postHTMLinit(){
+	function postHTMLinit () {
 		Essence.init();
 		UI.run();
-		if(isNon($n("#btn"))){
+		if (isNon($n("#btn"))) {
 			Essence.say("I couldn't find the node #btn !\The element is the following:\n"+$e("#btn"));
 			Essence.say("$e('#btn').node= "+$e("#btn").node, "info");
-		}else $e("#btn").on('click', function(event){evtLog(event);EvtShow(event);});
+		} else $e("#btn").on('click', function(event){evtLog(event);EvtShow(event);});
 		simpleNodes();
+		Calendar.set();
 	}
 	
-	function testDL(){
+	function testDL () {
 		Essence.say($n("span#ceval"));
 		CECheck("span#ceval");
 	}
 
-	function lineTest (b, c) {
+	/*function lineTest (b, c) {
 		b();
 		Essence.say("line: " + getLineNum());
 		c();
-	}
+	}*/
 
 
 	</script>
 </head>
-<body onpageshow='postHTMLinit();lineTest(function () { Essence.say("Inb4 !! " + getLineNum()) }, function () { Essence.say("Callback ! " + getLineNum()) });' onload='Essence.preInit();'>
+<body onpageshow='postHTMLinit();' onload='Essence.preInit();'>
 	<span id="test" onmouseover="Essence.applyCSS(true)">lorent</span>
 	<div id="ColourTest" onMouseover='effect()' onClick="effect2()" onMouseout="effect3()">
 		<span id='ba'>Black</span> <span id='r'>Red</span> <span id='g'>Green</span> <span id='b'>Blue</span>
@@ -132,5 +135,6 @@
 	<input type="button" value="event" id="btn" />
 	<br /><span id="ceval" onclick="testDL()">Click on me to test your download speed.</span>
 	<br /><div id="csl">Console !</div>
+	<div id="calendar"></div>
 </body>
 </html>

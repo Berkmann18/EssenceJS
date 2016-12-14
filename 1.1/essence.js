@@ -57,7 +57,7 @@
  * @property {function(server)} Essence.addServer Server adder
  * @property {number} Essence.serverSize Total server size
  * @property {function(): string} Essence.toString String representation of EssenceJS's namespace
- * @property {string} Essence.txt2pring Text to print
+ * @property {string} Essence.txt2print Text to print
  * @property {function(string, string)} Essence.addToPrinter Add text to the printer and print them
  * @property {function(string, string)} Essence.print Print stuff to the screen
  * @property {Function} Essence.preInit Pre-initialisation
@@ -212,7 +212,8 @@ var Essence = {
 				}
 				if (window[modules[i]].loaded) this.loadedModules.push(window[modules[i]]);
 			}
-			return !!complete;
+			//noinspection PointlessBooleanExpressionJS
+            return !!complete;
 		}, loadedModules: [],
 		updateAll: function () {
 			this.update();
@@ -1121,6 +1122,7 @@ function exclude (file, type) {
 	document.head.removeChild(el)
 }
 
+//will be replaced by this.filter(x => x === c).length in v1.2
 /**
  * @description Counts how many times a character/property/number <code>c</code> is present in the object
  * @param {(string|Bool)} c Character data
@@ -1314,6 +1316,21 @@ Object.prototype.isEmpty = function () {
 		if (this.hasOwnProperty(prop)) return false;
 	}
 	return true;
+};
+
+/**
+ * @description High level inheritance.
+ * @param {*} parent Parent
+ * @return {undefined}
+ * @memberof Object.prototype
+ * @external Object
+ * @this Object
+ * @since 1.1
+ * @method
+ */
+Object.prototype.inherits = function(parent) {
+    this.prototype = Object.create(parent.prototype);
+    this.prototype.constructor = this;
 };
 
 /**
@@ -1879,7 +1896,7 @@ Array.prototype.avgOf = function (nbDec, start, n) {
 
 //noinspection JSUnusedGlobalSymbols
 /**
- * @description Minimum timewise average of n of all the means of the times
+ * @description Minimum time-wise average of n of all the means of the times
  * @param {number} [n=this.length-1] Number of times for the mean of n
  * @param {number} [nbDec=2] Number of decimals
  * @returns {*} Minimum Average of N
@@ -1899,7 +1916,7 @@ Array.prototype.minAvg = function (n, nbDec) {
 
 //noinspection JSUnusedGlobalSymbols
 /**
- * @description Maximum timewise average of n of all the means of the times
+ * @description Maximum time-wise average of n of all the means of the times
  * @param {number} [n=this.length-1] Number of times for the mean of n
  * @param {number} [nbDec=2] Number of decimals
  * @returns {*} Maximum Average of N
@@ -3831,7 +3848,7 @@ Number.prototype.toArr = function () {
  * @description Inheritance.<br />
  * Source: Somewhere
  * @param {*} parentClassOrObj Parent
- * @returns {function(*)} this Current function/constructor
+ * @returns {Function.prototype.Function} this Current function/constructor
  * @since 1.0
  * @method
  * @memberof Function.prototype

@@ -1097,7 +1097,7 @@ var Calendar = {
 		for (var row = 1; row <= Math.ceil((firstDay + firstDay - 1) / 7); row++) {
 			text += "<tr align='right' valign='top'>";
 			for (var col = 1; col <= 7; col++) {
-				if (digit > firstDay) break;
+				//if (digit > firstDay) break;
 				if (curCell < firstDay) {
 					text += "<td></td>";
 					curCell++

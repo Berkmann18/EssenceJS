@@ -39,6 +39,7 @@ tr:hover td {
     color: #008;
 }
 
+/*noinspection CssUnusedSymbol*/
 .succ {
     color: #0f0;
 }
@@ -47,6 +48,7 @@ tr:hover td {
     color: #f00;
 }
 
+/*noinspection CssUnusedSymbol*/
 .quest {
     color: #00f;
 }
@@ -133,6 +135,7 @@ h3 {
     color: #0ff;
 }
 
+/*noinspection CssUnusedSymbol*/
 .code-tag, .code-inst {
     color: #00f;
 }
@@ -161,6 +164,7 @@ h3 {
     color: #800080;
 }
 
+/*noinspection CssUnusedSymbol*/
 .code-doc, .code-op {
     color: #0ff;
 }
@@ -173,6 +177,7 @@ h3 {
     color: #f0f;
 }
 
+/*noinspection CssUnusedSymbol*/
 .nocss {
     margin: auto;
     padding: auto;

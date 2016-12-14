@@ -452,7 +452,7 @@ function fromFSHA (fsha) {
 /**
  * @description Data Encryption Standard algorithm.
  * @param {Str} text Plaintext
- * @param {NumberLike} keys Key list of sub-keys
+ * @param {NumberLike[]} keys Key list of sub-keys
  * @returns {Array|string} DES cipher
  * @method
  * @since 1.1
@@ -461,7 +461,37 @@ function DES (text, keys) {
 	var left = text.portion(2, -1), right = text.portion(2, 1);
 	for (var i = 1; i < 16; i++) {
 		left[i] = right[i - 1];
-		right[i] = isType(left[i - 1], "String")? left[i - 1].charCodeAt(0) ^ trans(right[i - 1].charCodeAt(0), (isType(keys[i - 1], "String")? keys[i - 1].charCodeAt(0): keys[i - 1])): left[i - 1] ^ trans(right[i - 1], (isType(keys[i - 1], "String")? keys[i - 1].charCodeAt(0): keys[i - 1])); //Or keys[i] instead of keys[i - 1]
+		/*right[i] = isType(left[i - 1], "String")?
+			left[i - 1].charCodeAt(0) ^ trans(right[i - 1].charCodeAt(0), (isType(keys[i - 1], "String")? keys[i - 1].charCodeAt(0): keys[i - 1])):
+			left[i - 1] ^ trans(right[i - 1], (isType(keys[i - 1], "String")? keys[i - 1].charCodeAt(0): keys[i - 1]));*/ //Or keys[i] instead of keys[i - 1]
+		console.log("l[%d]=%s ^ (trans(%s, %d)=%s) = %s", i - 1, left[i - 1], right[i - 1], keys[i], trans(right[i - 1], keys[i]), left[i - 1] ^ trans(right[i - 1], keys[i]));
+		right[i] = String.fromCharCode(left.charCodeAt(i - 1) ^ trans(right[i - 1], keys[i]).charCodeAt(0));
 	}
 	return left.concat(right);
+}
+
+/**
+ * @description Password checker
+ * @param {String} password Password to check
+ * @returns {number} Score of the password
+ * @since 1.1
+ * @method
+ */
+function checkPassword (password) {
+	/*
+	 Type	Pool of Characters Possible
+	 Lowercase	26
+	 Lower & Upper Case	52
+	 Alphanumeric	36
+	 Alphanumeric & Upper Case	62
+	 Common ASCII Characters	30
+	 Diceware Words List	7,776
+	 English Dictionary Words	171,000
+
+	 Entropy: log(x, 2) where x is the pool of character used
+	 Score: password.length * log(x, 2) bits
+	 */
+	var score = 0;
+
+	return score;
 }

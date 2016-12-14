@@ -400,7 +400,7 @@ function AJAXpost (data, to, xml) {
 
 /* eslint no-undef: 2 */
 /**
- * @description HTPP status message
+ * @description HTTP status message
  * @param {number} status HTTP status (e.g: xhr.status)
  * @returns {string} Status message
  * @since 1.0
@@ -436,7 +436,7 @@ function getHTTPMsg (status) {
         case 404: return "Not Found";
         case 405: return "Method Not Allowed";
         case 406: return "Not Acceptable";
-        case 407: return "Proxy Authentification Required";
+        case 407: return "Proxy Authentication Required";
         case 408: return "Request Timeout";
         case 409: return "Conflict";
         case 410: return "Gone";

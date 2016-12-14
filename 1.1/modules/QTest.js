@@ -56,30 +56,52 @@ function evtLog (event) {
  MyError.prototype = Object.create(Error.prototype);
  MyError.prototype.constructor = MyError; */
 
-InvalidParamError.inheritsFrom(Error);
 /**
  * @description Invalid parameter error
  * @param {string} [msg="The parameter used at <code>lineNum</code> is invalid"]  Message
  * @param {string} [fname] Filename
  * @param {number} [lineNum] Line number
  * @constructor
- * @returns {InvalidParamError} Error
- * @extends {Error}
+ * @returns {InvalidParamError} Parameter error
+ * @extends {TypeError}
  * @this {InvalidParamError}
  * @since 1.1
- * @throws {Error}
+ * @throws {TypeError}
  */
 function InvalidParamError (msg, fname, lineNum) {
-	var error = Error.call(this, msg || "The parameter is invalid !");
+	var error = TypeError.call(this, msg || "The parameter is invalid !");
 
-	this.name = "CustomError";
+	this.name = "InvalidParamError";
 	this.message = error.message;
 	this.stack = error.stack;
 	this.fileName = fname || location.href;
 	this.lineNumber = lineNum || getLineNum();
 }
-InvalidParamError.prototype = Object.create(Error.prototype);
-InvalidParamError.prototype.constructor = InvalidParamError;
+InvalidParamError.inherits(TypeError);
+
+/**
+ * @description Invalid parameter error
+ * @param {string} [msg="The parameter used at <code>lineNum</code> is invalid"]  Message
+ * @param {string} [fname] Filename
+ * @param {number} [lineNum] Line number
+ * @constructor
+ * @returns {InvalidExpressionError} Error
+ * @extends {Error}
+ * @this {InvalidExpressionError}
+ * @since 1.1
+ * @throws {Error}
+ */
+function InvalidExpressionError (msg, fname, lineNum) {
+    var error = Error.call(this, msg || "The expression is invalid !");
+
+    this.name = "InvalidExpressionError";
+    this.message = error.message;
+    this.stack = error.stack;
+    this.fileName = fname || location.href;
+    this.lineNumber = lineNum || getLineNum();
+}
+InvalidExpressionError.inherits(Error);
+
 
 /**
  * @description Get the caller'start trace'start location
@@ -185,12 +207,12 @@ var UnitTest = {
 	bad: 0,
 	failRate: 0,
 	coverage: 0,
-	test: function (then, expected, cmt, noisy) {
+	test: function (then, expected, description, noisy) {
 		this.total++;
 		var res = then; //to avoid random changes while calling the same function/method with the same parameter(start)
 		if (!res.equals(expected)) {
 			this.bad++;
-			console.log("%c[Unit]%c " + (cmt || "Test #b" + this.bad) + ": Expected \"%c" + expected + "%c\" but was \"%c" + res + "%c\"", "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
+			console.log("%c[Unit]%c " + (description || "Test #b" + this.bad) + ": Expected \"%c" + expected + "%c\" but was \"%c" + res + "%c\"", "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
 		} else if(noisy && res.equals(expected)) console.log("%c[Unit]%c The expectation on " + expected + " was satisfied !", "color: #c0c", "color: #000"); //in case someone wants to not just see what failed
 	},
 	testFalse: function (then, expected, cmt, noisy) {

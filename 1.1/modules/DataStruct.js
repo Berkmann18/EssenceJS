@@ -57,6 +57,183 @@ function LinkedList (pl, nx, name) {
 }
 
 /**
+ * @description Node
+ * @param {*} [pl=1] Payload
+ * @param {Node} [nx] Next node
+ * @param {Node} [pv] Previous node
+ * @this Node
+ * @return {Node} Node
+ * @constructor
+ * @since 1.0
+ * @property {NumberLike} Node.payload Payload
+ * @property {Node} Node.next Next node
+ * @property {function(): Node} Node.traverse Node traversal
+ * @property {Function} Node.print Node printer
+ * @property {Function} Node.printList Node list printer
+ * @property {function(): Node} Node.last Get the last node
+ * @property {function(NumberLike)} Node.append Append the list with a new node
+ * @property {Function} Node.remove Node remover
+ * @property {function(): Node} Node.reverse List reversal
+ * @property {function(NumberLike, number): Nums} Node.find Look for a node
+ * @property {function(Node): boolean} Node.equals Node comparator
+ * @property {function(): string} Node.toString String representation
+ */
+function Node (pl, nx, pv) {
+	this.payload = pl || 1;
+	this.next = nx; //Or new node()
+	this.prev = pv;
+
+	this.traverse = function () {
+		if (this.next) this.next.traverse();
+		Essence.say("payload: " + this.payload);
+	};
+
+	this.print = function () {
+		if (this.next != null) this.next.print();
+		Essence.print(this.payload + "=>");
+	};
+
+	this.printList = function () {
+		if (this.next === null) Essence.txt2print += "->" + this.v;
+		else this.next.printList();
+		Essence.print("");
+	};
+
+	this.last = function () {
+		if (this.next === null) return this;
+		else return this.next.last()
+	};
+
+	this.append = function (n) {
+		if (this.next === null) {
+			this.next = new Node(n); //If there is no next node, link the new one here
+			this.next.prev = this;
+		} else this.next.append(n); //Else, append to next node
+	};
+
+	this.remove = function () {
+		var n = this.next;
+		this.next = n.next;
+		n.next.prev = this;
+	};
+
+	this.reverse = function () {
+		if (this.next == null) return this;
+		else {
+			var newHead = this.next.reverse();
+			newHead.next = this;
+			newHead.prev = null;
+			this.prev = newHead;
+			this.next = null;
+			return newHead
+		}
+	};
+
+	this.toString = function () {
+		return "Node(payload = " + this.payload + ", previous = " + this.prev + ", next = " + this.next + ")"
+	};
+
+	this.equals = function (node) {
+		return this.payload === node.payload && this.next.equals(node.next) && this.prev.equals(node.prev)
+	};
+
+	this.find = function (n, d) {
+		if (!d) d = 0;
+		if (this.payload === n) return d;
+		if (this.next) return this.next.find(n, d + 1);
+		return [-1, d]
+	};
+	return this;
+}
+
+/**
+ * @description Nodes for path finding algs
+ * @param {number} [g=0] Current total cost
+ * @param {number} [h=0] Current total heuristic
+ * @param {number[]} [pos=[0, 0]] 2D position of the node
+ * @param {Edge[]} [edges=[]] List of edges connected to the path node
+ * @param {*} [payload=""] Payload
+ * @returns {PathNode} Path node
+ * @this PathNode
+ * @constructor
+ * @since 1.0
+ * @property {number} PathNode.g Cost of the path to that node
+ * @property {number} PathNode.h Heuristic to get to that node
+ * @property {number} PathNode.f Cost of the path (g) + heuristic estimate
+ * @property {Edge[]} PathNode.edges List of edges connected to the path node
+ * @property {*} PathNode.payload Payload (content/data) of the node
+ * @property {number[]} PathNode.pos Position of the node
+ * @property {?PathNode} PathNode.parent Parent of the path-node
+ * @property {function(number): PathNode} PathNode.back Go n path-nodes back
+ * @property {function(PathNode): boolean} PathNode.isCloser Check if the current path-node is closer than the other one
+ * @property {function(): string} PathNode.toString String representation
+ * @property {Function} PathNode.join Join PathNodes with edges
+ *
+ */
+function PathNode (g, h, pos, payload, edges) {
+	this.g = g || 0;
+	this.h = h || 0;
+	this.f = this.g + this.h || 1;
+	this.pos = pos || [0, 0];
+	this.parent = null;
+	this.payload = payload || "";
+	this.edges = edges || [];
+
+	this.back = function (n) {
+		return (isNon(n) || n <= 1)? this.parent: this.parent.back(n - 1);
+	};
+
+	this.isCloser = function (pn) {
+		return this.f <= pn.f;
+	};
+
+	this.toString = function () {
+		return "PathNode(g=" + this.g + "h=" + this.h + "f=" + this.f + ", pos=[" + this.pos.toStr(true) + "], parent=" + (this.parent === null? null: this.parent.toString()) + ")";
+	};
+
+	this.join = function (PathNodes) {
+		for (var i = 0; i < PathNodes.length; i++) {
+			this.edges[i].startNode = this;
+			this.edges[i].endNode = PathNodes[i];
+			PathNodes[i].edges.push(this.edges[i]);
+			PathNodes[i].edges.last().startNode = this;
+			PathNodes[i].edges.last().endNode = PathNodes[i];
+		}
+    };
+
+	return this;
+}
+
+/**
+ * @description Edge that connects two PathNodes
+ * @param {?PathNode} start Starting node
+ * @param {?PathNode} end Ending node
+ * @param {number} [len=0] Length of the edge.
+ * @this Edge
+ * @since 1.1
+ * @constructor
+ * @property {?PathNode} Edge.startNode Starting node of the edge
+ * @property {?PathNode} Edge.endNode Ending node of the edge
+ * @property {number} Edge.length Length of the edge
+ * @property {function(): string} Edge.toString String representation of the edge
+ * @property {Function} Edge.draw Draw the edge
+ */
+function Edge (start, end, len) {
+	this.startNode = start || null;
+	this.endNode = end || null;
+	this.length = len || ((!isNon(start) && !isNon(end))? euclidianDist(start.pos, end.pos): 0);
+	this.line = new Line(start? start.pos: [0, 0], end? end.pos: [0, 0]);
+
+	this.toString = function () {
+		return "Edge(startNode=" + this.startNode + ", endNode=" + this.endNode + ", length=" + this.length + ")";
+	};
+
+	this.draw = function () {
+		this.line.draw();
+    }
+}
+
+/**
  * @description Binary tree node
  * @param {*} [pl=0] Payload
  * @param {TreeNode} [l] Left child
@@ -307,135 +484,6 @@ function TreeNode (pl, l, r) { //Binary tree
 	return this;
 }
 
-/**
- * @description Node
- * @param {*} [pl=1] Payload
- * @param {Node} [nx] Next node
- * @param {Node} [pv] Previous node
- * @this Node
- * @return {Node} Node
- * @constructor
- * @since 1.0
- * @property {NumberLike} Node.payload Payload
- * @property {Node} Node.next Next node
- * @property {function(): Node} Node.traverse Node traversal
- * @property {Function} Node.print Node printer
- * @property {Function} Node.printList Node list printer
- * @property {function(): Node} Node.last Get the last node
- * @property {function(NumberLike)} Node.append Append the list with a new node
- * @property {Function} Node.remove Node remover
- * @property {function(): Node} Node.reverse List reversal
- * @property {function(NumberLike, number): Nums} Node.find Look for a node
- * @property {function(Node): boolean} Node.equals Node comparator
- * @property {function(): string} Node.toString String representation
- */
-function Node (pl, nx, pv) {
-	this.payload = pl || 1;
-	this.next = nx; //Or new node()
-	this.prev = pv;
-
-	this.traverse = function () {
-		if (this.next) this.next.traverse();
-		Essence.say("payload: " + this.payload);
-	};
-
-	this.print = function () {
-		if (this.next != null) this.next.print();
-		Essence.print(this.payload + "=>");
-	};
-
-	this.printList = function () {
-		if (this.next === null) Essence.txt2print += "->" + this.v;
-		else this.next.printList();
-		Essence.print("");
-	};
-
-	this.last = function () {
-		if (this.next === null) return this;
-		else return this.next.last()
-	};
-
-	this.append = function (n) {
-		if (this.next === null) {
-			this.next = new Node(n); //If there is no next node, link the new one here
-			this.next.prev = this;
-		} else this.next.append(n); //Else, append to next node
-	};
-
-	this.remove = function () {
-		var n = this.next;
-		this.next = n.next;
-		n.next.prev = this;
-	};
-
-	this.reverse = function () {
-		if (this.next == null) return this;
-		else {
-			var newHead = this.next.reverse();
-			newHead.next = this;
-			newHead.prev = null;
-			this.prev = newHead;
-			this.next = null;
-			return newHead
-		}
-	};
-
-	this.toString = function () {
-		return "Node(payload = " + this.payload + ", previous = " + this.prev + ", next = " + this.next + ")"
-	};
-
-	this.equals = function (node) {
-		return this.payload === node.payload && this.next.equals(node.next) && this.prev.equals(node.prev)
-	};
-
-	this.find = function (n, d) {
-		if (!d) d = 0;
-		if (this.payload === n) return d;
-		if (this.next) return this.next.find(n, d + 1);
-		return [-1, d]
-	};
-	return this;
-}
-
-/**
- * @description Path node
- * @param {number} [g=0] Current total cost
- * @param {number} [h=0] Current total heuristic
- * @param {number[]} [pos=[0, 0]] 2D position of the node
- * @returns {PathNode} Path node
- * @this PathNode
- * @constructor
- * @since 1.0
- * @property {number} PathNode.g Cost of the path to that node
- * @property {number} PathNode.h Heuristic to get to that node.
- * @property {number} PathNode.f Cost of the path (g) + heuristic estimate
- * @property {number[]} PathNode.pos Position of the node
- * @property {?PathNode} PathNode.parent Parent of the path-node
- * @property {function(number): PathNode} PathNode.back Go n path-nodes back
- * @property {function(PathNode): boolean} PathNode.isCloser Check if the current path-node is closer than the other one
- * @property {function(): string} Node.toString String representation
- */
-function PathNode (g, h, pos) { //Nodes for path finding algs
-	this.g = g || 0;
-	this.h = h || 0;
-	this.f = this.g + this.h || 1;
-	this.pos = pos || [0, 0];
-	this.parent = null;
-
-	this.back = function (n) {
-		return (isNon(n) || n <= 1)? this.parent: this.parent.back(n - 1);
-	};
-
-	this.isCloser = function (pn) {
-		return this.f <= pn.f;
-	};
-
-	this.toString = function () {
-		return "PathNode(g=" + this.g + "h=" + this.h + "f=" + this.f + ", pos=[" + this.pos.toStr(true) + "], parent=" + (this.parent === null? null: this.parent.toString()) + ")";
-	};
-	return this;
-}
-
 NTreeNode.inheritsFrom(TreeNode);
 /**
  * @description N-ary tree node
@@ -675,7 +723,7 @@ function NTreeNode (pl, ch) {
  * @param {Node} node Node
  * @param {string} [symbol="--"] Symbol/string/character to denote a branch
  * @param {string} [start="|"] Starting symbol/string/character to denote the head of a branch
- * @param {number} [indent=0] Identation preceding a branch
+ * @param {number} [indent=0] Indentation preceding a branch
  * @return {string} Current buffer (assuming it'start only containing what this function added to it).
  * @func
  * @since 1.1
@@ -1329,6 +1377,7 @@ function QueueList () {
  * @returns {undefined}
  * @since 1.0
  * @func
+ * @deprecated
  */
 function Astar (start, goal) {
 	//PathNode.f (score) = g (sum of all cost to get at this point) + h (heuristic: estimate of what it will take to get the goal)
@@ -1831,6 +1880,7 @@ function Graph (formula, dims, lbls, name, precision) { //N-dimensional graph
  * @return {Array} Permutations
  * @since 1.1
  * @func
+ * @todo Improve ?
  */
 function Perm (data) {
 	if (data.length <= 1) return data;
@@ -1839,7 +1889,7 @@ function Perm (data) {
 			return data[0] + x;
 		}).append(Perm(data.get(-1)).map(function (x) {
 			return data.last() + x;
-		})).append(Perm(data.remove()).map(function (x) {
+		})).append(Perm(data.remove(data[1])).map(function (x) {
 			return data[1] + x;
 		}));
 	else {
@@ -1863,7 +1913,7 @@ function Perm (data) {
  * @return {Str} Combinations
  * @since 1.1
  * @func
- * @todo Make it work right
+ * @todo Make it work right (3*\[a, b, c\] -> \[aaa, aab, aac, ..., ccc\])
  */
 function Comb (n, set) {
 	var res = new Array(n * factorial(set.length)), p = Perm(set.join("")), lIdx = set.lastIndex();
@@ -1874,7 +1924,9 @@ function Comb (n, set) {
 	p.append(complement(set, p));
 	console.log(res.length, p, "\nset=" + set);
 
-	return alphabetSort(p);
+	return alphabetSort(p).filter(function (x) {
+		return x.length === n;
+	});
 }
 
 /**

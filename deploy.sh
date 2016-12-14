@@ -78,7 +78,7 @@ function init {
 	git commit -m "Initial commit"
 	git remote add origin "https://github.com/Berkmann18/EssenceJS"
 	git remote -v
-	git push origin $branch
+	git push origin ${branch}
 }
 
 function update {
@@ -88,14 +88,14 @@ function update {
 	else
 		git commit -F "$version/updates.md" -m "$1"
 	fi
-	git push origin $branch
+	git push origin ${branch}
 	echo -e "\n\t\tGit status\n"
 	git status
 }
 
 function download {
 	git init
-	git pull origin $branch $1
+	git pull origin ${branch} $1
 }
 
 function add {
@@ -109,7 +109,7 @@ function add {
 	else
 		git commit -m "$2"
 	fi
-	git push origin $branch
+	git push origin ${branch}
 }
 
 function restore {
@@ -117,7 +117,7 @@ function restore {
 }
 
 function log {
-	git checkout $branch
+	git checkout ${branch}
 	if ["$1" == ""]; then
 		git log --graph --oneline --decorate & echo ""
 	elif ["$1" == "all"]; then
