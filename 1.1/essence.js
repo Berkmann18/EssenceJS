@@ -1280,10 +1280,10 @@ Object.prototype.compareTo = function (obj) {
  * @param {string} prop Property
  * @returns {boolean} Containment check result
  * @memberof Object.prototype
+ * @external Object
  * @since 1.1
  * @this Object
  * @method
- * @external Object
  * @example
  * var a = {name: "A", size: 8}, b = ["1", "4", "9", "h", "w", "_"];
  * a.has("name"); //true
@@ -3848,7 +3848,7 @@ Number.prototype.toArr = function () {
  * @description Inheritance.<br />
  * Source: Somewhere
  * @param {*} parentClassOrObj Parent
- * @returns {Function.prototype.Function} this Current function/constructor
+ * @returns {Function} this Current function/constructor
  * @since 1.0
  * @method
  * @memberof Function.prototype
@@ -3864,7 +3864,8 @@ Function.prototype.inheritsFrom = function (parentClassOrObj) {
 		this.prototype.constructor = this;
 		this.prototype.parent = parentClassOrObj;
 	}
-	return this
+	//noinspection JSValidateTypes
+    return this
 };
 
 /**

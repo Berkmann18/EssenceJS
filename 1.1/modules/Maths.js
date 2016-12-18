@@ -2669,15 +2669,17 @@ function approxEqual (a, b, precision) {
 /**
  * @description Truthness of the proposition among all elements of the array.
  * @summary Propositional function P(arr)
- * @param {number} arr Array
+ * @param {number[]} arr Array
  * @param {string} prop Proposition
  * @return {boolean[]} P(arr)
  * @since 1.1
  * @func
  */
 function P (arr, prop) {
+	var truth = [];
 	arr.map(function (x) {
-		truth.push(Boolean(prop.replace(/x/gm, x)));
+        //noinspection PointlessBooleanExpressionJS
+		truth.push(!!prop.replace(/x/gm, x));
 	});
 	return truth;
 }

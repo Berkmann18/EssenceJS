@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: WebApp</title>
+    <title>JSDoc: Class: Edge</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: WebApp</h1>
+    <h1 class="page-title">Class: Edge</h1>
 
     
 
@@ -29,7 +29,7 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="module-Web.html">Web</a>~</span>WebApp</h2>
+            <span class="ancestors"><a href="module-DataStruct.html">DataStruct</a>~</span>Edge</h2>
         
     
 </header>
@@ -41,14 +41,14 @@
 
     
 
-    <h4 class="name" id="WebApp"><span class="type-signature"></span>new WebApp<span class="signature">(name<span class="signature-attributes">opt</span>, path<span class="signature-attributes">opt</span>, author<span class="signature-attributes">opt</span>, ver<span class="signature-attributes">opt</span>, stct<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {WebApp}</span></h4>
+    <h4 class="name" id="Edge"><span class="type-signature"></span>new Edge<span class="signature">(start<span class="signature-attributes">nullable</span>, end<span class="signature-attributes">nullable</span>, len<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    Web application
+    Edge that connects two PathNodes
 </div>
 
 
@@ -58,7 +58,7 @@
 
 
     <h5>This:</h5>
-    <ul><li>{WebApp}</li></ul>
+    <ul><li>Edge</li></ul>
 
 
 
@@ -91,13 +91,13 @@
 
         <tr>
             
-                <td class="name"><code>name</code></td>
+                <td class="name"><code>start</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">PathNode</span>
 
 
             
@@ -106,9 +106,9 @@
             
                 <td class="attributes">
                 
-                    &lt;optional><br>
-                
 
+                
+                    &lt;nullable><br>
                 
 
                 
@@ -118,25 +118,23 @@
             
                 <td class="default">
                 
-                    "Web App"
-                
                 </td>
             
 
-            <td class="description last">Name</td>
+            <td class="description last">Starting node</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>path</code></td>
+                <td class="name"><code>end</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">PathNode</span>
 
 
             
@@ -145,9 +143,9 @@
             
                 <td class="attributes">
                 
-                    &lt;optional><br>
-                
 
+                
+                    &lt;nullable><br>
                 
 
                 
@@ -157,58 +155,17 @@
             
                 <td class="default">
                 
-                    ""
-                
                 </td>
             
 
-            <td class="description last">Path</td>
+            <td class="description last">Ending node</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>author</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    "Maximilian Berkmann"
-                
-                </td>
-            
-
-            <td class="description last">Author</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>ver</code></td>
+                <td class="name"><code>len</code></td>
             
 
             <td class="type">
@@ -235,49 +192,12 @@
             
                 <td class="default">
                 
-                    1.0
+                    0
                 
                 </td>
             
 
-            <td class="description last">Version</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>stct</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">Structure</td>
+            <td class="description last">Length of the edge.</td>
         </tr>
 
     
@@ -303,6 +223,8 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -315,76 +237,69 @@
 
         <tr>
             
-                <td class="name"><code>WebApp.name</code></td>
+                <td class="name"><code>Edge.startNode</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">PathNode</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+                </td>
+            
 
             
 
-            <td class="description last">Name of the app</td>
+            <td class="description last">Starting node of the edge</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>WebPage.path</code></td>
+                <td class="name"><code>Edge.endNode</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">PathNode</span>
 
 
             
             </td>
 
             
-
-            
-
-            <td class="description last">Path of the file</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>WebPage.author</code></td>
-            
-
-            <td class="type">
-            
+                <td class="attributes">
                 
-<span class="param-type">string</span>
 
-
-            
-            </td>
-
-            
-
+                
+                    &lt;nullable><br>
+                
+                </td>
             
 
-            <td class="description last">Author</td>
+            
+
+            <td class="description last">Ending node of the edge</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>WebPage.version</code></td>
+                <td class="name"><code>Edge.length</code></td>
             
 
             <td class="type">
@@ -397,63 +312,23 @@
             </td>
 
             
-
-            
-
-            <td class="description last">Version</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>WebPage.dirs</code></td>
-            
-
-            <td class="type">
-            
+                <td class="attributes">
                 
-<span class="param-type">Array.&lt;string></span>
 
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">List of directories</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>WebPage.pages</code></td>
-            
-
-            <td class="type">
-            
                 
-<span class="param-type">Template</span>
-
-
-            
-            </td>
-
+                </td>
             
 
             
 
-            <td class="description last">Pages</td>
+            <td class="description last">Length of the edge</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>WebPage.build</code></td>
+                <td class="name"><code>Edge.toString</code></td>
             
 
             <td class="type">
@@ -466,10 +341,45 @@
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last">Build the pages</td>
+            <td class="description last">String representation of the edge</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Edge.draw</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Draw the edge</td>
         </tr>
 
     
@@ -485,7 +395,7 @@
 
     
     <dt class="tag-since">Since:</dt>
-    <dd class="tag-since"><ul class="dummy"><li>1.0</li></ul></dd>
+    <dd class="tag-since"><ul class="dummy"><li>1.1</li></ul></dd>
     
 
     
@@ -511,20 +421,13 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Web.js.html">modules/Web.js</a>, <a href="modules_Web.js.html#line934">line 934</a>
+        <a href="modules_DataStruct.js.html">modules/DataStruct.js</a>, <a href="modules_DataStruct.js.html#line221">line 221</a>
     </li></ul></dd>
     
 
     
 
     
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="module-Web-WebPage.html">module:Web~WebPage</a></li>
-        </ul>
-    </dd>
-    
 
     
 </dl>
@@ -541,28 +444,6 @@
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    Web app
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">WebApp</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
@@ -602,7 +483,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Sun Dec 18 2016 13:19:48 GMT+0000 (GMT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Sun Dec 18 2016 13:19:47 GMT+0000 (GMT)
 </footer>
 
 <script> prettyPrint(); </script>

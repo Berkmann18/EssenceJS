@@ -85,6 +85,183 @@ function LinkedList (pl, nx, name) {
 }
 
 /**
+ * @description Node
+ * @param {*} [pl=1] Payload
+ * @param {Node} [nx] Next node
+ * @param {Node} [pv] Previous node
+ * @this Node
+ * @return {Node} Node
+ * @constructor
+ * @since 1.0
+ * @property {NumberLike} Node.payload Payload
+ * @property {Node} Node.next Next node
+ * @property {function(): Node} Node.traverse Node traversal
+ * @property {Function} Node.print Node printer
+ * @property {Function} Node.printList Node list printer
+ * @property {function(): Node} Node.last Get the last node
+ * @property {function(NumberLike)} Node.append Append the list with a new node
+ * @property {Function} Node.remove Node remover
+ * @property {function(): Node} Node.reverse List reversal
+ * @property {function(NumberLike, number): Nums} Node.find Look for a node
+ * @property {function(Node): boolean} Node.equals Node comparator
+ * @property {function(): string} Node.toString String representation
+ */
+function Node (pl, nx, pv) {
+	this.payload = pl || 1;
+	this.next = nx; //Or new node()
+	this.prev = pv;
+
+	this.traverse = function () {
+		if (this.next) this.next.traverse();
+		Essence.say("payload: " + this.payload);
+	};
+
+	this.print = function () {
+		if (this.next != null) this.next.print();
+		Essence.print(this.payload + "=>");
+	};
+
+	this.printList = function () {
+		if (this.next === null) Essence.txt2print += "->" + this.v;
+		else this.next.printList();
+		Essence.print("");
+	};
+
+	this.last = function () {
+		if (this.next === null) return this;
+		else return this.next.last()
+	};
+
+	this.append = function (n) {
+		if (this.next === null) {
+			this.next = new Node(n); //If there is no next node, link the new one here
+			this.next.prev = this;
+		} else this.next.append(n); //Else, append to next node
+	};
+
+	this.remove = function () {
+		var n = this.next;
+		this.next = n.next;
+		n.next.prev = this;
+	};
+
+	this.reverse = function () {
+		if (this.next == null) return this;
+		else {
+			var newHead = this.next.reverse();
+			newHead.next = this;
+			newHead.prev = null;
+			this.prev = newHead;
+			this.next = null;
+			return newHead
+		}
+	};
+
+	this.toString = function () {
+		return "Node(payload = " + this.payload + ", previous = " + this.prev + ", next = " + this.next + ")"
+	};
+
+	this.equals = function (node) {
+		return this.payload === node.payload &amp;&amp; this.next.equals(node.next) &amp;&amp; this.prev.equals(node.prev)
+	};
+
+	this.find = function (n, d) {
+		if (!d) d = 0;
+		if (this.payload === n) return d;
+		if (this.next) return this.next.find(n, d + 1);
+		return [-1, d]
+	};
+	return this;
+}
+
+/**
+ * @description Nodes for path finding algs
+ * @param {number} [g=0] Current total cost
+ * @param {number} [h=0] Current total heuristic
+ * @param {number[]} [pos=[0, 0]] 2D position of the node
+ * @param {Edge[]} [edges=[]] List of edges connected to the path node
+ * @param {*} [payload=""] Payload
+ * @returns {PathNode} Path node
+ * @this PathNode
+ * @constructor
+ * @since 1.0
+ * @property {number} PathNode.g Cost of the path to that node
+ * @property {number} PathNode.h Heuristic to get to that node
+ * @property {number} PathNode.f Cost of the path (g) + heuristic estimate
+ * @property {Edge[]} PathNode.edges List of edges connected to the path node
+ * @property {*} PathNode.payload Payload (content/data) of the node
+ * @property {number[]} PathNode.pos Position of the node
+ * @property {?PathNode} PathNode.parent Parent of the path-node
+ * @property {function(number): PathNode} PathNode.back Go n path-nodes back
+ * @property {function(PathNode): boolean} PathNode.isCloser Check if the current path-node is closer than the other one
+ * @property {function(): string} PathNode.toString String representation
+ * @property {Function} PathNode.join Join PathNodes with edges
+ *
+ */
+function PathNode (g, h, pos, payload, edges) {
+	this.g = g || 0;
+	this.h = h || 0;
+	this.f = this.g + this.h || 1;
+	this.pos = pos || [0, 0];
+	this.parent = null;
+	this.payload = payload || "";
+	this.edges = edges || [];
+
+	this.back = function (n) {
+		return (isNon(n) || n &lt;= 1)? this.parent: this.parent.back(n - 1);
+	};
+
+	this.isCloser = function (pn) {
+		return this.f &lt;= pn.f;
+	};
+
+	this.toString = function () {
+		return "PathNode(g=" + this.g + "h=" + this.h + "f=" + this.f + ", pos=[" + this.pos.toStr(true) + "], parent=" + (this.parent === null? null: this.parent.toString()) + ")";
+	};
+
+	this.join = function (PathNodes) {
+		for (var i = 0; i &lt; PathNodes.length; i++) {
+			this.edges[i].startNode = this;
+			this.edges[i].endNode = PathNodes[i];
+			PathNodes[i].edges.push(this.edges[i]);
+			PathNodes[i].edges.last().startNode = this;
+			PathNodes[i].edges.last().endNode = PathNodes[i];
+		}
+    };
+
+	return this;
+}
+
+/**
+ * @description Edge that connects two PathNodes
+ * @param {?PathNode} start Starting node
+ * @param {?PathNode} end Ending node
+ * @param {number} [len=0] Length of the edge.
+ * @this Edge
+ * @since 1.1
+ * @constructor
+ * @property {?PathNode} Edge.startNode Starting node of the edge
+ * @property {?PathNode} Edge.endNode Ending node of the edge
+ * @property {number} Edge.length Length of the edge
+ * @property {function(): string} Edge.toString String representation of the edge
+ * @property {Function} Edge.draw Draw the edge
+ */
+function Edge (start, end, len) {
+	this.startNode = start || null;
+	this.endNode = end || null;
+	this.length = len || ((!isNon(start) &amp;&amp; !isNon(end))? euclidianDist(start.pos, end.pos): 0);
+	this.line = new Line(start? start.pos: [0, 0], end? end.pos: [0, 0]);
+
+	this.toString = function () {
+		return "Edge(startNode=" + this.startNode + ", endNode=" + this.endNode + ", length=" + this.length + ")";
+	};
+
+	this.draw = function () {
+		this.line.draw();
+    }
+}
+
+/**
  * @description Binary tree node
  * @param {*} [pl=0] Payload
  * @param {TreeNode} [l] Left child
@@ -335,135 +512,6 @@ function TreeNode (pl, l, r) { //Binary tree
 	return this;
 }
 
-/**
- * @description Node
- * @param {*} [pl=1] Payload
- * @param {Node} [nx] Next node
- * @param {Node} [pv] Previous node
- * @this Node
- * @return {Node} Node
- * @constructor
- * @since 1.0
- * @property {NumberLike} Node.payload Payload
- * @property {Node} Node.next Next node
- * @property {function(): Node} Node.traverse Node traversal
- * @property {Function} Node.print Node printer
- * @property {Function} Node.printList Node list printer
- * @property {function(): Node} Node.last Get the last node
- * @property {function(NumberLike)} Node.append Append the list with a new node
- * @property {Function} Node.remove Node remover
- * @property {function(): Node} Node.reverse List reversal
- * @property {function(NumberLike, number): Nums} Node.find Look for a node
- * @property {function(Node): boolean} Node.equals Node comparator
- * @property {function(): string} Node.toString String representation
- */
-function Node (pl, nx, pv) {
-	this.payload = pl || 1;
-	this.next = nx; //Or new node()
-	this.prev = pv;
-
-	this.traverse = function () {
-		if (this.next) this.next.traverse();
-		Essence.say("payload: " + this.payload);
-	};
-
-	this.print = function () {
-		if (this.next != null) this.next.print();
-		Essence.print(this.payload + "=>");
-	};
-
-	this.printList = function () {
-		if (this.next === null) Essence.txt2print += "->" + this.v;
-		else this.next.printList();
-		Essence.print("");
-	};
-
-	this.last = function () {
-		if (this.next === null) return this;
-		else return this.next.last()
-	};
-
-	this.append = function (n) {
-		if (this.next === null) {
-			this.next = new Node(n); //If there is no next node, link the new one here
-			this.next.prev = this;
-		} else this.next.append(n); //Else, append to next node
-	};
-
-	this.remove = function () {
-		var n = this.next;
-		this.next = n.next;
-		n.next.prev = this;
-	};
-
-	this.reverse = function () {
-		if (this.next == null) return this;
-		else {
-			var newHead = this.next.reverse();
-			newHead.next = this;
-			newHead.prev = null;
-			this.prev = newHead;
-			this.next = null;
-			return newHead
-		}
-	};
-
-	this.toString = function () {
-		return "Node(payload = " + this.payload + ", previous = " + this.prev + ", next = " + this.next + ")"
-	};
-
-	this.equals = function (node) {
-		return this.payload === node.payload &amp;&amp; this.next.equals(node.next) &amp;&amp; this.prev.equals(node.prev)
-	};
-
-	this.find = function (n, d) {
-		if (!d) d = 0;
-		if (this.payload === n) return d;
-		if (this.next) return this.next.find(n, d + 1);
-		return [-1, d]
-	};
-	return this;
-}
-
-/**
- * @description Path node
- * @param {number} [g=0] Current total cost
- * @param {number} [h=0] Current total heuristic
- * @param {number[]} [pos=[0, 0]] 2D position of the node
- * @returns {PathNode} Path node
- * @this PathNode
- * @constructor
- * @since 1.0
- * @property {number} PathNode.g Cost of the path to that node
- * @property {number} PathNode.h Heuristic to get to that node.
- * @property {number} PathNode.f Cost of the path (g) + heuristic estimate
- * @property {number[]} PathNode.pos Position of the node
- * @property {?PathNode} PathNode.parent Parent of the path-node
- * @property {function(number): PathNode} PathNode.back Go n path-nodes back
- * @property {function(PathNode): boolean} PathNode.isCloser Check if the current path-node is closer than the other one
- * @property {function(): string} Node.toString String representation
- */
-function PathNode (g, h, pos) { //Nodes for path finding algs
-	this.g = g || 0;
-	this.h = h || 0;
-	this.f = this.g + this.h || 1;
-	this.pos = pos || [0, 0];
-	this.parent = null;
-
-	this.back = function (n) {
-		return (isNon(n) || n &lt;= 1)? this.parent: this.parent.back(n - 1);
-	};
-
-	this.isCloser = function (pn) {
-		return this.f &lt;= pn.f;
-	};
-
-	this.toString = function () {
-		return "PathNode(g=" + this.g + "h=" + this.h + "f=" + this.f + ", pos=[" + this.pos.toStr(true) + "], parent=" + (this.parent === null? null: this.parent.toString()) + ")";
-	};
-	return this;
-}
-
 NTreeNode.inheritsFrom(TreeNode);
 /**
  * @description N-ary tree node
@@ -703,7 +751,7 @@ function NTreeNode (pl, ch) {
  * @param {Node} node Node
  * @param {string} [symbol="--"] Symbol/string/character to denote a branch
  * @param {string} [start="|"] Starting symbol/string/character to denote the head of a branch
- * @param {number} [indent=0] Identation preceding a branch
+ * @param {number} [indent=0] Indentation preceding a branch
  * @return {string} Current buffer (assuming it'start only containing what this function added to it).
  * @func
  * @since 1.1
@@ -2191,13 +2239,13 @@ function Prim (tree) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="external-String.html">String</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#Buffer">Buffer</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#DocTemplate">DocTemplate</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="external-String.html">String</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-Edge.html">Edge</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidExpressionError.html">InvalidExpressionError</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#Buffer">Buffer</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#DocTemplate">DocTemplate</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Wed Nov 09 2016 17:54:07 GMT+0000 (GMT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Sun Dec 18 2016 13:19:47 GMT+0000 (GMT)
 </footer>
 
 <script> prettyPrint(); </script>

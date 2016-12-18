@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: WebApp</title>
+    <title>JSDoc: Class: InvalidExpressionError</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: WebApp</h1>
+    <h1 class="page-title">Class: InvalidExpressionError</h1>
 
     
 
@@ -29,7 +29,7 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="module-Web.html">Web</a>~</span>WebApp</h2>
+            <span class="ancestors"><a href="module-QTest.html">QTest</a>~</span>InvalidExpressionError</h2>
         
     
 </header>
@@ -41,14 +41,14 @@
 
     
 
-    <h4 class="name" id="WebApp"><span class="type-signature"></span>new WebApp<span class="signature">(name<span class="signature-attributes">opt</span>, path<span class="signature-attributes">opt</span>, author<span class="signature-attributes">opt</span>, ver<span class="signature-attributes">opt</span>, stct<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {WebApp}</span></h4>
+    <h4 class="name" id="InvalidExpressionError"><span class="type-signature"></span>new InvalidExpressionError<span class="signature">(msg<span class="signature-attributes">opt</span>, fname<span class="signature-attributes">opt</span>, lineNum<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {InvalidExpressionError}</span></h4>
 
     
 
 
 
 <div class="description">
-    Web application
+    Invalid parameter error
 </div>
 
 
@@ -58,7 +58,7 @@
 
 
     <h5>This:</h5>
-    <ul><li>{WebApp}</li></ul>
+    <ul><li>{InvalidExpressionError}</li></ul>
 
 
 
@@ -91,7 +91,7 @@
 
         <tr>
             
-                <td class="name"><code>name</code></td>
+                <td class="name"><code>msg</code></td>
             
 
             <td class="type">
@@ -118,19 +118,19 @@
             
                 <td class="default">
                 
-                    "Web App"
+                    "The parameter used at &lt;code>lineNum&lt;/code> is invalid"
                 
                 </td>
             
 
-            <td class="description last">Name</td>
+            <td class="description last">Message</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>path</code></td>
+                <td class="name"><code>fname</code></td>
             
 
             <td class="type">
@@ -157,58 +157,17 @@
             
                 <td class="default">
                 
-                    ""
-                
                 </td>
             
 
-            <td class="description last">Path</td>
+            <td class="description last">Filename</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>author</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    "Maximilian Berkmann"
-                
-                </td>
-            
-
-            <td class="description last">Author</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>ver</code></td>
+                <td class="name"><code>lineNum</code></td>
             
 
             <td class="type">
@@ -235,49 +194,10 @@
             
                 <td class="default">
                 
-                    1.0
-                
                 </td>
             
 
-            <td class="description last">Version</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>stct</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">Structure</td>
+            <td class="description last">Line number</td>
         </tr>
 
     
@@ -285,196 +205,6 @@
 </table>
 
 
-
-
-
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    
-
-<table class="props">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>WebApp.name</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Name of the app</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>WebPage.path</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Path of the file</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>WebPage.author</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Author</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>WebPage.version</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Version</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>WebPage.dirs</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;string></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">List of directories</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>WebPage.pages</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Template</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Pages</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>WebPage.build</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Build the pages</td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -485,7 +215,7 @@
 
     
     <dt class="tag-since">Since:</dt>
-    <dd class="tag-since"><ul class="dummy"><li>1.0</li></ul></dd>
+    <dd class="tag-since"><ul class="dummy"><li>1.1</li></ul></dd>
     
 
     
@@ -511,19 +241,12 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_Web.js.html">modules/Web.js</a>, <a href="modules_Web.js.html#line934">line 934</a>
+        <a href="modules_QTest.js.html">modules/QTest.js</a>, <a href="modules_QTest.js.html#line94">line 94</a>
     </li></ul></dd>
     
 
     
 
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="module-Web-WebPage.html">module:Web~WebPage</a></li>
-        </ul>
-    </dd>
     
 
     
@@ -539,13 +262,28 @@
 
 
 
+<h5>Throws:</h5>
+
+        
+
+    <div class="param-desc">
+    
+        
+<span class="param-type">Error</span>
+
+
+    
+    </div>
+
+
+    
 
 
 <h5>Returns:</h5>
 
         
 <div class="param-desc">
-    Web app
+    Error
 </div>
 
 
@@ -556,7 +294,7 @@
     </dt>
     <dd>
         
-<span class="param-type">WebApp</span>
+<span class="param-type">InvalidExpressionError</span>
 
 
     </dd>
@@ -568,6 +306,17 @@
 
     
     </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li>Error</li>
+    </ul>
+
 
     
 
@@ -602,7 +351,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Sun Dec 18 2016 13:19:48 GMT+0000 (GMT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Sun Dec 18 2016 13:19:47 GMT+0000 (GMT)
 </footer>
 
 <script> prettyPrint(); </script>
