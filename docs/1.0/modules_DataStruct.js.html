@@ -709,7 +709,7 @@ function Set (arr) {
     };
 
     this.add = function (item) {
-        if (isType(item, "array")) {
+        if (isType(item, "Array")) {
             for (var i = 0; i &lt; item.length; i++) this.add(item[i]);
         }
         if (this.value.indexOf(item) === -1) this.value.push(item)
@@ -717,7 +717,7 @@ function Set (arr) {
 
     this.remove = function (item) {
         if (this.value.indexOf(item) !== -1) {
-            if (isType(item, "array")) {
+            if (isType(item, "Array")) {
                 for(var i = 0; i &lt; item.length; i++) this.remove(item[i]);
             } else this.value = this.value.remove(item)
         }
@@ -732,7 +732,7 @@ function Set (arr) {
     };
 
     this.contains = function (item) {
-        if (isType(item, "array")) {
+        if (isType(item, "Array")) {
             var c = true;
             for (var i = 0; i &lt; item.length; i++) {
                 if (!c) return false; //Reduce the cost of the operation by not doing any unnecessary work
@@ -821,7 +821,7 @@ function SortedSet (arr) {
     this.value = arr || [];
     this.add = function (item) {
         if (this.value.indexOf(item) === -1) {
-            if (isType(item, "array")) this.value = this.value.concat(rmDuplicates(item));
+            if (isType(item, "Array")) this.value = this.value.concat(rmDuplicates(item));
             else this.value.push(item);
         }
         this.value = rmDuplicates(this.value);
@@ -873,7 +873,7 @@ function Stack (arr, lim) {
      */
     this.push = function (item) {
         if (this.isFull()) throw new Error("Stack overflow !");
-        isType(item, "array")? this.value.append(item): this.value.push(item);
+        isType(item, "Array")? this.value.append(item): this.value.push(item);
     };
 
     /**
@@ -942,7 +942,7 @@ function StackArray (sz) {
      */
     this.push = function (item) {
         if (this.isFull()) throw new Error("Stack overflow !");
-        if (isType(item, "array")) {
+        if (isType(item, "Array")) {
             for(var i = 0; i &lt; item.length; i++) this.push(item[i]);
         } else {
             this.top++;
@@ -957,7 +957,7 @@ function StackArray (sz) {
      */
     this.pop = function (item) {
         if (this.isEmpty()) throw new Error("Stack underflow !");
-        if (isType(item, "array")) {
+        if (isType(item, "Array")) {
             for(var i = 0; i &lt; item.length; i++) this.pop(item[i]);
         } else {
             var el = this.peek();
@@ -1015,7 +1015,7 @@ function StackList (arr) {
     };
 
     this.push = function (item) {
-        if (isType(item, "array")) {
+        if (isType(item, "Array")) {
             for(var i = 0; i &lt; item.length; i++) this.push(item[i]);
         } else {
             var n = new Node(item, this.top);
@@ -1082,7 +1082,7 @@ function Queue (arr, lim) {
      */
     this.enqueue = function (item) {
         if (this.isFull()) throw new Error("Queue overflow !");
-        isType(item, "array")? this.value.prepend(item): this.value.unshift(item);
+        isType(item, "Array")? this.value.prepend(item): this.value.unshift(item);
     };
 
     /**
@@ -1156,7 +1156,7 @@ function QueueArray (arr) {
      * @param {*} item Item
      */
     this.enqueue = function (item) {
-        if (isType(item, "array")) {
+        if (isType(item, "Array")) {
             for(var i = 0; i &lt; item.length; i++) this.enqueue(item[i]);
         } else {
             if (this.isFull()) throw new Error("The queue is full");
@@ -1235,7 +1235,7 @@ function QueueList () {
     this.len = 0;
 
     this.enqueue = function (item) {
-        if (isType(item, "array")) {
+        if (isType(item, "Array")) {
             for(var i = 0; i &lt; item.length; i++) this.enqueue(item[i]);
         } else {
             var n = this.back != null? new Node(item, this.back, null): new Node(item);
@@ -1568,7 +1568,7 @@ function virtualHistory (elm) {
     };
 
     this.add = function (val) { //Add a state
-        if (isType(val, "array")) {
+        if (isType(val, "Array")) {
             for (var i = 0; i &lt; val.length; i++) this.add(val[i]);
         } else {
             this.src = val;

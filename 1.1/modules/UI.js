@@ -11,7 +11,7 @@
  * @type {Module}
  * @exports UI
  */
-var UI = new Module("UI", "UI stuff", ["Maths"]);
+var UI = new Module("UI", "UI stuff", ["Maths", "DOM"]);
 
 /* eslint no-undef: 0 */
 /**
@@ -426,6 +426,21 @@ function hsv2rgb (hsv, toArray) {
     });
 
     return toArray? rgb: "rgb(" + rgb.join(", ") + ")";
+}
+
+/**
+ * @description Get the colour type of a colour
+ * @param {String} clr Colour
+ * @return {?String} Colour type (if present)
+ * @throws {InvalidExpressionError} Not a valid colour!
+ * @since 1.1
+ * @func
+ */
+function getColourType(clr) {
+	if (!isValid(clr, "colour")) throw new InvalidExpressionError(clr + " isn't a colour!");
+	if (/^#?([a-f\d]{1,2})([a-f\d]{1,2})([a-f\d]{1,2})$/i.test(clr)) return "hex";
+	var colourNames = [clr.replace(/^(rgb|hsl|hsv|hsb)\(([0-9]+,\s){2}([0-9]+)\)$/, "$1"), clr.replace(/^(rgb|hsl|hsv|hsb)a\(([0-9]+,\s){3}((0|1|)\.[0-9]*)\)$/, "$1")];
+	return colourNames[0] != clr? colourNames[0]: (colourNames[1] != clr? colourNames[1]: null);
 }
 
 /**
@@ -1308,6 +1323,18 @@ function radialGradient (clrI, clrF, n) {
 /* eslint no-unused-vars: 2 */
 
 /**
+ * @description Check if a colour is dark<i>-ish</i>.
+ * @param {string} clr Colour
+ * @return {boolean} Darkness
+ * @since 1.1
+ * @func
+ */
+function isDark (clr) {
+
+	return true;
+}
+
+/**
  * @description Day/night mode
  * @type {boolean}
  * @default
@@ -1324,13 +1351,25 @@ $G["dnM"] = false;
  * @func
  */
 function daynightMode (exch) { //Switch between enabled or not for Day/Night page vision
-	var h = new Date().getHours();
-	if (exch) $G["dnM"] = !$G["dnM"];
-	if ($G["dnM"]) {
+	var h = new Date().getHours(), getTags = function () {
+        return rmDuplicates(DomTree().getOrder().split("->"));
+    };
+	if (exch) $G.dnM = !$G.dnM;
+	if ($G.dnM) {
 		//negateColour("body", "color", "a");
 		//negateColour("body", "backgroundColor", "a");
-		if (h >= 21) $e("body").setStyles(["backgroundColor", "#000", "color", "#fff"]);
-		else $e("body").setStyles(["backgroundColor", "#fff", "color", "#000"]);
+		/*if (h >= 20) $e("body").setStyles(["backgroundColor", "#000", "color", "#fff"]);
+		else $e("body").setStyles(["backgroundColor", "#fff", "color", "#000"]);*/
+		var tags = getTags().map(function (name) {
+			return $e("*" + name);
+        }), darkTime = (h >= 20 || h <= 3); //Assuming it will be dark between 8pm and 3am
+
+		Essence.say((darkTime ? "It's dark" : "It's light") + "!", "info");
+
+		for (var i = 0; i < tags.length; i++) {
+			//console.log("#%d tag: %s => %s", i, tags[i], tags[i].node);
+			if (darkTime) tags[i].invColour();
+		}
 	} else Essence.say("You cannot use the day/night mod if it\'start disabled.", "warn")
 }
 

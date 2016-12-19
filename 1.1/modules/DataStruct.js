@@ -500,7 +500,7 @@ NTreeNode.inheritsFrom(TreeNode);
  * @property {function(NTreeNode)} NTreeNode.remove Child remove
  * @property {function(): NTreeNode} NTreeNode.traverse Tree traversal
  * @property {Function} NTreeNode.printInOrder Console in-order printing
- * @property {Function} NTreeNode.printPreOrder Console pre-o 	rder printing
+ * @property {Function} NTreeNode.printPreOrder Console pre-order printing
  * @property {Function} NTreeNode.printPostOrder Console post-order printing
  * @property {Function} NTreeNode.printInOrder Console in-order printing
  * @property {function(number, string, number, string)} NTreeNode.inOrder Window in-order printing
@@ -606,9 +606,12 @@ function NTreeNode (pl, ch) {
 
 	//Getter
 	this.getOrder = function (sym) {
-		return this.payload + (sym || "->") + this.child.map(function (child) {
-				return child.payload
-			}).join(sym || "->");
+		if (!sym) sym = "->";
+		//var self = this;
+		var getPayloads = function (node) {
+            return node.isLeaf()? node.payload: node.payload + sym + node.getOrder(sym);
+        };
+		return this.payload + sym + this.child.map(getPayloads).join(sym);
 	};
 
 	this.isLeaf = function () {
@@ -776,7 +779,7 @@ function Set (arr) {
 	};
 
 	this.add = function (item) {
-		if (isType(item, "array")) {
+		if (isType(item, "Array")) {
 			for (var i = 0; i < item.length; i++) this.add(item[i]);
 		}
 		if (this.value.indexOf(item) === -1) this.value.push(item)
@@ -784,7 +787,7 @@ function Set (arr) {
 
 	this.remove = function (item) {
 		if (this.value.has(item)) {
-			if (isType(item, "array")) {
+			if (isType(item, "Array")) {
 				for(var i = 0; i < item.length; i++) this.remove();
 			} else this.value = this.value.remove()
 		}
@@ -799,7 +802,7 @@ function Set (arr) {
 	};
 
 	this.contains = function (item) {
-		if (isType(item, "array")) {
+		if (isType(item, "Array")) {
 			var c = true;
 			for (var i = 0; i < item.length; i++) {
 				if (!c) return false; //Reduce the cost of the operation by not doing any unnecessary work
@@ -887,7 +890,7 @@ SortedSet.inheritsFrom(Set);
 function SortedSet (arr) {
 	this.value = Copy(arr).quickSort() || [];
 	this.add = function (item) {
-		isType(item, "array")? this.value.multiPlace(item): this.value.place(item);
+		isType(item, "Array")? this.value.multiPlace(item): this.value.place(item);
 		this.value = rmDuplicates(this.value);
 	};
 
@@ -937,7 +940,7 @@ function Stack (arr, lim) {
 	 */
 	this.push = function (item) {
 		if (this.isFull()) throw new Error("Stack overflow !");
-		isType(item, "array")? this.value.append(item): this.value.push(item);
+		isType(item, "Array")? this.value.append(item): this.value.push(item);
 	};
 
 	/**
@@ -1007,7 +1010,7 @@ function StackArray (sz) {
 	 */
 	this.push = function (item) {
 		if (this.isFull()) throw new Error("Stack overflow !");
-		if (isType(item, "array")) {
+		if (isType(item, "Array")) {
 			for(var i = 0; i < item.length; i++) this.push(item[i]);
 		} else {
 			this.top++;
@@ -1022,7 +1025,7 @@ function StackArray (sz) {
 	 */
 	this.pop = function (item) {
 		if (this.isEmpty()) throw new Error("Stack underflow !");
-		if (isType(item, "array")) {
+		if (isType(item, "Array")) {
 			for(var i = 0; i < item.length; i++) this.pop(item[i]);
 		} else {
 			var el = this.peek();
@@ -1080,7 +1083,7 @@ function StackList (arr) {
 	};
 
 	this.push = function (item) {
-		if (isType(item, "array")) {
+		if (isType(item, "Array")) {
 			for(var i = 0; i < item.length; i++) this.push(item[i]);
 		} else this.top = new Node(item, this.top);
 		return this
@@ -1159,7 +1162,7 @@ function Queue (arr, lim) {
 	 */
 	this.enqueue = function (item) {
 		if (this.isFull()) throw new Error("Queue overflow !");
-		isType(item, "array")? this.value.prepend(item): this.value.unshift(item);
+		isType(item, "Array")? this.value.prepend(item): this.value.unshift(item);
 	};
 
 	/**
@@ -1234,7 +1237,7 @@ function QueueArray (arr) {
 	 * @returns {undefined}
 	 */
 	this.enqueue = function (item) {
-		if (isType(item, "array")) {
+		if (isType(item, "Array")) {
 			for(var i = 0; i < item.length; i++) this.enqueue(item[i]);
 		} else {
 			if (this.isFull()) throw new Error("The queue is full");
@@ -1312,7 +1315,7 @@ function QueueList () {
 	this.len = 0;
 
 	this.enqueue = function (item) {
-		if (isType(item, "array")) {
+		if (isType(item, "Array")) {
 			for(var i = 0; i < item.length; i++) this.enqueue(item[i]);
 		} else {
 			var n = this.back != null? new Node(item, this.back, null): new Node(item);
@@ -1683,7 +1686,7 @@ function virtualHistory (elm) {
 	};
 
 	this.add = function (val) { //Add a state
-		if (isType(val, "array")) {
+		if (isType(val, "Array")) {
 			for (var i = 0; i < val.length; i++) this.add(val[i]);
 		} else {
 			this.src = val;

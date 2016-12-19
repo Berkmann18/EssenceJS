@@ -168,7 +168,7 @@ function Item (name, cat, price, amr, nb) { //An item like the ones that can be 
 	this.toString = function () {
 		var str = "";
 		for (var p in this) {
-			if (this.hasOwnProperty(p) && p != "toString" && !isType(p, "function")) str += p + "=" + this[p] + ", ";
+			if (this.hasOwnProperty(p) && p != "toString" && !isType(p, "Function")) str += p + "=" + this[p] + ", ";
 		}
 		return str.substring(0, str.length-2)
 	};

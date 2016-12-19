@@ -159,7 +159,7 @@ function isValid (txt, type) {
 		case "variable":
 			pattern = /^[A-Za-z_$]+[0-9]*[A-Za-z_$]*$/;
 			break;
-		case "color":
+		case "colour":
 			pattern = /^(#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6}))|(rgb\(([0-9]+,\s){2}([0-9]+)\))|(rgba\(([0-9]+,\s){3}((0|1|)\.[0-9]*)\))|(hsl\(([0-9]+,\s){2}([0-9]+)\))|(hsla\(([0-9]+,\s){3}((0|1|)\.[0-9]*)\))$/;
 			break;
 		case "url":

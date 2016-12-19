@@ -1,15 +1,24 @@
 ## General
-+ 
+^ Documentation
+
+^ Fixed the mistypes on the Type checkers/getters throughout the project.
 
 ## [essence](essence.js)
-+ \+ Object.inherits()
+^ Element.invColour(), added an empty color/background-color support
+
+^ Made isType() and isCustomType() dependent on their counterparts and suppressed the case manipulation to remove complexity and prevent erroneous valid code
+
+^ Element.css() is now compatible with elements based on NodeLists such as $e("*...")
+
+\+ Element.selector
+
+^ Element.setCSS() now properly checks for NodeLists instead for hopping for arrays which will never happen
 
 ## [Ajax](modules/Ajax.js)
-+ \^ PUT(), DELETE()
++ 
 
 ## [DataStruct](modules/DataStruct.js)
-+ ^ Perm(), Comb()
-+ \+ PathNode.payload, Edge, PathNode.join()
+^ getOrder() now display all the child instead of just the direct ones from the caller
 
 ## [DOM](modules/DOM.js)
 + 
@@ -18,7 +27,7 @@
 + 
 
 ## [Maths](modules/Maths.js)
-+ \+ timeDiff(), revPolishCalc()
++ 
 
 ## [Misc](modules/Misc.js)
 + 
@@ -27,12 +36,12 @@
 + 
 
 ## [UI](modules/UI.js)
-+ ^ rgb2hex(), hex2rgb()
-+ \+ rgb2hsl(), hsl2rgb(), rgb2hsv(), hsv2rgb()
+\+ getColourType() which supports: hex, rgb(a), hsl(a), hsv(a) and hsb(a);
+
+^ daynightMode now manipulates the entire DOM and acts on a more appropriate time range
 
 ## [Web](modules/Web.js)
-+ \+ rmCookie()
++
 
 ## [QTest](modules/QTest.js)
-+ ^ InvalidParamError()
-+ \+ InvalidExpressionError()
+^ Fixed a typo in InvalidExpressionError
