@@ -4,19 +4,18 @@
 | 1 | L | Improve getResources() | to do | [DOM] |
 | 2 | L | Improve Console() | to do | [Web] |
 | 3 | M | Comparing DB and server's event handlers/listeners and use the best for the rest | to do |  |
-| 4 | M | Improve daynightMode() (using Dom*() | to do | [UI] |
+| 4 | M | Test daynightMode() (using Dom*() | in progress | [UI] |
 | 5 | M | Add a complete thing for DocTemplate (to avoid having to add manually of the things) | to do | [DOM] |
 | 6 | H | Speed up the framework | waiting for pre-1.2 release |  |
 | 7 | H | Rewrite README.md | to do | [README](README.md) |
 | 8 | L | Test DES() | to do | [Security] |
 | 9 | L | Add an URL (or any good) pipeline to BuddyGit to send updates to the github website for each releases | to do |  |
 | 10 | H | Add tutorials and a demo | to do  |  |
-| 11 | M | Add edges (object that could be used to show visual connections between nodes) | to do  | [DataStruct] |
+| 11 | M | Add edges (object that could be used to show visual connections between nodes) | to test  | [DataStruct] |
 | 12 | M | Test A in AlgTest.html | to continue | [AlgTest](test/algTest.html) |
 | 13 | L | Adding a dynamic real-time table/update (e.g: news feeds) | to add |  |
 | 14 | L | Adding the real-time chat feature as well as the console one | to add | |
 | 15 | L | Currency conversion | to add | [Maths] |
-| 16 | L | Password checker | to add | [Security] |
 | 17 | L | History (event history, command history, viewed pages, ...) | to add | |
 | 18 | M | Colour.getColourName() | to continue | [UI] |
 | 19 | M | greyish hover effect for rows/columns headers that would highlight the whole row/column | to add | [UI] |
@@ -57,6 +56,7 @@
 | 54 | H | Getting $Data.save() to save at the desired place and making sure the rest works | to fix | [Files]~$Data |
 | 55 | H | Array.(min/max)(Avg/Mean)() | to fix | [essence]~Array |
 | 56 | H | Moving onto 1.2 using ES6+Node.js(+ExpressJS) | to do | |
+| 57 | L | Add an element creator (a bit like in React) such that: createElement("tagname", {attr: val, ..., onEvt: handler, ...}, "Value") will create an object (Component) which will be transformed into this <tagname attr="val" onEvt="handler(this)">Value</tagname> after being rendered by a renderer | to add | [Dom]~createComponent (React.createElement), [UI]~renderComponent |
 
 [essence]: 1.1/essence.js
 [Ajax]: 1.1/modules/Ajax.js

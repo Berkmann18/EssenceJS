@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>EssenceJS Performance test</title>
+    <meta charset="UTF-8" />
+    <meta name="author" content="Maximilian Berkmann" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script type="text/javascript" src="1.1/essence.js" async defer></script>
+    <script type="text/javascript" async defer>
+        function start () {
+            Essence.init();
+            $e("body").after("<span id='log'>log here</span>", true);
+            $e("#log").write("<p><em>Essence.applyCSS</em>: " + time(Essence.applyCSS) + "ms</p>", true);
+            $e("#log").after("<p><em>Header change</em>: " + time(function () {
+                $e("header>h2").write($G.lorem.chunk(0, 4))
+            }) + "ms</p>", true);
+            $e("#log").after("<p><em>Footer change</em>: " + time(function () {
+                $e("footer").remove("me");
+                $e("footer").after(" " + Essence.author)
+            }) + "ms</p>", true);
+            $e("#log").after("<p><em>Log styling</em>: " + time(function () {
+                $e("#log").setStyles(["display", "inline-block", "text-align", "center", "border", "1px solid #000", "border-radius", "5px", "padding", "2px"]);
+            }) + "ms</p>", true);
+        }
+        function Init (stackLayer) {
+            //Slower by ~100ms, changing the timeout to 0 would improve it a little but cause some ML errors to pop up more frequently
+            if (typeof Essence !== "undefined") {
+                start();
+            } else if (stackLayer > 3) {
+                console.log("Wow, hold on ! %d stack layers down !!", stackLayer);
+                setTimeout("Init()", 5);
+            } else {
+                console.warn("EssenceJS is not currently available !");
+                Init(stackLayer? stackLayer + 1: 1);
+            }
+        }
+    </script>
+</head>
+<body onpageshow="start();" onload="Essence.preInit();">
+    <article>
+        <header>
+            <h2>Header</h2>
+        </header>
+        <p>Some text</p>
+        <footer>By me</footer>
+    </article>
+</body>
+</html>

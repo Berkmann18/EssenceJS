@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>EssenceJS SpeedTest</title>
+    <meta charset="UTF-8" />
+    <meta name="author" content="Maximilian Berkmann" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <script type="text/javascript" src="../1.1/essence.js" async defer></script>
+    <script type="text/javascript" async defer>
+        function start () {
+            Essence.init();
+            $e("body").after("<span id='log'>log here</span>", true);
+            $e("#log").write("<p><em>Essence.applyCSS time</em>: " + time(Essence.applyCSS()) + "</p>", true);
+            time($e("header>h2").write($G.lorem.chunk(0, 4)));
+        }
+    </script>
+</head>
+<body onpageshow='start();' onload='Essence.preInit();'>
+    <article>
+        <header>
+            <h2>Header</h2>
+        </header>
+        <p>Some text</p>
+        <footer>By me</footer>
+    </article>
+</body>
+</html>

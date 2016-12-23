@@ -13,7 +13,7 @@
  * @type {Module}
  * @exports File
  */
-var Files = new Module("Files", "File management and control", ["Ajax", "Misc"]);
+var Files = new Module("Files", "File management and control", ["Ajax", "Misc", "DOM"]);
 
 /* eslint no-undef: 0 */
 /**
@@ -377,4 +377,25 @@ function $Data (filename, data) {
 	};
 
 	return this;
+}
+
+/**
+ * @description Load a stylesheet in a deferred manner.<br />
+ * Inspired by {@link https://developers.google.com/speed/docs/insights/OptimizeCSSDelivery|Google's CSS Optimized delivery}.
+ * @param {String} file Filename
+ * @returns {undefined}
+ * @since 1.1
+ * @func
+ */
+function loadDeferredStyle (file) {
+    var addStylesNode = tryNode("noscript#deferredStyles", "body");
+    var replacement = document.createElement("div");
+    replacement.innerHTML = addStylesNode.innerText;
+    document.body.appendChild(replacement);
+    addStylesNode.delete();
+    var raf = requestAnimationFrame || mozRequestAnimationFrame || webkitRequestAnimationFrame || msRequestAnimationFrame;
+    if (raf) raf(function () {
+    	wait(loadDeferredStyle);
+    });
+    else window.addEventListener("load", loadDeferredStyle);
 }

@@ -11,7 +11,7 @@
  * @type {Module}
  * @exports UI
  */
-var UI = new Module("UI", "UI stuff", ["Maths"]);
+var UI = new Module("UI", "UI stuff", ["Maths", "DOM"]);
 
 /* eslint no-undef: 0 */
 /**
@@ -429,6 +429,21 @@ function hsv2rgb (hsv, toArray) {
 }
 
 /**
+ * @description Get the colour type of a colour
+ * @param {String} clr Colour
+ * @return {?String} Colour type (if present)
+ * @throws {InvalidExpressionError} Not a valid colour!
+ * @since 1.1
+ * @func
+ */
+function getColourType(clr) {
+	if (!isValid(clr, "colour")) throw new InvalidExpressionError(clr + " isn't a colour!");
+	if (/^#?([a-f\d]{1,2})([a-f\d]{1,2})([a-f\d]{1,2})$/i.test(clr)) return "hex";
+	var colourNames = [clr.replace(/^(rgb|hsl|hsv|hsb)\(([0-9]+,\s){2}([0-9]+)\)$/, "$1"), clr.replace(/^(rgb|hsl|hsv|hsb)a\(([0-9]+,\s){3}((0|1|)\.[0-9]*)\)$/, "$1")];
+	return colourNames[0] != clr? colourNames[0]: (colourNames[1] != clr? colourNames[1]: null);
+}
+
+/**
  * @description Switch the colour of the <code>elmt</code>'start attribute (that can be the background/border/font colour of an HTML element and which is in hex form) to it'start red/green/blue/yellow/cyan/magenta/full negative version.
  * @param {string} elmt Element to be used
  * @param {string} attr Attribute to be used
@@ -600,7 +615,7 @@ function Shape (x, y, b, v) {
 	};
 
 	this.copy = function () {
-		return new Shape(this.x, this.y, this.b, this.vel)
+		return new Shape(this.x, this.y, this.border, this.vel)
 	};
 
 	this.mult = function (k) {
@@ -711,8 +726,8 @@ function Box (x, y, z, w, h, d, bsz, bclr, clr, brd) {
 			context.rotate(alpha);
 		})
 	};
-	this.translate = function (px, py, pz) {
-		runCanvas(function (context) {
+    this.translate = function (px, py) {
+        runCanvas(function (context) {
 			context.translate(px, py);
 		})
 	};
@@ -784,11 +799,11 @@ function AABB (x, y, w, h, b, v) {
 	};
 
 	this.hit = function (obj, s) {
-		return (s === "l")?  obj.offset("l") <= this.offset("rad"): ((s === "rad")? obj.offset("rad") >= this.offset("l"): ((s === "u")? obj.offset("u") <= this.offset("d"): ((s === "d")? obj.offset("d") >= this.offset("u"): (this.hit(obj, "l") || this.hit(obj, "rad") || this.hit(obj, "u") || this.hit(obj, "d")))))
+		return (s === "l")?  obj.offset("l") <= this.width: ((s === "r")? obj.offset("rad") >= this.x: ((s === "u")? obj.offset("u") <= this.height: ((s === "d")? obj.offset("d") >= this.y: (this.hit(obj, "l") || this.hit(obj, "rad") || this.hit(obj, "u") || this.hit(obj, "d")))))
 	};
 
 	this.copy = function () {
-		return new AABB(this.x, this.y, this.width, this.height, this.b, this.vel)
+		return new AABB(this.x, this.y, this.width, this.height, this.border, this.vel)
 	};
 
 	this.concat = function (a) {
@@ -877,8 +892,8 @@ function Circ (x, y, r, b, v) {
 
 	this.hit = function (obj, s) { //More like a getHit(obj) but for also circle/circle situations
 		if (obj.hit(this, s || "")) {
-			this.bounce(obj.norm);
-			this.update();
+			this.vel.bounce(obj.norm);
+			this.vel.update();
 			return true
 		} return false
 	};
@@ -999,6 +1014,11 @@ Vector.inheritsFrom(Shape);
  * @property {function(): Vector} Vector.getNormal Get the normal of the vector
  * @property {function(): Vector} Vector.zero Null vector
  * @property {function(): Vector} Vector.neg Negate the vector
+ * @property {function(number): Vector} Vector.mult Multiply this vector by a scalar
+ * @property {function(number): Vector} Vector.div Divide this vector by a scalar
+ * @property {function(Vector): Vector} Vector.add Add two vectors together
+ * @property {function(number): Vector} Vector.addScalar Add a scalar to the vector
+ * @property {function(Vector): Vector} Vector.sub Subtract two vectors
  * @property {function(Vector): number} Vector.dot Dot/scalar product
  * @property {function(Vector): number} Vector.cross Cross/vector product
  * @property {function(): number} Vector.lenSq Length squared
@@ -1038,6 +1058,36 @@ function Vector (x, y) {
 		return this
 	};
 
+    this.mult = function (k) {
+        this.x *= k;
+        this.y *= k;
+        return this
+    };
+
+    this.div = function (k) {
+        this.x /= k;
+        this.y /= k;
+        return this
+    };
+
+    this.addScalar = function (k) {
+        this.x += k;
+        this.y += k;
+        return this
+    };
+
+    this.add = function (v) {
+        this.x += v.x;
+        this.y += v.y;
+        return this
+    };
+
+    this.sub = function (v) {
+        this.x -= v.x;
+        this.y -= v.y;
+        return this
+    };
+
 	this.neg = function () {
 		this.x = -this.x;
 		this.y = -this.y;
@@ -1061,8 +1111,8 @@ function Vector (x, y) {
 	};
 
 	this.reflect = function (normal) { //.. on a normal
-		var n = normal || this.normal.copy();
-		n.mult(2 * this.dot(normal || this.normal));
+		var n = normal || this.getNormal().copy();
+		n.mult(2 * this.dot(normal || this.getNormal()));
 		this.sub(n);
 		return this
 	};
@@ -1125,7 +1175,7 @@ function Polygon (pts, b, v) {
 	};
 
 	this.copy = function () {
-		return new Polygon(this.points, this.b, this.vel)
+		return new Polygon(this.points, this.border, this.vel)
 	};
 
 	this.draw = function () {
@@ -1308,6 +1358,18 @@ function radialGradient (clrI, clrF, n) {
 /* eslint no-unused-vars: 2 */
 
 /**
+ * @description Check if a colour is dark<i>-ish</i>.
+ * @param {string} clr Colour
+ * @return {boolean} Darkness
+ * @since 1.1
+ * @func
+ */
+function isDark (clr) {
+
+	return true;
+}
+
+/**
  * @description Day/night mode
  * @type {boolean}
  * @default
@@ -1324,13 +1386,25 @@ $G["dnM"] = false;
  * @func
  */
 function daynightMode (exch) { //Switch between enabled or not for Day/Night page vision
-	var h = new Date().getHours();
-	if (exch) $G["dnM"] = !$G["dnM"];
-	if ($G["dnM"]) {
+	var h = new Date().getHours(), getTags = function () {
+        return rmDuplicates(DomTree().getOrder().split("->"));
+    };
+	if (exch) $G.dnM = !$G.dnM;
+	if ($G.dnM) {
 		//negateColour("body", "color", "a");
 		//negateColour("body", "backgroundColor", "a");
-		if (h >= 21) $e("body").setStyles(["backgroundColor", "#000", "color", "#fff"]);
-		else $e("body").setStyles(["backgroundColor", "#fff", "color", "#000"]);
+		/*if (h >= 20) $e("body").setStyles(["backgroundColor", "#000", "color", "#fff"]);
+		else $e("body").setStyles(["backgroundColor", "#fff", "color", "#000"]);*/
+		var tags = getTags().map(function (name) {
+			return $e("*" + name);
+        }), darkTime = (h >= 20 || h <= 3); //Assuming it will be dark between 8pm and 3am
+
+		Essence.say((darkTime ? "It's dark" : "It's light") + "!", "info");
+
+		for (var i = 0; i < tags.length; i++) {
+			//console.log("#%d tag: %s => %s", i, tags[i], tags[i].node);
+			if (darkTime) tags[i].invColour();
+		}
 	} else Essence.say("You cannot use the day/night mod if it\'start disabled.", "warn")
 }
 

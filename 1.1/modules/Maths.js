@@ -624,7 +624,7 @@ function C (n, r) {
  * @param {number} p Success probability
  * @param {number} r Number of attempts
  * @param {string} sign Sign used in the expression
- * @returns {number} Normal distribution
+ * @returns {?number} Normal distribution
  * @see module:Maths~Bin
  * @see module:Maths~Norm
  * @since 1.0
@@ -634,7 +634,7 @@ function Bin2Norm (n, p, r, sign) {
 	if (n * p > 5 && n * (1 - p) > 5) {
 		r += (sign === ">=")? -.5: .5; //Continuity correction
 		return StdNorm(n * p, Math.sqrt(n * p * (1 - p)), r)
-	} else return false
+	} else return null;
 }
 
 /**
@@ -2298,7 +2298,7 @@ function range2base (min, inc, max, b) {
  * @param {number} [inc=1] Increment
  * @param {number} [max=100] Maximum
  * @param {boolean} [noRepeat=false] No repeated numbers
- * @returns {Array} Mixed range
+ * @returns {Nums} Mixed range
  * @since 1.0
  * @func
  */
@@ -2411,7 +2411,9 @@ function intersection (a, b, c, toSort) {
 
 	for (var i in a) {
 		if(a.hasOwnProperty(i)) {
-			if (b.has(a[i]) && isNon(c)) inter.push(a[i]);
+			//noinspection JSUnresolvedFunction
+            if (b.has(a[i]) && isNon(c)) inter.push(a[i]);
+            //noinspection JSUnresolvedFunction
 			else if (b.has(a[i]) && c.has(a[i])) inter.push(a[i]);
 		}
 	}
@@ -2669,15 +2671,17 @@ function approxEqual (a, b, precision) {
 /**
  * @description Truthness of the proposition among all elements of the array.
  * @summary Propositional function P(arr)
- * @param {number} arr Array
+ * @param {number[]} arr Array
  * @param {string} prop Proposition
  * @return {boolean[]} P(arr)
  * @since 1.1
  * @func
  */
 function P (arr, prop) {
+	var truth = [];
 	arr.map(function (x) {
-		truth.push(Boolean(prop.replace(/x/gm, x)));
+        //noinspection PointlessBooleanExpressionJS
+		truth.push(!!prop.replace(/x/gm, x));
 	});
 	return truth;
 }

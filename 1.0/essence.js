@@ -156,7 +156,7 @@ function Element (selector) { //The element object
 	else this.node = document.querySelector(selector);
 
 	this.val = function (getHTML, withTags) { //Get the value of the element's node
-		if (isType(this.node, "array")) {
+		if (isType(this.node, "Array")) {
 			var arr = [];
 			for (var i = 0; i < this.node.length; i++) {
 				if (this.node[i].value && !getHTML && !withTags) arr.push(this.node[i].value);
@@ -183,13 +183,13 @@ function Element (selector) { //The element object
 	};
 	
 	this.write = function (nval, parseToHTML, incTags) { //Assign #nval as the value of the element's node
-		if (isType(this.node, "array")) {
+		if (isType(this.node, "Array")) {
 			for (var i = 0; i < this.node.length; i++) {
-				if (this.node[i].value && !parseToHTML && !incTags) this.node[i].value = isType(nval, "array")? nval[i]: nval;
-				else if (this.node[i].innerHTML && parseToHTML && !incTags) this.node[i].innerHTML = isType(nval, "array")? nval[i]: nval;
-				else if (this.node[i].innerText && !parseToHTML && !incTags)this.node[i].innerText = isType(nval, "array")? nval[i]: nval;
-				else if (this.node[i].outerHTML && !parseToHTML && incTags) this.node[i].outerHTML = isType(nval, "array")? nval[i]: nval;
-				else this.node[i].value? (this.node[i].value = isType(nval, "array")? nval[i]: nval): (this.node[i].innerText = isType(nval, "array")? nval[i]: nval);
+				if (this.node[i].value && !parseToHTML && !incTags) this.node[i].value = isType(nval, "Array")? nval[i]: nval;
+				else if (this.node[i].innerHTML && parseToHTML && !incTags) this.node[i].innerHTML = isType(nval, "Array")? nval[i]: nval;
+				else if (this.node[i].innerText && !parseToHTML && !incTags)this.node[i].innerText = isType(nval, "Array")? nval[i]: nval;
+				else if (this.node[i].outerHTML && !parseToHTML && incTags) this.node[i].outerHTML = isType(nval, "Array")? nval[i]: nval;
+				else this.node[i].value? (this.node[i].value = isType(nval, "Array")? nval[i]: nval): (this.node[i].innerText = isType(nval, "Array")? nval[i]: nval);
 			}
 		}
 		
@@ -201,13 +201,13 @@ function Element (selector) { //The element object
 	};
 
 	this.before = function (nval, parseToHTML, incTags) { //Write before (like a string/code unshift)
-		if (isType(this.node, "array")) {
+		if (isType(this.node, "Array")) {
 			for (var i = 0; i < this.node.length; i++) {
-				if (this.node[i].value && !parseToHTML && !incTags) this.node[i].value = isType(nval, "array")? nval[i] + this.node[i].value: nval + this.node[i].value;
-				else if (this.node[i].innerHTML && parseToHTML && !incTags) this.node[i].innerHTML = isType(nval, "array")? nval[i] + this.node[i].innerHTML: nval+ this.node[i].innerHTML;
-				else if (this.node[i].innerText && !parseToHTML && !incTags) this.node[i].innerText = isType(nval, "array")? nval[i] + this.node[i].innerText: nval + this.node[i].innerText;
-				else if (this.node[i].outerHTML && !parseToHTML && incTags) this.node[i].outerHTML = isType(nval, "array")? nval[i] + this.node[i].outerHTML: nval + this.node[i].outerHTML;
-				else this.node[i].value? (this.node[i].value = isType(nval, "array")? nval[i] + this.node[i].value: nval + this.node[i].value): (this.node[i].innerText = isType(nval, "array")? nval[i] + this.node[i].innerText: nval + this.node[i].innerText);
+				if (this.node[i].value && !parseToHTML && !incTags) this.node[i].value = isType(nval, "Array")? nval[i] + this.node[i].value: nval + this.node[i].value;
+				else if (this.node[i].innerHTML && parseToHTML && !incTags) this.node[i].innerHTML = isType(nval, "Array")? nval[i] + this.node[i].innerHTML: nval+ this.node[i].innerHTML;
+				else if (this.node[i].innerText && !parseToHTML && !incTags) this.node[i].innerText = isType(nval, "Array")? nval[i] + this.node[i].innerText: nval + this.node[i].innerText;
+				else if (this.node[i].outerHTML && !parseToHTML && incTags) this.node[i].outerHTML = isType(nval, "Array")? nval[i] + this.node[i].outerHTML: nval + this.node[i].outerHTML;
+				else this.node[i].value? (this.node[i].value = isType(nval, "Array")? nval[i] + this.node[i].value: nval + this.node[i].value): (this.node[i].innerText = isType(nval, "Array")? nval[i] + this.node[i].innerText: nval + this.node[i].innerText);
 			}
 		}
 		
@@ -219,13 +219,13 @@ function Element (selector) { //The element object
 	};
 	
 	this.after = function (nval, parseToHTML, incTags) { //Write after (like an array push)
-		if (isType(this.node, "array")) {
+		if (isType(this.node, "Array")) {
 			for (var i = 0; i < this.node.length; i++) {
-				if (this.node[i].value && !parseToHTML && !incTags) this.node[i].value += isType(nval, "array")? nval[i]: nval;
-				else if (this.node[i].innerHTML && parseToHTML && !incTags) this.node[i].innerHTML += isType(nval, "array")? nval[i]: nval;
-				else if (this.node[i].innerText && !parseToHTML && !incTags)this.node[i].innerText += isType(nval, "array")? nval[i]: nval;
-				else if (this.node[i].outerHTML && !parseToHTML && incTags) this.node[i].outerHTML += isType(nval, "array")? nval[i]: nval;
-				else this.node[i].value? (this.node[i].value += isType(nval, "array")? nval[i]: nval): (this.node[i].innerText += isType(nval, "array")? nval[i]: nval);
+				if (this.node[i].value && !parseToHTML && !incTags) this.node[i].value += isType(nval, "Array")? nval[i]: nval;
+				else if (this.node[i].innerHTML && parseToHTML && !incTags) this.node[i].innerHTML += isType(nval, "Array")? nval[i]: nval;
+				else if (this.node[i].innerText && !parseToHTML && !incTags)this.node[i].innerText += isType(nval, "Array")? nval[i]: nval;
+				else if (this.node[i].outerHTML && !parseToHTML && incTags) this.node[i].outerHTML += isType(nval, "Array")? nval[i]: nval;
+				else this.node[i].value? (this.node[i].value += isType(nval, "Array")? nval[i]: nval): (this.node[i].innerText += isType(nval, "Array")? nval[i]: nval);
 			}
 		}
 		
@@ -246,8 +246,8 @@ function Element (selector) { //The element object
 	};
 
 	this.setCSS = function (prop, val) { //Change the css property
-		if (isType(this.node, "array")) {
-			for (var i = 0; i < this.node.length; i++) this.node[i].style[prop] = isType(val, "array")? val[i]: val;
+		if (isType(this.node, "Array")) {
+			for (var i = 0; i < this.node.length; i++) this.node[i].style[prop] = isType(val, "Array")? val[i]: val;
 		} else this.node.style[prop] = val;
 	};
 
@@ -256,7 +256,7 @@ function Element (selector) { //The element object
 	};
 
 	this.css = function (prop) { //Get the CSS property of the element's node
-		if (isType(this.node, "array")) {
+		if (isType(this.node, "Array")) {
 			var arr = [];
 			for(var i = 0; i < this.node.length; i++) arr.push(this.node[i].style[prop]);
 			return arr
@@ -265,7 +265,7 @@ function Element (selector) { //The element object
 	};
 
 	this.hasClass = function (className) { //Check if the element's node has the specified CSS class
-		if (isType(this.node, "array")) {
+		if (isType(this.node, "Array")) {
 			var arr = [];
 			for(var i = 0; i < this.node.length; i++) arr.push(new RegExp(" " + className + " ").test(" " + this.node[i].className + " ") || new RegExp(" " + className + " ").test(" " + this.node[i][className] + " ") || this.node[i].style.clasName == className);
 		}
@@ -273,7 +273,7 @@ function Element (selector) { //The element object
 	};
 
 	this.hasCSS = function (prop) { //Check if the element's node has the specified CSS property
-		if (isType(this.node, "array")) {
+		if (isType(this.node, "Array")) {
 			var arr = [];
 			for(var i = 0; i < this.node.length; i++) arr.push(new RegExp(" " + prop + " ").test(" " + this.node[i].style[prop] + " ") || new RegExp(" " + prop + " ").test(" " + this.node[i][prop] + " "));
 		}
@@ -281,7 +281,7 @@ function Element (selector) { //The element object
 	};
 
 	this.addClass = function (className) { //Add a class to the element's node
-		if (isType(this.node, "array")) {
+		if (isType(this.node, "Array")) {
 			for (var i = 0; i < this.node.length; i++) {
 				if (!this.node[i].hasClass(className)) this.node[i].className += " " + className;
 			}
@@ -292,7 +292,7 @@ function Element (selector) { //The element object
 
 	this.rmClass = function (className) { //Remove the class from the element's node
 		var newClass = " " + this.node.className.replace(/[\t\r\n]/g, " ") + " ";
-		if (isType(this.node, "array")) {
+		if (isType(this.node, "Array")) {
 			for (var i = 0; i < this.node.length; i++) {
 				newClass = " " + this.node[i].className.replace(/[\t\r\n]/g, " ") + " ";
 				if (this.node[i].hasClass(className)) {
@@ -1048,7 +1048,7 @@ Array.prototype.revSort = function (left, right) {
  */
 Array.prototype.bubbleSort = function (order) {
 	var arr = this, j = 1, s = true;
-	if (isNon(order) || isType(order, "string") && order[0].toLowerCase() === "a") {
+	if (isNon(order) || isType(order, "String") && order[0].toLowerCase() === "a") {
 		while (s) {
 			s = false;
 			for (var i = 0; i <= arr.length - j; i++) {
@@ -1073,7 +1073,7 @@ Array.prototype.bubbleSort = function (order) {
 			}
 			j++;
 		}
-	}else if (order === 1 || isType(order, "string") && order[0].toLowerCase() === "d") { //Descending order
+	}else if (order === 1 || isType(order, "String") && order[0].toLowerCase() === "d") { //Descending order
 		while (s) {
 			s = false;
 			for (i = 0; i <= arr.length - j; i++) {
@@ -4288,7 +4288,7 @@ function Item (name, cat, price, amr, nb) { //An item like the ones that can be 
 	this.toString = function () {
 		var str = "";
 		for (var p in this) {
-			if (this.hasOwnProperty(p) && p != "toString" && !isType(p, "function")) str += p + "=" + this[p] + ", ";
+			if (this.hasOwnProperty(p) && p != "toString" && !isType(p, "Function")) str += p + "=" + this[p] + ", ";
 		}
 		return str.substring(0, str.length-2)
 	};
@@ -5400,21 +5400,21 @@ function NTreeNode (pl, ch) {
  * @this Set
  */
 function Set (arr) {
-	this.value = (isType(arr, "arr")? arr: [arr]) || [];
+	this.value = (isType(arr, "Array")? arr: [arr]) || [];
 	this.size = function () {
 		return this.value.length
 	};
 	
 	this.add = function (item) {
 		if (this.value.indexOf(item) === -1) {	
-			if (isType(item, "array")) this.value = this.value.concat(item);
+			if (isType(item, "Array")) this.value = this.value.concat(item);
 			else this.value.push(item)
 		}
 	};
 
 	this.remove = function (item) {
 		if (this.value.indexOf(item) !== -1) {
-			if (isType(item, "array")) {
+			if (isType(item, "Array")) {
 				for(var i = 0; i < item.length; i++) this.remove(item[i]);
 			} else this.value = this.value.remove(item)
 		}
@@ -5429,7 +5429,7 @@ function Set (arr) {
 	};
 
 	this.contains = function (item) {
-		if (isType(item, "array")) {
+		if (isType(item, "Array")) {
 			var c = true;
 			for (var i = 0; i < item.length; i++) {
 				if (!c) return false; //Reduce the cost of the operation by not doing any unecessary work
@@ -5501,7 +5501,7 @@ function SortedSet (arr) {
 	this.value = arr || [];
 	this.add = function (item) {
 		if (this.value.indexOf(item) === -1) {
-			if (isType(item, "array")) this.value = this.value.concat(item);
+			if (isType(item, "Array")) this.value = this.value.concat(item);
 			else this.value.push(item);
 		}
 		this.value.quickSort();
@@ -5533,7 +5533,7 @@ function Stack (arr, lim) {
 	
 	this.push = function (item) {
 		if (this.isFull()) throw new Error("Stack overflow !");
-		isType(item, "array")? this.value.append(item): this.value.push(item);
+		isType(item, "Array")? this.value.append(item): this.value.push(item);
 	};
 	
 	this.pop = function () {
@@ -5584,7 +5584,7 @@ function StackArray (sz) {
 	
 	this.push = function (item) {
 		if (this.isFull()) throw new Error("Stack overflow !");
-		if (isType(item, "array")) {
+		if (isType(item, "Array")) {
 			for(var i = 0; i < item.length; i++) this.push(item[i]);
 		} else {
 			this.top++;
@@ -5594,7 +5594,7 @@ function StackArray (sz) {
 	
 	this.pop = function (item) {
 		if (this.isEmpty()) throw new Error("Stack underflow !");
-		if (isType(item, "array")) {
+		if (isType(item, "Array")) {
 			for(var i = 0; i < item.length; i++) this.pop(item[i]);
 		} else {
 			var el = this.peek();
@@ -5642,7 +5642,7 @@ function StackList (arr) {
 	};
 	
 	this.push = function (item) { 
-		if (isType(item, "array")) {
+		if (isType(item, "Array")) {
 			for(var i = 0; i < item.length; i++) this.push(item[i]);
 		} else {
 			var n = new Node(item, this.top);
@@ -5689,7 +5689,7 @@ function Queue (arr, lim) {
 	
 	this.enqueue = function (item) {
 		if (this.isFull()) throw new Error("Queue overflow !");
-		isType(item, "array")? this.value.preppend(item): this.value.unshift(item);
+		isType(item, "Array")? this.value.preppend(item): this.value.unshift(item);
 	};
 	
 	this.dequeue = function () {
@@ -5744,7 +5744,7 @@ function QueueArray (arr) {
 	this.back = -1;
 	
 	this.enqueue = function (item) {
-		if (isType(item, "array")) {
+		if (isType(item, "Array")) {
 			for(var i = 0; i < item.length; i++) this.enqueue(item[i]);
 		} else {
 			if (this.isFull()) throw new Error("The queue is full");
@@ -5809,7 +5809,7 @@ function QueueList () {
 	this.len = 0;
 	
 	this.enqueue = function (item) {
-		if (isType(item, "array")) {
+		if (isType(item, "Array")) {
 			for(var i = 0; i < item.length; i++) this.enqueue(item[i]);
 		} else {
 			var n = this.back != null? new Node(item, this.back, null): new Node(item);
@@ -6890,7 +6890,7 @@ function decrypt (txt, key) {
  */
 function abcEncode (txt) {
 	var code = new Array(txt.length);
-	if (isType(txt, "string") || isType(txt, "array")) {
+	if (isType(txt, "String") || isType(txt, "Array")) {
 		for (var i in txt) {
 			if(txt.hasOwnProperty(i)) {
 				switch (txt[i].toLowerCase()) {
@@ -6951,7 +6951,7 @@ function abcEncode (txt) {
 				}
 			}
 		}
-		return isType(txt, "string")? code.join(""): code
+		return isType(txt, "String")? code.join(""): code
 	}
 	return Essence.say("The parameter of abcEncode must be a string or an array.", "err")
 }
@@ -6964,7 +6964,7 @@ function abcEncode (txt) {
  */
 function abcDecode (txt) {
 	var code = new Array(txt.length);
-	if (isType(txt, "string") || isType(txt, "array")) {
+	if (isType(txt, "String") || isType(txt, "Array")) {
 		for (var i = 0; i < txt.length; i += 2) {
 			switch (txt.substr(i, 2)) {
 				case "00": code[i] = " ";break;
@@ -7023,7 +7023,7 @@ function abcDecode (txt) {
 				default: code[i] = 0;
 			}
 		}
-		return isType(txt, "string")? code.join(""): code
+		return isType(txt, "String")? code.join(""): code
 	}
 	return Essence.say("The parameter of abcDecode must be a string or an array.", "err")
 }
@@ -8681,7 +8681,7 @@ function virtualHistory (elm) {
 	};
 	
 	this.add = function (val) { //Add a state
-		if (isType(val, "array")) {
+		if (isType(val, "Array")) {
 			for (var i = 0; i < val.length; i++) this.add(val[i]);
 		} else {
 			this.src = val;

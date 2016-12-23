@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ProjectTasksOptions">
-    <TaskOptions isEnabled="false">
+    <TaskOptions isEnabled="true">
       <option name="arguments" value="$FileName$ -o $FileNameWithoutExtension$.min.js --no-comment" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" value="Compress .js files" />
@@ -20,7 +20,7 @@
       <option name="workingDir" value="$FileDir$" />
       <envs />
     </TaskOptions>
-    <TaskOptions isEnabled="false">
+    <TaskOptions isEnabled="true">
       <option name="arguments" value="$FileName$ -o $FileNameWithoutExtension$.min.css" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" value="Compress .css files" />
@@ -39,7 +39,7 @@
       <option name="workingDir" value="$FileDir$" />
       <envs />
     </TaskOptions>
-    <TaskOptions isEnabled="false">
+    <TaskOptions isEnabled="true">
       <option name="arguments" value="-e -q $FileName$" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" value="Lint .html files" />
@@ -73,6 +73,25 @@
       <option name="outputFromStdout" value="false" />
       <option name="program" value="$PROJECT_DIR$/builder.sh" />
       <option name="scopeName" value="Current File" />
+      <option name="trackOnlyRoot" value="false" />
+      <option name="workingDir" value="" />
+      <envs />
+    </TaskOptions>
+    <TaskOptions isEnabled="true">
+      <option name="arguments" value="-d $ContentRoot$/docs/1.1/ $FileDir$/$FileNameWithoutExtension$.js" />
+      <option name="checkSyntaxErrors" value="true" />
+      <option name="description" />
+      <option name="exitCodeBehavior" value="ERROR" />
+      <option name="fileExtension" value="js" />
+      <option name="immediateSync" value="true" />
+      <option name="name" value="JSDoc" />
+      <option name="output" value="$ContentRoot$/docs/1.1" />
+      <option name="outputFilters">
+        <array />
+      </option>
+      <option name="outputFromStdout" value="false" />
+      <option name="program" value="jsdoc" />
+      <option name="scopeName" value="Changed Files" />
       <option name="trackOnlyRoot" value="false" />
       <option name="workingDir" value="" />
       <envs />

@@ -80,8 +80,8 @@ function InvalidParamError (msg, fname, lineNum) {
 InvalidParamError.inherits(TypeError);
 
 /**
- * @description Invalid parameter error
- * @param {string} [msg="The parameter used at <code>lineNum</code> is invalid"]  Message
+ * @description Invalid expression error
+ * @param {string} [msg="The expression is invalid !"]  Message
  * @param {string} [fname] Filename
  * @param {number} [lineNum] Line number
  * @constructor
@@ -250,3 +250,9 @@ var UnitTest = {
 	},
 	libTests: []
 };
+
+window.addEventListener("error", function (err) {
+    var stack = err.error.stack;
+    var message = err.error.toString() + (stack? "\n" + stack: "");
+    Essence.say("[EssenceJS] " + message, "erro");
+});

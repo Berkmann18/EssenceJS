@@ -30,7 +30,7 @@
  */
 /**
  * @description This is the main object of the library as well as being the core module of the framework.
- * @type {{version: string, author: string, description: string, source: string, element: $n, handleError: Essence.handleError, say: Essence.say, applyCSS: Essence.applyCSS, addCSS: Essence.addCSS, addJS: Essence.addJS, update: Essence.update, eps: number, emptyDoc: Essence.emptyDoc, editor: Essence.editor, processList: Array, global: ?Object, addProcess: Essence.addProcess, processSize: number, serverList: Array, addServer: Essence.addServer, serverSize: number, toString: Essence.toString, txt2print: string, addToPrinter: Essence.addToPrinter, print: Essence.print, preInit: Essence.preInit, init: Essence.init, time: Essence.time, sayClr: Essence.sayClr, ask: Essence.ask, isComplete: Essence.isComplete, loadedModules: Array}}
+ * @type {{version: string, author: string, description: string, source: string, element: $n, handleError: module:essence.handleError, say: module:essence.say, applyCSS: module:essence.applyCSS, addCSS: module:essence.addCSS, addJS: module:essence.addJS, update: module:essence.update, eps: number, emptyDoc: module:essence.emptyDoc, editor: module:essence.editor, processList: Array, global: null, addProcess: module:essence.addProcess, processSize: number, serverList: Array, addServer: module:essence.addServer, serverSize: number, toString: module:essence.toString, txt2print: string, addToPrinter: module:essence.addToPrinter, print: module:essence.print, preInit: module:essence.preInit, init: module:essence.init, time: module:essence.time, sayClr: module:essence.sayClr, ask: module:essence.ask, isComplete: module:essence.isComplete, loadedModules: Array, updateAll: module:essence.updateAll}}
  * @this Essence
  * @namespace
  * @exports essence
@@ -172,18 +172,21 @@ var Essence = {
 			txt.has("\n\r")? this.print(txt, type): this.txt2print += txt;
 		}, print: function (txt, type) { //Works like the print in Java
 			if (txt) this.txt2print += txt;
-			this.txt2print = this.txt2print.split("\b");
+			//noinspection JSValidateTypes
+            this.txt2print = this.txt2print.split("\b");
 			for (var i = 0; i < this.txt2print.length; i++) {
 				this.say(this.txt2print[i], type);
 			}
 			this.txt2print = "";
 		}, preInit: function () {
-			$G["t1"] = $G["t1"].getSeconds() * 1000 + $G["t1"].getMilliseconds();
+			//noinspection JSValidateTypes
+            $G.t1 = $G.t1.getSeconds() * 1000 + $G.t1.getMilliseconds();
 		}, init: function () {
-			$G["t2"] = new Date();
-			$G["t2"] = $G["t2"].getSeconds() * 1000 + $G["t2"].getMilliseconds();
-			$G["t"] = ($G["t2"] - $G["t1"] > 1000)? ($G["t2"] - $G["t1"]) / 1000 + "start": ($G["t2"] - $G["t1"]) + "ms";
-			Essence.say("Page loaded in %c" + $G["t"] + "%c", "succ", "font-style: italic", "font-style: none");
+			//noinspection JSValidateTypes
+            $G.t2 = new Date();
+			$G.t2 = $G.t2.getSeconds() * 1000 + $G.t2.getMilliseconds();
+			$G.t = ($G.t2 - $G.t1 > 1000)? ($G.t2 - $G.t1) / 1000 + "s": ($G.t2 - $G.t1) + "ms";
+			Essence.say("Page loaded in %c" + $G.t + "%c", "succ", "font-style: italic", "font-style: none");
 		}, time: function(msg, style, style0) { //Like Essence.say(msg) but with the timestamp
 			console.log("[%c" + getTimestamp(true) + "%c] "+msg, "color: #00f;", "color: #000;", style || "", style0 || "")
 		}, sayClr: function (clrs) { //Display a RGB(A) coloured console log
@@ -213,7 +216,7 @@ var Essence = {
 				if (window[modules[i]].loaded) this.loadedModules.push(window[modules[i]]);
 			}
 			//noinspection PointlessBooleanExpressionJS
-            return !!complete;
+			return !!complete;
 		}, loadedModules: [],
 		updateAll: function () {
 			this.update();
@@ -349,8 +352,8 @@ function require (mdl, ver, extpath) {
 	} else if (modules.indexOf(mdl) === -1) {
 		include_once((ver? ver + "/": "") + "modules/" + mdl + ".js", "script", extpath || getDirectoryPath());
 		modules.push(mdl);
-		if (debugging) console.log("The module %c%start%c is now included into %c%start    " + getTimestamp(true), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFilename());
-	} else if (debugging) console.log("The module %c%start%c is already included into %c%start    " + getTimestamp(true), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFilename());
+		if (debugging) console.log("The module %c%start%c is now included into %c%start	" + getTimestamp(true), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFilename());
+	} else if (debugging) console.log("The module %c%start%c is already included into %c%start	" + getTimestamp(true), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFilename());
 }
 
 /**
@@ -395,8 +398,8 @@ function $require (mdl) {
 	} else if (modules.indexOf(mdl) === -1) {
 		gatherScripts()["essence.min.js"]? include_once(getExtPath(getDirectoryPath(gatherScripts()["essence.min.js"])) + "modules/" + mdl + ".min.js", "script"): include_once(getExtPath(getDirectoryPath(gatherScripts()["essence.js"])) + "modules/" + mdl + ".js", "script");
 		modules.push(mdl);
-		if (debugging) console.log("The module %c%start%c is now included into %c%start    " + getT(), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFn());
-	} else if (debugging) console.log("The module %c%start%c is already included into %c%start    " + getT(), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFn());
+		if (debugging) console.log("The module %c%start%c is now included into %c%start	" + getT(), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFn());
+	} else if (debugging) console.log("The module %c%start%c is already included into %c%start	" + getT(), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFn());
 }
 
 /**
@@ -422,9 +425,9 @@ function run (module, ver) {
 		 */
 		var go = function () {
 			try {
-				if (debugging) Essence.say("Running " + module + "    " + getTimestamp(true), "info");
+				if (debugging) Essence.say("Running " + module + "	" + getTimestamp(true), "info");
 				/*init(window[module].dependency, false, function (x) {
-				 if (debugging) Essence.say("%c" + x + "%c from %c" + module + "%c'start dependency has been initiated !!    " + getTimestamp(true), "info", "color: #c0f", "color: #000", "color: #f0c", "color: #000");
+				 if (debugging) Essence.say("%c" + x + "%c from %c" + module + "%c'start dependency has been initiated !!	" + getTimestamp(true), "info", "color: #c0f", "color: #000", "color: #f0c", "color: #000");
 				 //console.info("")
 				 }, ver);*/
 				if (!window[module].loaded) window[module].load();
@@ -441,15 +444,15 @@ function run (module, ver) {
 		 */
 		retry = function (stackLayer) {
 			if (!stackLayer) stackLayer = 0;
-			Essence.say("The module %c" + module + "%c isn't available !    " + getTimestamp(true), "erro", "color: #c0f", "color: #000");
-			if (debugging) Essence.say("Retrying to run %c" + module + "%c    " + getTimestamp(true), "info", "color: #c0f", "color: #000");
+			Essence.say("The module %c" + module + "%c isn't available !	" + getTimestamp(true), "erro", "color: #c0f", "color: #000");
+			if (debugging) Essence.say("Retrying to run %c" + module + "%c	" + getTimestamp(true), "info", "color: #c0f", "color: #000");
 			if (window[module]) go();
 			else if (stackLayer <= 2) setTimeout(retry(stackLayer + 1), 1);
-			else Essence.say("It'start not possible to run %c" + module + "%c :( !    " + getTimestamp(true) + "\nModule: " + window[module], "info", "color: #c0f", "color: #000");
+			else Essence.say("It'start not possible to run %c" + module + "%c :( !	" + getTimestamp(true) + "\nModule: " + window[module], "info", "color: #c0f", "color: #000");
 			init(module);
 		};
 		window[module]? go(): retry();
-	} else Essence.say("The module %c" + module + "%c isn't in the list !!    " + getTimestamp(true), "erro", "color: #c0f", "color: #000");
+	} else Essence.say("The module %c" + module + "%c isn't in the list !!	" + getTimestamp(true), "erro", "color: #c0f", "color: #000");
 }
 
 /**
@@ -614,15 +617,17 @@ getExtPath = function (path) {
 	}, 690);
 	setTimeout(function () {
 		if (debugging) {
-			if (Essence.isComplete()) {
-				Essence.say("Essence is complete !", "succ");
-
-			} else Essence.time("List of loaded modules: " + Essence.loadedModules.map(function (m) {
-					return m.name;
-				}).toStr(true));
+			//noinspection JSValidateTypes
+            if (Essence.isComplete()) Essence.say("Essence is complete !", "succ");
+			else Essence.time("List of loaded modules: " + Essence.loadedModules.map(function (m) {
+				return m.name;
+			}).toStr(true));
 		}
 		if (!filenameList(gatherExternalScripts(true)).has("essence.js")) Essence.source = Essence.source.replace(".js", ".min.js");
-		if (testMode) UnitTest.multiTest(UnitTest.libTests);
+		if (testMode) {
+			UnitTest.basicTests();
+			UnitTest.multiTest(UnitTest.libTests);
+        }
 		UnitTest.libTests = [
 			//essence
 
@@ -741,6 +746,7 @@ function $n (selector, silence) { //To get directly the node without having to u
  * @since 1.0
  * @throws {InvalidParamError} Invalid parameter
  * @property {HTMLElement} Element.node Node
+ * @property {String} Element.selector Selector
  * @property {function(boolean, boolean): (NumberLike|XML)} Element.val Get the node's value
  * @property {function(): number} Element.size Get the node's value's size
  * @property {function(): boolean} Element.isEmpty Check if the node's value is empty
@@ -773,17 +779,20 @@ function $n (selector, silence) { //To get directly the node without having to u
  * @property {function(): string[]} Element.classes Get an array of classes of the element
  * @property {function(function(HTMLElement))} Element.multi Execute a callback on all nodes of a $e("*...") element
  * @property {function(string, Array)} Element.multiElm Execute a method on all elements of a $e("*...") element
+ * @property {function()} Element.delete Self-destruction of the element by self-removal of the DOM
+ * @property {function(String, String, boolean, boolean)} Element.replace Replace a string in the element's value by a new one
  */
-function Element (selector) { //The element object
+function Element (selector) {
 	if (/^([#.*_-`~&]\W*|\S|undefined|null|)$/.test(selector)) throw new InvalidParamError("Element cannot accept the selector '" + selector + "' as it'start invalid."); //Reject invalid selectors
 	if (selector[0] === "#") this.node = document.querySelector(selector) || document.getElementById(selector.slice(1, selector.length)); //Id
 	else if (selector[0] === ".") this.node = document.querySelector(selector) || document.getElementByClassName(selector.slice(1, selector.length)); //Class
-	else if (selector[0] === "*") this.node = document.querySelectorAll(selector.slice(1, selector.length)) || document.getElementsByTagName(selector.slice(1, selector.length)); //Node array
+	else if (selector[0] === "*") this.node = document.querySelectorAll(selector.slice(1, selector.length)) || document.getElementsByTagName(selector.slice(1, selector.length)); //Node list
 	else this.node = document.querySelector(selector);
 	if (this.node === null) throw new Error("The node $n(\"" + selector + "\") doesn't exist !!");
+	this.selector = selector;
 
-	this.val = function (getHTML, withTags) { //Get the value of the element'start node
-		if (isType(this.node, "array")) {
+	this.val = function (getHTML, withTags) {
+		if (isType(this.node, "Array")) {
 			var arr = [];
 			for (var i = 0; i < this.node.length; i++) {
 				if (this.node[i].value && !getHTML && !withTags) arr.push(this.node[i].value);
@@ -811,13 +820,13 @@ function Element (selector) { //The element object
 
 	this.write = function (nval, parseToHTML, incTags) {
 		if (typeof this.val(true) == "undefined") this.node.innerText = "?";
-		if (isType(this.node, "array")) {
+		if (isType(this.node, "Array")) {
 			for (var i = 0; i < this.node.length; i++) {
-				if (this.node[i].value && !parseToHTML && !incTags) this.node[i].value = isType(nval, "array")? nval[i]: nval;
-				else if (this.node[i].innerHTML && parseToHTML && !incTags) this.node[i].innerHTML = isType(nval, "array")? nval[i]: nval;
-				else if (this.node[i].innerText && !parseToHTML && !incTags)this.node[i].innerText = isType(nval, "array")? nval[i]: nval;
-				else if (this.node[i].outerHTML && !parseToHTML && incTags) this.node[i].outerHTML = isType(nval, "array")? nval[i]: nval;
-				else this.node[i].value? (this.node[i].value = isType(nval, "array")? nval[i]: nval): (this.node[i].innerText = isType(nval, "array")? nval[i]: nval);
+				if (this.node[i].value && !parseToHTML && !incTags) this.node[i].value = isType(nval, "Array")? nval[i]: nval;
+				else if (this.node[i].innerHTML && parseToHTML && !incTags) this.node[i].innerHTML = isType(nval, "Array")? nval[i]: nval;
+				else if (this.node[i].innerText && !parseToHTML && !incTags)this.node[i].innerText = isType(nval, "Array")? nval[i]: nval;
+				else if (this.node[i].outerHTML && !parseToHTML && incTags) this.node[i].outerHTML = isType(nval, "Array")? nval[i]: nval;
+				else this.node[i].value? (this.node[i].value = isType(nval, "Array")? nval[i]: nval): (this.node[i].innerText = isType(nval, "Array")? nval[i]: nval);
 			}
 		}
 
@@ -830,13 +839,13 @@ function Element (selector) { //The element object
 
 	this.before = function (nval, parseToHTML, incTags) {
 		if (typeof this.val(true) == "undefined") this.node.innerText = "?";
-		if (isType(this.node, "array")) {
+		if (isType(this.node, "Array")) {
 			for (var i = 0; i < this.node.length; i++) {
-				if (this.node[i].value && !parseToHTML && !incTags) this.node[i].value = isType(nval, "array")? nval[i] + this.node[i].value: nval + this.node[i].value;
-				else if (this.node[i].innerHTML && parseToHTML && !incTags) this.node[i].innerHTML = isType(nval, "array")? nval[i] + this.node[i].innerHTML: nval+ this.node[i].innerHTML;
-				else if (this.node[i].innerText && !parseToHTML && !incTags) this.node[i].innerText = isType(nval, "array")? nval[i] + this.node[i].innerText: nval + this.node[i].innerText;
-				else if (this.node[i].outerHTML && !parseToHTML && incTags) this.node[i].outerHTML = isType(nval, "array")? nval[i] + this.node[i].outerHTML: nval + this.node[i].outerHTML;
-				else this.node[i].value? (this.node[i].value = isType(nval, "array")? nval[i] + this.node[i].value: nval + this.node[i].value): (this.node[i].innerText = isType(nval, "array")? nval[i] + this.node[i].innerText: nval + this.node[i].innerText);
+				if (this.node[i].value && !parseToHTML && !incTags) this.node[i].value = isType(nval, "Array")? nval[i] + this.node[i].value: nval + this.node[i].value;
+				else if (this.node[i].innerHTML && parseToHTML && !incTags) this.node[i].innerHTML = isType(nval, "Array")? nval[i] + this.node[i].innerHTML: nval+ this.node[i].innerHTML;
+				else if (this.node[i].innerText && !parseToHTML && !incTags) this.node[i].innerText = isType(nval, "Array")? nval[i] + this.node[i].innerText: nval + this.node[i].innerText;
+				else if (this.node[i].outerHTML && !parseToHTML && incTags) this.node[i].outerHTML = isType(nval, "Array")? nval[i] + this.node[i].outerHTML: nval + this.node[i].outerHTML;
+				else this.node[i].value? (this.node[i].value = isType(nval, "Array")? nval[i] + this.node[i].value: nval + this.node[i].value): (this.node[i].innerText = isType(nval, "Array")? nval[i] + this.node[i].innerText: nval + this.node[i].innerText);
 			}
 		}
 
@@ -849,13 +858,13 @@ function Element (selector) { //The element object
 
 	this.after = function (nval, parseToHTML, incTags) {
 		if (typeof this.val(true) == "undefined") this.node.innerText = "?";
-		if (isType(this.node, "array")) {
+		if (isType(this.node, "Array")) {
 			for (var i = 0; i < this.node.length; i++) {
-				if (this.node[i].value && !parseToHTML && !incTags) this.node[i].value += isType(nval, "array")? nval[i]: nval;
-				else if (this.node[i].innerHTML && parseToHTML && !incTags) this.node[i].innerHTML += isType(nval, "array")? nval[i]: nval;
-				else if (this.node[i].innerText && !parseToHTML && !incTags)this.node[i].innerText += isType(nval, "array")? nval[i]: nval;
-				else if (this.node[i].outerHTML && !parseToHTML && incTags) this.node[i].outerHTML += isType(nval, "array")? nval[i]: nval;
-				else this.node[i].value? (this.node[i].value += isType(nval, "array")? nval[i]: nval): (this.node[i].innerText += isType(nval, "array")? nval[i]: nval);
+				if (this.node[i].value && !parseToHTML && !incTags) this.node[i].value += isType(nval, "Array")? nval[i]: nval;
+				else if (this.node[i].innerHTML && parseToHTML && !incTags) this.node[i].innerHTML += isType(nval, "Array")? nval[i]: nval;
+				else if (this.node[i].innerText && !parseToHTML && !incTags)this.node[i].innerText += isType(nval, "Array")? nval[i]: nval;
+				else if (this.node[i].outerHTML && !parseToHTML && incTags) this.node[i].outerHTML += isType(nval, "Array")? nval[i]: nval;
+				else this.node[i].value? (this.node[i].value += isType(nval, "Array")? nval[i]: nval): (this.node[i].innerText += isType(nval, "Array")? nval[i]: nval);
 			}
 		}
 
@@ -866,7 +875,7 @@ function Element (selector) { //The element object
 		else this.node.value? this.node.value += nval: this.innerText += nval;
 	};
 
-	this.remove = function (c, r) { //Remove the character from the string/array/number and return it with the rad character as a joiner or a blank when rad isn't specified
+	this.remove = function (c, r) { //Remove the character from the string/array/number and return it with the r character as a joiner or a blank when r isn't specified
 		if (isType(this.val(), "Array")) {
 			for (var i = 0; i < this.size(); i++) {
 				if (this.val()[i] == c) this.write(this.val().slice(0, i).concat(this.val().slice(i + 1, this.size())));
@@ -876,8 +885,8 @@ function Element (selector) { //The element object
 	};
 
 	this.setCSS = function (prop, val) { //Change the css property
-		if (isType(this.node, "array")) {
-			for (var i = 0; i < this.node.length; i++) this.node[i].style[prop] = isType(val, "array")? val[i]: val;
+		if (isType(this.node, "NodeList")) {
+			for (var i = 0; i < this.node.length; i++) this.node[i].style[prop] = isType(val, "Array")? val[i]: val;
 		} else this.node.style[prop] = val;
 	};
 
@@ -886,16 +895,18 @@ function Element (selector) { //The element object
 	};
 
 	this.css = function (prop) { //Get the CSS property of the element'start node
-		if (isType(this.node, "array")) {
+		if (isType(this.node, "Array")) {
 			var arr = [];
 			for(var i = 0; i < this.node.length; i++) arr.push(this.node[i].style[prop]);
 			return arr
 		}
-		return this.node.style[prop]
+		return isType(this.node, "NodeList")? this.node.toArray().map(function (currentNode) {
+			return currentNode.style[prop];
+		}): this.node.style[prop]
 	};
 
 	this.hasClass = function (className) { //Check if the element'start node has the specified CSS class
-		if (isType(this.node, "array")) {
+		if (isType(this.node, "Array")) {
 			var arr = [];
 			for(var i = 0; i < this.node.length; i++) arr.push(new RegExp(" " + className + " ").test(" " + this.node[i].className + " ") || new RegExp(" " + className + " ").test(" " + this.node[i][className] + " ") || this.node[i].style.clasName == className);
 		}
@@ -903,7 +914,7 @@ function Element (selector) { //The element object
 	};
 
 	this.hasCSS = function (prop) { //Check if the element'start node has the specified CSS property
-		if (isType(this.node, "array")) {
+		if (isType(this.node, "Array")) {
 			var arr = [];
 			for(var i = 0; i < this.node.length; i++) arr.push(new RegExp(" " + prop + " ").test(" " + this.node[i].style[prop] + " ") || new RegExp(" " + prop + " ").test(" " + this.node[i][prop] + " "));
 		}
@@ -911,7 +922,7 @@ function Element (selector) { //The element object
 	};
 
 	this.addClass = function (className) { //Add a class to the element'start node
-		if (isType(this.node, "array")) {
+		if (isType(this.node, "Array")) {
 			for (var i = 0; i < this.node.length; i++) {
 				if (!this.node[i].hasClass(className)) this.node[i].className += " " + className;
 			}
@@ -920,7 +931,7 @@ function Element (selector) { //The element object
 
 	this.rmClass = function (className) { //Remove the class from the element'start node
 		var newClass = " " + this.node.className.replace(/[\t\r\n]/g, " ") + " ";
-		if (isType(this.node, "array")) {
+		if (isType(this.node, "Array")) {
 			for (var i = 0; i < this.node.length; i++) {
 				newClass = " " + this.node[i].className.replace(/[\t\r\n]/g, " ") + " ";
 				if (this.node[i].hasClass(className)) {
@@ -942,7 +953,7 @@ function Element (selector) { //The element object
 		} else if (prop === "enabled") {
 			(this.css("enabled") === "enabled")? this.setCSS("enabled", "disabled"): this.setCSS("enabled", "enabled");
 		} else if (prop === "display") {
-			(this.css("enabled") === "enabled")? this.setCSS("display", "none"): this.setCSS("display", params || "block");
+			(this.css("display") === "block" || this.css("display") === params)? this.setCSS("display", "none"): this.setCSS("display", params || "block");
 		} else if (!isNon(prop) && !isNon(params)) { //For color, bgcolor, opacity, font-size, ...
 			if (isNon(this.css(prop))) this.setCSS(prop, params[0]);
 			for (var i = 0; i < params.length; i++) { //Slide through the parameters and go to the next one if the one already set is present
@@ -971,7 +982,11 @@ function Element (selector) { //The element object
 			"mouseenter", "mouseleave", "mousemove", "mouseout", "mouseover", "mouseup", "mousewheel", "offline", "online", "pagehide", "pageshow", "pause", "play", "playing", "popstate",
 			"progress", "ratechange", "reset", "resize", "scroll", "search", "seeked", "seeking", "select", "show", "stalled", "storage", "submit", "suspend", "timeupdate", "toggle",
 			"transitionend", "unload", "volumechange", "waiting", "webkitanimationend", "webkitanimationiteration", "webkitanimationstart", "webkittransitionend", "wheel"];
-		if (evts.has(evt.normal())) this.node.addEventListener(evt.normal(), act);
+		if (evts.has(evt.normal())) {
+			isType(this.node, "NodeList")? this.node.toArray().map(function (node) {
+					node.addEventListener(evt.normal(), act)
+				}): this.node.addEventListener(evt.normal(), act);
+        }
 	};
 
 	this.toString = function () {
@@ -1033,13 +1048,29 @@ function Element (selector) { //The element object
 	this.attr = function (name, nval) {
 		return isNon(nval)? this.node.getAttribute(name): this.node.setAttribute(name, nval);
 	};
+
 	//noinspection JSUnusedGlobalSymbols
 	this.rmAttr = function (name) {
 		this.node.removeAttribute(name);
 	};
 
-	//noinspection JSUnusedGlobalSymbols
 	this.invColour = function () {
+		//First make sure there's a colour and a background colour specified on the affect element(s)
+		if (isType(this.css("color"), "Array") || isType(this.css("backgroundColor"), "Array")) {
+			this.node.toArray().filter(function (node) {
+				return node.style.color === "";
+			}).map(function (node) {
+				return node.style.color = "inherit";
+			});
+			this.node.toArray().filter(function (node) {
+				return node.style.backgroundColor === "";
+			}).map(function (node) {
+				return node.style.backgroundColor = "inherit";
+			});
+		} else {
+			if (this.css("color") === "") this.setCSS("color", "inherit"); //if the colour wasn't set or is only known to CSS as the default inherited value
+			if (this.css("backgroundColor") === "") this.setCSS("backgroundColor", "inherit");
+		}
 		negateColour(selector, "color", "a");
 		negateColour(selector, "backgroundColor", "a");
 	};
@@ -1057,6 +1088,14 @@ function Element (selector) { //The element object
 	this.multiElm = function (method, args) { //Caution: every nodes treated must have an id
 		var nodes = this.node.toArray();
 		for (var i = 0; i < nodes.length; i++) $e(nodes[i].id)[method](args[0], args[1], args[2]);
+	};
+
+	this.delete = function () {
+		this.write("", false, true); //or this.node.parentElement.removeChild(this.node);
+	};
+
+	this.replace = function (oldVal, newVal, parseToHTML, incTags) {
+		this.write(this.val(parseToHTML, incTags).replace(oldVal, newVal), parseToHTML, incTags);
 	};
 
 	return this
@@ -1280,10 +1319,10 @@ Object.prototype.compareTo = function (obj) {
  * @param {string} prop Property
  * @returns {boolean} Containment check result
  * @memberof Object.prototype
+ * @external Object
  * @since 1.1
  * @this Object
  * @method
- * @external Object
  * @example
  * var a = {name: "A", size: 8}, b = ["1", "4", "9", "h", "w", "_"];
  * a.has("name"); //true
@@ -1329,8 +1368,8 @@ Object.prototype.isEmpty = function () {
  * @method
  */
 Object.prototype.inherits = function(parent) {
-    this.prototype = Object.create(parent.prototype);
-    this.prototype.constructor = this;
+	this.prototype = Object.create(parent.prototype);
+	this.prototype.constructor = this;
 };
 
 /**
@@ -2186,7 +2225,7 @@ Array.prototype.revSort = function (left, right) {
  */
 Array.prototype.bubbleSort = function (order) {
 	var arr = this, j = 1, s = true;
-	if (isNon(order) || isType(order, "string") && order[0].toLowerCase() === "a") {
+	if (isNon(order) || isType(order, "String") && order[0].toLowerCase() === "a") {
 		while (s) {
 			s = false;
 			for (var i = 0; i <= arr.length - j; i++) {
@@ -3848,7 +3887,7 @@ Number.prototype.toArr = function () {
  * @description Inheritance.<br />
  * Source: Somewhere
  * @param {*} parentClassOrObj Parent
- * @returns {Function.prototype.Function} this Current function/constructor
+ * @returns {Function} this Current function/constructor
  * @since 1.0
  * @method
  * @memberof Function.prototype
@@ -3864,6 +3903,7 @@ Function.prototype.inheritsFrom = function (parentClassOrObj) {
 		this.prototype.constructor = this;
 		this.prototype.parent = parentClassOrObj;
 	}
+	//noinspection JSValidateTypes
 	return this
 };
 
@@ -3876,8 +3916,7 @@ Function.prototype.inheritsFrom = function (parentClassOrObj) {
  * @func
  */
 function isType (obj, type) { //Only works for native types (treats custom ones as objects)
-	type = type[0].toUpperCase() + type.slice(1, type.length).toLowerCase();
-	return Object.prototype.toString.call(obj) === "[object " + type + "]"
+	return getType(obj, true) === "[object " + type + "]"
 }
 
 /**
@@ -3889,7 +3928,7 @@ function isType (obj, type) { //Only works for native types (treats custom ones 
  * @func
  */
 function isCustomType (obj, type) { //Same as isType but for custom types
-	return getCustomType(obj).toLowerCase() === type.toLowerCase()
+	return getCustomType(obj) === type
 }
 
 /**
@@ -3902,7 +3941,7 @@ function isCustomType (obj, type) { //Same as isType but for custom types
  */
 function getType (obj, preserve) { //Only works for native types. preserve would leave the [object type]
 	var t = Object.prototype.toString.call(obj);
-	return preserve? t: t.split(" ")[1].slice(0, t.split(" ")[1].length-1)
+	return preserve? t: t.split(" ")[1].slice(0, t.split(" ")[1].length - 1)
 }
 
 /**
@@ -4543,7 +4582,35 @@ function timeUp (act, pref, params) {
 	act(params);
 	var t2 = new Date();
 	t2 = (t2.getMinutes() * 60 + t2.getSeconds()) * 1000 + t2.getMilliseconds();
-	if (isNon(pref) || pref.slice(0, 4).toLowerCase() === "auto" || pref.slice(0, 4).toLowerCase() === "none") return (t2-t1 > 1000)? (t2-t1)/1000 + "start": (t2-t1) + "ms";
+	if (isNon(pref) || pref.slice(0, 4).toLowerCase() === "auto" || pref.slice(0, 4).toLowerCase() === "none") return (t2 - t1 > 1000)? (t2 - t1) / 1000 + "start": (t2 - t1) + "ms";
 	else if (pref.toLowerCase() === "ms" || pref.slice(0, 8).toLowerCase() === "millisec") return (t2-t1) + "ms";
-	else return (t2-t1)/1000 + "start";
+	else return (t2-t1) / 1000 + "s";
+}
+
+/**
+ * @description Time how long a callback took
+ * @param {Function} cb Callback
+ * @param {*} [params] Parameters
+ * @returns {number} Time
+ * @since 1.1
+ * @func
+ */
+function time (cb, params) {
+    var t1 = new Date().getTime();
+    cb(params);
+    var t2 = new Date().getTime();
+    return t2 - t1;
+}
+
+/**
+ * @description Pause the JS execution for a bit and place the callback (if specified) at the end of the execution queue (parsed by the browser which also includes the UI).
+ * A neat wait of keeping the code passed in the parameter to be executed in order of execution (instead of being pushed at the end of the execution queue), is to pass a command/instruction instead of a function (with that command/instructions).
+ * @param {Function} [cb=$f] Callback
+ * @returns {undefined}
+ * @since 1.1
+ * @func
+ */
+function wait (cb) {
+	if (!cb) cb = $f;
+	setTimeout(cb, 0);
 }
