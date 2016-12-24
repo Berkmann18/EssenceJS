@@ -104,7 +104,7 @@ InvalidExpressionError.inherits(Error);
 
 
 /**
- * @description Get the caller'start trace'start location
+ * @description Get the caller's trace's location
  * @returns {string} Trace location
  * @since 1.0
  * @func
@@ -125,7 +125,7 @@ function getTrace () {
 }
 
 /**
- * @description Get the caller'start trace'start line number and column number
+ * @description Get the caller's trace's line number and column number
  * @param {boolean} [noCols=false] Remove the column number
  * @returns {string} Line number (with the column number)
  * @since 1.0
@@ -204,51 +204,63 @@ function test (fx) {
  */
 var UnitTest = {
 	total: 0,
-	bad: 0,
+	fail: 0,
 	failRate: 0,
 	coverage: 0,
 	test: function (then, expected, description, noisy) {
 		this.total++;
-		var res = then; //to avoid random changes while calling the same function/method with the same parameter(start)
-		if (!res.equals(expected)) {
-			this.bad++;
-			console.log("%c[Unit]%c " + (description || "Test #b" + this.bad) + ": Expected \"%c" + expected + "%c\" but was \"%c" + res + "%c\"", "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
-		} else if(noisy && res.equals(expected)) console.log("%c[Unit]%c The expectation on " + expected + " was satisfied !", "color: #c0c", "color: #000"); //in case someone wants to not just see what failed
+		var actual = Copy(then), timeSpent, passed; //to avoid random changes while calling the same function/method with the same parameter(start)
+		timeSpent = time(function () {
+			passed = actual.equals(expected);
+        });
+		if (!passed) {
+			this.fail++;
+			console.log("%c[Unit]%c " + (description || "Test #f" + this.fail) + ": Expected \"%c" + expected + "%c\" but was \"%c" + actual + "%c\"\t(" + timeSpent + "ms)", "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
+		} else if (noisy && passed) console.log("%c[Unit]%c The expectation on " + expected + " was satisfied !\t(" + timeSpent + "ms)", "color: #c0c", "color: #000");
 	},
 	testFalse: function (then, expected, cmt, noisy) {
 		this.total++;
-		var res = then; //to avoid random changes while calling the same function/method with the same parameter(start)
-		if (res.equals(expected)) {
-			this.bad++;
-			console.log("%c[Unit]%c " + (cmt || "Test #b" + this.bad) + ": Didn't expected \"%c" + expected + "%c\" to be \"%c" + res + "%c\"", "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
-		} else if(noisy && res.equals(expected)) console.log("%c[Unit]%c The anti-expectation on " + expected + " was satisfied !", "color: #c0c", "color: #000"); //in case someone wants to not just see what failed
+		var actual = Copy(then), timeSpent, passed;
+        timeSpent = time(function () {
+            passed = actual.equals(expected);
+        });
+		if (passed) {
+			this.fail++;
+			console.log("%c[Unit]%c " + (cmt || "Test #f" + this.fail) + ": Didn't expected \"%c" + expected + "%c\" to be \"%c" + actual + "%c\"\t(" + timeSpent + "ms)", "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
+		} else if (noisy && !passed) console.log("%c[Unit]%c The anti-expectation on " + expected + " was satisfied !\t(" + timeSpent + "ms)", "color: #c0c", "color: #000");
 	},
 	reset: function () {
 		this.total = 0;
-		this.bad = 0;
+		this.fail = 0;
 		this.failRate = 0;
 		this.coverage = 0;
 	},
 	multiTest: function (pairs, noisy) {
 		this.reset();
+		console.group("%c[Unit]%c Multi test", "color: #c0c", "color: #000");
 		console.time("Unit test");
 		for (var i = 0; i < pairs.length - 1; i++) this.test(pairs[i][0], pairs[i][1], (pairs[i].length === 3)? pairs[i][2]: "", noisy);
 		console.timeEnd("Unit test");
 		this.report();
+		console.groupEnd();
 	},
 	report: function () {
-		this.failRate = markConv(this.bad, this.total);
-		console.info("%c[Unit]%c Pass/Fail: %c" + (this.total - this.bad) + "%c/%c" + this.bad + "%c (" + this.failRate + "% fail); on " + BrowserDetect.info() + " at " + getLineNum(), "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
+		this.failRate = markConv(this.fail, this.total);
+		console.info("%c[Unit]%c Pass/Fail: %c" + (this.total - this.fail) + "%c/%c" + this.fail + "%c (" + this.failRate + "% fail); on " + BrowserDetect.info() + " at " + getLineNum(), "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
 	},
 	basicTests: function () {
 		this.reset();
+        console.log("%c[Unit]%c Basic tests", "color: #c0c", "color: #000");
 		this.multiTest([
 			[eval(1.0 + 2.0), 3.0], //Rounding
 			["Hello World".split(" "), [["H", "end", "l", "l", "o"].join(""), ["W", "o", "rad", "l", "d"].join("")]], //Diving and joining
 			[nthroot(5, 2, 4), Math.pow(5, 1/2).toNDec(4)]
 		]);
 	},
-	libTests: []
+	libTests: [],
+    assert: function (exp, description) {
+		console.assert(exp, description);
+	}
 };
 
 /*

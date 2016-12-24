@@ -1,8 +1,8 @@
 ## General
-
+^ A couple corrections
 
 ## [essence](essence.js)
-\+ String.countWord(), asyncTime()
+\+ String.countWord(), asyncTime(), perMode and profiling logs
 
 ^ Changed the parameter order in timeUp()
 
@@ -40,7 +40,14 @@
 
 ^ Optimised isDark()
 
+\+ syncCSS(), addCSSRule(), clearCSSRule()
+
 ## [Web](modules/Web.js)
 
 
 ## [QTest](modules/QTest.js)
+\+ UnitTest.assert()
+
+^ UnitTest.basicTests(), UnitTest.test(), UnitTest.testFalse(), UnitTest.multiTest()
+
+^ renamed UnitTest.bad into UnitTest.fail

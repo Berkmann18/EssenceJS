@@ -84,4 +84,6 @@ function build {
         finished
     fi
 }
+
+rm -r *.min.min.*
 st $1 $2 $3 $4

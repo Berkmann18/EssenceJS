@@ -147,7 +147,7 @@ var Essence = {
 			Essence.say("%cEssence(.min).js%c has been updated", "succ", "text-decoration: underline", "text-decoration: none");
 		},
 		/** @const {number} Essence.eps Epsilon */
-		eps: Math.pow(2, -52), //Matlab'start epsilon (useful when dealing with null values to keep them in the real range or just not null
+		eps: Math.pow(2, -52), //Matlab'sepsilon (useful when dealing with null values to keep them in the real range or just not null
 		emptyDoc: function (title, author) { //Empty the document and fill it with a basic structure
 			$e("html").write("<head><title>" + (title || document.title) + "</title><meta charset='UTF-8' /><meta name='author' content=" + (author || "unknown") + " /><script type='text/javascript' src=" + Essence.source + "></script></head><body></body>", true);
 		}, editor: function (ctt) {
@@ -255,7 +255,14 @@ var Essence = {
 	 * @global
 	 * @since 1.1
 	 */
-	testMode = false;
+	testMode = false,
+    /**
+     * @description Performance/profiling mode on/off
+     * @type {boolean}
+     * @global
+     * @since 1.1
+     */
+	perfMod = true;
 
 /**
  * @description EssenceJS Module
@@ -291,6 +298,7 @@ function Module (name, desc, dpc, ver, rn, pathVer) {
 	this.path = (pathVer? pathVer : Essence.version.substr(0, 3)) + "/modules/" + this.name + ".js";
 
 	this.load = function () {
+        if (perfMod) console.timeStamp("Loading module:" + this.name);
 		if (debugging) Essence.say("Loading " + this.name);
 		if (this.dependency.length > 0) {
 			if (debugging) Essence.say("Initiating dependencies for %c" + this.name + "%c", "info", "color: #f0f", "color: #000");
@@ -298,6 +306,7 @@ function Module (name, desc, dpc, ver, rn, pathVer) {
 			init(this.dependency, false, false, pathVer);
 		}
 		/*if (gatherExternalScripts(true).has(this.path) || filenameList(gatherExternalScripts(true)).has(this.path)) */this.loaded = true;
+        if (perfMod) console.timeStamp("Loaded module:" + this.name);
 	};
 
 	this.toString = function () {
@@ -314,6 +323,7 @@ function Module (name, desc, dpc, ver, rn, pathVer) {
 	};
 
 	this.update = function () { //This method should not be used before EssenceJS is fully implemented onto the environment using it
+        if (perfMod) console.timeStamp("Updated module:" + this.name);
 		var $s = $n("*script").toArray();
 		var scripts = filenameList($s.map(function (script) {
 			return script.src;
@@ -324,6 +334,7 @@ function Module (name, desc, dpc, ver, rn, pathVer) {
 		}
 
 		Essence.say(this.name.capitalize() + "(.min).js has been updated", "succ");
+        if (perfMod) console.timeStamp("Updated module:" + this.name);
 	};
 	return this;
 }
@@ -345,6 +356,7 @@ function Module (name, desc, dpc, ver, rn, pathVer) {
  * @deprecated
  */
 function require (mdl, ver, extpath) {
+    if (perfMod) console.timeStamp("Start of require(" + mdl + ", " + ver + ")");
 	if (isType(mdl, "Array")) {
 		for (var i = 0; i < mdl.length; i++) { //noinspection JSDeprecatedSymbols
 			require(mdl[i], ver);
@@ -354,6 +366,7 @@ function require (mdl, ver, extpath) {
 		modules.push(mdl);
 		if (debugging) console.log("The module %c%start%c is now included into %c%start	" + getTimestamp(true), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFilename());
 	} else if (debugging) console.log("The module %c%start%c is already included into %c%start	" + getTimestamp(true), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFilename());
+    if (perfMod) console.timeStamp("End of require(" + mdl + ", " + version + ")");
 }
 
 /**
@@ -367,6 +380,7 @@ function require (mdl, ver, extpath) {
  * require(["moduleA", "moduleB", "moduleC"]); //It will import "modules/moduleA.js", "modules/moduleB.js" and "modules/moduleC.js"
  */
 function $require (mdl) {
+    if (perfMod) console.timeStamp("Start of $require(" + mdl + ")");
 	var toND = function (x, n) {
 		var i = this + ""; //Because it won't work with other types than strings
 		n = n || 2;
@@ -400,6 +414,7 @@ function $require (mdl) {
 		modules.push(mdl);
 		if (debugging) console.log("The module %c%start%c is now included into %c%start	" + getT(), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFn());
 	} else if (debugging) console.log("The module %c%start%c is already included into %c%start	" + getT(), "color: red; text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", mdl, "color: #000; text-decoration: none;", " text-decoration: bold; -webkit-text-decoration: bold; -moz-text-decoration: bold;", getFn());
+	if (perfMod) console.timeStamp("End of $require(" + mdl + ")");
 }
 
 /**
@@ -414,6 +429,7 @@ function $require (mdl) {
  * run(["moduleA", "moduleB"]); //will run moduleA.run() then moduleB.run() (unless module is a dependency of moduleA in which case it will be ran before)
  */
 function run (module, ver) {
+    if (perfMod) console.timeStamp("Start of run(" + module + ", " + ver + ")");
 	if (isType(module, "Array")) {
 		for (var i = 0; i < module.length; i++) run(module[i], ver);
 	} else if (modules.indexOf(module) > -1) {
@@ -424,16 +440,17 @@ function run (module, ver) {
 		 * @returns {undefined}
 		 */
 		var go = function () {
+			if (perfMod) console.timeStamp("Go in run(" + module + ", " + ver + ")");
 			try {
 				if (debugging) Essence.say("Running " + module + "	" + getTimestamp(true), "info");
 				/*init(window[module].dependency, false, function (x) {
-				 if (debugging) Essence.say("%c" + x + "%c from %c" + module + "%c'start dependency has been initiated !!	" + getTimestamp(true), "info", "color: #c0f", "color: #000", "color: #f0c", "color: #000");
+				 if (debugging) Essence.say("%c" + x + "%c from %c" + module + "%c's dependency has been initiated !!	" + getTimestamp(true), "info", "color: #c0f", "color: #000", "color: #f0c", "color: #000");
 				 //console.info("")
 				 }, ver);*/
 				if (!window[module].loaded) window[module].load();
 				window[module].run();
 			} catch (e) {
-				Essence.time("The module %c" + module + "%c have problems regarding it'start run method.", "color: #c0f", "color: #000");
+				Essence.time("The module %c" + module + "%c have problems regarding it's run method.", "color: #c0f", "color: #000");
 			}
 		}, /**
 		 * @description Retry to get the module to be usable and launch go()
@@ -443,16 +460,18 @@ function run (module, ver) {
 		 * @returns {undefined}
 		 */
 		retry = function (stackLayer) {
+            if (perfMod) console.timeStamp("Retry in run(" + module + ", " + ver + ")");
 			if (!stackLayer) stackLayer = 0;
 			Essence.say("The module %c" + module + "%c isn't available !	" + getTimestamp(true), "erro", "color: #c0f", "color: #000");
 			if (debugging) Essence.say("Retrying to run %c" + module + "%c	" + getTimestamp(true), "info", "color: #c0f", "color: #000");
 			if (window[module]) go();
 			else if (stackLayer <= 2) setTimeout(retry(stackLayer + 1), 1);
-			else Essence.say("It'start not possible to run %c" + module + "%c :( !	" + getTimestamp(true) + "\nModule: " + window[module], "info", "color: #c0f", "color: #000");
+			else Essence.say("It's not possible to run %c" + module + "%c :( !	" + getTimestamp(true) + "\nModule: " + window[module], "info", "color: #c0f", "color: #000");
 			init(module);
 		};
 		window[module]? go(): retry();
 	} else Essence.say("The module %c" + module + "%c isn't in the list !!	" + getTimestamp(true), "erro", "color: #c0f", "color: #000");
+    if (perfMod) console.timeStamp("End of $require(" + module + ", " + ver + ")");
 }
 
 /**
@@ -480,6 +499,7 @@ function run (module, ver) {
  * });
  */
 function init (mdls, mid, cb, ver, argsMid, argsCB) {
+	if (perfMod) console.timeStamp("Start of init(" + mdls + ")");
 	if (isType(mdls, "Array")) {
 		for (var i = 0; i < mdls.length; i++) init(mdls[i], mid, cb, ver, mdls[i], mdls[i]);
 	} else {
@@ -493,6 +513,7 @@ function init (mdls, mid, cb, ver, argsMid, argsCB) {
 			if (cb) cb(argsCB || mdls);
 		}, 1);
 	}
+    if (perfMod) console.timeStamp("End of init(" + mdls + ")");
 }
 
 /**
@@ -605,6 +626,7 @@ getExtPath = function (path) {
  */
 (function () {
 	//document.scripts[i].ownerDocument may be useful to correct the link of the included modules
+    if (perfMod) console.timeStamp("Module Loader init");
 	if (debugging) Essence.say("Initiating the Module Loader");
 	$require(["Files", "DOM", "UI", "Web", "Maths", "Ajax", "DataStruct", "Security", "Misc", "QTest"]);
 	/* init(["Web", "Maths", "Ajax", "DataStruct", "Security", "Misc", "QTest"], function (mdl) {
@@ -614,6 +636,7 @@ getExtPath = function (path) {
 	 }, 1.1); */
 	setTimeout(function () {
 		run(modules, Essence.version.substr(0, 3));
+        if (perfMod) console.timeStamp("Modules ran!");
 	}, 690);
 	setTimeout(function () {
 		if (debugging) {
@@ -624,10 +647,6 @@ getExtPath = function (path) {
 			}).toStr(true));
 		}
 		if (!filenameList(gatherExternalScripts(true)).has("essence.js")) Essence.source = Essence.source.replace(".js", ".min.js");
-		if (testMode) {
-			UnitTest.basicTests();
-			UnitTest.multiTest(UnitTest.libTests);
-        }
 		UnitTest.libTests = [
 			//essence
 
@@ -672,20 +691,26 @@ getExtPath = function (path) {
 
 			//Web
 		];
-		if (debugging && !Essence.loadedModules.map(function (m) {
+        if (testMode) {
+            UnitTest.basicTests();
+            UnitTest.multiTest(UnitTest.libTests);
+        }
+        if (debugging && !Essence.loadedModules.map(function (m) {
 				return m.name;
 			}).equals(modules)
 		) Essence.say("The following modules weren't loaded: " + complement(modules, Essence.loadedModules.map(function (m) {
 				return m.name;
 			}))
 		);
-		if (Essence.source.has("essence.min")) { //If it'start the minimised version, change the modules to their minimised version as well
+		if (Essence.source.has("essence.min")) { //If it's the minimised version, change the modules to their minimised version as well
 			var $s = $n("*script").toArray();
 			for (var i = 0; i < $s.length; i++) {
 				if (!$s[i].src.has(".min.js")) $s[i].src.replace(".js", ".min.js");
 			}
 		}
+        if (perfMod) console.timeStamp("Module edit");
 	}, 1e3);
+    if (perfMod) console.timeStamp("Module Loading done");
 })();
 
 /**
@@ -726,7 +751,7 @@ function $e (selector, silence) { //THE selector !!
 }
 
 /**
- * @description Element'start node
+ * @description Element's node
  * @param {string} selector A CSS selector
  * @param {boolean} [silence=false] Flag to use when <code>selector</code> doesn't exist yet (end.g: a particular selector used by a JS object/function which may not be in the page yet).
  * @returns {HTMLElement} Element node
@@ -783,7 +808,7 @@ function $n (selector, silence) { //To get directly the node without having to u
  * @property {function(String, String, boolean, boolean)} Element.replace Replace a string in the element's value by a new one
  */
 function Element (selector) {
-	if (/^([#.*_-`~&]\W*|\S|undefined|null|)$/.test(selector)) throw new InvalidParamError("Element cannot accept the selector '" + selector + "' as it'start invalid."); //Reject invalid selectors
+	if (/^([#.*_-`~&]\W*|\S|undefined|null|)$/.test(selector)) throw new InvalidParamError("Element cannot accept the selector '" + selector + "' as its invalid."); //Reject invalid selectors
 	if (selector[0] === "#") this.node = document.querySelector(selector) || document.getElementById(selector.slice(1, selector.length)); //Id
 	else if (selector[0] === ".") this.node = document.querySelector(selector) || document.getElementByClassName(selector.slice(1, selector.length)); //Class
 	else if (selector[0] === "*") this.node = document.querySelectorAll(selector.slice(1, selector.length)) || document.getElementsByTagName(selector.slice(1, selector.length)); //Node list
@@ -894,7 +919,7 @@ function Element (selector) {
 		for(var i = 0; i < sAndV.length - 1; i += 2) this.setCSS(sAndV[i], sAndV[i + 1]);
 	};
 
-	this.css = function (prop) { //Get the CSS property of the element'start node
+	this.css = function (prop) { //Get the CSS property of the element's node
 		if (isType(this.node, "Array")) {
 			var arr = [];
 			for(var i = 0; i < this.node.length; i++) arr.push(this.node[i].style[prop]);
@@ -905,7 +930,7 @@ function Element (selector) {
 		}): this.node.style[prop]
 	};
 
-	this.hasClass = function (className) { //Check if the element'start node has the specified CSS class
+	this.hasClass = function (className) { //Check if the element's node has the specified CSS class
 		if (isType(this.node, "Array")) {
 			var arr = [];
 			for(var i = 0; i < this.node.length; i++) arr.push(new RegExp(" " + className + " ").test(" " + this.node[i].className + " ") || new RegExp(" " + className + " ").test(" " + this.node[i][className] + " ") || this.node[i].style.clasName == className);
@@ -913,7 +938,7 @@ function Element (selector) {
 		return new RegExp(" " + className + " ").test(" " + this.node.className + " ") || new RegExp(" " + className + " ").test(" " + this.node[className] + " ") || this.node.style.className == className
 	};
 
-	this.hasCSS = function (prop) { //Check if the element'start node has the specified CSS property
+	this.hasCSS = function (prop) { //Check if the element's node has the specified CSS property
 		if (isType(this.node, "Array")) {
 			var arr = [];
 			for(var i = 0; i < this.node.length; i++) arr.push(new RegExp(" " + prop + " ").test(" " + this.node[i].style[prop] + " ") || new RegExp(" " + prop + " ").test(" " + this.node[i][prop] + " "));
@@ -921,7 +946,7 @@ function Element (selector) {
 		return new RegExp(" " + prop + " ").test(" " + this.node.style[prop] + " ") || new RegExp(" " + prop + " ").test(" " + this.node[prop] + " ")
 	};
 
-	this.addClass = function (className) { //Add a class to the element'start node
+	this.addClass = function (className) { //Add a class to the element's node
 		if (isType(this.node, "Array")) {
 			for (var i = 0; i < this.node.length; i++) {
 				if (!this.node[i].hasClass(className)) this.node[i].className += " " + className;
@@ -929,7 +954,7 @@ function Element (selector) {
 		} else if (!this.hasClass(className)) this.node.className += " " + className;
 	};
 
-	this.rmClass = function (className) { //Remove the class from the element'start node
+	this.rmClass = function (className) { //Remove the class from the element's node
 		var newClass = " " + this.node.className.replace(/[\t\r\n]/g, " ") + " ";
 		if (isType(this.node, "Array")) {
 			for (var i = 0; i < this.node.length; i++) {
@@ -993,7 +1018,7 @@ function Element (selector) {
 		return "[object Element]"
 	};
 
-	this.tagName = function() { //get the enclosing tag'start name
+	this.tagName = function() { //get the enclosing tag's name
 		return this.node.tagName.toLowerCase()
 	};
 
@@ -1125,7 +1150,7 @@ function include (file, type) {
 }
 
 /**
- * @description Avoid including a file if it'start already included
+ * @description Avoid including a file if it's already included
  * @param {string} file Filename
  * @param {string} [type="link"] Type of the file
  * @param {string} [parentPath=""] Parent path
@@ -3641,7 +3666,7 @@ String.prototype.unzip = function (noPairs) { //Decompress the string (when bein
 String.prototype.replaceAll = function(str, nstr, sep) {
 	var res = sep? this.split(sep).replace(str, nstr) : this.replace(str, nstr), i = 0;
 	if (sep === "") return this.replace(RegExpify(str), nstr); //Avoid the infinite loop caused by sep = ""
-	while (res.has(str) || i === this.length) { //Look up the occurrences until there'start none of them left or the interpreter reached the end
+	while (res.has(str) || i === this.length) { //Look up the occurrences until there's none of them left or the interpreter reached the end
 		res = this.replace(str, nstr);
 		i++;
 	}
@@ -4149,13 +4174,13 @@ function dateTime (id) {
 	s = date.getSeconds();
 	if (s < 10) s = "0" + s;
 	GMT = (GMT >= 0)? "GMT+" + GMT: "GMT-" + GMT;
-	var result = "We're " + days[day] + " " + d + " " + months[month] + " " + year + " and it'start " + h + ":" + m + ":" + s + " " + tt + " " + GMT;
+	var result = "We're " + days[day] + " " + d + " " + months[month] + " " + year + " and it'ss" + h + ":" + m + ":" + s + " " + tt + " " + GMT;
 	$e("#" + id || "body").write(result);
 	setTimeout("dateTime(\"" + id + "\");", 1000);
 }
 
 /**
- * @description Kinch'start week day finder
+ * @description Kinch's week day finder
  * @param {string} d Date
  * @author Daniel "Kinch" Sheppard
  * @returns {string} Week day
