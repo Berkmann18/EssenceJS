@@ -96,7 +96,7 @@ function decrypt (txt, key) {
  */
 function abcEncode (txt) {
 	var code = new Array(txt.length);
-	if (isType(txt, "string") || isType(txt, "array")) {
+	if (isType(txt, "String") || isType(txt, "Array")) {
 		for (var i in txt) {
 			if(txt.hasOwnProperty(i)) {
 				switch (txt[i]) {
@@ -198,9 +198,9 @@ function abcEncode (txt) {
  */
 function abcDecode (txt) {
 	var code = new Array(txt.length);
-	if (isType(txt, "string") || isType(txt, "array")) {
+	if (isType(txt, "String") || isType(txt, "Array")) {
 		for (var i = 0; i < txt.length; i += 2) {
-			switch (txt.substr(i, 2)) {
+			switch (txt.get(i, i + 2)) {
 				case "00": code[i] = " ";break;
 				case "01": code[i] = "a";break;
 				case "02": code[i] = "b";break;

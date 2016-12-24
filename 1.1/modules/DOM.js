@@ -15,8 +15,8 @@
 var DOM = new Module("DOM", "DOM stuff", ["Misc", "Files"], 1, function () {
 	BrowserDetect.init();
 });
-/* eslint no-undef: 0 */
 
+/* eslint no-undef: 0 */
 /**
  * @description Print onto something
  * @param {*} text Data to be printed
@@ -1062,4 +1062,8 @@ function cssPath (node) {
         }
     }
     return names.join(" > ");
+}
+
+function simplifyCSSPath (path) {
+	return path.replace(/(?:html > )*(head:nth-child\(1\)|body:nth-child\(2\)) > +/gmi, "");
 }
