@@ -11,12 +11,12 @@
             color: red;
         }
     </style>
-    <script type="text/javascript" src="1.1/essence.min.js" async defer></script>
+    <script type="text/javascript" src="1.1/essence.js" async defer></script>
     <script type="text/javascript" async defer>
         var tree, struct;
         function start () {
             Essence.init();
-            var SbTime = asyncTime(init, "Sandbox"), completeness = false;
+            var SbTime = 1 || asyncTime(init, "Sandbox"), completeness = false;
             var mdlCompleteTime = asyncTime(function() {
                 setTimeout(function () {
                     completeness = Essence.isComplete();
