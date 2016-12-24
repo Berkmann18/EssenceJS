@@ -267,7 +267,8 @@ var base64 = {
 	 * @throws Invalid character error: DOM Exception 5
 	 * @param {String} s String to use
 	 * @param {number} [i=0] Index
-	 * @returns {undefined}
+	 * @returns {number}
+	 * @throws String State
 	 */
 	getbyte64: function (s, i) {
 		/* "This is oddly fast, except on Chrome/V8.
@@ -281,6 +282,7 @@ var base64 = {
 	 * @throws Cannot decode base64
 	 * @param {String} s String to decode
 	 * @returns {String} Decoded base64 code
+     * @throws String State
 	 */
 	decode: function (s) {
 		s += "";
@@ -319,7 +321,8 @@ var base64 = {
 	 * @throws Invalid character error: DOM Exception 5
 	 * @param {String} s String to use
 	 * @param {number} [i=0] Index
-	 * @returns {undefined}
+	 * @returns {Number}
+     * @throws String State
 	 */
 	getbyte: function (s, i) {
 		var x = s.charCodeAt(i || 0);
@@ -329,7 +332,7 @@ var base64 = {
 	/**
 	 * @throws {SyntaxError} Only one argument needed
 	 * @param {string} s String to encode
-	 * @returns {undefined}
+	 * @returns {String} Encoded result
 	 */
 	encode: function (s) {
 		if (arguments.length != 1) throw new SyntaxError("Only one argument please !");
@@ -651,7 +654,8 @@ var Sys = { //System
  * @listens window.onkeypress
  */
 window.onkeypress = function (keyStroke) {
-	Sys.in.record(keyStroke);
+	//noinspection JSValidateTypes
+    Sys.in.record(keyStroke);
 	$G["lastKeyPair"] = getKey(keyStroke);
 };
 

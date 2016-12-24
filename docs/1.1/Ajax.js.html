@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!--suppress ALL -->
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -35,7 +34,7 @@
  * @license MIT
  * @author Maximilian Berkmann &lt;maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
- * @requires essence
+ * @requires module:essence
  * @type {Module}
  * @exports Ajax
  */
@@ -57,8 +56,8 @@ var Ajax = new Module("Ajax", "AJAX stuff");
  * @func
  */
 function GET (name) {
-    //noinspection JSValidateTypes
-    if (name === (new RegExp("[?&amp;]" + encodeURIComponent(name) + "=([^&amp;]*)")).exec(location.search)) return decodeURIComponent(name[1]);
+	//noinspection JSValidateTypes
+	if ((new RegExp("[?&amp;]" + encodeURIComponent(name) + "=([^&amp;]*)").exec(location.search))) return decodeURIComponent((new RegExp("[?&amp;]" + encodeURIComponent(name) + "=([^&amp;]*)").exec(location.search))[1]);
 }
 
 /**
@@ -71,43 +70,47 @@ function GET (name) {
  * @func
  */
 function POST (path, params) {
-    var form = document.createElement("form");
-    form.setAttribute("method", "post");
-    form.setAttribute("action", path);
+	var form = document.createElement("form");
+	form.setAttribute("method", "post");
+	form.setAttribute("action", path);
 
-    for (var key in params) {
-        if (params.hasOwnProperty(key)) {
-            var hiddenField = document.createElement("input");
-            hiddenField.setAttribute("type", "hidden");
-            hiddenField.setAttribute("name", key);
-            hiddenField.setAttribute("value", params[key]);
-            form.appendChild(hiddenField);
-        }
-    }
-    document.body.appendChild(form);
-    form.submit()
+	for (var key in params) {
+		if (params.hasOwnProperty(key)) {
+			var hiddenField = document.createElement("input");
+			hiddenField.setAttribute("type", "hidden");
+			hiddenField.setAttribute("name", key);
+			hiddenField.setAttribute("value", params[key]);
+			form.appendChild(hiddenField);
+		}
+	}
+	document.body.appendChild(form);
+	form.submit()
 }
 
 /**
  * @description HTTP PUT request. Update/replace data.
+ * @param {*} data Date to place/update
+ * @param {String} url URL where the insertion/alternation is happening
  * @returns {undefined}
- * @todo Fill it
- * @since 1.0
+ * @since 1.1
  * @func
  */
-function PUT () {
-
+function PUT (data, url) {
+    var xhr = new XHR(url, "PUT", true, $f, $f, $f, data);
+    xhr.init();
 }
 
 /**
  * @description HTTP DELETE request. Delete data
+ * @param {*} data Date to delete
+ * @param {String} url URL where the deletion is happening
  * @returns {undefined}
- * @todo Fill it
- * @since 1.0
+ * @since 1.1
  * @func
  */
-function DELETE () {
-
+function DELETE (data, url) {
+    var xhr = new XHR(url, "DELETE", true, $f, $f, $f, data);
+    xhr.init();
 }
 
 /* eslint no-undef: 0 */
@@ -121,13 +124,13 @@ function DELETE () {
  * @example
  * function showLogs () {
  *   load("logs.log", function (xhr) {
- *      $e("#logView").write(xhr.responseText);
+ *      $end("#logView").write(xhr.responseText);
  *   }
  * }
  */
 function load (url, cb) {
-    var xhr = new XHR(url, "get", true, cb);
-    xhr.init();
+	var xhr = new XHR(url, "GET", true, cb);
+	xhr.init();
 }
 
 /**
@@ -145,22 +148,22 @@ function load (url, cb) {
  * });
  */
 function loadJSON (file) {
-    var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
-    xhr.overrideMimeType("application/json");
-    xhr.open("GET", (file || "data") + ".json", true);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 &amp;&amp; xhr.status === 200) (function () {
-            $G["json"] = JSON.parse(xhr.responseText);
-            return JSON.parse(xhr.responseText) || $G["json"];
-        })();
-    };
-    xhr.send(null);
-    //console.log("res=", xhr.response, "\nresTxt=", xhr.responseText, "\nresXML=", xhr.responseXML, "\nresT=", xhr.responseType);
-    try {
-        return JSON.parse(xhr.response);
-    } catch (e) {
-        return $G["json"];
-    }
+	var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
+	xhr.overrideMimeType("application/json");
+	xhr.open("GET", (file || "data") + ".json", true);
+	xhr.onreadystatechange = function () {
+		if (xhr.readyState === 4 &amp;&amp; xhr.status === 200) (function () {
+			$G["json"] = JSON.parse(xhr.responseText);
+			return JSON.parse(xhr.responseText) || $G["json"];
+		})();
+	};
+	xhr.send(null);
+	//console.log("res=", xhr.response, "\nresTxt=", xhr.responseText, "\nresXML=", xhr.responseXML, "\nresT=", xhr.responseType);
+	try {
+		return JSON.parse(xhr.response);
+	} catch (e) {
+		return $G["json"];
+	}
 }
 
 /**
@@ -171,9 +174,9 @@ function loadJSON (file) {
  * @param {XhrCallback} [success] Success handler
  * @param {XhrCallback} [fail] Failure handler
  * @param {XhrCallback} [progress] Loading/progress handler
+ * @param {string} [body] Body of the request
  * @param {string[]} [creds=["", ""]] Credentials (username, password)
  * @param {string} [mime] MIME type
- * @param {string} [body] Body of the request
  * @returns {XHR} XHR object
  * @since 1.1
  * @constructor
@@ -182,7 +185,7 @@ function loadJSON (file) {
  * @property {*} XHR.response Response
  * @property {string[]} XHR.credentials Credentials
  * @property {boolean} XHR.async Asynchronousness
- * @property {XMLHttpRequest|ActiveXObject} XHR.req XHR/AXO request
+ * @property {(XMLHttpRequest|ActiveXObject)} XHR.req XHR/AXO request
  * @property {boolean} XHR.forIE Is the request only for MS IE
  * @property {string} XHR.state State (message of the ready-stateness of the request)
  * @property {number} XHR.status HTTP status
@@ -192,7 +195,7 @@ function loadJSON (file) {
  * @property {function((XMLHttpRequest|ActiveXObject))} XHR.onFailure Failure handler
  * @property {function((XMLHttpRequest|ActiveXObject))} XHR.onLoad Progress handler
  * @property {Function} XHR.handleResponse Response listener
- * @property {function(?Array[])} XHR.init XHR initialiser
+ * @property {function(?Array[])} XHR.init XHR initializer
  * @property {function(...?string): *} XHR.header Header manager
  * @property {function(): string} XHR.toString String representation
  * @property {string} XHR.body Body of the request
@@ -200,101 +203,104 @@ function loadJSON (file) {
  * @this {XHR}
  */
 function XHR (url, method, async, success, fail, progress, body, creds, mime) {
-    this.url = url || location.href;
-    this.method = method || "GET";
-    this.response = null;
-    this.credentials = creds || ["", ""]; //Username, password
-    this.async = async || false;
-    this.req = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
-    this.forIE = !window.XMLHttpRequest;
-    this.state = getXHRMsg(0);
-    this.status = this.req.status;
-    this.body = body || "";
-    var self = this;
-    /**
-     * @listens XHR.req.readyState
-     */
-    this.req.onreadystatechange = function () {
-        self.state = getXHRMsg(self.req.readyState);
-        self.handleResponse();
-        /** @this {XMLHttpRequest} */
-        if (self.status != this.status) self.status = this.status;
-        if (this.readyState === 4 &amp;&amp; (this.status === 200 || this.status === 204)) self.onSuccess(this);
-        else if (this.readyState === 3) self.onLoad(this);
-        else if (this.status >= 400 &amp;&amp; this.status &lt;= 505) self.onFailure(this);
-    };
-    this.onChange = this.req.onreadystatechange;
-    this.onSuccess = success || function () {
-        /** @this {XHR} */
-        this.handleResponse();
-        console.log("%c[XHR] %s%c:\n%s", "color: #0f0", this.status + " " + getHTTPMsg(this.status), "color: #000;", this.response);
-    };
-    this.onFailure = fail || function () {
-        /** @this {XHR} */
-        this.handleResponse();
-        console.log("%c[XHR] %s%c:\n%s", "color: #f00", this.status + " " + getHTTPMsg(this.status), "color: #000;", this.response);
-    };
-    this.onLoad = progress || function () {
-        /** @this {XHR} */
-        this.handleResponse();
-        console.log("%c[XHR] %s%c:\n%s", "color: #666", this.state, "color: #000;", this.status + " " + getHTTPMsg(this.status));
-    };
-    this.req.onload = function () {
-        /** @this {XMLHttpRequest} */
-        console.info("%c[XHR]%c Loading the %s request to %s", "color: #666;", "color: #000;", self.method, self.url);
-    };
-    this.req.onerror = function () {
-        console.error("%c[XHR]%c There was an error in the request !", "color: #f00", "color: #000");
-    };
-    /**
-     * @listens XHR.req.responseType
-     */
-    this.handleResponse = function () {
-        switch (this.req.responseType) {
-            case "":
-            case "text": this.response = this.req.responseText;
-                break;
-            case "json": this.response = this.req.responseXML; break;
-            default: this.response = this.req.response; //arrayBuffer and document
-        }
-    };
-    this.init = function (reqHeaders) {
-        if (mime) this.req.overrideMimeType(mime);
-        this.req.open(this.method, this.url, this.async, this.credentials[0], this.credentials[1]);
-        this.header("Access-Control-Allow-Origin", getDirectoryPath(this.url) + ", " + getDirectoryPath());
-        var methods = [this.method];
-        if (this.method != "GET") methods.push("GET");
-        if (this.method != "POST") methods.push("POST");
-        this.header("Access-Control-Allow-Methods", methods.toStr(true));
-        //this.header("Access-Control-Expose-Headers", ", , "); //Already exposed: Cache-Control, Content-Language, Content-Type, Expires, Last-Modified, Pragma
-        this.header("Access-Control-Allow-Max-Age", "1728000");
-        if (this.credentials[0] != "" &amp;&amp; this.credentials[1] != "") {
-            this.req.withCredentials = true;
-            this.header("Access-Control-Allow-Credentials", "true");
-        }
-        if (this.method === "POST" || this.method === "DELETE") this.header("Body", this.body);
-        this.onChange();
-        if (reqHeaders) reqHeaders.map(function (i) {
-            self.header(i[0], i[1]);
-        });
+	this.url = url || location.href;
+	this.method = method || "GET";
+	this.response = null;
+	this.credentials = creds || ["", ""]; //Username, password
+	this.async = async || false;
+	this.req = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
+	this.forIE = !window.XMLHttpRequest;
+	this.state = getXHRMsg(0);
+	this.status = this.req.status;
+	this.body = body || "";
+	var self = this;
+	/**
+	 * @listens XHR.req.readyState
+	 * @returns {undefined}
+	 */
+	this.req.onreadystatechange = function () {
+		self.state = getXHRMsg(self.req.readyState);
+		self.handleResponse();
+		/** @this {XMLHttpRequest} */
+		if (self.status != self.req.status) self.status = self.req.status;
+		if (self.req.readyState === 4 &amp;&amp; (self.req.status === 200 || self.req.status === 204)) self.onSuccess(this);
+		else if (self.req.readyState === 3) self.onLoad(this);
+		else if (self.req.status >= 400 &amp;&amp; self.req.status &lt;= 505) self.onFailure(this);
+	};
+	this.onChange = this.req.onreadystatechange;
+	this.onSuccess = success || function () {
+		/** @this {XHR} */
+		self.handleResponse();
+		console.log("%c[XHR] %start%c:\n%start", "color: #0f0", self.status + " " + getHTTPMsg(self.status), "color: #000;", self.response);
+	};
+	this.onFailure = fail || function () {
+		/** @this {XHR} */
+		self.handleResponse();
+		console.log("%c[XHR] %start%c:\n%start", "color: #f00", self.status + " " + getHTTPMsg(self.status), "color: #000;", self.response);
+	};
+	this.onLoad = progress || function () {
+		/** @this {XHR} */
+		self.handleResponse();
+		console.log("%c[XHR] %start%c:\n%start", "color: #666", self.state, "color: #000;", self.status + " " + getHTTPMsg(self.status));
+	};
+	this.req.onload = function () {
+		/** @this {XMLHttpRequest} */
+		console.info("%c[XHR]%c Loading the %start request to %start", "color: #666;", "color: #000;", self.method, self.url);
+	};
+	this.req.onerror = function () {
+		console.error("%c[XHR]%c There was an error in the request !", "color: #f00", "color: #000");
+	};
+	/**
+	 * @listens XHR.req.responseType
+	 * @returns {undefined}
+	 */
+	this.handleResponse = function () {
+		switch (this.req.responseType) {
+			case "":
+			case "text": this.response = this.req.responseText;
+				break;
+			case "json": this.response = this.req.responseXML; break;
+			default: this.response = this.req.response; //arrayBuffer and document
+		}
+	};
+	this.init = function (reqHeaders) {
+		if (mime) this.req.overrideMimeType(mime);
+		this.req.open(this.method, this.url, this.async, this.credentials[0], this.credentials[1]);
+		this.header("Access-Control-Allow-Origin", getDirectoryPath(this.url) + ", " + getDirectoryPath());
+		var methods = [this.method];
+		if (this.method != "GET") methods.push("GET");
+		if (this.method != "POST") methods.push("POST");
+		this.header("Access-Control-Allow-Methods", methods.toStr(true));
+		//this.header("Access-Control-Expose-Headers", ", , "); //Already exposed: Cache-Control, Content-Language, Content-Type, Expires, Last-Modified, Pragma
+		this.header("Access-Control-Allow-Max-Age", "1728000");
+		if (this.credentials[0] != "" &amp;&amp; this.credentials[1] != "") {
+			this.req.withCredentials = true;
+			this.header("Access-Control-Allow-Credentials", "true");
+		}
+		if (this.method === "POST" || this.method === "DELETE") this.header("Body", this.body);
+		this.onChange();
+		if (reqHeaders) reqHeaders.map(function (i) {
+			self.header(i[0], i[1]);
+		});
 
-        this.req.send(isNon(this.body)? this.response: this.body);
-    };
-    this.header = function (name, val) {
-        if (!val) return name? this.req.getResponseHeader(name): this.req.getAllResponseHeaders();
-        else this.req.setRequestHeader(name, val);
-    };
+		this.req.send(isNon(this.body)? this.response: this.body);
+	};
+	this.header = function (name, val) {
+		if (!val) return name? this.req.getResponseHeader(name): this.req.getAllResponseHeaders();
+		else this.req.setRequestHeader(name, val);
+	};
 
-    this.toString = function () {
-        return "XHR(url='" + this.url + "', method='" + this.method + "', response='" + this.response + "', credentials=" + this.credentials + ", async=" + this.async + ", state='" + this.state + "', status=" + this.status + ", forIE=" + this.forIE + ", body='" + this.body + "')";
-    };
+	this.toString = function () {
+		return "XHR(url='" + this.url + "', method='" + this.method + "', response='" + this.response + "', credentials=" + this.credentials + ", async=" + this.async + ", state='" + this.state + "', status=" + this.status + ", forIE=" + this.forIE + ", body='" + this.body + "')";
+	};
 
+	//noinspection JSUnusedGlobalSymbols
     this.viewResponse = function (id) {
-        this.handleResponse();
-        $e(id? "#" + id: "body").write(this.response, true);
-    };
+		this.handleResponse();
+		$e(id? "#" + id: "body").write(this.response, true);
+	};
 
-    return this;
+	return this;
 }
 
 /**
@@ -305,9 +311,9 @@ function XHR (url, method, async, success, fail, progress, body, creds, mime) {
  * @param {XhrCallback} [success] Success handler
  * @param {XhrCallback} [fail] Failure handler
  * @param {XhrCallback} [progress] Loading/progress handler
+ * @param {string} [body] Body of the request
  * @param {string[]} [creds=["", ""]] Credentials (username, password)
  * @param {string} [mime] MIME type
- * @param {string} [body] Body of the request
  * @returns {CORS} CORS object
  * @since 1.1
  * @inheritdoc
@@ -321,55 +327,61 @@ function XHR (url, method, async, success, fail, progress, body, creds, mime) {
  * @property {Function} CORS.init CORS initializer
  * @property {function(): string} CORS.toString String representation
  * @property {Function} CORS.update Update the object's fields
+ * @property {Function} CORS.silence Ignore all XHR's request errors
  * @this {CORS}
  */
 function CORS (url, method, async, success, fail, progress, body, creds, mime) {
-    var self = this;
-    this.xhr = new XHR(url, method, async || true, success || function () {
-            /** @this {XHR} */
-            this.handleResponse();
-            self.update();
-            console.log("%c[CORS] %s%c:\n%s", "color: #0f0", this.status + " " + getHTTPMsg(this.status), "color: #000;", this.response);
-        }, fail || function () {
-            /** @this {XHR} */
-            this.handleResponse();
-            self.update();
-            console.log("%c[CORS] %s%c:\n%s", "color: #f00", this.status + " " + getHTTPMsg(this.status), "color: #000;", this.response);
-        }, progress || function () {
-            /** @this {XHR} */
-            this.handleResponse();
-            self.update();
-            console.log("%c[CORS] %s%c:\n%s", "color: #666", this.status + " " + getHTTPMsg(this.status), "color: #000;", this.response);
-        }, body, creds, mime);
-    try {
-        //noinspection JSUnresolvedVariable
-        if (!("withCredentials" in this.xhr.req) &amp;&amp; typeof XDomainRequest != "undefined") this.xhr.req = new XDomainRequest();
-    } catch (e) {}
-    this.init = function () {
-        this.xhr.init([["Access-Control-Request-Headers", "X-Custom-Header"],
-            ["Access-Control-Allow-Headers", "Cache-Control, Content-Language, Content-Type, Expires, Last-Modified, Pragma, Body, Origin, X-Custom-Headers, X-PINGOTHER"],
-            ["Access-Control-Expose-Headers", "X-Custom-Header"]
-        ]);
-        this.update();
-    };
-    this.response = this.xhr.response;
-    this.url = this.xhr.url;
-    this.method = this.xhr.method;
-    this.body = body || "";
-    //noinspection JSUnresolvedVariable
-    this.forIE = typeof XDomainRequest != "undefined";
-    this.toString = function () {
-        return "CORS(url="+ this.url + ", method=" + this.method + ", body=" + this.body + ", forIE=" + this.forIE + ", response=" + this.response + ", xhr=" + this.xhr.toString() + ")";
-    };
-    this.update = function () {
-        this.xhr.handleResponse();
-        this.response = this.xhr.response;
-        this.url = this.xhr.url;
-        this.method = this.xhr.method;
-        if (isNon(this.body)) this.body = this.xhr.body;
-    };
+	var self = this;
+	this.xhr = new XHR(url, method, async || true, success || function () {
+			/** @this {XHR} */
+			this.handleResponse();
+			self.update();
+			console.log("%c[CORS] %start%c:\n%start", "color: #0f0", this.status + " " + getHTTPMsg(this.status), "color: #000;", self.response);
+		}, fail || function () {
+			/** @this {XHR} */
+			this.handleResponse();
+			self.update();
+			console.log("%c[CORS] %start%c:\n%start", "color: #f00", this.status + " " + getHTTPMsg(this.status), "color: #000;", self.response);
+		}, progress || function () {
+			/** @this {XHR} */
+			this.handleResponse();
+			self.update();
+			console.log("%c[CORS] %start%c:\n%start", "color: #666", this.status + " " + getHTTPMsg(this.status), "color: #000;", thisself.response);
+		}, body, creds, mime);
+	try {
+		//noinspection JSUnresolvedVariable
+		if (!("withCredentials" in this.xhr.req) &amp;&amp; typeof XDomainRequest != "undefined") this.xhr.req = new XDomainRequest();
+	} catch (e) {
+		//Nothing do to here
+	}
+	this.init = function () {
+		this.xhr.init([["Access-Control-Request-Headers", "X-Custom-Header"],
+			["Access-Control-Allow-Headers", "Cache-Control, Content-Language, Content-Type, Expires, Last-Modified, Pragma, Body, Origin, X-Custom-Headers, X-PINGOTHER"],
+			["Access-Control-Expose-Headers", "X-Custom-Header"]
+		]);
+		this.update();
+	};
+	this.response = this.xhr.response;
+	this.url = this.xhr.url;
+	this.method = this.xhr.method;
+	this.body = body || "";
+	//noinspection JSUnresolvedVariable
+	this.forIE = typeof XDomainRequest != "undefined";
+	this.toString = function () {
+		return "CORS(url="+ this.url + ", method=" + this.method + ", body=" + this.body + ", forIE=" + this.forIE + ", response=" + this.response + ", xhr=" + this.xhr.toString() + ")";
+	};
+	this.update = function () {
+		this.xhr.handleResponse();
+		this.response = this.xhr.response;
+		this.url = this.xhr.url;
+		this.method = this.xhr.method;
+		if (isNon(this.body)) this.body = this.xhr.body;
+	};
+	this.silence = function () {
+		this.xhr.req.onerror = $f;
+	};
 
-    return this;
+	return this;
 }
 
 /**
@@ -382,80 +394,80 @@ function CORS (url, method, async, success, fail, progress, body, creds, mime) {
  * @func
  */
 function AJAXpost (data, to, xml) {
-    var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP"), res = "";
-    xhr.onreadystatechange = function () {
-        //Request complete and HTTP OK response
-        if (xhr.readyState === 4 &amp;&amp; xhr.status === 200) res = xml? xhr.responseXML: xhr.responseText;
-    };
-    xhr.open("POST", to, true);
-    if (xml) {
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.send(data);
-    } else {
-        xhr.setRequestHeader("Content-Type", "text/plain");
-        xhr.send(data);
-    }
-    return res
+	var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP"), res = "";
+	xhr.onreadystatechange = function () {
+		//Request complete and HTTP OK response
+		if (xhr.readyState === 4 &amp;&amp; xhr.status === 200) res = xml? xhr.responseXML: xhr.responseText;
+	};
+	xhr.open("POST", to, true);
+	if (xml) {
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		xhr.send(data);
+	} else {
+		xhr.setRequestHeader("Content-Type", "text/plain");
+		xhr.send(data);
+	}
+	return res
 }
 
 /* eslint no-undef: 2 */
 /**
  * @description HTTP status message
- * @param {number} status HTTP status (e.g: xhr.status)
+ * @param {number} status HTTP status (end.g: xhr.status)
  * @returns {string} Status message
  * @since 1.0
  * @func
  */
 function getHTTPMsg (status) {
-    switch (status) {
-        //Information
-        case 100: return "Continue";
-        case 101: return "Switching Protocols";
-        //Success
-        case 200: return "OK";
-        case 201: return "Created";
-        case 202: return "Accepted";
-        case 203: return "Non-Authoriative Information";
-        case 204: return "No Content";
-        case 205: return "Reset Content";
-        case 206: return "Partial Content";
-        //Redirection
-        case 300: return "Multiple Choices";
-        case 301: return "Moved Permanently";
-        case 302: return "Found";
-        case 303: return "See Other";
-        case 304: return "Not Modified";
-        case 305: return "Use Proxy";
-        case 306: return "Unused";
-        case 307: return "Temporary Redirect";
-        //Client error
-        case 400: return "Bad Request";
-        case 401: return "Unauthorized";
-        case 402: return "Payment Required";
-        case 403: return "Forbidden";
-        case 404: return "Not Found";
-        case 405: return "Method Not Allowed";
-        case 406: return "Not Acceptable";
-        case 407: return "Proxy Authentication Required";
-        case 408: return "Request Timeout";
-        case 409: return "Conflict";
-        case 410: return "Gone";
-        case 411: return "Length Required";
-        case 412: return "Precondition Failed";
-        case 413: return "Request Entity Too Large";
-        case 414: return "Request-url Too Long";
-        case 415: return "Bad Request";
-        case 416: return "Unsupported Media Type";
-        case 417: return "Expectation Failed";
-        //Server error
-        case 500: return "Internal Server Error";
-        case 501: return "Not Implemented";
-        case 502: return "Bad Gateway";
-        case 503: return "Service Unavailable";
-        case 504: return "Gateway Timeout";
-        case 505: return "HTTP Version Not Supported";
-        default: return "Unknown status"
-    }
+	switch (status) {
+		//Information
+		case 100: return "Continue";
+		case 101: return "Switching Protocols";
+		//Success
+		case 200: return "OK";
+		case 201: return "Created";
+		case 202: return "Accepted";
+		case 203: return "Non-Authoriative Information";
+		case 204: return "No Content";
+		case 205: return "Reset Content";
+		case 206: return "Partial Content";
+		//Redirection
+		case 300: return "Multiple Choices";
+		case 301: return "Moved Permanently";
+		case 302: return "Found";
+		case 303: return "See Other";
+		case 304: return "Not Modified";
+		case 305: return "Use Proxy";
+		case 306: return "Unused";
+		case 307: return "Temporary Redirect";
+		//Client error
+		case 400: return "Bad Request";
+		case 401: return "Unauthorized";
+		case 402: return "Payment Required";
+		case 403: return "Forbidden";
+		case 404: return "Not Found";
+		case 405: return "Method Not Allowed";
+		case 406: return "Not Acceptable";
+		case 407: return "Proxy Authentication Required";
+		case 408: return "Request Timeout";
+		case 409: return "Conflict";
+		case 410: return "Gone";
+		case 411: return "Length Required";
+		case 412: return "Precondition Failed";
+		case 413: return "Request Entity Too Large";
+		case 414: return "Request-url Too Long";
+		case 415: return "Bad Request";
+		case 416: return "Unsupported Media Type";
+		case 417: return "Expectation Failed";
+		//Server error
+		case 500: return "Internal Server Error";
+		case 501: return "Not Implemented";
+		case 502: return "Bad Gateway";
+		case 503: return "Service Unavailable";
+		case 504: return "Gateway Timeout";
+		case 505: return "HTTP Version Not Supported";
+		default: return "Unknown status"
+	}
 }
 
 /**
@@ -464,45 +476,46 @@ function getHTTPMsg (status) {
  * @returns {string} XHR message
  */
 function getXHRMsg (state) {
-    /* readyStates
-     0 (UNSENT): request not initialized
-     1 (OPENED): server connection established
-     2 (HEADERS_RECEIVED): request received
-     3 (LOADING): processing request
-     4 (DONE): request finished and response is ready
-     */
-    return ["UNSENT", "OPENED", "HEADERS_RECEIVED", "LOADING", "DONE"][state];
+	/* readyStates
+	 0 (UNSENT): request not initialized
+	 1 (OPENED): server connection established
+	 2 (HEADERS_RECEIVED): request received
+	 3 (LOADING): processing request
+	 4 (DONE): request finished and response is ready
+	 */
+	return ["UNSENT", "OPENED", "HEADERS_RECEIVED", "LOADING", "DONE"][state];
 }
 
 /**
  * @description Cross Origin Resource Sharing request maker.&lt;br />
  * Source: {@link https://stackoverflow.com/questions/3076414/ways-to-circumvent-the-same-origin-policy}
- * @param {string} [method="get"] Method
+ * @param {string} [method="GET"] Method
  * @param {string} [url=getDirectoryPath()] URL
  * @returns {XMLHttpRequest} CORS request
  * @example
- * var request = createCORSRequest("get", "http://www.stackoverflow.com/");
+ * var request = createCORSRequest("GET", "http://www.stackoverflow.com/");
  if (request) {
-    request.onload = function () {
-        //...
-    };
-    request.onreadystatechange = handler;
-    request.send();
+	request.onload = function () {
+		//...
+	};
+	request.onreadystatechange = handler;
+	request.send();
  }
  * @since 1.1
  * @func
  * @see module:Ajax~setCORS
  */
 function createCORSRequest (method, url) {
-    var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
-    if ("withCredentials" in xhr || xhr.withCredentials !== undefined) xhr.open(method || "get", url || getDirectoryPath(), true);
-    else if (typeof XDomainRequest != "undefined" || XDomainRequest) { //IE
-        xhr = new XDomainRequest();
-        xhr.open(method || "GET", url || getDirectoryPath());
-    } else xhr = null;
-    return xhr;
+	var xhr = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
+	if ("withCredentials" in xhr || xhr.withCredentials !== undefined) xhr.open(method || "GET", url || getDirectoryPath(), true);
+	else if (typeof XDomainRequest != "undefined" || XDomainRequest) { //IE
+		xhr = new XDomainRequest();
+		xhr.open(method || "GET", url || getDirectoryPath());
+	} else xhr = null;
+	return xhr;
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Set up a Cross Origin Resource Sharing request
  * @param {string} [url=getDirectoryPath()] URL where CORS is going to be allowed
@@ -517,49 +530,49 @@ function createCORSRequest (method, url) {
  * @throws {Error} CORS not supported
  */
 function setCORS (url, method, xml, withCreds, body) {
-    var res = null, req = createCORSRequest(method, url || getDirectoryPath());
-    if (!req) throw new Error("CORS not supported.");
-    //from http://www.html5rocks.com/en/tutorials/cors/
-    if (withCreds) {
-        req.withCredentials = true;
-        req.setRequestHeader("Access-Control-Allow-Credentials", "true");
-    }
-    req.setRequestHeader("Access-Control-Allow-Origin", getDirectoryPath());
-    req.setRequestHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-    req.setRequestHeader("Access-Control-Allow-Headers", "Cache-Control, Content-Language, Content-Type, Expires, Last-Modified, Pragma, Body, Origin");
-    req.setRequestHeader("Access-Control-Request-Headers", "X-Custom-Header");
-    req.setRequestHeader("Access-Control-Allow-Max-Age", "1728000");
-    req.onload = function () {
-        res = xml? req.responseXML: req.responseText;
-    };
-    req.onreadystatechange = function () {
-        if (req.readyState === 4 &amp;&amp; req.status === 200) res = xml? req.responseXML: req.responseText;
-    };
-    req.onerror = function () {
-        Essence.say("There was an error in the CORS request", "erro");
-    };
-    //Access-Control-Allow-Origin needed
-    //Access-Control-Expose-Headers : X-Custom-Header;(optional) so more than the default ones: Cache-Control, Content-Language, Content-Type, Expires, Last-Modified, Pragma
-    //Access-Control-Max-Age (optional)
+	var res = null, req = createCORSRequest(method, url || getDirectoryPath());
+	if (!req) throw new Error("CORS not supported.");
+	//from http://www.html5rocks.com/en/tutorials/cors/
+	if (withCreds) {
+		req.withCredentials = true;
+		req.setRequestHeader("Access-Control-Allow-Credentials", "true");
+	}
+	req.setRequestHeader("Access-Control-Allow-Origin", getDirectoryPath());
+	req.setRequestHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+	req.setRequestHeader("Access-Control-Allow-Headers", "Cache-Control, Content-Language, Content-Type, Expires, Last-Modified, Pragma, Body, Origin");
+	req.setRequestHeader("Access-Control-Request-Headers", "X-Custom-Header");
+	req.setRequestHeader("Access-Control-Allow-Max-Age", "1728000");
+	req.onload = function () {
+		res = xml? req.responseXML: req.responseText;
+	};
+	req.onreadystatechange = function () {
+		if (req.readyState === 4 &amp;&amp; req.status === 200) res = xml? req.responseXML: req.responseText;
+	};
+	req.onerror = function () {
+		Essence.say("There was an error in the CORS request", "erro");
+	};
+	//Access-Control-Allow-Origin needed
+	//Access-Control-Expose-Headers : X-Custom-Header;(optional) so more than the default ones: Cache-Control, Content-Language, Content-Type, Expires, Last-Modified, Pragma
+	//Access-Control-Max-Age (optional)
 
-    /*req.setRequestHeader("Access-Control-Allow-Origin", url || getDirectoryPath());
-     req.setRequestHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS"); //Or ["POST", ...]
-     //req.setRequestHeader("Access-Control-Allow-Headers", "X-PINGOTHER"); //Or *
-     req.setRequestHeader("X-PING", "*");
-     req.setRequestHeader("Access-Control-Allow-Max-Age", "1728000");
-     if (req) {
-     req.onload = function() {
-     Essence.say("Setting a CORS request...");
-     };
-     req.onreadystatechange = function () {
-     if (req.readyState === 4 &amp;&amp; req.status === 200) res = xml? req.responseXML: req.responseText;
-     };
-     req.send();
-     }*/
+	/*req.setRequestHeader("Access-Control-Allow-Origin", url || getDirectoryPath());
+	 req.setRequestHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS"); //Or ["POST", ...]
+	 //req.setRequestHeader("Access-Control-Allow-Headers", "X-PINGOTHER"); //Or *
+	 req.setRequestHeader("X-PING", "*");
+	 req.setRequestHeader("Access-Control-Allow-Max-Age", "1728000");
+	 if (req) {
+	 req.onload = function() {
+	 Essence.say("Setting a CORS request...");
+	 };
+	 req.onreadystatechange = function () {
+	 if (req.readyState === 4 &amp;&amp; req.status === 200) res = xml? req.responseXML: req.responseText;
+	 };
+	 req.send();
+	 }*/
 
-    body? req.send(body): req.send();
+	body? req.send(body): req.send();
 
-    return res;
+	return res;
 }</code></pre>
         </article>
     </section>
@@ -570,13 +583,13 @@ function setCORS (url, method, xml, withCreds, body) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#DocTemplate">DocTemplate</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Sep 08 2016 11:58:04 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Dec 23 2016 02:39:11 GMT+0000 (GMT)
 </footer>
 
 <script> prettyPrint(); </script>

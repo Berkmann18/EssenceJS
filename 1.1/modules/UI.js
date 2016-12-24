@@ -258,7 +258,7 @@ function hex2rgb (hex, toArray) {
  * @func
  */
 function rgb2hex (rgb, toArray) {
-	var clr = isType(rgb, "Array")? rgb: rgb.slice(4, rgb.length - 1).split(", "), _format = function (shade) {
+	var clr = isType(rgb, "Array")? rgb: clrToArr(rgb), _format = function (shade) {
 		return conv(shade, 10, 16).toNDigits();
     };
 	clr = clr.map(_format);
@@ -276,7 +276,7 @@ function rgb2hex (rgb, toArray) {
  * @func
  */
 function rgb2hsl (rgb, toArray) {
-	var clr = isType(rgb, "Array")? rgb: rgb.slice(4, rgb.length - 1).split(", "), h, s, l, _format = function (shade) {
+	var clr = isType(rgb, "Array")? rgb: clrToArr(rgb), h, s, l, _format = function (shade) {
 		return (shade * 100 + .5) | 0;
     };
 	var r = clr[0] / 255, g = clr[1] / 255, b = clr[2] / 255, max = clr.max(), min = clr.min();
@@ -307,7 +307,7 @@ function rgb2hsl (rgb, toArray) {
  * @func
  */
 function hsl2rgb (hsl, toArray) {
-	var clr = hsl.slice(4, hsl.length - 1).split(", "), r, g, b, _format = function (shade) {
+	var clr = clrToArr(hsl), r, g, b, _format = function (shade) {
         return ((shade - .5) / 100) | 0;
     };
 	var h = _format(clr[0]), s = _format(clr[1]), l = _format(clr[2]);
@@ -347,7 +347,7 @@ function hsl2rgb (hsl, toArray) {
  * @func
  */
 function rgb2hsv (rgb, toArray) {
-    var clr = isType(rgb, "Array")? rgb: rgb.slice(4, rgb.length - 1).split(", ");
+    var clr = isType(rgb, "Array")? rgb: clrToArr(rgb);
     clr = clr.map(function (shade) {
 		return shade / 255;
     });
@@ -381,7 +381,7 @@ function rgb2hsv (rgb, toArray) {
  * @func
  */
 function hsv2rgb (hsv, toArray) {
-    var clr = isType(hsv, "Array")? hsv: hsv.slice(4, hsv.length - 1).split(", "), r, g, b;
+    var clr = isType(hsv, "Array")? hsv: clrToArr(hsv), r, g, b;
 
     var i = Math.floor(clr[0] * 6);
     var f = clr[0] * 6 - i, p = clr[2] * (1 - clr[1]);
@@ -436,7 +436,11 @@ function hsv2rgb (hsv, toArray) {
  * @since 1.1
  * @func
  */
+<<<<<<< HEAD
 function getColourType(clr) {
+=======
+function getColourType (clr) {
+>>>>>>> develop
 	if (!isValid(clr, "colour")) throw new InvalidExpressionError(clr + " isn't a colour!");
 	if (/^#?([a-f\d]{1,2})([a-f\d]{1,2})([a-f\d]{1,2})$/i.test(clr)) return "hex";
 	var colourNames = [clr.replace(/^(rgb|hsl|hsv|hsb)\(([0-9]+,\s){2}([0-9]+)\)$/, "$1"), clr.replace(/^(rgb|hsl|hsv|hsb)a\(([0-9]+,\s){3}((0|1|)\.[0-9]*)\)$/, "$1")];
@@ -454,7 +458,7 @@ function getColourType(clr) {
  */
 function negateColour (elmt, attr, mod) {
 	mod = mod? mod[0].toLowerCase(): "x"; //To accept: rad, R, red, Red, RED; for the red, ...
-	var clrs = ($e(elmt).css(attr).indexOf("rgb(") === 0)? $e(elmt).css(attr).slice(4, $e(elmt).css(attr).length - 1).split(", "): hex2rgb($e(elmt).css(attr), true), clr = new Colour();
+	var clrs = ($e(elmt).css(attr).indexOf("rgb(") === 0)? clrToArr($e(elmt).css(attr)): hex2rgb($e(elmt).css(attr), true), clr = new Colour();
 	if (mod === "rad") {
 		clr.red = 255 - parseInt(clrs[0]);
 		clr.green = clrs[1];
@@ -615,7 +619,7 @@ function Shape (x, y, b, v) {
 	};
 
 	this.copy = function () {
-		return new Shape(this.x, this.y, this.b, this.vel)
+		return new Shape(this.x, this.y, this.border, this.vel)
 	};
 
 	this.mult = function (k) {
@@ -726,8 +730,8 @@ function Box (x, y, z, w, h, d, bsz, bclr, clr, brd) {
 			context.rotate(alpha);
 		})
 	};
-	this.translate = function (px, py, pz) {
-		runCanvas(function (context) {
+    this.translate = function (px, py) {
+        runCanvas(function (context) {
 			context.translate(px, py);
 		})
 	};
@@ -799,11 +803,11 @@ function AABB (x, y, w, h, b, v) {
 	};
 
 	this.hit = function (obj, s) {
-		return (s === "l")?  obj.offset("l") <= this.offset("rad"): ((s === "rad")? obj.offset("rad") >= this.offset("l"): ((s === "u")? obj.offset("u") <= this.offset("d"): ((s === "d")? obj.offset("d") >= this.offset("u"): (this.hit(obj, "l") || this.hit(obj, "rad") || this.hit(obj, "u") || this.hit(obj, "d")))))
+		return (s === "l")?  obj.offset("l") <= this.width: ((s === "r")? obj.offset("rad") >= this.x: ((s === "u")? obj.offset("u") <= this.height: ((s === "d")? obj.offset("d") >= this.y: (this.hit(obj, "l") || this.hit(obj, "rad") || this.hit(obj, "u") || this.hit(obj, "d")))))
 	};
 
 	this.copy = function () {
-		return new AABB(this.x, this.y, this.width, this.height, this.b, this.vel)
+		return new AABB(this.x, this.y, this.width, this.height, this.border, this.vel)
 	};
 
 	this.concat = function (a) {
@@ -892,8 +896,8 @@ function Circ (x, y, r, b, v) {
 
 	this.hit = function (obj, s) { //More like a getHit(obj) but for also circle/circle situations
 		if (obj.hit(this, s || "")) {
-			this.bounce(obj.norm);
-			this.update();
+			this.vel.bounce(obj.norm);
+			this.vel.update();
 			return true
 		} return false
 	};
@@ -1014,6 +1018,11 @@ Vector.inheritsFrom(Shape);
  * @property {function(): Vector} Vector.getNormal Get the normal of the vector
  * @property {function(): Vector} Vector.zero Null vector
  * @property {function(): Vector} Vector.neg Negate the vector
+ * @property {function(number): Vector} Vector.mult Multiply this vector by a scalar
+ * @property {function(number): Vector} Vector.div Divide this vector by a scalar
+ * @property {function(Vector): Vector} Vector.add Add two vectors together
+ * @property {function(number): Vector} Vector.addScalar Add a scalar to the vector
+ * @property {function(Vector): Vector} Vector.sub Subtract two vectors
  * @property {function(Vector): number} Vector.dot Dot/scalar product
  * @property {function(Vector): number} Vector.cross Cross/vector product
  * @property {function(): number} Vector.lenSq Length squared
@@ -1053,6 +1062,36 @@ function Vector (x, y) {
 		return this
 	};
 
+    this.mult = function (k) {
+        this.x *= k;
+        this.y *= k;
+        return this
+    };
+
+    this.div = function (k) {
+        this.x /= k;
+        this.y /= k;
+        return this
+    };
+
+    this.addScalar = function (k) {
+        this.x += k;
+        this.y += k;
+        return this
+    };
+
+    this.add = function (v) {
+        this.x += v.x;
+        this.y += v.y;
+        return this
+    };
+
+    this.sub = function (v) {
+        this.x -= v.x;
+        this.y -= v.y;
+        return this
+    };
+
 	this.neg = function () {
 		this.x = -this.x;
 		this.y = -this.y;
@@ -1076,8 +1115,8 @@ function Vector (x, y) {
 	};
 
 	this.reflect = function (normal) { //.. on a normal
-		var n = normal || this.normal.copy();
-		n.mult(2 * this.dot(normal || this.normal));
+		var n = normal || this.getNormal().copy();
+		n.mult(2 * this.dot(normal || this.getNormal()));
 		this.sub(n);
 		return this
 	};
@@ -1140,7 +1179,7 @@ function Polygon (pts, b, v) {
 	};
 
 	this.copy = function () {
-		return new Polygon(this.points, this.b, this.vel)
+		return new Polygon(this.points, this.border, this.vel)
 	};
 
 	this.draw = function () {
@@ -1323,6 +1362,20 @@ function radialGradient (clrI, clrF, n) {
 /* eslint no-unused-vars: 2 */
 
 /**
+<<<<<<< HEAD
+=======
+ * @description Luminance of an RGB colour.
+ * @param {number} [r=0] Red shade
+ * @param {number} [g=0] Green shade
+ * @param {number} [b=0] Blue shade
+ * @returns {number} Luminance
+ */
+function getLuminance (r, g, b) {
+    return .299 * (r || 0) + .587 * (g || 0) + .114 * (b || 0);
+}
+
+/**
+>>>>>>> develop
  * @description Check if a colour is dark<i>-ish</i>.
  * @param {string} clr Colour
  * @return {boolean} Darkness
@@ -1330,8 +1383,14 @@ function radialGradient (clrI, clrF, n) {
  * @func
  */
 function isDark (clr) {
+<<<<<<< HEAD
 
 	return true;
+=======
+	var shades = clrToArr(clr);
+	if (getColourType(clr) != "rgb") shades = window[getColourType(clr) + "2rgb"](shades, true);
+    return getLuminance(shades[0], shades[1], shades[2]) < 128;
+>>>>>>> develop
 }
 
 /**
@@ -1368,7 +1427,11 @@ function daynightMode (exch) { //Switch between enabled or not for Day/Night pag
 
 		for (var i = 0; i < tags.length; i++) {
 			//console.log("#%d tag: %s => %s", i, tags[i], tags[i].node);
+<<<<<<< HEAD
 			if (darkTime) tags[i].invColour();
+=======
+			if (darkTime && !isDark(tags[i].css("backgroundColor"))) tags[i].invColour();
+>>>>>>> develop
 		}
 	} else Essence.say("You cannot use the day/night mod if it\'start disabled.", "warn")
 }
@@ -1576,4 +1639,15 @@ function runCanvas (commands, dimension, stackLayer) {
 	if (!stackLayer) stackLayer = 0;
 	commands($n("canvas#essenceCanvas").getContext(dimension || "2d"));
 	if (stackLayer < 1) runCanvas(commands, dimension, stackLayer + 1);
+}
+
+/**
+ * @description Transform a colour into an array.
+ * @param {String} clr Colour
+ * @returns {String[]} Array of shades
+ * @since 1.1
+ * @func
+ */
+function clrToArr (clr) {
+	return (getColourType(clr) === "hex")? clr.get(1).divide((clr.length - 1) / 3): clr.get(clr.indexOf("(") + 1, -1).split(", ");
 }

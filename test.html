@@ -5,11 +5,8 @@
 	<meta charset="UTF-8" />
 	<meta name="author" content="Maximilian Berkmann" />
 	<meta http-equiv="pragma" content="no-cache" />
-	<script type="text/javascript" src="1.1/essence.js"></script>
-	<script defer>
-	/*init(["Misc"], false, function (x) {
-		Essence.say(x + " got initiated !\nModules: " + modules.toStr(true) + "   (" + getTime(true) + ")", "info");
-	}, 1.1);*/
+	<script type="text/javascript" src="1.1/essence.js" async defer></script>
+	<script type="text/javascript" async defer>
 	var bodyBg, ba, r, g, b, csl, lr;
 	function start () {
 		if (typeof(conv) != "function" || !isType(Colour, "Object") || !isType(Console, "Object") || !isType(virtualHistory, "Object")) setTimeout("start()", 100);
@@ -18,7 +15,7 @@
 		csl.place("csl");
 		lr = $G["lorem"].replace(/(\.|!|\?|;|:|"|,|\t|\n|\f|\r|\v|\{|})+/gm, " ").split(" ").remove("");
 	}
-	setTimeout("start()", 180);
+	setTimeout("start()", 150);
 	function effect () {
 		$e("body").setCSS("background", bodyBg.hex);
 		$e("#ba").setCSS("color", ba.hex);

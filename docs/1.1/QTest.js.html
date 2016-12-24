@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!--suppress ALL -->
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -27,7 +26,8 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
+            <pre class="prettyprint source linenums"><code>//noinspection JSValidateJSDoc
+/**
  * @module QTest
  * @description QA and tests
  * @version 1.0
@@ -35,7 +35,7 @@
  * @license MIT
  * @author Maximilian Berkmann &lt;maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
- * @requires essence
+ * @requires module:essence
  * @requires Maths
  * @requires DOM
  * @type {Module}
@@ -53,7 +53,7 @@ var QTest = new Module("QTest", "QA and tests", ["Maths", "DOM"]);
  * @func
  */
 function EvtShow (evt) {
-    alert("\tName: " + evt.name + "\nsource: " + evt.source + "\ndata: " + evt.data + "\ntarget: " + evt.target + "\ntime stamp: " + evt.timeStamp)
+	alert("\tName: " + evt.name + "\nsource: " + evt.source + "\ndata: " + evt.data + "\ntarget: " + evt.target + "\ntime stamp: " + evt.timeStamp)
 }
 
 /**
@@ -64,78 +64,103 @@ function EvtShow (evt) {
  * @func
  */
 function evtLog (event) {
-    for(var atr in event) {
-        if (event.hasOwnProperty(atr)) Essence.say(atr + ": " + event[atr])
-    }
+	for(var atr in event) {
+		if (event.hasOwnProperty(atr)) Essence.say(atr + ": " + event[atr])
+	}
 }
 /* Types
  - EvalError: instance representing an error that occurs regarding the global function eval()
  - InternalError: instance representing an error that occurs when an internal error in the JavaScript engine is thrown. E.g. "too much recursion"
  - RangeError: instance representing an error that occurs when a numeric variable or parameter is outside of its valid range
  - ReferenceError: instance representing an error that occurs when de-referencing an invalid reference
- - SynthaxError: instance representing a syntax error that occurs while parsing code in eval()
+ - SyntaxError: instance representing a syntax error that occurs while parsing code in eval()
  - TypeError: instance representing an error that occurs when a variable or parameter is not of a valid type
  - URIError: instance representing an error that occurs when encodeURI() or decodeURI() are passed invalid parameters
  function MyError(message) { //From Mozilla ?
- this.name = 'MyError';
- this.message = message || 'Default Message';
- this.stack = (new Error()).stack
+	 this.name = 'MyError';
+	 this.message = message || 'Default Message';
+	 this.stack = (new Error()).stack
  }
  MyError.prototype = Object.create(Error.prototype);
  MyError.prototype.constructor = MyError; */
 
-InvalidParamError.inheritsFrom(Error);
 /**
  * @description Invalid parameter error
  * @param {string} [msg="The parameter used at &lt;code>lineNum&lt;/code> is invalid"]  Message
- * @param {string} fname Filename
- * @param {number} lineNum Line number
+ * @param {string} [fname] Filename
+ * @param {number} [lineNum] Line number
  * @constructor
- * @returns {InvalidParamError} Error
- * @extends {Error}
+ * @returns {InvalidParamError} Parameter error
+ * @extends {TypeError}
  * @this {InvalidParamError}
- * @since 1.0
- * @throws {Error}
+ * @since 1.1
+ * @throws {TypeError}
  */
-function InvalidParamError(msg, fname, lineNum) { //Invalid parameter
-    this.name = "Invalid parameter error";
-    this.fileName = fname;
-    this.lineNumber = lineNum;
-    this.message = msg || "The parameter used at " + this.lineNumber + " is invalid !";
-    this.stack = (new Error()).stack;
+function InvalidParamError (msg, fname, lineNum) {
+	var error = TypeError.call(this, msg || "The parameter is invalid !");
 
-    return this;
+	this.name = "InvalidParamError";
+	this.message = error.message;
+	this.stack = error.stack;
+	this.fileName = fname || location.href;
+	this.lineNumber = lineNum || getLineNum();
 }
+InvalidParamError.inherits(TypeError);
 
 /**
- * @description Get the caller's trace's location
+ * @description Invalid expression error
+ * @param {string} [msg="The expression is invalid !"]  Message
+ * @param {string} [fname] Filename
+ * @param {number} [lineNum] Line number
+ * @constructor
+ * @returns {InvalidExpressionError} Error
+ * @extends {Error}
+ * @this {InvalidExpressionError}
+ * @since 1.1
+ * @throws {Error}
+ */
+function InvalidExpressionError (msg, fname, lineNum) {
+    var error = Error.call(this, msg || "The expression is invalid !");
+
+    this.name = "InvalidExpressionError";
+    this.message = error.message;
+    this.stack = error.stack;
+    this.fileName = fname || location.href;
+    this.lineNumber = lineNum || getLineNum();
+}
+InvalidExpressionError.inherits(Error);
+
+
+/**
+ * @description Get the caller'start trace'start location
  * @returns {string} Trace location
  * @since 1.0
  * @func
  * @throws {Error}
  */
 function getTrace () {
-    var err = function () {
-        try {
-            throw Error("")
-        } catch(e) {
-            return e;
-        }
-        //return new Error("");
-    };
-    var fn = stripPath(err().stack.split("\n").last());
-    return fn.split(" ").last();
+	var err = function () {
+		try {
+			//noinspection ExceptionCaughtLocallyJS
+			throw Error("")
+		} catch(e) {
+			return e;
+		}
+		//return new Error("");
+	};
+	var fn = stripPath(err().stack.split("\n").last());
+	return fn.split(" ").last();
 }
 
 /**
- * @description Get the caller's trace's line number and column number
+ * @description Get the caller'start trace'start line number and column number
  * @param {boolean} [noCols=false] Remove the column number
  * @returns {string} Line number (with the column number)
  * @since 1.0
  * @func
  */
 function getLineNum (noCols) {
-    return noCols ? getTrace().split(":")[1] : getTrace().get(getTrace().indexOf(":") + 1).remove(")");
+	return noCols ? getTrace().split(":")[1] : getTrace().get(getTrace().indexOf(":") + 1).remove();
 }
 
 
@@ -148,15 +173,16 @@ function getLineNum (noCols) {
  * @throws {Error}
  */
 function testErr (err) {
-    try {
-        throw err;
-    } catch (e) {
-        Essence.say("%cTested error%c:\n" + e.stack, "erro", "text-decoration: underline; color: #000;", "text-decoration: none; color: #000;");
-    }
+	try {
+		//noinspection ExceptionCaughtLocallyJS
+		throw err;
+	} catch (e) {
+		Essence.say("%cTested error%c:\n" + e.stack, "erro", "text-decoration: underline; color: #000;", "text-decoration: none; color: #000;");
+	}
 }
 
 /**
- * @description Error testing for beginner's.&lt;br />
+ * @description Error testing for beginner'start.&lt;br />
  * Source: {@link https://scontent-lhr3-1.xx.fbcdn.net/hphotos-xfl1/v/t1.0-9/12705609_1071795346206130_3757520485028328706_n.jpg?oh=cb99a4624d9732414b787f7eb8437c73&amp;oe=57383223}
  * @param {Function} fx Function
  * @param {*} [param] Parameter
@@ -165,11 +191,11 @@ function testErr (err) {
  * @func
  */
 function noobTest (fx, param) {
-    try {
-        fx(param);
-    } catch(e) {
-        location.href = "http://Stackoverflow.com/search?q=[js]+" + e.message;
-    }
+	try {
+		fx(param);
+	} catch(e) {
+		location.href = "http://Stackoverflow.com/search?q=[js]+" + e.message;
+	}
 }
 
 /**
@@ -180,11 +206,11 @@ function noobTest (fx, param) {
  * @func
  */
 function test (fx) {
-    try {
-        isType(fx, "String")? eval(fx): fx(arguments.toArray().get(1));
-    } catch (e) {
-        Essence.handleError(e + "\n", getFilename(true), getLineNum(true));
-    }
+	try {
+		isType(fx, "String")? eval(fx): fx(arguments.toArray().get(1));
+	} catch (e) {
+		Essence.handleError(e + "\n", getFilename(true), getLineNum(true));
+	}
 }
 
 /**
@@ -198,51 +224,67 @@ function test (fx) {
  * @property {number} UnitTest.failRate Failure rate
  * @property {number} UnitTest.coverage Coverage
  * @property {function(*, *, string, boolean)} UnitTest.test Assertion tester
+ * @property {function(*, *, string, boolean)} UnitTest.testFalse Reversed assertion tester
  * @property {Function} UnitTest.reset Reset
  * @property {function(Array[], boolean)} UnitTest.multiTest Multi assertion tester
  * @property {Function} UnitTest.report Report loger
  * @property {Array[]} UnitTest.libTests Intern tests to EssenceJS
  */
 var UnitTest = {
-    total: 0,
-    bad: 0,
-    failRate: 0,
-    coverage: 0,
-    test: function (then, expected, cmt, noisy) {
-        this.total++;
-        var res = then; //to avoid random changes while calling the same function/method with the same parameter(s)
-        if (!res.equals(expected)/* || res !== expected*/) {
-            this.bad++;
-            console.log("%c[Unit]%c " + (cmt || "Test #b" + this.bad) + ": Expected \"" + expected + "\" but was \"" + res + "\"", "color: #c0c", "color: #000");
-        } else if(noisy &amp;&amp; res.equals(expected)) console.log("%c[Unit]%c The expectation on " + expected + " was satisfied !", "color: #c0c", "color: #000"); //in case someone wants to not just see what failed
-    },
-    reset: function () {
-        this.total = 0;
-        this.bad = 0;
-        this.failRate = 0;
-        this.coverage = 0;
-    },
-    multiTest: function (pairs, noisy) {
-        this.reset();
-        console.time("Unit test");
-        for (var i = 0; i &lt; pairs.length - 1; i++) this.test(pairs[i][0], pairs[i][1], (pairs[i].length === 3)? pairs[i][2]: "", noisy);
-        console.timeEnd("Unit test");
-        this.report();
-    },
-    report: function () {
-        this.failRate = markConv(this.bad, this.total);
-        console.info("%c[Unit]%c Pass/Fail: %c" + (this.total - this.bad) + "%c/%c" + this.bad + "%c (" + this.failRate + "% fail); on " + BrowserDetect.info(), "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
-    },
-    basicTests: function () {
-        this.reset();
-        this.multiTest([
-            [eval(1.0 + 2.0), 3.0], //Rounding
-            ["Hello World".split(" "), [["H", "e", "l", "l", "o"].join(""), ["W", "o", "r", "l", "d"].join("")]], //Diving and joining
-            [nthroot(5, 2, 4), Math.pow(5, 1/2).toNDec(4)]
-        ]);
-    },
-    libTests: []
-};</code></pre>
+	total: 0,
+	bad: 0,
+	failRate: 0,
+	coverage: 0,
+	test: function (then, expected, description, noisy) {
+		this.total++;
+		var res = then; //to avoid random changes while calling the same function/method with the same parameter(start)
+		if (!res.equals(expected)) {
+			this.bad++;
+			console.log("%c[Unit]%c " + (description || "Test #b" + this.bad) + ": Expected \"%c" + expected + "%c\" but was \"%c" + res + "%c\"", "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
+		} else if(noisy &amp;&amp; res.equals(expected)) console.log("%c[Unit]%c The expectation on " + expected + " was satisfied !", "color: #c0c", "color: #000"); //in case someone wants to not just see what failed
+	},
+	testFalse: function (then, expected, cmt, noisy) {
+		this.total++;
+		var res = then; //to avoid random changes while calling the same function/method with the same parameter(start)
+		if (res.equals(expected)) {
+			this.bad++;
+			console.log("%c[Unit]%c " + (cmt || "Test #b" + this.bad) + ": Didn't expected \"%c" + expected + "%c\" to be \"%c" + res + "%c\"", "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
+		} else if(noisy &amp;&amp; res.equals(expected)) console.log("%c[Unit]%c The anti-expectation on " + expected + " was satisfied !", "color: #c0c", "color: #000"); //in case someone wants to not just see what failed
+	},
+	reset: function () {
+		this.total = 0;
+		this.bad = 0;
+		this.failRate = 0;
+		this.coverage = 0;
+	},
+	multiTest: function (pairs, noisy) {
+		this.reset();
+		console.time("Unit test");
+		for (var i = 0; i &lt; pairs.length - 1; i++) this.test(pairs[i][0], pairs[i][1], (pairs[i].length === 3)? pairs[i][2]: "", noisy);
+		console.timeEnd("Unit test");
+		this.report();
+	},
+	report: function () {
+		this.failRate = markConv(this.bad, this.total);
+		console.info("%c[Unit]%c Pass/Fail: %c" + (this.total - this.bad) + "%c/%c" + this.bad + "%c (" + this.failRate + "% fail); on " + BrowserDetect.info() + " at " + getLineNum(), "color: #c0c", "color: #000", "color: #0f0", "color: #000", "color: #f00", "color: #000");
+	},
+	basicTests: function () {
+		this.reset();
+		this.multiTest([
+			[eval(1.0 + 2.0), 3.0], //Rounding
+			["Hello World".split(" "), [["H", "end", "l", "l", "o"].join(""), ["W", "o", "rad", "l", "d"].join("")]], //Diving and joining
+			[nthroot(5, 2, 4), Math.pow(5, 1/2).toNDec(4)]
+		]);
+	},
+	libTests: []
+};
+
+/*
+window.addEventListener("error", function (err) {
+    var stack = err.error.stack;
+    var message = err.error.toString() + (stack? "\n" + stack: "");
+    Essence.say(message, "erro");
+});*/</code></pre>
         </article>
     </section>
 
@@ -252,13 +294,13 @@ var UnitTest = {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#DocTemplate">DocTemplate</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-QTest.html">QTest</a></li></ul><h3>Classes</h3><ul><li><a href="module-QTest-InvalidExpressionError.html">InvalidExpressionError</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#UnitTest">UnitTest</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Sep 08 2016 11:58:04 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Dec 23 2016 12:57:07 GMT+0000 (GMT)
 </footer>
 
 <script> prettyPrint(); </script>

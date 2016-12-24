@@ -15,8 +15,8 @@
 var DOM = new Module("DOM", "DOM stuff", ["Misc", "Files"], 1, function () {
 	BrowserDetect.init();
 });
-/* eslint no-undef: 0 */
 
+/* eslint no-undef: 0 */
 /**
  * @description Print onto something
  * @param {*} text Data to be printed
@@ -958,3 +958,112 @@ var Buffer = {
 		console.log("Buffer cleared");
 	}
 };
+
+/**
+ * @description Dissect a selector and return if it matches some top-level CSS selections (or the matching bits).
+ * @param {String} selector Selector
+ * @param {boolean} [booleanOnly=false] Return the result as boolean (so test results)
+ * @returns {{list: boolean, tag: boolean, id: boolean, class: boolean, pseudoSelector: boolean, multiple: boolean, namespace: boolean}} Dissection
+ * @since 1.1
+ * @func
+ * @TODO make sure it gets the tags and spaces right
+ */
+function dissect (selector, booleanOnly) {
+	var hasPart = function (regexp) {
+		var matches = selector.match(new RegExp(regexp, "g"));
+		return matches === null? null: matches;
+	};
+
+	return booleanOnly? {
+		list: /\*\w+/g.test(selector),
+		tag: /^\w+[^#.|:](\s*?\w*[^#.|:]|$)/g.test(selector), //to improve
+		id: /#\w+/g.test(selector),
+		class: /\.\w+/g.test(selector),
+		pseudoSelector: /:\w+/g.test(selector),
+    	multiple: /\s+/g.test(selector),
+		namespace: /\w+\|\w+/g.test(selector)
+	}: {
+		list: hasPart(/\*\w+/),
+		tag: hasPart(/^\w+[^#.|:](\s*?\w*[^#.|:]|$)/), //to improve
+		id: hasPart(/#\w+/),
+		class: hasPart(/\.\w+/),
+		pseudoSelector: hasPart(/:\w+/),
+		multiple: hasPart(/\s+/),
+		namespace: hasPart(/\w+\|\w+/)
+	};
+}
+
+/**
+ * @description Try to gather an element <em>$e(selector)</em> while placing it if it's not there yet to be used
+ * @param {String} selector Selector of the tested element
+ * @param {String} [container="body"] Container where the new element will be placed if it doesn't already exist
+ * @param {Code} [newHTMLValue] Value (HTML code) that the element will get if it's not already existent
+ * @returns {Element} Element
+ * @since 1.1
+ * @func
+ */
+function tryElement (selector, container, newHTMLValue) {
+	try {
+		$e(selector);
+	} catch (err) {
+		var dissection = dissect(selector);
+		var element = document.createElement(dissection.tag[0]);
+		element.id = dissection.id[0].remove("#");
+		element.className = dissection.class.join(" ").remove(".");
+		element.innerHTML = newHTMLValue || "";
+		$n(container || "body").appendChild(element);
+	}
+	return $e(selector);
+}
+
+/**
+ * @description Try to gather an element <em>$n(selector)</em> while placing it if it's not there yet to be used
+ * @param {String} selector Selector of the tested element
+ * @param {String} [container="body"] Container where the new element will be placed if it doesn't already exist
+ * @param {{tagName: String, id: String, class: String, title: (undefined|String)}} attr Attributes of the newly created element (if not already present)
+ * @returns {HTMLElement} HTML element
+ * @since 1.1
+ * @func
+ */
+function tryNode (selector, container, attr) {
+	try {
+		$n(selector);
+	} catch (err) {
+		var node = document.createElement(attr.tagName);
+		if (attr.hasOwnProperty("id")) node.id = attr.id;
+		if (attr.hasOwnProperty("class")) node.className = attr.class;
+        if (attr.hasOwnProperty("title")) node.title = attr.title;
+        $n(container || "body").appendChild(node);
+	}
+	return $n(selector);
+}
+
+/**
+ * @description Get the CSS path of a node <i>$n(...)</i>.<br />
+ * Inspired by {@link https://stackoverflow.com/questions/4588119/get-elements-css-selector-when-it-doesnt-have-an-id|@Phrogz's answer on here}.
+ * @param {HTMLElement} node Node
+ * @returns {string} CSS Path
+ * @since 1.1
+ * @func
+ */
+function cssPath (node) {
+    var names = [];
+    while (node.parentNode) {
+        if (node.id) {
+            names.unshift("#" + node.id);
+            break;
+        } else {
+            if (node === node.ownerDocument.documentElement) names.unshift(node.tagName.toLowerCase());
+            else{
+                for (var c = 1, e = node; e.previousElementSibling; e = e.previousElementSibling, c++);
+                names.unshift(node.tagName.toLowerCase() + ":nth-child(" + c + ")");
+            }
+            node = node.parentNode;
+        }
+    }
+    return names.join(" > ");
+}
+
+function simplifyCSSPath (path) {
+	return path.replace(/(?:html > )*(head:nth-child\(1\)|body:nth-child\(2\)) > +/gmi, "");
+}

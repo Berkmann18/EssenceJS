@@ -30,7 +30,7 @@
  */
 /**
  * @description This is the main object of the library as well as being the core module of the framework.
- * @type {{version: string, author: string, description: string, source: string, element: $n, handleError: Essence.handleError, say: Essence.say, applyCSS: Essence.applyCSS, addCSS: Essence.addCSS, addJS: Essence.addJS, update: Essence.update, eps: number, emptyDoc: Essence.emptyDoc, editor: Essence.editor, processList: Array, global: ?Object, addProcess: Essence.addProcess, processSize: number, serverList: Array, addServer: Essence.addServer, serverSize: number, toString: Essence.toString, txt2print: string, addToPrinter: Essence.addToPrinter, print: Essence.print, preInit: Essence.preInit, init: Essence.init, time: Essence.time, sayClr: Essence.sayClr, ask: Essence.ask, isComplete: Essence.isComplete, loadedModules: Array}}
+ * @type {{version: string, author: string, description: string, source: string, element: $n, handleError: module:essence.handleError, say: module:essence.say, applyCSS: module:essence.applyCSS, addCSS: module:essence.addCSS, addJS: module:essence.addJS, update: module:essence.update, eps: number, emptyDoc: module:essence.emptyDoc, editor: module:essence.editor, processList: Array, global: null, addProcess: module:essence.addProcess, processSize: number, serverList: Array, addServer: module:essence.addServer, serverSize: number, toString: module:essence.toString, txt2print: string, addToPrinter: module:essence.addToPrinter, print: module:essence.print, preInit: module:essence.preInit, init: module:essence.init, time: module:essence.time, sayClr: module:essence.sayClr, ask: module:essence.ask, isComplete: module:essence.isComplete, loadedModules: Array, updateAll: module:essence.updateAll}}
  * @this Essence
  * @namespace
  * @exports essence
@@ -172,18 +172,21 @@ var Essence = {
 			txt.has("\n\r")? this.print(txt, type): this.txt2print += txt;
 		}, print: function (txt, type) { //Works like the print in Java
 			if (txt) this.txt2print += txt;
-			this.txt2print = this.txt2print.split("\b");
+			//noinspection JSValidateTypes
+            this.txt2print = this.txt2print.split("\b");
 			for (var i = 0; i < this.txt2print.length; i++) {
 				this.say(this.txt2print[i], type);
 			}
 			this.txt2print = "";
 		}, preInit: function () {
-			$G["t1"] = $G["t1"].getSeconds() * 1000 + $G["t1"].getMilliseconds();
+			//noinspection JSValidateTypes
+            $G.t1 = $G.t1.getTime();
 		}, init: function () {
-			$G["t2"] = new Date();
-			$G["t2"] = $G["t2"].getSeconds() * 1000 + $G["t2"].getMilliseconds();
-			$G["t"] = ($G["t2"] - $G["t1"] > 1000)? ($G["t2"] - $G["t1"]) / 1000 + "start": ($G["t2"] - $G["t1"]) + "ms";
-			Essence.say("Page loaded in %c" + $G["t"] + "%c", "succ", "font-style: italic", "font-style: none");
+			//noinspection JSValidateTypes
+            $G.t2 = new Date();
+			$G.t2 = $G.t2.getTime();
+			$G.t = ($G.t2 - $G.t1 > 1000)? ($G.t2 - $G.t1) / 1000 + "s": ($G.t2 - $G.t1) + "ms";
+			if (debugging) Essence.say("Page loaded in %c" + $G.t + "%c", "succ", "font-style: italic", "font-style: none");
 		}, time: function(msg, style, style0) { //Like Essence.say(msg) but with the timestamp
 			console.log("[%c" + getTimestamp(true) + "%c] "+msg, "color: #00f;", "color: #000;", style || "", style0 || "")
 		}, sayClr: function (clrs) { //Display a RGB(A) coloured console log
@@ -614,15 +617,17 @@ getExtPath = function (path) {
 	}, 690);
 	setTimeout(function () {
 		if (debugging) {
-			if (Essence.isComplete()) {
-				Essence.say("Essence is complete !", "succ");
-
-			} else Essence.time("List of loaded modules: " + Essence.loadedModules.map(function (m) {
-					return m.name;
-				}).toStr(true));
+			//noinspection JSValidateTypes
+            if (Essence.isComplete()) Essence.say("Essence is complete !", "succ");
+			else Essence.time("List of loaded modules: " + Essence.loadedModules.map(function (m) {
+				return m.name;
+			}).toStr(true));
 		}
 		if (!filenameList(gatherExternalScripts(true)).has("essence.js")) Essence.source = Essence.source.replace(".js", ".min.js");
-		if (testMode) UnitTest.multiTest(UnitTest.libTests);
+		if (testMode) {
+			UnitTest.basicTests();
+			UnitTest.multiTest(UnitTest.libTests);
+        }
 		UnitTest.libTests = [
 			//essence
 
@@ -774,6 +779,8 @@ function $n (selector, silence) { //To get directly the node without having to u
  * @property {function(): string[]} Element.classes Get an array of classes of the element
  * @property {function(function(HTMLElement))} Element.multi Execute a callback on all nodes of a $e("*...") element
  * @property {function(string, Array)} Element.multiElm Execute a method on all elements of a $e("*...") element
+ * @property {function()} Element.delete Self-destruction of the element by self-removal of the DOM
+ * @property {function(String, String, boolean, boolean)} Element.replace Replace a string in the element's value by a new one
  */
 function Element (selector) {
 	if (/^([#.*_-`~&]\W*|\S|undefined|null|)$/.test(selector)) throw new InvalidParamError("Element cannot accept the selector '" + selector + "' as it'start invalid."); //Reject invalid selectors
@@ -868,7 +875,7 @@ function Element (selector) {
 		else this.node.value? this.node.value += nval: this.innerText += nval;
 	};
 
-	this.remove = function (c, r) { //Remove the character from the string/array/number and return it with the rad character as a joiner or a blank when rad isn't specified
+	this.remove = function (c, r) { //Remove the character from the string/array/number and return it with the r character as a joiner or a blank when r isn't specified
 		if (isType(this.val(), "Array")) {
 			for (var i = 0; i < this.size(); i++) {
 				if (this.val()[i] == c) this.write(this.val().slice(0, i).concat(this.val().slice(i + 1, this.size())));
@@ -946,7 +953,7 @@ function Element (selector) {
 		} else if (prop === "enabled") {
 			(this.css("enabled") === "enabled")? this.setCSS("enabled", "disabled"): this.setCSS("enabled", "enabled");
 		} else if (prop === "display") {
-			(this.css("enabled") === "enabled")? this.setCSS("display", "none"): this.setCSS("display", params || "block");
+			(this.css("display") === "block" || this.css("display") === params)? this.setCSS("display", "none"): this.setCSS("display", params || "block");
 		} else if (!isNon(prop) && !isNon(params)) { //For color, bgcolor, opacity, font-size, ...
 			if (isNon(this.css(prop))) this.setCSS(prop, params[0]);
 			for (var i = 0; i < params.length; i++) { //Slide through the parameters and go to the next one if the one already set is present
@@ -975,7 +982,11 @@ function Element (selector) {
 			"mouseenter", "mouseleave", "mousemove", "mouseout", "mouseover", "mouseup", "mousewheel", "offline", "online", "pagehide", "pageshow", "pause", "play", "playing", "popstate",
 			"progress", "ratechange", "reset", "resize", "scroll", "search", "seeked", "seeking", "select", "show", "stalled", "storage", "submit", "suspend", "timeupdate", "toggle",
 			"transitionend", "unload", "volumechange", "waiting", "webkitanimationend", "webkitanimationiteration", "webkitanimationstart", "webkittransitionend", "wheel"];
-		if (evts.has(evt.normal())) this.node.addEventListener(evt.normal(), act);
+		if (evts.has(evt.normal())) {
+			isType(this.node, "NodeList")? this.node.toArray().map(function (node) {
+					node.addEventListener(evt.normal(), act)
+				}): this.node.addEventListener(evt.normal(), act);
+        }
 	};
 
 	this.toString = function () {
@@ -1077,6 +1088,14 @@ function Element (selector) {
 	this.multiElm = function (method, args) { //Caution: every nodes treated must have an id
 		var nodes = this.node.toArray();
 		for (var i = 0; i < nodes.length; i++) $e(nodes[i].id)[method](args[0], args[1], args[2]);
+	};
+
+	this.delete = function () {
+		this.write("", false, true); //or this.node.parentElement.removeChild(this.node);
+	};
+
+	this.replace = function (oldVal, newVal, parseToHTML, incTags) {
+		this.write(this.val(parseToHTML, incTags).replace(oldVal, newVal), parseToHTML, incTags);
 	};
 
 	return this
@@ -1300,10 +1319,10 @@ Object.prototype.compareTo = function (obj) {
  * @param {string} prop Property
  * @returns {boolean} Containment check result
  * @memberof Object.prototype
+ * @external Object
  * @since 1.1
  * @this Object
  * @method
- * @external Object
  * @example
  * var a = {name: "A", size: 8}, b = ["1", "4", "9", "h", "w", "_"];
  * a.has("name"); //true
@@ -3748,6 +3767,22 @@ String.prototype.portion = function (denominator, numerator) {
 };
 
 /**
+ * @description Counts how many times a word is present in the string.
+ * @param {String} word Word to be counted
+ * @param {String} [separation=" "] Separation character
+ * @this String
+ * @returns {number} Number of occurrences of the word in the string
+ * @since 1.0
+ * @method
+ * @inheritdoc
+ * @memberof String.prototype
+ * @external String
+ */
+String.prototype.countWord = function (word, separation) {
+	return this.split(separation || " ").count(word);
+};
+
+/**
  * @description Length of the number
  * @this Number
  * @returns {Nums} Length
@@ -3868,7 +3903,7 @@ Number.prototype.toArr = function () {
  * @description Inheritance.<br />
  * Source: Somewhere
  * @param {*} parentClassOrObj Parent
- * @returns {Function.prototype.Function} this Current function/constructor
+ * @returns {Function} this Current function/constructor
  * @since 1.0
  * @method
  * @memberof Function.prototype
@@ -3885,9 +3920,13 @@ Function.prototype.inheritsFrom = function (parentClassOrObj) {
 		this.prototype.parent = parentClassOrObj;
 	}
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 	//noinspection JSValidateTypes
 >>>>>>> e065322... Overall improvements
+=======
+	//noinspection JSValidateTypes
+>>>>>>> develop
 	return this
 };
 
@@ -4554,19 +4593,65 @@ function num2txt (num, base) {
 /**
  * @description Time how long an action took
  * @param {function(*)} act Action
- * @param {string} [pref="auto"] Preference (auto/none, ms/millisec, start/sec)
  * @param {*} [params] Parameters
+ * @param {string} [pref="auto"] Preference (auto/none, ms/millisec, start/sec)
  * @returns {string} Time
  * @since 1.0
  * @func
  */
-function timeUp (act, pref, params) {
+function timeUp (act, params, pref) {
 	var t1 = new Date();
 	t1 = (t1.getMinutes() * 60 + t1.getSeconds()) * 1000 + t1.getMilliseconds();
 	act(params);
 	var t2 = new Date();
 	t2 = (t2.getMinutes() * 60 + t2.getSeconds()) * 1000 + t2.getMilliseconds();
-	if (isNon(pref) || pref.slice(0, 4).toLowerCase() === "auto" || pref.slice(0, 4).toLowerCase() === "none") return (t2-t1 > 1000)? (t2-t1)/1000 + "start": (t2-t1) + "ms";
+	if (isNon(pref) || pref.slice(0, 4).toLowerCase() === "auto" || pref.slice(0, 4).toLowerCase() === "none") return (t2 - t1 > 1000)? (t2 - t1) / 1000 + "start": (t2 - t1) + "ms";
 	else if (pref.toLowerCase() === "ms" || pref.slice(0, 8).toLowerCase() === "millisec") return (t2-t1) + "ms";
-	else return (t2-t1)/1000 + "start";
+	else return (t2-t1) / 1000 + "s";
+}
+
+/**
+ * @description Time how long a callback took
+ * @param {Function} cb Callback
+ * @param {*} [params] Parameters
+ * @returns {number} Time
+ * @since 1.1
+ * @func
+ */
+function time (cb, params) {
+    var t1 = new Date().getTime();
+    cb(params);
+    var t2 = new Date().getTime();
+    return t2 - t1;
+}
+
+/**
+ * @description Pause the JS execution for a bit and place the callback (if specified) at the end of the execution queue (parsed by the browser which also includes the UI).
+ * A neat wait of keeping the code passed in the parameter to be executed in order of execution (instead of being pushed at the end of the execution queue), is to pass a command/instruction instead of a function (with that command/instructions).
+ * @param {Function} [cb=$f] Callback
+ * @returns {undefined}
+ * @since 1.1
+ * @func
+ */
+function wait (cb) {
+	setTimeout(cb || $f, 0);
+}
+
+/**
+ * @description Time how long an asynchronous callback took
+ * @param {Function} cb Callback
+ * @param {*} [params] Parameters
+ * @returns {number} Time
+ * @since 1.1
+ * @func
+ */
+function asyncTime (cb, params) {
+    var t1 = new Date().getTime(), done = "^no", maybe;
+    maybe = cb(params);
+    do {
+    	wait();
+    	done = maybe;
+    } while(maybe != undefined || done == "^no");
+    var t2 = new Date().getTime();
+    return t2 - t1;
 }

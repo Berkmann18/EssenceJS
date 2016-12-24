@@ -892,7 +892,8 @@ function WebPage (title, name, path, author, ver, stct, type, subtitle) {
 
 	this.genPage = function (params) {
 		this.page = new Template(this.title, this.name, this.template, ["title", "subtitle", "content", "aside", "footer", "0", "1", "2", "article_title", "article_content", "article_footer"]);
-		this.page = this.page.gen({
+		//noinspection JSUnresolvedVariable
+        this.page = this.page.gen({
 			title: this.title,
 			subtitle: this.subtitle,
 			content: params.content || $G["lorem"],
@@ -1094,14 +1095,14 @@ function Editor (id, lang, prev, parser, tb) {
 				//XML syntax highlighting rules
 				break;
 			case "webscript":
-				code = code.replace(/(\<|\>|\/\>)([A-Za-z]*|)(\<|\>|\/\>)/g, "<span class = 'code-tag'>$1</span>");
-				code = code.replace(/(\"|\')(.*)(\"|\')/g, "<span class = 'code-str'>$1</span>");
-				code = code.replace(/(?!\"|\')(\d+)(?!\"|\')/g, "<span class = 'code-num'>$1</span>");
+				code = code.replace(/(<|>|\/\>)([A-Za-z]*|)(<|>|\/>)/g, "<span class = 'code-tag'>$1</span>");
+				code = code.replace(/("|')(.*)("|')/g, "<span class = 'code-str'>$1</span>");
+				code = code.replace(/(?!"|')(\d+)(?!"|')/g, "<span class = 'code-num'>$1</span>");
 				code = code.replace(/([\s\S] * ?)(=)/g, "<span class = 'code-attr'>$1</span>");
-				code = code.replace(/\<\!--([\s\S]*)--\>/g, "<span class = 'code-cmt'>$1</span>");
+				code = code.replace(/<!--([\s\S]*)--\>/g, "<span class = 'code-cmt'>$1</span>");
 				code = code.replace(/\/\/(.*?)/g, "<span class = 'code-cmt'>$1</span>");
-				code = code.replace(/=[A-Za-z0-9\.]+(| )/g, "<span class = 'code-val'>$1</span>");
-				code = code.replace(/[=\{\}\[\]\(\)\;]/g, "<span class = 'code-op'>$1</span>");
+				code = code.replace(/=[A-Za-z0-9.]+(| )/g, "<span class = 'code-val'>$1</span>");
+				code = code.replace(/[={}\[\]();]/g, "<span class = 'code-op'>$1</span>");
 				break;
 			case "markdown":
 				//Markdown syntax highlighting rules
@@ -1504,7 +1505,8 @@ function getIP () {
 	}, $f);
 	cors.silence();
 	cors.init();
-	return res.ip || $G["IP"];
+	//noinspection JSUnresolvedVariable
+    return res.ip || $G["IP"];
 }
 
 //noinspection JSUnusedGlobalSymbols
@@ -1547,7 +1549,8 @@ function getPrivateIP () {
 			if (line.indexOf("candidate") < 0) return;
 			line.match(ipRegex).forEach(ipIterate);
 		});
-		pc.setLocalDescription(sdp, $f, $f);
+		//noinspection JSUnresolvedFunction
+        pc.setLocalDescription(sdp, $f, $f);
 	}, $f); //Create offer and set local description
 	pc.onicecandidate = function (ice) { //Listen for candidate events
 		if (!ice || !ice.candidate || !ice.candidate.candidate || !ice.candidate.candidate.match(ipRegex)) return;

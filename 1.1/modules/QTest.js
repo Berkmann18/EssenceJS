@@ -250,3 +250,10 @@ var UnitTest = {
 	},
 	libTests: []
 };
+
+/*
+window.addEventListener("error", function (err) {
+    var stack = err.error.stack;
+    var message = err.error.toString() + (stack? "\n" + stack: "");
+    Essence.say(message, "erro");
+});*/

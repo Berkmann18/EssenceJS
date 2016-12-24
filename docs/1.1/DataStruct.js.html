@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!--suppress ALL -->
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -35,7 +34,7 @@
  * @license MIT
  * @author Maximilian Berkmann &lt;maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
- * @requires essence
+ * @requires module:essence
  * @requires DOM
  * @requires Maths
  * @requires Files
@@ -44,12 +43,7 @@
  */
 var DataStruct = new Module("DataStruct", "Data structures", ["DOM", "Maths", "Files"]);
 
-(function () {
-    //DataStruct.complete = true;
-})();
-
 /* eslint no-undef: 0 */
-
 /**
  * @description Linked list
  * @param {*} [pl=1] Payload
@@ -67,20 +61,199 @@ var DataStruct = new Module("DataStruct", "Data structures", ["DOM", "Maths", "F
  * @property {function(): string} LinkedList.toString String representation
  */
 function LinkedList (pl, nx, name) {
-    this.payload = pl || 1;
-    this.next = nx || {payload: 1, next: null};
-    this.next.show = function () {
-        return this.name + ":" + this.next.payload + "->"
-    };
-    this.name = name;
-    this.show = function () {
-        return this.name + ":" + this.payload + "->" + this.next.show()
+	this.payload = pl || 1;
+	this.next = nx || {payload: 1, next: null};
+	this.next.show = function () {
+		/** @this LinkedList.next */
+		//noinspection JSPotentiallyInvalidUsageOfThis
+		return this.name + ":" + this.next.payload + "->"
+	};
+	this.name = name;
+	this.show = function () {
+		return this.name + ":" + this.payload + "->" + this.next.show()
+	};
+
+	this.toString = function () {
+		return "LinkedList(" + this.show() + ")"
+	};
+	return this
+}
+
+/**
+ * @description Node
+ * @param {*} [pl=1] Payload
+ * @param {Node} [nx] Next node
+ * @param {Node} [pv] Previous node
+ * @this Node
+ * @return {Node} Node
+ * @constructor
+ * @since 1.0
+ * @property {NumberLike} Node.payload Payload
+ * @property {Node} Node.next Next node
+ * @property {function(): Node} Node.traverse Node traversal
+ * @property {Function} Node.print Node printer
+ * @property {Function} Node.printList Node list printer
+ * @property {function(): Node} Node.last Get the last node
+ * @property {function(NumberLike)} Node.append Append the list with a new node
+ * @property {Function} Node.remove Node remover
+ * @property {function(): Node} Node.reverse List reversal
+ * @property {function(NumberLike, number): Nums} Node.find Look for a node
+ * @property {function(Node): boolean} Node.equals Node comparator
+ * @property {function(): string} Node.toString String representation
+ */
+function Node (pl, nx, pv) {
+	this.payload = pl || 1;
+	this.next = nx; //Or new node()
+	this.prev = pv;
+
+	this.traverse = function () {
+		if (this.next) this.next.traverse();
+		Essence.say("payload: " + this.payload);
+	};
+
+	this.print = function () {
+		if (this.next != null) this.next.print();
+		Essence.print(this.payload + "=>");
+	};
+
+	this.printList = function () {
+		if (this.next === null) Essence.txt2print += "->" + this.payload;
+		else this.next.printList();
+		Essence.print("");
+	};
+
+	this.last = function () {
+		if (this.next === null) return this;
+		else return this.next.last()
+	};
+
+	this.append = function (n) {
+		if (this.next === null) {
+			this.next = new Node(n); //If there is no next node, link the new one here
+			this.next.prev = this;
+		} else this.next.append(n); //Else, append to next node
+	};
+
+	this.remove = function () {
+		var n = this.next;
+		this.next = n.next;
+		n.next.prev = this;
+	};
+
+	this.reverse = function () {
+		if (this.next == null) return this;
+		else {
+			var newHead = this.next.reverse();
+			newHead.next = this;
+			newHead.prev = null;
+			this.prev = newHead;
+			this.next = null;
+			return newHead
+		}
+	};
+
+	this.toString = function () {
+		return "Node(payload = " + this.payload + ", previous = " + this.prev + ", next = " + this.next + ")"
+	};
+
+	this.equals = function (node) {
+		return this.payload === node.payload &amp;&amp; this.next.equals(node.next) &amp;&amp; this.prev.equals(node.prev)
+	};
+
+	this.find = function (n, d) {
+		if (!d) d = 0;
+		if (this.payload === n) return d;
+		if (this.next) return this.next.find(n, d + 1);
+		return [-1, d]
+	};
+	return this;
+}
+
+/**
+ * @description Nodes for path finding algs
+ * @param {number} [g=0] Current total cost
+ * @param {number} [h=0] Current total heuristic
+ * @param {number[]} [pos=[0, 0]] 2D position of the node
+ * @param {Edge[]} [edges=[]] List of edges connected to the path node
+ * @param {*} [payload=""] Payload
+ * @returns {PathNode} Path node
+ * @this PathNode
+ * @constructor
+ * @since 1.0
+ * @property {number} PathNode.g Cost of the path to that node
+ * @property {number} PathNode.h Heuristic to get to that node
+ * @property {number} PathNode.f Cost of the path (g) + heuristic estimate
+ * @property {Edge[]} PathNode.edges List of edges connected to the path node
+ * @property {*} PathNode.payload Payload (content/data) of the node
+ * @property {number[]} PathNode.pos Position of the node
+ * @property {?PathNode} PathNode.parent Parent of the path-node
+ * @property {function(number): PathNode} PathNode.back Go n path-nodes back
+ * @property {function(PathNode): boolean} PathNode.isCloser Check if the current path-node is closer than the other one
+ * @property {function(): string} PathNode.toString String representation
+ * @property {Function} PathNode.join Join PathNodes with edges
+ *
+ */
+function PathNode (g, h, pos, payload, edges) {
+	this.g = g || 0;
+	this.h = h || 0;
+	this.f = this.g + this.h || 1;
+	this.pos = pos || [0, 0];
+	this.parent = null;
+	this.payload = payload || "";
+	this.edges = edges || [];
+
+	this.back = function (n) {
+		return (isNon(n) || n &lt;= 1)? this.parent: this.parent.back(n - 1);
+	};
+
+	this.isCloser = function (pn) {
+		return this.f &lt;= pn.f;
+	};
+
+	this.toString = function () {
+		return "PathNode(g=" + this.g + "h=" + this.h + "f=" + this.f + ", pos=[" + this.pos.toStr(true) + "], parent=" + (this.parent === null? null: this.parent.toString()) + ")";
+	};
+
+	this.join = function (PathNodes) {
+		for (var i = 0; i &lt; PathNodes.length; i++) {
+			this.edges[i].startNode = this;
+			this.edges[i].endNode = PathNodes[i];
+			PathNodes[i].edges.push(this.edges[i]);
+			PathNodes[i].edges.last().startNode = this;
+			PathNodes[i].edges.last().endNode = PathNodes[i];
+		}
     };
 
-    this.toString = function () {
-        return "LinkedList(" + this.show() + ")"
-    };
-    return this
+	return this;
+}
+
+/**
+ * @description Edge that connects two PathNodes
+ * @param {?PathNode} start Starting node
+ * @param {?PathNode} end Ending node
+ * @param {number} [len=0] Length of the edge.
+ * @this Edge
+ * @since 1.1
+ * @constructor
+ * @property {?PathNode} Edge.startNode Starting node of the edge
+ * @property {?PathNode} Edge.endNode Ending node of the edge
+ * @property {number} Edge.length Length of the edge
+ * @property {function(): string} Edge.toString String representation of the edge
+ * @property {Function} Edge.draw Draw the edge
+ */
+function Edge (start, end, len) {
+	this.startNode = start || null;
+	this.endNode = end || null;
+	this.length = len || ((!isNon(start) &amp;&amp; !isNon(end))? euclidianDist(start.pos, end.pos): 0);
+	this.line = new Line(start? start.pos: [0, 0], end? end.pos: [0, 0]);
+
+	this.toString = function () {
+		return "Edge(startNode=" + this.startNode + ", endNode=" + this.endNode + ", length=" + this.length + ")";
+	};
+
+	this.draw = function () {
+		this.line.draw();
+    }
 }
 
 /**
@@ -121,339 +294,222 @@ function LinkedList (pl, nx, name) {
  * @property {function(): number} TreeNode.avg Average of the payloads
  * @property {function(): string} TreeNode.printBFS Print in the BFS order
  * @property {function(): string} TreeNode.toString String representation
- * @property {function(): Array} TreeNode.toArray Array representation
+ * @property {function(boolean): Array} TreeNode.toArray Array representation
+ * @property {function(NumberLike): number} TreeNode.count Count the number of times there's a particular payload
  */
 function TreeNode (pl, l, r) { //Binary tree
-    this.left = l;
-    this.right = r;
-    this.payload = pl || 0;
+	this.left = l;
+	this.right = r;
+	this.payload = pl || 0;
 
-    this.add = function (l, r) {
-        this.left = l;
-        this.right = r;
-    };
-    this.addLeft = function (childs) {
-        for (var i = 0; i &lt; childs.length; i++) {
-            if (i === 0) this.left = childs[0];
-            else childs[i - 1].left = childs[i];
-        }
-    };
-    this.addRight = function (childs) {
-        for (var i in childs) {
-            if(childs.hasOwnProperty(i)) {
-                if (i === 0) this.right = childs[0];
-                else childs[i-1].right = childs[i];
-            }
-        }
-    };
-    this.traverse = function () {
-        if (this.left) this.left.traverse();
-        if (this.right) this.right.traverse();
-        return this
-    };
-    //Console printing
-    this.printInOrder = function () {
-        if (this.left) this.left.printInOrder();
-        Essence.addToPrinter(this.payload + "->");
-        if (this.right) this.right.printInOrder();
-        Essence.addToPrinter("\r\n");
-    };
-    this.printPreOrder = function () {
-        Essence.addToPrinter(this.payload + "->");
-        if (this.left) this.left.printPreOrder();
-        if (this.right) this.right.printPreOrder();
-        Essence.addToPrinter("\r\n")
-    };
-    this.printPostOrder = function () {
-        if (this.left) this.left.printPreOrder();
-        if (this.right) this.right.printPreOrder();
-        Essence.addToPrinter(this.payload + "->");
-        Essence.addToPrinter("\r\n")
-    };
-    //Window printing
-    this.inOrder = function (t, s, d, sym) {
-        if (!t) t = "";
-        if (!s) s = "&amp;nbsp;&amp;nbsp;";
-        if (!d) d = 0;
-        if (!sym) sym = "|-";
+	this.add = function (l, r) {
+		this.left = l;
+		this.right = r;
+	};
+	this.addLeft = function (child) {
+		for (var i = 0; i &lt; child.length; i++) {
+			if (i === 0) this.left = child[0];
+			else child[i - 1].left = child[i];
+		}
+	};
+	this.addRight = function (childs) {
+		for (var i in childs) {
+			if(childs.hasOwnProperty(i)) {
+				if (i === 0) this.right = childs[0];
+				else childs[i-1].right = childs[i];
+			}
+		}
+	};
+	this.traverse = function () {
+		if (this.left) this.left.traverse();
+		if (this.right) this.right.traverse();
+		return this
+	};
+	//Console printing
+	this.printInOrder = function () {
+		if (this.left) this.left.printInOrder();
+		Essence.addToPrinter(this.payload + "->");
+		if (this.right) this.right.printInOrder();
+		Essence.addToPrinter("\r\n");
+	};
+	this.printPreOrder = function () {
+		Essence.addToPrinter(this.payload + "->");
+		if (this.left) this.left.printPreOrder();
+		if (this.right) this.right.printPreOrder();
+		Essence.addToPrinter("\r\n")
+	};
+	this.printPostOrder = function () {
+		if (this.left) this.left.printPreOrder();
+		if (this.right) this.right.printPreOrder();
+		Essence.addToPrinter(this.payload + "->");
+		Essence.addToPrinter("\r\n")
+	};
+	//Window printing
+	this.inOrder = function (t, s, d, sym) {
+		if (!t) t = "";
+		if (!s) s = "&amp;nbsp;&amp;nbsp;";
+		if (!d) d = 0;
+		if (!sym) sym = "|-";
 
-        if (this.left) this.left.inOrder(t + s, s, d + 1, sym);
-        println(t + sym + this.payload + s+" (deepth = " + d+")");
-        if (this.right) this.right.inOrder(t + s, s, d + 1, sym);
-    };
-    this.preOrder = function (t, s, d, sym) {
-        if (!t) t = "";
-        if (!s) s = "&amp;nbsp;&amp;nbsp;";
-        if (!d) d = 0;
-        if (!sym) sym = "|-";
+		if (this.left) this.left.inOrder(t + s, s, d + 1, sym);
+		println(t + sym + this.payload + s+" (depth=" + d+")");
+		if (this.right) this.right.inOrder(t + s, s, d + 1, sym);
+	};
+	this.preOrder = function (t, s, d, sym) {
+		if (!t) t = "";
+		if (!s) s = "&amp;nbsp;&amp;nbsp;";
+		if (!d) d = 0;
+		if (!sym) sym = "|-";
 
-        println(t + sym + this.payload + s+" (deepth = " + d+")");
-        if (this.left) this.left.preOrder(t + s, s, d + 1, sym);
-        if (this.right) this.right.preOrder(t + s, s, d + 1, sym)
-    };
-    this.postOrder = function (t, s, d, sym) {
-        if (!t) t = "";
-        if (!s) s = "&amp;nbsp;&amp;nbsp;";
-        if (!d) d = 0;
-        if (!sym) sym = "|-";
+		println(t + sym + this.payload + s+" (depth=" + d+")");
+		if (this.left) this.left.preOrder(t + s, s, d + 1, sym);
+		if (this.right) this.right.preOrder(t + s, s, d + 1, sym)
+	};
+	this.postOrder = function (t, s, d, sym) {
+		if (!t) t = "";
+		if (!s) s = "&amp;nbsp;&amp;nbsp;";
+		if (!d) d = 0;
+		if (!sym) sym = "|-";
 
-        if (this.left) this.left.postOrder(t + s, s, d + 1, sym);
-        if (this.right) this.right.postOrder(t + s, s, d + 1, sym);
-        println(t + sym + this.payload + s+" (deepth = " + d+")")
-    };
+		if (this.left) this.left.postOrder(t + s, s, d + 1, sym);
+		if (this.right) this.right.postOrder(t + s, s, d + 1, sym);
+		println(t + sym + this.payload + s+" (depth=" + d+")")
+	};
 
-    //Getter
-    this.getInOrder = function (sym) {
-        if (!sym) sym = "->";
-        var order = "";
+	//Getter
+	this.getInOrder = function (sym) {
+		if (!sym) sym = "->";
+		var order = "";
 
-        if (this.left) order += this.left.getInOrder(sym);
-        order += sym + this.payload;
-        if (this.right) order += this.right.getInOrder(sym);
-        return order
-    };
-    this.getPreOrder = function (sym) {
-        if (!sym) sym = "->";
-        var order = "";
+		if (this.left) order += this.left.getInOrder(sym);
+		order += sym + this.payload;
+		if (this.right) order += this.right.getInOrder(sym);
+		return order
+	};
+	this.getPreOrder = function (sym) {
+		if (!sym) sym = "->";
+		var order = "";
 
-        order += sym + this.payload;
-        if (this.left) order += this.left.getPreOrder(sym);
-        if (this.right) order += this.right.getPreOrder(sym);
-        return order
-    };
-    this.getPostOrder = function (sym) {
-        if (!sym) sym = "->";
-        var order = "";
+		order += sym + this.payload;
+		if (this.left) order += this.left.getPreOrder(sym);
+		if (this.right) order += this.right.getPreOrder(sym);
+		return order
+	};
+	this.getPostOrder = function (sym) {
+		if (!sym) sym = "->";
+		var order = "";
 
-        if (this.left) order += this.left.getPostOrder(sym);
-        if (this.right) order += this.right.getPostOrder(sym);
-        return order + sym + this.payload
-    };
-    this.isLeaf = function () { //Is it an end of branch ?
-        return !this.left &amp;&amp; !this.right
-    };
-    this.find = function (n, method) {
-        return (method.normal() === "bfs")? this.bfs(n): this.dfs(n)
-    };
-    this.dfs = function (n) { //Depth First Search
-        var d = 0, td = 0; //Depth, total depth
-        var stack = [];
-        stack.push(this);
-        while (stack != []) {
-            d = 0;
-            var cur = stack.pop();
-            try {
-                if (cur.payload === n) return [d, td]
-            } catch (e) {
-                return [-1, td]
-            }
-            if (cur.left) stack.push(cur.left);
-            if (cur.right) stack.push(cur.right);
-            d++;
-            td++;
-        }
-    };
-    this.bfs = function (n) { //Breadth First Search
-        var b = 0, tb = 0; //Breadth, total breadth
-        var queue = [];
-        queue.unshift(this); //Add as the end
-        while (queue != []) {
-            b = 0;
-            var cur = queue.pop(); //Get the first element of the queue
-            try {
-                if (cur.payload === n) return [b, tb]
-            } catch(e) {
-                return [-1, tb]
-            }
-            if (cur.left) queue.unshift(cur.left);
-            if (cur.right) queue.unshift(cur.right);
-            b++;
-            tb++;
-        }
-    };
-    this.sum = function () {
-        var s = this.payload;
-        if (this.left) s += this.left.sum();
-        if (this.right) s += this.right.sum();
-        return s
-    };
-    this.min = function () {
-        var m = this.payload;
-        if (this.left) m = Math.min(m, this.left.min());
-        if (this.right) m = Math.min(m, this.right.min());
-        return m
-    };
-    this.max = function () {
-        var m = this.payload;
-        if (this.left) m = Math.max(m, this.left.max());
-        if (this.right) m = Math.max(m, this.right.max());
-        return m
-    };
-    this.nbOfBranches = function (n) {
-        if (!n) n = 0;
-        if (this.left) n = this.left.nbOfBranches(n + 1);
-        if (this.right) n = this.right.nbOfBranches(n + 1);
-        return n
-    };
-    this.avg = function () {
-        return this.sum() / this.nbOfBranches()
-    };
-    this.printBFS = function (sym) {
-        if (!sym) sym = "->";
-        var queue = [], res = "";
-        queue.unshift(this); //Add as the end
-        while (queue!=[]) {
-            var cur = queue.pop(); //Get the first element of the queue
-            res += cur + sym;
-            try {
-                if (cur.left) queue.unshift(cur.left);
-                if (cur.right) queue.unshift(cur.right);
-            } catch(e) {
-                Essence.say(e + " caused " + this + ".printBFS(" + sym + ") to go wrong", "err");
-            }
-        }
-        return sym
-    };
-    this.toString = function () {
-        /* Essence.txt2print = "";
-         this.printInOrder();
-         return "Tree(" + Essence.txt2print + ")" */
-        var str = "TreeNode(payload = " + this.payload + ", ";
-        if (this.left) str += "left = " + this.left.toString();
-        if (this.right) str += "right = " + this.right.toString();
-        return str.substring(0, str.length) + ")"
-    };
-    this.toArray = function (singly) {
-        var arr = [];
-        if (this.left) singly? arr.push(this.left.toArray().toString().split(",")): arr.push(this.left.toArray());
-        arr.push(this.payload);
-        if (this.right) singly? arr.push(this.right.toArray().toString().split(",")): arr.push(this.right.toArray());
-        return singly? arr.toString().split(","): arr
-    };
+		if (this.left) order += this.left.getPostOrder(sym);
+		if (this.right) order += this.right.getPostOrder(sym);
+		return order + sym + this.payload
+	};
+	this.isLeaf = function () { //Is it an end of branch ?
+		return !this.left &amp;&amp; !this.right
+	};
+	this.find = function (n, method) {
+		return (method.normal() === "bfs")? this.bfs(n): this.dfs(n)
+	};
+	this.dfs = function (n) { //Depth First Search
+		var d = 0, td = 0; //Depth, total depth
+		var stack = [];
+		stack.push(this);
+		while (!stack.equals([])) {
+			d = 0;
+			var cur = stack.pop();
+			try {
+				if (cur.payload === n) return [d, td]
+			} catch (e) {
+				return [-1, td]
+			}
+			if (cur.left) stack.push(cur.left);
+			if (cur.right) stack.push(cur.right);
+			d++;
+			td++;
+		}
+	};
+	this.bfs = function (n) { //Breadth First Search
+		var b = 0, tb = 0; //Breadth, total breadth
+		var queue = [];
+		queue.unshift(this); //Add as the end
+		while (!queue.equals([])) {
+			b = 0;
+			var cur = queue.pop(); //Get the first element of the queue
+			try {
+				if (cur.payload === n) return [b, tb]
+			} catch (err) {
+				return [-1, tb]
+			}
+			if (cur.left) queue.unshift(cur.left);
+			if (cur.right) queue.unshift(cur.right);
+			b++;
+			tb++;
+		}
+	};
+	this.sum = function () {
+		var s = this.payload;
+		if (this.left) s += this.left.sum();
+		if (this.right) s += this.right.sum();
+		return s
+	};
+	this.min = function () {
+		var m = this.payload;
+		if (this.left) m = Math.min(m, this.left.min());
+		if (this.right) m = Math.min(m, this.right.min());
+		return m
+	};
+	this.max = function () {
+		var m = this.payload;
+		if (this.left) m = Math.max(m, this.left.max());
+		if (this.right) m = Math.max(m, this.right.max());
+		return m
+	};
+	this.nbOfBranches = function (n) {
+		if (!n) n = 0;
+		if (this.left) n = this.left.nbOfBranches(n + 1);
+		if (this.right) n = this.right.nbOfBranches(n + 1);
+		return n
+	};
+	this.avg = function () {
+		return this.sum() / this.nbOfBranches()
+	};
+	this.printBFS = function (sym) {
+		if (!sym) sym = "->";
+		var queue = [], res = "";
+		queue.unshift(this); //Add as the end
+		while (!queue.equals([])) {
+			var cur = queue.pop(); //Get the first element of the queue
+			res += cur + sym;
+			try {
+				if (cur.left) queue.unshift(cur.left);
+				if (cur.right) queue.unshift(cur.right);
+			} catch (err) {
+				Essence.say(err + " caused " + this + ".printBFS(" + sym + ") to go wrong", "erro");
+			}
+		}
+		return res
+	};
+	this.toString = function () {
+		/* Essence.txt2print = "";
+		 this.printInOrder();
+		 return "Tree(" + Essence.txt2print + ")" */
+		var str = "TreeNode(payload = " + this.payload + ", ";
+		if (this.left) str += "left = " + this.left.toString();
+		if (this.right) str += "right = " + this.right.toString();
+		return str.substring(0, str.length) + ")"
+	};
+	this.toArray = function (singly) {
+		var arr = [];
+		if (this.left) singly? arr.push(this.left.toArray().toString().split(",")): arr.push(this.left.toArray());
+		arr.push(this.payload);
+		if (this.right) singly? arr.push(this.right.toArray().toString().split(",")): arr.push(this.right.toArray());
+		return singly? arr.toString().split(","): arr
+	};
 
-    return this;
-}
-
-/**
- * @description Node
- * @param {*} [pl=1] Payload
- * @param {Node} [nx] Next node
- * @param {Node} [pv] Previous node
- * @this Node
- * @return {Node} Node
- * @constructor
- * @since 1.0
- * @property {NumberLike} Node.payload Payload
- * @property {Node} Node.next Next node
- * @property {function(): Node} Node.traverse Node traversal
- * @property {Function} Node.print Node printer
- * @property {Function} Node.printList Node list printer
- * @property {function(): Node} Node.last Get the last node
- * @property {function(NumberLike)} Node.append Append the list with a new node
- * @property {Function} Node.remove Node remover
- * @property {function(): Node} Node.reverse List reversal
- * @property {function(NumberLike, number): Nums} Node.find Look for a node
- * @property {function(Node): boolean} Node.equals Node comparator
- * @property {function(): string} Node.toString String representation
- */
-function Node (pl, nx, pv) {
-    this.payload = pl || 1;
-    this.next = nx; //Or new node()
-    this.prev = pv;
-
-    this.traverse = function () {
-        if (this.next) this.next.traverse();
-        Essence.say("payload: " + this.payload);
+	this.count = function (n) {
+		return this.getInOrder().countWord(n, "->");
     };
 
-    this.print = function () {
-        if (this.next != null) this.next.print();
-        Essence.print(this.payload + "=>");
-    };
-
-    this.printList = function () {
-        if (this.next === null) Essence.txt2print += "->" + this.v;
-        else this.next.printList();
-        Essence.print("");
-    };
-
-    this.last = function () {
-        if (this.next === null) return this;
-        else return this.next.last()
-    };
-
-    this.append = function (n) {
-        if (this.next === null) {
-            this.next = new Node(n); //If there is no next node, link the new one here
-            this.next.prev = this;
-        } else this.next.append(n); //Else, append to next node
-    };
-
-    this.remove = function () {
-        var n = this.next;
-        this.next = n.next;
-        n.next.prev = this;
-    };
-
-    this.reverse = function () {
-        if (this.next == null) return this;
-        else {
-            var newHead = this.next.reverse();
-            newHead.next = this;
-            newHead.prev = null;
-            this.prev = newHead;
-            this.next = null;
-            return newHead
-        }
-    };
-
-    this.toString = function () {
-        return "Node(payload = " + this.payload + ", previous = " + this.prev + ", next = " + this.next + ")"
-    };
-
-    this.equals = function (node) {
-        return this.payload === node.payload &amp;&amp; this.next.equals(node.next) &amp;&amp; this.prev.equals(node.prev)
-    };
-
-    this.find = function (n, d) {
-        if (!d) d = 0;
-        if (this.payload === n) return d;
-        if (this.next) return this.next.find(n, d + 1);
-        return [-1, d]
-    };
-    return this;
-}
-
-/**
- * @description Path node
- * @param {number} g Total current cost
- * @param {number} h Total current heuristic
- * @returns {PathNode} Path node
- * @this PathNode
- * @constructor
- * @since 1.0
- * @property {number} PathNode.f Cost of the path (g) + heuristic estimate
- * @property {?PathNode} PathNode.parent Parent of the path-node
- * @property {function(number): PathNode} PathNode.back Go n path-nodes back
- * @property {function(PathNode): boolean} PathNode.isCloser Check if the current path-node is closer than the other one
- * @property {function(): string} Node.toString String representation
- */
-function PathNode (g, h) { //Nodes for path finding algs
-    this.f = g + h || 1;
-    this.parent = null;
-
-    this.back = function (n) {
-        return (isNon(n) || n &lt;= 1)? this.parent: this.parent.back(n - 1);
-    };
-
-    this.isCloser = function (pn) {
-        return this.f &lt;= pn.f;
-    };
-
-    this.toString = function () {
-        return "PathNode(f=" + this.f + ", parent=" + this.parent.toString() + ")";
-    };
-    return this;
+	return this;
 }
 
 NTreeNode.inheritsFrom(TreeNode);
@@ -461,15 +517,15 @@ NTreeNode.inheritsFrom(TreeNode);
  * @description N-ary tree node
  * @see module:DataStruct~TreeNode
  * @param {*} pl Payload
- * @param {TreeNode[]} ch Childs
+ * @param {TreeNode[]} [ch=[]] Child
  * @returns {NTreeNode} NTreeNode
  * @this NTreeNode
- * @implements {TreeNode}
  * @constructor
  * @since 1.0
- * @property {NTreeNode[]} NTreeNode.childs Childs
+ * @property {NTreeNode[]} NTreeNode.child Child
  * @property {NumberLike} NTreeNode.payload Payload
  * @property {function(NTreeNode)} NTreeNode.add Child adder
+ * @property {function(NTreeNode)} NTreeNode.remove Child remove
  * @property {function(): NTreeNode} NTreeNode.traverse Tree traversal
  * @property {Function} NTreeNode.printInOrder Console in-order printing
  * @property {Function} NTreeNode.printPreOrder Console pre-order printing
@@ -491,183 +547,232 @@ NTreeNode.inheritsFrom(TreeNode);
  * @property {function(string)} NTreeNode.printBFS Print in the BFS order
  * @property {function(): string} NTreeNode.toString String representation
  * @property {function(): Array} NTreeNode.toArray Array representation
+ * @property {function(number): NTreeNode} NTreeNode.getChild Child getter
+ * @property {function(string, boolean): ?string} NTreeNode.see See the tree for that particular node
+ * @property {function(*): number} NTreeNode.count Count the number of times there's a particular payload
  */
 function NTreeNode (pl, ch) {
-    this.payload = pl || 0;
-    this.childs = ch || [];
-    this.add = function (c) {
-        this.childs.push(c);
-    };
-    this.traverse = function () {
-        for (var c in this.childs) {
-            if (this.childs.hasOwnProperty(c)) c.traverse();
-        }
-        return this
-    };
-    //Console printing
-    this.printInOrder = function () {
-        for (var i = 0; i &lt; this.childs - 1; i++) {
-            this.childs[i].printInOrder();
-            Essence.addToPrinter(this.payload + "->");
-            this.childs[i + 1].printInOrder();
-            Essence.addToPrinter("\r\n");
-        }
-    };
-    this.printPreOrder = function () {
-        for (var i = 0; i &lt; this.childs - 1; i++) {
-            Essence.addToPrinter(this.payload + "->");
-            this.childs[i].printInOrder();
-            this.childs[i + 1].printInOrder();
-            Essence.addToPrinter("\r\n");
-        }
-    };
-    this.printPostOrder = function () {
-        for (var i = 0; i &lt; this.childs - 1; i++) {
-            this.childs[i].printInOrder();
-            this.childs[i + 1].printInOrder();
-            Essence.addToPrinter(this.payload + "->");
-            Essence.addToPrinter("\r\n");
-        }
-    };
-    //Window printing
-    this.inOrder = function (t, s, d, sym) {
-        if (!t) t = "";
-        if (!s) s = "&amp;nbsp;&amp;nbsp;";
-        if (!d) d = 0;
-        if (!sym) sym = "|-";
+	this.payload = pl || 0;
+	this.child = ch || [];
+	this.add = function (c) {
+		this.child.push(c);
+	};
+	this.remove = function (c) {
+		this.child.remove(c);
+	};
+	this.traverse = function () {
+		for (var c in this.child) {
+			if (this.child.hasOwnProperty(c)) c.traverse();
+		}
+		return this
+	};
 
-        for (var i = 0; i &lt; this.childs - 1; i++) {
-            this.childs[i].inOrder(t + s, s, d + 1, sym);
-            println(t + sym + this.payload + s+" (deepth= " + d+")");
-            this.childs[i].inOrder(t + s, s, d + 1, sym);
-            Essence.addToPrinter("\r\n");
-        }
-    };
-    this.preOrder = function (t, s, d, sym) {
-        if (!t) t = "";
-        if (!s) s = "&amp;nbsp;&amp;nbsp;";
-        if (!d) d = 0;
-        if (!sym) sym = "|-";
+	//Console printing
+	this.printInOrder = function () {
+		for (var i = 0; i &lt; this.child - 1; i++) {
+			this.child[i].printInOrder();
+			Essence.addToPrinter(this.payload + "->");
+			this.child[i + 1].printInOrder();
+			Essence.addToPrinter("\r\n");
+		}
+		Essence.addToPrinter("\b");
+	};
+	this.printPreOrder = function () {
+		for (var i = 0; i &lt; this.child - 1; i++) {
+			Essence.addToPrinter(this.payload + "->");
+			this.child[i].printInOrder();
+			this.child[i + 1].printInOrder();
+			Essence.addToPrinter("\r\n");
+		}
+		Essence.addToPrinter("\b");
+	};
+	this.printPostOrder = function () {
+		for (var i = 0; i &lt; this.child - 1; i++) {
+			this.child[i].printInOrder();
+			this.child[i + 1].printInOrder();
+			Essence.addToPrinter(this.payload + "->");
+			Essence.addToPrinter("\r\n");
+		}
+		Essence.addToPrinter("\b");
+	};
 
-        for (var i = 0; i &lt; this.childs - 1; i++) {
-            println(t + sym + this.payload + s+" (deepth= " + d+")");
-            this.childs[i].inOrder(t + s, s, d + 1, sym);
-            this.childs[i].inOrder(t + s, s, d + 1, sym);
-            Essence.addToPrinter("\r\n");
-        }
-    };
-    this.postOrder = function (t, s, d, sym) {
-        if (!t) t = "";
-        if (!s) s = "&amp;nbsp;&amp;nbsp;";
-        if (!d) d = 0;
-        if (!sym) sym = "|-";
+	//Window printing
+	this.inOrder = function (t, s, d, sym) {
+		if (!t) t = "";
+		if (!s) s = "&amp;nbsp;&amp;nbsp;";
+		if (!d) d = 0;
+		if (!sym) sym = "|-";
 
-        for (var i = 0; i &lt; this.childs - 1; i++) {
-            this.childs[i].inOrder(t + s, s, d + 1, sym);
-            this.childs[i].inOrder(t + s, s, d + 1, sym);
-            println(t + sym + this.payload + s+" (deepth = " + d+")");
-            Essence.addToPrinter("\r\n");
-        }
-    };
-    //Getter
-    this.getOrder = function (sym) {
-        return this.childs.join(sym || "->");
-    };
+		for (var i = 0; i &lt; this.child; i++) {
+			this.child[i].inOrder(t + s, s, d + 1, sym);
+			println(t + sym + this.payload + s + " (depth=" + d + ")");
+			this.child[i].inOrder(t + s, s, d + 1, sym);
+		}
+	};
+	this.preOrder = function (t, s, d, sym) {
+		if (!t) t = "";
+		if (!s) s = "&amp;nbsp;&amp;nbsp;";
+		if (!d) d = 0;
+		if (!sym) sym = "|-";
 
-    this.isLeaf = function () { //Is it an end of branch ?
-        return !isNon(this.childs)
-    };
+		println(t + sym + this.payload + s + " (depth=" + d + ")");
+		for (var i = 0; i &lt; this.child - 1; i++) {
+			console.log("this.child[i]=", this.child[i]);
+			this.child[i].preOrder(t + s, s, d + 1, sym);
+		}
+	};
+	this.postOrder = function (t, s, d, sym) {
+		if (!t) t = "";
+		if (!s) s = "&amp;nbsp;&amp;nbsp;";
+		if (!d) d = 0;
+		if (!sym) sym = "|-";
 
-    this.find = function (n, method) {
-        return (method.normal() === "bfs")? this.bfs(n): this.dfs(n)
-    };
-    this.dfs = function (n, d, td) { //Depth First Search
-        if (!d) d = 0; //Depth
-        if (!td) td = 0; //Total depth
-        for (var c in this.childs) {
-            if (this.childs.hasOwnProperty(c)) c.dfs(n, d + 1, td++);
-        }
-        return [-1, td]
-    };
-    this.bfs = function (n, b, tb) { //Breadth First Search
-        if (!b) b = 0; //Breadth
-        if (!tb) tb = 0; //Total breadth
-        var queue = [];
-        queue.unshift(this); //Add as the end
-        while (queue != []) {
-            b = 0;
-            var cur = new NTreeNode(queue.pop()); //Get the first element of the queue
-            if (cur.payload === n) return [b, tb];
-            if (cur.left) queue.unshift(cur.left);
-            if (cur.right) queue.unshift(cur.right);
-            b++;
-            tb++;
-        }
-        return [-1, tb]
-    };
-    this.sum = function () {
-        var s = this.payload;
-        for (var c in this.childs) {
-            if (this.childs.hasOwnProperty(c)) s += c.payload;
-        }
-        return s
-    };
-    this.min = function () {
-        var m = this.payload;
-        for (var c in this.childs) {
-            if (this.childs.hasOwnProperty(c)) m = Math.min(m, c.payload);
-        }
-        return m
-    };
-    this.max = function () {
-        var m = this.payload;
-        for (var c in this.childs) {
-            if (this.childs.hasOwnProperty(c)) m = Math.max(m, c.payload);
-        }
-        return m
-    };
-    this.nbOfBranches = function (n) {
-        if (!n) n = 0;
-        for (var c in this.childs) {
-            if (this.childs.hasOwnProperty(c)) n = c.nbOfBranches(n + 1);
-        }
-        return n
-    };
-    this.avg = function () {
-        return this.sum() / this.nbOfBranches()
-    };
-    this.printBFS = function (t) {
-        var queue = [], tab = t || "-"; //Better and easier than a Queue/QueueList
-        queue.unshift(this); //Add as the end
-        while (queue != []) {
-            var cur = new NTreeNode(queue.pop()); //Get the first element of the queue
-            println(tab + ">" + cur.payload);
-            tab += "-";
-            for (var c in this.childs) {
-                if (this.childs.hasOwnProperty(c)) queue.unshift(c);
+		for (var i = 0; i &lt; this.child; i++) {
+			this.child[i].postOrder(t + s, s, d + 1, sym);
+		}
+		println(t + sym + this.payload + s + " (depth=" + d+")");
+	};
+
+	//Getter
+	this.getOrder = function (sym) {
+		if (!sym) sym = "->";
+		//var self = this;
+		var getPayloads = function (node) {
+            return node.isLeaf()? node.payload: node.payload + sym + node.getOrder(sym);
+        };
+		return this.payload + sym + this.child.map(getPayloads).join(sym);
+	};
+
+	this.isLeaf = function () {
+		return this.child.length === 0;
+	};
+
+	this.find = function (n, method) {
+		return (method &amp;&amp; method.toLowerCase() === "bfs")? this.bfs(n): this.dfs(n)
+	};
+	this.dfs = function (n, d, td) { //Depth First Search
+		if (!d) d = 0; //Depth
+		if (!td) td = 0; //Total depth
+		for (var c in this.child) {
+			if (this.child.hasOwnProperty(c)) {
+                if (!isType(c, "NTreeNode")) throw new TypeError("The child '" + c + "' is not a NTreeNode");
+				c.dfs(n, d + 1, td++);
             }
-        }
-    };
-    this.toString = function () {
-        /* Essence.txt2print = "";
-         this.printInOrder();
-         return "Tree(" + Essence.txt2print + ")" */
-        var str = "NTreeNode(payload= " + this.payload + ", ";
-        for (var c in this.childs) {
-            if (this.childs.hasOwnProperty(c)) str += c.toString();
-        }
-        return str.substring(0, str.length) + ")"
-    };
-    this.toArray = function (singly) {
-        var arr = [];
-        arr.push(this.payload);
-        for (var c in this.childs) {
-            if (this.childs.hasOwnProperty(c)) singly? arr.push(c.toArray().toString().split(",")): arr.push(c.toArray());
-        }
-        return singly? arr.toString().split(","): arr
+		}
+		return [-1, td]
+	};
+	this.bfs = function (n, b, tb) { //Breadth First Search
+		if (!b) b = 0; //Breadth
+		if (!tb) tb = 0; //Total breadth
+		var queue = [];
+		queue.unshift(this); //Add as the end
+		while (!queue.equals([])) {
+			b = 0;
+			var cur = new NTreeNode(queue.pop()); //Get the first element of the queue
+			if (cur.payload === n) return [b, tb];
+			if (cur.left) queue.unshift(cur.left);
+			if (cur.right) queue.unshift(cur.right);
+			b++;
+			tb++;
+		}
+		return [-1, tb]
+	};
+	this.sum = function () {
+		var s = this.payload;
+		for (var c in this.child) {
+			if (this.child.hasOwnProperty(c)) s += c.payload;
+		}
+		return s
+	};
+	this.min = function () {
+		var m = this.payload;
+		for (var c in this.child) {
+			if (this.child.hasOwnProperty(c)) m = Math.min(m, c.payload);
+		}
+		return m
+	};
+	this.max = function () {
+		var m = this.payload;
+		for (var c in this.child) {
+			if (this.child.hasOwnProperty(c)) m = Math.max(m, c.payload);
+		}
+		return m
+	};
+	this.nbOfBranches = function (n) {
+		if (!n) n = 0;
+		for (var c in this.child) {
+			if (this.child.hasOwnProperty(c)) n = c.nbOfBranches(n + 1);
+		}
+		return n
+	};
+	this.avg = function () {
+		return this.sum() / this.nbOfBranches()
+	};
+	this.printBFS = function (t) {
+		var queue = [this], tab = t || "-"; //Better and easier than a Queue/QueueList
+		while (!queue.isEmpty()) {
+			var cur = new NTreeNode(queue.pop()); //Get the first element of the queue
+			println(tab + ">" + cur.payload);
+			tab += "-";
+			for (var c in this.child) {
+				if (this.child.hasOwnProperty(c)) queue.unshift(c);
+			}
+		}
+	};
+	this.toString = function () {
+		var str = "NTreeNode(payload=" + this.payload + ", child=[";
+		for (var c in this.child) {
+			if (this.child.hasOwnProperty(c)) str += this.child[c].toString() + ", ";
+		}
+		return (str.substring(0, str.length) + "])").replace(", ]", "]");
+	};
+	this.toArray = function (singly) {
+		var arr = [];
+		arr.push(this.payload);
+		for (var c in this.child) {
+			if (this.child.hasOwnProperty(c)) singly? arr.push(c.toArray().toString().split(",")): arr.push(c.toArray());
+		}
+		return singly? arr.toString().split(","): arr
+	};
+
+	this.getChild = function (pos) {
+		return this.child[pos];
+	};
+	
+	this.see = function (symbol, console) {
+		traverseTree(this, symbol);
+		Buffer.show(console, !console, true);
+		var tree = Buffer.log;
+		Buffer.clear();
+		return tree;
+	};
+
+    this.count = function (n) {
+        return this.getOrder().countWord(n, "->");
     };
 
-    return this;
+	return this;
+}
+
+/**
+ * @description Traverse a (sub)tree starting from a particular node.
+ * @param {Node} node Node
+ * @param {string} [symbol="--"] Symbol/string/character to denote a branch
+ * @param {string} [start="|"] Starting symbol/string/character to denote the head of a branch
+ * @param {number} [indent=0] Indentation preceding a branch
+ * @return {string} Current buffer (assuming it'start only containing what this function added to it).
+ * @func
+ * @since 1.1
+ */
+function traverseTree (node, symbol, start, indent) {
+	if (!indent) indent = 0;
+	if (!start) start = "|";
+	Buffer.add("  ".repeat(indent) + start + (symbol || "--") + node.payload);
+	indent++;
+	for (var i = 0; i &lt; node.child.length; i++) {
+		traverseTree(node.getChild(i), symbol, start, indent);
+	}
+	return Buffer.log;
 }
 
 /**
@@ -701,6 +806,7 @@ function NTreeNode (pl, ch) {
  * @property {function(function(*))} Set.forEach Act on each items of the set
  */
 function Set (arr) {
+<<<<<<< HEAD
     this.value = (isType(arr, "Array")? rmDuplicates(arr): [arr]) || [];
     this.size = function () {
         return this.value.length
@@ -799,6 +905,106 @@ function Set (arr) {
     };
 
     return this;
+=======
+	this.value = (isType(arr, "Array")? rmDuplicates(arr): [arr]) || [];
+	this.size = function () {
+		return this.value.length
+	};
+
+	this.add = function (item) {
+		if (isType(item, "Array")) {
+			for (var i = 0; i &lt; item.length; i++) this.add(item[i]);
+		}
+		if (this.value.indexOf(item) === -1) this.value.push(item)
+	};
+
+	this.remove = function (item) {
+		if (this.value.has(item)) {
+			if (isType(item, "Array")) {
+				for(var i = 0; i &lt; item.length; i++) this.remove();
+			} else this.value = this.value.remove()
+		}
+	};
+
+	this.clear = function (index) {
+		index? this.value = this.value.remove(): this.value = []
+	};
+
+	this.isEmpty = function () {
+		return this.value.length === 0
+	};
+
+	this.contains = function (item) {
+		if (isType(item, "Array")) {
+			var c = true;
+			for (var i = 0; i &lt; item.length; i++) {
+				if (!c) return false; //Reduce the cost of the operation by not doing any unnecessary work
+				c = c &amp;&amp; this.contains(item[i]);
+			}
+			return c
+		} else return this.value.has(item)
+	};
+
+	this.equals = function (s) {
+		return this.value.toString() === s.value.toString()
+	};
+
+	this.isSame = function (s) { //Check if both sets have the same elements but not necessarily in the same order
+		if (this.equals(s)) return true;
+		var same = true;
+		for (var i = 0; i &lt; s.size(); i++) {
+			if (!same) return false;
+			same = same &amp;&amp; this.contains(s.value[i]);
+		}
+		return same
+	};
+
+	this.toString = function () {
+		return "Set(" + this.value.toString() + ")"
+	};
+
+	this.subset = function (s, e) {
+		return this.value.slice(s, e + 1)
+	};
+
+	this.get = function (i) {
+		return this.value[i]
+	};
+
+	this.indexOf = function (val) {
+		return this.value.indexOf(val);
+	};
+
+	this.set = function (i, val) {
+		this.value[i] = val;
+	};
+
+	this.first = function () {
+		return this.value[0]
+	};
+
+	this.last = function () {
+		return this.value.last()
+	};
+
+	this.min = function (s, e) {
+		return this.value.min(s, e)
+	};
+
+	this.max = function (s, e) {
+		return this.value.max(s, e)
+	};
+
+	this.median = function () {
+		return this.value.median()
+	};
+
+	this.forEach = function (act) {
+		for (var i = 0; i &lt; this.size(); i++) act(this.get(i));
+	};
+
+	return this;
+>>>>>>> develop
 }
 
 SortedSet.inheritsFrom(Set);
@@ -816,17 +1022,25 @@ SortedSet.inheritsFrom(Set);
  * @property {function(): string} SortedSet.toString String representation
  */
 function SortedSet (arr) {
+<<<<<<< HEAD
     this.value = Copy(arr).quickSort() || [];
     this.add = function (item) {
         isType(item, "Array")? this.value.multiPlace(item): this.value.place(item);
         this.value = rmDuplicates(this.value);
     };
+=======
+	this.value = Copy(arr).quickSort() || [];
+	this.add = function (item) {
+		isType(item, "Array")? this.value.multiPlace(item): this.value.place(item);
+		this.value = rmDuplicates(this.value);
+	};
+>>>>>>> develop
 
-    this.toString = function () {
-        return "SortedSet(" + this.value.toString() + ")"
-    };
+	this.toString = function () {
+		return "SortedSet(" + this.value.toString() + ")"
+	};
 
-    return this;
+	return this;
 }
 
 /**
@@ -849,6 +1063,7 @@ function SortedSet (arr) {
  * @property {function(): string} Stack.toString String representation
  */
 function Stack (arr, lim) {
+<<<<<<< HEAD
     this.value = isType(lim, "Number")? new Array(lim): [];
     this.limit = lim || null;
     if (arr) this.value.push(arr);
@@ -896,6 +1111,56 @@ function Stack (arr, lim) {
     };
 
     return this;
+=======
+	this.value = isType(lim, "Number")? new Array(lim): [];
+	this.limit = lim || null;
+	if (arr) this.value.push(arr);
+
+	this.peek = function () {
+		return this.value.last()
+	};
+
+	this.ground = function () {
+		return this.value[0]
+	};
+
+	/**
+	 * @throws {Error} Stack overflow
+	 * @param {*} item Item
+	 * @returns {undefined}
+	 */
+	this.push = function (item) {
+		if (this.isFull()) throw new Error("Stack overflow !");
+		isType(item, "Array")? this.value.append(item): this.value.push(item);
+	};
+
+	/**
+	 * @throws {Error} Stack underflow
+	 * @return {*} Item
+	 */
+	this.pop = function () {
+		if (this.isEmpty()) throw new Error("Stack underflow !");
+		return this.value.pop();
+	};
+
+	this.isEmpty = function () {
+		return this.value.length === 0
+	};
+
+	this.isFull = function () {
+		return this.limit != null? this.value.length >= this.limit: false
+	};
+
+	this.size = function () {
+		return this.value.length
+	};
+
+	this.toString = function () {
+		return "Stack(" + this.value.toString() + ")"
+	};
+
+	return this;
+>>>>>>> develop
 }
 
 /**
@@ -918,6 +1183,7 @@ function Stack (arr, lim) {
  * @see module:DataStruct~Stack
  */
 function StackArray (sz) {
+<<<<<<< HEAD
     this.value = new Array(sz);
     /** @default */
     this.top = -1;
@@ -977,6 +1243,68 @@ function StackArray (sz) {
     };
 
     return this;
+=======
+	this.value = new Array(sz);
+	/** @default */
+	this.top = -1;
+
+	this.peek = function () {
+		return this.value[this.top]
+	};
+
+	this.ground = function () {
+		return this.value[0];
+	};
+
+	/**
+	 * @throws {Error} Stack overflow
+	 * @param {*} item Item
+	 * @returns {undefined}
+	 */
+	this.push = function (item) {
+		if (this.isFull()) throw new Error("Stack overflow !");
+		if (isType(item, "Array")) {
+			for(var i = 0; i &lt; item.length; i++) this.push(item[i]);
+		} else {
+			this.top++;
+			this.value[this.top] = item;
+		}
+	};
+
+	/**
+	 * @throws {Error} Stack underflow
+	 * @param {*} item Item
+	 * @returns {*} Item
+	 */
+	this.pop = function (item) {
+		if (this.isEmpty()) throw new Error("Stack underflow !");
+		if (isType(item, "Array")) {
+			for(var i = 0; i &lt; item.length; i++) this.pop(item[i]);
+		} else {
+			var el = this.peek();
+			this.top--;
+			return el
+		}
+	};
+
+	this.isEmpty = function () {
+		return this.top &lt;= -1
+	};
+
+	this.isFull = function () {
+		return this.top >= this.value.length
+	};
+
+	this.size = function () {
+		return this.top + 1
+	};
+
+	this.toString = function () {
+		return "Stack(" + this.value.toString() + ")"
+	};
+
+	return this;
+>>>>>>> develop
 }
 
 /**
@@ -998,6 +1326,7 @@ function StackArray (sz) {
  * @see module:DataStruct~Stack
  */
 function StackList (arr) {
+<<<<<<< HEAD
     this.top = new Node();
 
     this.peek = function () {
@@ -1044,6 +1373,65 @@ function StackList (arr) {
     };
 
     return this;
+=======
+	this.top = null;
+
+	this.ground = function () {
+		return (this.isEmpty() || this.top === null)? null: (this.top.next === null? this.top.payload: this.top.next.payload);
+	};
+
+	this.peek = function () {
+		return this.top.payload;
+	};
+
+	this.push = function (item) {
+		if (isType(item, "Array")) {
+			for(var i = 0; i &lt; item.length; i++) this.push(item[i]);
+		} else this.top = new Node(item, this.top);
+		return this
+	};
+	if (arr) this.push(arr);
+
+	/**
+	 * @throws {Error} Stack underflow
+	 * @param {number} [n] Number of pops to do
+	 * @returns {Node} Item
+	 */
+	this.pop = function (n) {
+		if (!this.isEmpty()) throw new Error("I can't pop from an empty stack list");
+		if (n) {
+			for(var i = 0; i &lt; n; i++) this.pop();
+		} else {
+			var el = this.top.payload;
+			this.top = this.top.next;
+			return el
+		}
+	};
+
+	this.isEmpty = function () {
+		return this.top == null
+	};
+
+	this.size = function () {
+		var size = 0, crt = this.top;
+		while (crt != null) {
+			crt = crt.next;
+			size++;
+		}
+		return size;
+	};
+
+	this.toString = function () {
+		var chain = "", crt = this.top;
+		do {
+			chain += crt.payload + "->";
+			crt = crt.next;
+		} while (crt != null);
+		return "StackList(" + chain + ")";
+	};
+
+	return this;
+>>>>>>> develop
 }
 
 /**
@@ -1066,6 +1454,7 @@ function StackList (arr) {
  * @property {function(): string} Queue.toString String representation
  */
 function Queue (arr, lim) {
+<<<<<<< HEAD
     this.value = isType(lim, "Number")? new Array(lim): [];
     this.limit = lim || null;
     if (arr) this.value.push(arr);
@@ -1115,6 +1504,58 @@ function Queue (arr, lim) {
     };
 
     return this;
+=======
+	this.value = isType(lim, "Number")? new Array(lim): [];
+	this.limit = lim || null;
+	if (arr) this.value.push(arr);
+
+	/**
+	 * @throws {Error} Queue overflow
+	 * @param {*} item Item
+	 * @returns {undefined}
+	 */
+	this.enqueue = function (item) {
+		if (this.isFull()) throw new Error("Queue overflow !");
+		isType(item, "Array")? this.value.prepend(item): this.value.unshift(item);
+	};
+
+	/**
+	 * @throws {Error} Queue underflow
+	 * @returns {*} Item
+	 */
+	this.dequeue = function () {
+		if (this.isEmpty()) throw new Error("Queue underflow !");
+		var it = this.head();
+		this.value.pop();
+		return it
+	};
+
+	this.head = function () {
+		return this.value.last()
+	};
+
+	this.tail = function () {
+		return this.value[0]
+	};
+
+	this.isEmpty = function () {
+		return this.value.length === 0
+	};
+
+	this.isFull = function () {
+		return this.limit != null? this.value.length >= this.limit: false
+	};
+
+	this.size = function () {
+		return this.value.length
+	};
+
+	this.toString = function () {
+		return "Queue(head=" + this.head() + ", tail=" + this.tail() + ", value=" + this.value.toString() + ")"
+	};
+
+	return this;
+>>>>>>> develop
 }
 
 /**
@@ -1138,6 +1579,7 @@ function Queue (arr, lim) {
  * @property {function(): string} QueueArray.toString String representation
  */
 function QueueArray (arr) {
+<<<<<<< HEAD
     /** @default */
     this.value = arr || [];
     /** @default */
@@ -1199,13 +1641,76 @@ function QueueArray (arr) {
     };
 
     return this;
+=======
+	/** @default */
+	this.value = arr || [];
+	/** @default */
+	this.front = -1;
+	/** @default */
+	this.back = -1;
+
+	/**
+	 * @throws {Error} Queue full
+	 * @param {*} item Item
+	 * @returns {undefined}
+	 */
+	this.enqueue = function (item) {
+		if (isType(item, "Array")) {
+			for(var i = 0; i &lt; item.length; i++) this.enqueue(item[i]);
+		} else {
+			if (this.isFull()) throw new Error("The queue is full");
+			if (this.isEmpty()) {
+				this.front++;
+				this.back++;
+				this.value[this.back] = item;
+			} else {
+				this.back = (this.back + 1) % this.value.length;
+				this.value[this.back] = item;
+			}
+		}
+	};
+
+	/**
+	 * @throws {Error} Queue empty
+	 * @returns {*} Dequeued element
+	 */
+	this.dequeue = function () {
+		var val;
+		if (this.isEmpty()) throw new Error("I can't dequeue from an empty queue");
+		if (this.front === this.back) {
+			val = this.value[this.front];
+			this.front = this.back = -1;
+		}else {
+			val = this.value[this.front];
+			this.front = (this.front + 1) % this.value.length;
+		}
+		return val
+	};
+
+	this.isEmpty = function () {
+		return this.front === -1 &amp;&amp; this.back === -1
+	};
+
+	this.isFull = function () {
+		return this.back>(this.front + 1) % this.value.length
+	};
+
+	this.size = function () {
+		return this.value.length
+	};
+
+	this.toString = function () {
+		return "Queue(front=" + this.front + ", back=" + this.back + ", value=" + this.value.toString() + ")"
+	};
+
+	return this;
+>>>>>>> develop
 }
 
 /**
  * @description Queue list
  * @this QueueList
  * @returns {QueueList} QueueList
- * @todo Probably add the pre-init similar to StackList() ?
  * @constructor
  * @since 1.0
  * @property {number[]} QueueList.value Values
@@ -1224,6 +1729,7 @@ function QueueArray (arr) {
  * @property {function(number, *)} QueueList.insertAt Positional node insertion
  */
 function QueueList () {
+<<<<<<< HEAD
     this.front = null;
     this.back = null;
     this.len = 0;
@@ -1284,6 +1790,68 @@ function QueueList () {
     };
 
     return this;
+=======
+	this.front = new Node(null);
+	this.back = new Node(null);
+	this.len = 0;
+
+	this.enqueue = function (item) {
+		if (isType(item, "Array")) {
+			for(var i = 0; i &lt; item.length; i++) this.enqueue(item[i]);
+		} else {
+			var n = this.back != null? new Node(item, this.back, null): new Node(item);
+			this.back.prev = n;
+			this.back = n;
+			this.len++;
+		}
+		return this
+	};
+
+	/**
+	 * @throws {Error} Queue underflow
+	 * @returns {?Node} Dequeued node
+	 */
+	this.dequeue = function () {
+		if (this.isEmpty()) throw new Error("I can't dequeue an empty queue list");
+		this.front = this.front.prev;
+		this.len--;
+		return this.front
+	};
+
+	this.isEmpty = function () {
+		return this.len === 0 || this.back === null
+	};
+
+	this.size = function () {
+		return this.len
+	};
+
+	this.toString = function () {
+		var str = "", crt = this.front;
+		while (crt != null) {
+			str += "&lt;-"+ crt.payload;
+			crt = crt.prev;
+		}
+		return str
+	};
+
+	this.remove = function (pl) {
+		var crt = this.front;
+		while (crt != null) {
+			if (crt.payload != null &amp;&amp; (crt.payload == pl || crt.payload.equals(pl))) crt = null;
+			crt = crt.next;
+		}
+	};
+
+	this.insertAt = function (i, pl) {
+		this.back.next = new Node(pl);
+		if (i === 0) this.front = new Node(pl);
+		else if (i === this.len) this.back = new Node(pl);
+		else if (i > this.len) this.enqueue(pl);
+	};
+
+	return this;
+>>>>>>> develop
 }
 
 /**
@@ -1294,98 +1862,117 @@ function QueueList () {
  * @returns {undefined}
  * @since 1.0
  * @func
+ * @deprecated
  */
 function Astar (start, goal) {
-    //PathNode.f (score) = g (sum of all cost to get at this point) + h (heuristic: estimate of what it will take to get the goal)
-    var nodeGoal = goal, nodeCurrent, nodeSuccessor, _h;
-    var openList = [start], closedList = [];
-    while (openList.length > 0) {
-        var scores = [], minScore = openList[0].f;
-        for (var i in openList) {
-            if (openList.hasOwnProperty(i)) {
-                scores.push(openList[i].f);
-                minScore = Math.min(minScore, openList[i].f);
-            }
-        }
-        nodeCurrent = openList.filter(function (x) {
-            if (x.f === minScore) return x
-        })[0];
-        openList = openList.filter(function (x) {
-            if (x.f != minScore) return x
-        });
-        if (nodeCurrent === nodeGoal) {
-            //Generate each states nodeSucessor that can come after nodeCurrent
-            for (nodeSucessor in nodeCurrent) {
-                if (nodeCurrent.hasOwnProperty(nodeSuccessor)) {
-                    nodeSuccessor.f = nodeCurrent.f + h(nodeSuccessor, nodeCurrent);
-                    var l = lookfor(nodeSuccessor, openList);
-                    if (l != -1) {
-                        l = l[0];
-                        //If the current node is better then continue
-                        if (nodeCurrent.f &lt; openList[l] || (lookfor(nodeSuccessor, closedList) != -1 &amp;&amp; nodeCurrent.f &lt; openList[lookfor(nodeSuccessor, closedList)][0].f)) continue;
-                        openList = openList.remove(nodeSuccessor);
-                        closedList = closedList.remove(nodeSuccessor);
-                        nodeSuccessor.parent = nodeCurrent;
-                        _h = h(nodeSuccessor, nodeGoal);
-                        openList.push(nodeSuccessor);
-                    }
-                    closedList.push(nodeCurrent);
-                }
-            }
-            throw "Solution found ! With h=" + _h;
-        }
-    }
+	//PathNode.f (score) = g (sum of all cost to get at this point) + h (heuristic: estimate of what it will take to get the goal)
+	var nodeGoal = goal, nodeCurrent, _h;
+	var openList = [start], closedList = [];
+	while (openList.length > 0) {
+		var scores = [], minScore = openList[0].f;
+		for (var i in openList) {
+			if (openList.hasOwnProperty(i)) {
+				scores.push(openList[i].f);
+				minScore = Math.min(minScore, openList[i].f);
+			}
+		}
+		nodeCurrent = openList.filter(function (x) {
+			if (x.f === minScore) return x
+		})[0];
+		openList = openList.filter(function (x) {
+			if (x.f != minScore) return x
+		});
+		if (nodeCurrent === nodeGoal) {
+			//Generate each states nodeSuccessor that can come after nodeCurrent
+			for (var nodeSuccessor in nodeCurrent) {
+				if (nodeCurrent.hasOwnProperty(nodeSuccessor)) {
+					//noinspection JSPrimitiveTypeWrapperUsage
+					nodeSuccessor.f = nodeCurrent.f + h(nodeSuccessor, nodeCurrent);
+					var l = lookfor(nodeSuccessor, openList);
+					if (l != -1) {
+						l = l[0];
+						//If the current node is better then continue
+						if (nodeCurrent.f &lt; openList[l] || (lookfor(nodeSuccessor, closedList) != -1 &amp;&amp; nodeCurrent.f &lt; openList[lookfor(nodeSuccessor, closedList)][0].f)) continue;
+						openList = openList.remove();
+						closedList = closedList.remove();
+						//noinspection JSPrimitiveTypeWrapperUsage
+						nodeSuccessor.parent = nodeCurrent;
+						_h = h(nodeSuccessor, nodeGoal);
+						openList.push(nodeSuccessor);
+					}
+					closedList.push(nodeCurrent);
+				}
+			}
+			throw "Solution found ! With h=" + _h;
+		}
+	}
 }
 
 /**
  * @description A* algorithm v2.&lt;br />
  * JS version of: {@link https://en.wikipedia.org/wiki/A*_search_algorithm}
- * @param {number[]} start Starting node
- * @param {number[]} goal Ending node
- * @param {Array} grid Grid
- * @returns {?Array}
+ * @param {PathNode} start Starting node
+ * @param {PathNode} goal Ending node
+ * @param {PathNode[]} grid Grid
+ * @returns {?Array} Optimal Path
  * @since 1.0
  * @func
+ * @throws {InvalidParamError} Not a PathNode object
  */
-function A(start, goal, grid) {
-    var closedSet = [], openSet = [start], cameFrom = [], gScore = [0], fScore = [euclidianDist(start, goal)];
+function A (start, goal, grid) {
+	if (!isCustomType(start, "PathNode") || !isCustomType(goal, "PathNode")) throw new InvalidParamError("The boundary nodes needs to be PathNode objects !");
+	/*
+	closedSet: The set of nodes already evaluated
+	openSet: The set of currently discovered nodes still to be evaluated (where only the start node is known)
+	 */
+	var closedSet = [], openSet = [start], cameFrom = {}, gScore = {}, fScore = {}, current;
+	gScore[start] = 0; //cost of going from start to start
+	//Heuristic for the start node
+	start.f = euclidianDist(start.pos, goal.pos);
+	fScore[start] = euclidianDist(start.pos, goal.pos);
 
-    while (openSet.length > 0) {
-        var current = openSet[fScore.indexOf(fScore.min())];
-        if (current === goal) return reconPath(cameFrom, current, grid);
-        openSet = openSet.remove(current);
-        closedSet.push(current);
-        var n = grid.neighbour(current[0], current[1]);
-        Essence.say("neighbour of " + current + ":\n" + n.toStr(true), "info");
-        for (var i = 0; i &lt; n; i++) {
-            if (closedSet.has(n[i])) continue;
-            var tentativeGScore = gScore[closedSet.indexOf(current)] + 1;
-            if (closedSet.indexOf(n[i]) === -1) openSet.push(n[i]);
-            else if (tentativeGScore >= gScore[i]) break;
-        }
+	while (!openSet.isEmpty()) {
+		current = openSet.filter(function (node) { //node in openSet which has the lowest fScore
+			return node.f === openSet.map(function (node) {
+					return node.f
+				}).min();
+		});
 
-        cameFrom[i] = current;
-        gScore[i] = tentativeGScore;
-        fScore[i] = gScore[i] + euclidianDist(n[i], goal);
-    }
+		if (current.equals(goal)) return reconPath(cameFrom, current, grid);
+		openSet.remove(current);
+		closedSet.push(current);
+
+		var currentPos = lookfor(current, grid), tentativeGScore = 0; //position of the current node and the gScore of the path from start to the neighbour
+		grid.neighbour(currentPos[0], currentPos[1]).map(function (neighbour) { //Goes through each neighbours of the current neighbour
+			//if (closedSet.has(neighbour)) continue;
+			tentativeGScore = current.g + manhattanDist(currentPos, neighbour.pos); //Distance from start to a neighbour
+			if (!openSet.has(neighbour)) openSet.push(neighbour); //Discover a new neighbour
+			//else if (tentativeGScore >= neighbour.g) continue;
+			cameFrom[neighbour] = current;
+			neighbour.g = gScore[neighbour] = tentativeGScore;
+			neighbour.f = fScore[neighbour] = neighbour.g + euclidianDist(neighbour.pos, goal.pos);
+		});
+	}
+
+	return null;
 }
 
 /**
  * @description Path reconstructor
  * @param {Array} cameFrom List of visited nodes
  * @param {Array} current Current node
- * @param {Array} grid Grid
+ * param {Array} grid Grid
  * @returns {Array} Reconstructed path
  * @since 1.0
  * @func
  */
-function reconPath(cameFrom, current, grid) {
-    var totalPath = [current];
-    while (current in keyList(cameFrom)) {
-        current = cameFrom[grid.lookFor(current)];
-        totalPath.append(current);
-    }
-    return totalPath;
+function reconPath(cameFrom, current/*, grid*/) {
+	var totalPath = [current];
+	while (current in keyList(cameFrom)) {
+		current = cameFrom[current];
+		totalPath.append(current);
+	}
+	return totalPath;
 }
 
 /**
@@ -1405,30 +1992,29 @@ function IDAstar () {
  * @param {string|Array} x String|array to alphabetically sort
  * @returns {string|Array} Sorted string|array
  * @since 1.0
- * @func
- * @throws {TypeError} x isn't iterable
+ * @funcs
  */
 function alphabetSort (x) {
-    if (!x.isIterable()) throw new TypeError("alphabetSort cannot sort non iterable objects");
-    if (isType(x, "String")) return x.split("").quickSort().join("");
+	if (!x.isIterable()) throw new TypeError("alphabetSort cannot sort non iterable objects");
+	if (isType(x, "String")) return x.split("").quickSort().join("");
 
-    var res = x.uniform(), s = true, j = 1;
-    while (s) {
-        s = false;
-        for (var k = 0; k &lt; res.maxLength(); k++) {
-            for (var i = 0; i &lt; res.length - j; i++) {
-                if (k == 0 &amp;&amp; res[i].charAt(k) > res[i + 1].charAt(k)) { //Sort the by the first letter
-                    swap(res, i, i + 1);
-                    s = true;
-                } else if (res[i].charAt(k - 1) === res[i + 1].charAt(k - 1) &amp;&amp; res[i].charAt(k) > res[i + 1].charAt(k)) {
-                    swap(res, i, i + 1);
-                    s = true;
-                }
-            }
-            j++;
-        }
-    }
-    return res.trimAll("r")
+	var res = x.uniform(), s = true, j = 1;
+	while (s) {
+		s = false;
+		for (var k = 0; k &lt; res.maxLength(); k++) {
+			for (var i = 0; i &lt; res.length - j; i++) {
+				if (k == 0 &amp;&amp; res[i].charAt(k) > res[i + 1].charAt(k)) { //Sort the by the first letter
+					swap(res, i, i + 1);
+					s = true;
+				} else if (res[i].charAt(k - 1) === res[i + 1].charAt(k - 1) &amp;&amp; res[i].charAt(k) > res[i + 1].charAt(k)) {
+					swap(res, i, i + 1);
+					s = true;
+				}
+			}
+			j++;
+		}
+	}
+	return res.trimAll("rad")
 }
 
 /**
@@ -1439,18 +2025,18 @@ function alphabetSort (x) {
  * @since 1.1
  */
 function occurrenceSort (arr) {
-    var counts = arr.map(function (x) {
-        return arr.count(x);
-    }), vals = rmDuplicates(arr);
-    var lookup = new Map(counts), res = []; //Tablify(counts, vals);
-    vals.map(function (x) {
-        lookup.add(arr.count(x), x);
-    });
-    //lookup.forEach(function (x, i) { console.log(lookup.keys.get(i), x.toStr(true)); }, true)
-    lookup.forEach(function (x) {
-        res.prepend(x);
-    }, true);
-    return res;
+	var counts = arr.map(function (x) {
+		return arr.count(x);
+	}), vals = rmDuplicates(arr);
+	var lookup = new Map(counts), res = []; //Tablify(counts, vals);
+	vals.map(function (x) {
+		lookup.add(arr.count(x), x);
+	});
+	//lookup.forEach(function (x, i) { console.log(lookup.keys.get(i), x.toStr(true)); }, true)
+	lookup.forEach(function (x) {
+		res.prepend(x);
+	}, true);
+	return res;
 }
 
 /**
@@ -1463,18 +2049,18 @@ function occurrenceSort (arr) {
  * @func
  */
 function binarySearch (list, x) {
-    list.quickSort();
-    var i = 2, term = list[Math.floor(list.length / i)], l = 0;
-    while (term != x &amp;&amp; i &lt; list.length) {
-        if (term === x) return true;
-        else {
-            i *= 2;
-            term = term &lt; x? list[Math.floor(list.length / i)]: list[3 * Math.floor(list.length / i)];
-        }
-        if (debugging) Essence.say("i=" + i + "\nterm=" + term + "\nloops=" + l);
-        l++;
-    }
-    return term === x
+	list.quickSort();
+	var i = 2, term = list[Math.floor(list.length / i)], l = 0;
+	while (term != x &amp;&amp; i &lt; list.length) {
+		if (term === x) return true;
+		else {
+			i *= 2;
+			term = term &lt; x? list[Math.floor(list.length / i)]: list[3 * Math.floor(list.length / i)];
+		}
+		if (debugging) Essence.say("i=" + i + "\nterm=" + term + "\nloops=" + l);
+		l++;
+	}
+	return term === x
 }
 
 /**
@@ -1482,16 +2068,16 @@ function binarySearch (list, x) {
  * Source: {@link https://www.khanacademy.org/computing/computer-science/algorithms/binary-search/a/implementing-binary-search-of-an-array|KhanAcademy}
  * @param {number[]} arr Array
  * @param {NumberLike} target Target of the search
- * @return {number}
+ * @return {number} Binary index
  */
 function search (arr, target) {
-    var min = 0, max = arr.length - 1, guess = Math.floor((max - min) / 2);
-    if (arr[guess] === target) return guess;
-    while (arr[guess] != target) {
-        if (max &lt; min) return -1;
-        (arr[guess] &lt; target)? min = guess + 1: max = guess - 1;
-        guess = Math.floor((max - min) / 2);
-    }
+	var min = 0, max = arr.length - 1, guess = Math.floor((max - min) / 2);
+	if (arr[guess] === target) return guess;
+	while (arr[guess] != target) {
+		if (max &lt; min) return -1;
+		(arr[guess] &lt; target)? min = guess + 1: max = guess - 1;
+		guess = Math.floor((max - min) / 2);
+	}
 }
 
 /**
@@ -1509,43 +2095,43 @@ function search (arr, target) {
  * @property {function(): Str} Archive.getResult Get the result
  */
 function Archive (name, data) {
-    this.name = name || "Archive";
-    this.data = data || "";
-    this.dictionary = [];
-    this.result = [];
-    this.updateDict = function () {
-        var lexiq = [], count, tmp = alphabetSort(data);
-        for (var i = 0; i &lt; this.data.length - 1; i++) {
-            if (tmp[i] != tmp[i+ 1]) lexiq.push(tmp[i]);
-        }
-        lexiq = rmDuplicates(lexiq);
-        //lexiq.debug();
-        //console.log(lexiq.getOccurrences());
-        count = new Array(lexiq.length);
-        tmp = [];
-        for (i = 0; i &lt; lexiq.length; i++) {
-            count[i] = data.count(lexiq[i]);
-            //Essence.say("lexiq[" + i + "]=" + lexiq[i] + " is present " + timesLiteral(count[i]), "inf");
-            tmp[i] = lexiq[i] + count[i];
-        }
-        //Essence.say("Lexiq of " + this.name + ": " + lexiq + "\ncounts: " + count);
+	this.name = name || "Archive";
+	this.data = data || "";
+	this.dictionary = [];
+	this.result = [];
+	this.updateDict = function () {
+		var lexiq = [], count, tmp = alphabetSort(data);
+		for (var i = 0; i &lt; this.data.length - 1; i++) {
+			if (tmp[i] != tmp[i+ 1]) lexiq.push(tmp[i]);
+		}
+		lexiq = rmDuplicates(lexiq);
+		//lexiq.debug();
+		//console.log(lexiq.getOccurrences());
+		count = new Array(lexiq.length);
+		tmp = [];
+		for (i = 0; i &lt; lexiq.length; i++) {
+			count[i] = data.count(lexiq[i]);
+			//Essence.say("lexiq[" + i + "]=" + lexiq[i] + " is present " + timesLiteral(count[i]), "inf");
+			tmp[i] = lexiq[i] + count[i];
+		}
+		//Essence.say("Lexiq of " + this.name + ": " + lexiq + "\ncounts: " + count);
 
-        this.dictionary = occurrenceSort(this.data);
+		this.dictionary = occurrenceSort(this.data);
 
-        for (i = 0; i &lt; this.dictionary.length; i++) this.result[i] = conv(i, 10, 2);
-    };
+		for (i = 0; i &lt; this.dictionary.length; i++) this.result[i] = conv(i, 10, 2);
+	};
 
-    this.getResult = function () {
-        this.updateDict();
-        var res = this.data;
-        for (var i = 0; i &lt; this.data.length; i++) {
-            console.log(i + "// " + this.dictionary[this.dictionary.indexOf(this.data[i])]);
-            res = res.replace(RegExpify(this.dictionary[this.dictionary.indexOf(this.data[i])]), this.result[i]);
-        }
+	this.getResult = function () {
+		this.updateDict();
+		var res = this.data;
+		for (var i = 0; i &lt; this.data.length; i++) {
+			console.log(i + "// " + this.dictionary[this.dictionary.indexOf(this.data[i])]);
+			res = res.replace(RegExpify(this.dictionary[this.dictionary.indexOf(this.data[i])]), this.result[i]);
+		}
 
-        return res;
-    };
-    return this
+		return res;
+	};
+	return this
 }
 
 /**
@@ -1568,6 +2154,7 @@ function Archive (name, data) {
  * @property {*} virtualHistory.isStateDefault Check if the current state is the default one
  */
 function virtualHistory (elm) {
+<<<<<<< HEAD
     this.src = elm;
     this.DEFAULT_STATE = elm;
     this.states = new Set(this.src);
@@ -1622,6 +2209,64 @@ function virtualHistory (elm) {
     };
 
     return this;
+=======
+	this.src = elm;
+	this.DEFAULT_STATE = elm;
+	this.states = new Set(this.src);
+	this.state = 0;
+
+	this.reset = function () {
+		this.src = this.DEFAULT_STATE;
+	};
+
+	this.update = function (elm) {
+		if (this.src != elm) this.add(elm);
+	};
+
+	this.add = function (val) { //Add a state
+		if (isType(val, "Array")) {
+			for (var i = 0; i &lt; val.length; i++) this.add(val[i]);
+		} else {
+			this.src = val;
+			this.states.add(this.src);
+			this.state++;
+		}
+	};
+
+	this.get = function (i) {
+		return this.states.get(i)
+	};
+
+	/**
+	 * @throws {Error} Set underflow
+	 * @returns {undefined}
+	 */
+	this.undo = function () {
+		if (this.state === 0) throw new Error("Set underflow, it's not possible to undo to a non-existent state.");
+		this.state--;
+		this.src = this.get(this.state);
+	};
+
+	/**
+	 * @throws {Error} Set overflow
+	 * @returns {undefined}
+	 */
+	this.redo = function () {
+		if (this.state === (this.states.size() - 1)) throw new Error("Set overflow, it's not possible to redo to a non-existent state.");
+		this.state++;
+		this.src = this.get(this.state);
+	};
+
+	this.getStates = function () {
+		return this.states.toString()
+	};
+
+	this.isStateDefault = function () { //Check if the current state is the default
+		return this.src === this.DEFAULT_STATE
+	};
+
+	return this;
+>>>>>>> develop
 }
 
 /**
@@ -1632,11 +2277,11 @@ function virtualHistory (elm) {
  * @throws {TypeError} list must be iterable
  */
 function occurrenceList (list) {
-    if (!list.isIterable()) throw new TypeError("It must be an iterable object !");
-    var nums = list.getOccurrences(true), chars = [], oc = list.getOccurrences(), res = {};
-    for (var i = 0; i &lt; oc.length; i++) chars[i] = oc[i].split(":")[0];
-    for (i = 0; i &lt; nums.length; i++) res[chars[i]] = nums[i];
-    return res;
+	if (!list.isIterable()) throw new TypeError("It must be an iterable object !");
+	var nums = list.getOccurrences(true), chars = [], oc = list.getOccurrences(), res = {};
+	for (var i = 0; i &lt; oc.length; i++) chars[i] = oc[i].split(":")[0];
+	for (i = 0; i &lt; nums.length; i++) res[chars[i]] = nums[i];
+	return res;
 }
 
 /**
@@ -1655,30 +2300,30 @@ function occurrenceList (list) {
  * @property {function(): string} Stream.toString String representation
  */
 function Stream (initVal, formula, nbVals) {
-    this.start = initVal || 0;
-    this.formula = formula || "x + 1";
-    this.data = [this.start];
+	this.start = initVal || 0;
+	this.formula = formula || "x + 1";
+	this.data = [this.start];
 
-    this.next = function () { //use PEG.js to solve the issue ?
-        this.data.push(eval(this.formula.multiReplace([
-            [/x/g, this.data.last()], [/x0/g, this.start],
-            [/pi/ig, Math.PI], [/e/ig, Math.E], [/sqrt(2)/ig, Math.SQRT2],
-            [/(pow|max|min)\((.*?),(| )(.*?)\)/, "Math.$1($2, $3)"],
-            [/(sqrt|cbrt|cos|sin|tan|acos|asin|cosh|sinh|tanh|acosh|asinh|atanh|exp|abs)\((.*?)\)/, "Math.$1($2)"],
-            [/(ln|log|nthroot|clampTop|clampBottom)\((.*?),(| )(.*?)\)/, "$1($2, $3)"],
-            [/(clamp)\((.*?),(?:| )(.*?),(?:| )(.*?)\)/, "$1($2, $3, $4)"]
-        ])));
-    };
+	this.next = function () { //use PEG.js to solve the issue ?
+		this.data.push(eval(this.formula.multiReplace([
+			[/x/g, this.data.last()], [/x0/g, this.start],
+			[/pi/ig, Math.PI], [/e/ig, Math.E], [/sqrt(2)/ig, Math.SQRT2],
+			[/(pow|max|min)\((.*?),(| )(.*?)\)/, "Math.$1($2, $3)"],
+			[/(sqrt|cbrt|cos|sin|tan|acos|asin|cosh|sinh|tanh|acosh|asinh|atanh|exp|abs)\((.*?)\)/, "Math.$1($2)"],
+			[/(ln|log|nthroot|clampTop|clampBottom)\((.*?),(| )(.*?)\)/, "$1($2, $3)"],
+			[/(clamp)\((.*?),(?:| )(.*?),(?:| )(.*?)\)/, "$1($2, $3, $4)"]
+		])));
+	};
 
-    if (nbVals) {
-        for (var i = 1; i &lt; nbVals; i++) this.next();
-    }
+	if (nbVals) {
+		for (var i = 1; i &lt; nbVals; i++) this.next();
+	}
 
-    this.toString = function () {
-        return "Stream(start=" + this.start + ", formula=" + this.formula + ", data=" + this.data.toStr(true) + ")";
-    };
+	this.toString = function () {
+		return "Stream(start=" + this.start + ", formula=" + this.formula + ", data=" + this.data.toStr(true) + ")";
+	};
 
-    return this;
+	return this;
 }
 
 /**
@@ -1699,42 +2344,42 @@ function Stream (initVal, formula, nbVals) {
  * @property {function(NumberLike): number} MultiStream.compute Compute a value
  */
 function MultiStream (initVal, formula, nbVals) {
-    this.start = initVal || 0;
-    this.formula = formula || "x + y";
-    this.data = [this.start];
-    this.results = [];
+	this.start = initVal || 0;
+	this.formula = formula || "x + y";
+	this.data = [this.start];
+	this.results = [];
 
-    this.next = function () { //use PEG.js to solve the issue ?
-        this.data.push(this.data.last().map(function (x) {
-            return x + 1;
-        }));
-        this.results.push(this.compute(this.data.last()));
-    };
+	this.next = function () { //use PEG.js to solve the issue ?
+		this.data.push(this.data.last().map(function (x) {
+			return x + 1;
+		}));
+		this.results.push(this.compute(this.data.last()));
+	};
 
-    this.compute = function (data) { //Turn an expression into a number
-        return eval(this.formula.multiReplace([
-            [/x/g, data[0]], [/x0/g, this.start[0]],
-            [/y/g, data[1]], [/y0/g, this.start[1]],
-            [/z/g, data[2]], [/z0/g, this.start[2]],
-            [/pi/ig, Math.PI], [/e/ig, Math.E], [/sqrt(2)/ig, Math.SQRT2],
-            [/(pow|max|min)\((.*?),(| )(.*?)\)/, "Math.$1($2, $3)"], //fails on first occurrence
-            [/(sqrt|cbrt|cos|sin|tan|acos|asin|cosh|sinh|tanh|acosh|asinh|atanh|exp|abs|e\^)\((.*?)\)/, "Math.$1($2)"],
-            [/(ln|log|nthroot|clampTop|clampBottom)\((.*?),(| )(.*?)\)/, "$1($2, $3)"],
-            [/(clamp)\((.*?),(| )(.*?),(| )(.*?)\)/, "$1($2, $3, $4)"]
-        ]))
-    };
+	this.compute = function (data) { //Turn an expression into a number
+		return eval(this.formula.multiReplace([
+			[/x/g, data[0]], [/x0/g, this.start[0]],
+			[/y/g, data[1]], [/y0/g, this.start[1]],
+			[/z/g, data[2]], [/z0/g, this.start[2]],
+			[/pi/ig, Math.PI], [/e/ig, Math.E], [/sqrt(2)/ig, Math.SQRT2],
+			[/(pow|max|min)\((.*?),(| )(.*?)\)/, "Math.$1($2, $3)"], //fails on first occurrence
+			[/(sqrt|cbrt|cos|sin|tan|acos|asin|cosh|sinh|tanh|acosh|asinh|atanh|exp|abs|e\^)\((.*?)\)/, "Math.$1($2)"],
+			[/(ln|log|nthroot|clampTop|clampBottom)\((.*?),(| )(.*?)\)/, "$1($2, $3)"],
+			[/(clamp)\((.*?),(| )(.*?),(| )(.*?)\)/, "$1($2, $3, $4)"]
+		]))
+	};
 
-    this.results = [this.compute(this.start)];
+	this.results = [this.compute(this.start)];
 
-    if (nbVals > 1) {
-        for (var i = 1; i &lt; nbVals; i++) this.next();
-    }
+	if (nbVals > 1) {
+		for (var i = 1; i &lt; nbVals; i++) this.next();
+	}
 
-    this.toString = function () {
-        return "MultiStream(start=" + this.start.toStr(true) + ", formula=" + this.formula + ", data=" + this.data.toStr(true) + ", results=" + this.results.toStr(true) + ")";
-    };
+	this.toString = function () {
+		return "MultiStream(start=" + this.start.toStr(true) + ", formula=" + this.formula + ", data=" + this.data.toStr(true) + ", results=" + this.results.toStr(true) + ")";
+	};
 
-    return this;
+	return this;
 }
 
 /**
@@ -1756,19 +2401,19 @@ function MultiStream (initVal, formula, nbVals) {
  * @property {function(): string} Graph.toString String representation
  */
 function Graph (formula, dims, lbls, name, precision) { //N-dimensional graph
-    this.labels = lbls || ["x", "y"];
-    this.name = name || "Graph";
-    this.dimension = dims || new Array(this.labels.length).fill(50);
-    this.equation = new Equation(formula); //y=...
-    // this.stream = new Stream(0, this.formula.split("=")[1], this.dimension[0]);
-    this.data = precision? range(0, precision, this.dimension[0], (Number(precision)).length()[1]): range(this.dimension[0]);
-    for (var i = 0; i &lt; this.data.length; i++) this.data[i] = [this.data[i], this.equation.compute({x: this.data[i]})];
+	this.labels = lbls || ["x", "y"];
+	this.name = name || "Graph";
+	this.dimension = dims || new Array(this.labels.length).fill(50);
+	this.equation = new Equation(formula); //y=...
+	// this.stream = new Stream(0, this.formula.split("=")[1], this.dimension[0]);
+	this.data = precision? range(0, precision, this.dimension[0], (Number(precision)).length()[1]): range(this.dimension[0]);
+	for (var i = 0; i &lt; this.data.length; i++) this.data[i] = [this.data[i], this.equation.compute({x: this.data[i]})];
 
-    this.toString = function () {
-        return "Graph(name=" + this.name + ", labels=" + this.labels.toStr(true) + ", dimension=" + this.dimension + ", this.equation=" + this.equation.toString() + ", data=" + this.data + ")";
-    };
+	this.toString = function () {
+		return "Graph(name=" + this.name + ", labels=" + this.labels.toStr(true) + ", dimension=" + this.dimension + ", this.equation=" + this.equation.toString() + ", data=" + this.data + ")";
+	};
 
-    return this;
+	return this;
 }
 
 /**
@@ -1777,30 +2422,32 @@ function Graph (formula, dims, lbls, name, precision) { //N-dimensional graph
  * @return {Array} Permutations
  * @since 1.1
  * @func
+ * @todo Improve ?
  */
 function Perm (data) {
-    if (data.length &lt;= 1) return data;
-    else if (data.length === 2) return [data, Copy(data).reverse()];
-    else if (data.length === 3) return Perm(data.get(1)).map(function (x) {
-            return data[0] + x;
-        }).append(Perm(data.get(-1)).map(function (x) {
-            return data.last() + x;
-        })).append(Perm(data.remove(data[1])).map(function (x) {
-            return data[1] + x;
-        }));
-    else {
-        var perm = Perm(data.get(1)).map(function (x) {
-            return data[0] + x;
-        });
-        for (var i = 1; i &lt; data.length; i++) {
-            perm.append(Perm(data.remove(data[i])).map(function (x) {
-                return data[i] + x;
-            }));
-        }
-        return rmDuplicates(perm);
-    }
+	if (data.length &lt;= 1) return data;
+	else if (data.length === 2) return [data, Copy(data).reverse()];
+	else if (data.length === 3) return Perm(data.get(1)).map(function (x) {
+			return data[0] + x;
+		}).append(Perm(data.get(-1)).map(function (x) {
+			return data.last() + x;
+		})).append(Perm(data.remove(data[1])).map(function (x) {
+			return data[1] + x;
+		}));
+	else {
+		var perm = Perm(data.get(1)).map(function (x) {
+			return data[0] + x;
+		});
+		for (var i = 1; i &lt; data.length; i++) {
+			perm.append(Perm(data.remove()).map(function (x) {
+				return data[i] + x;
+			}));
+		}
+		return rmDuplicates(perm);
+	}
 }
 
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description Get the combinations of the &lt;code>n*&lt;code>set&lt;/code>
  * @param {number} n Length of each terms
@@ -1808,18 +2455,21 @@ function Perm (data) {
  * @return {Str} Combinations
  * @since 1.1
  * @func
- * @todo Make it work right
+ * @todo Make it work right (3*\[a, b, c\] -> \[aaa, aab, aac, ..., ccc\])
  */
 function Comb (n, set) {
-    var res = new Array(n * factorial(set.length)), p = Perm(set.join("")), lIdx = set.lastIndex();
-    for (var i = 0; i &lt; set.length * 2; i += 2) {
-        if (i > lIdx + 1) break;
+	var res = new Array(n * factorial(set.length)), p = Perm(set.join("")), lIdx = set.lastIndex();
+	for (var i = 0; i &lt; set.length * 2; i += 2) {
+		if (i > lIdx + 1) break;
+		//noinspection JSUnresolvedFunction
         set.splice(i + 1, set.binaryIndexOf(set[i]), set[i].repeat(n));
-    }
-    p.append(complement(set, p));
-    console.log(res.length, p, "\nset=" + set);
+	}
+	p.append(complement(set, p));
+	console.log(res.length, p, "\nset=" + set);
 
-    return alphabetSort(p);
+	return alphabetSort(p).filter(function (x) {
+		return x.length === n;
+	});
 }
 
 /**
@@ -1836,52 +2486,52 @@ function Comb (n, set) {
  * @property {function(number, number)} EventTable.make Make the table
  * @property {function(string, string)} EventTable.fill Fill in the table
  * @property {function(): Array[]} EventTable.getCleanTable Get a clean empty-cell-less table
- * @property {function(Date): string} EventTable.loookAt Look at what happened at a particular time
+ * @property {function(Date): string} EventTable.lookAt Look at what happened at a particular time
  */
 function EventTable (name, srcs) {
-    this.name = name ||"Event table";
-    this.sources = srcs || [getFilename(true)];
-    this.table = [["Source", "Event", "Timestamp"]];
-    this.add = function (evt) {
-        this.table.push([evt.source || getFilename(true), evt.event, evt.timestamp || (new Date()).getTime()]);
-        this.sources.uniquePush(evt.source || getFilename(true));
-    };
+	this.name = name ||"Event table";
+	this.sources = srcs || [getFilename(true)];
+	this.table = [["Source", "Event", "Timestamp"]];
+	this.add = function (evt) {
+		this.table.push([evt.source || getFilename(true), evt.event, evt.timestamp || (new Date()).getTime()]);
+		this.sources.uniquePush(evt.source || getFilename(true));
+	};
 
-    this.make = function (nb, space) {
-        var ts = (new Date()).getTime();
-        if(!space) space = 1;
-        for (var i = 0; i &lt; (nb || 1e3); i += space) {
-            this.add({
-                timestamp: ts + i
-            });
-        }
-    };
+	this.make = function (nb, space) {
+		var ts = (new Date()).getTime();
+		if(!space) space = 1;
+		for (var i = 0; i &lt; (nb || 1e3); i += space) {
+			this.add({
+				timestamp: ts + i
+			});
+		}
+	};
 
-    this.fill = function (src, desc) {
-        var ts = (new Date()).getTime();
-        var pos = lookfor(ts, this.table);
-        if (pos === -1 &amp;&amp; ts > this.table.last()[2]) this.add({source: src, event: desc, timestamp: ts});
-        else {
-            this.table[pos[0]][0] = src;
-            this.table[pos[0]][1] = desc;
-        }
-    };
+	this.fill = function (src, desc) {
+		var ts = (new Date()).getTime();
+		var pos = lookfor(ts, this.table);
+		if (pos === -1 &amp;&amp; ts > this.table.last()[2]) this.add({source: src, event: desc, timestamp: ts});
+		else {
+			this.table[pos[0]][0] = src;
+			this.table[pos[0]][1] = desc;
+		}
+	};
 
-    this.getCleanTable = function () {
-        var table = [];
-        for (var i = 0; i &lt; this.table.length; i++) {
-            if (!isNon(this.table[i][1])) table.push(this.table[i]);
-        }
+	this.getCleanTable = function () {
+		var table = [];
+		for (var i = 0; i &lt; this.table.length; i++) {
+			if (!isNon(this.table[i][1])) table.push(this.table[i]);
+		}
 
-        return table;
-    };
+		return table;
+	};
 
-    this.lookAt = function (ts) {
-        var pos = lookfor(ts || (new Date()).getTime(), this.table)[0];
-        return "'" + this.table[pos][1] + "' at " + this.table[pos][0];
-    };
+	this.lookAt = function (ts) {
+		var pos = lookfor(ts || (new Date()).getTime(), this.table)[0];
+		return "'" + this.table[pos][1] + "' at " + this.table[pos][0];
+	};
 
-    return this;
+	return this;
 }
 
 /**
@@ -1912,74 +2562,253 @@ function EventTable (name, srcs) {
  * @property {function(boolean): string} Map.elements Elements of the map
  */
 function Map (keys) {
-    this.keys = new SortedSet(keys || []);
-    this.values = Tablify(this.keys.value);
-    /*this.keys.forEach(function (k) {
-     this.values[k] = [];
-     });*/
-    this.add = function (key, value) {
-        if (isType(key, "Array")) {
-            for (var i = 0; i &lt; key; i++) this.add(key[i], isType(value, "Array")? value[i]: value);
+	this.keys = new SortedSet(keys || []);
+	this.values = Tablify(this.keys.value);
+	/*this.keys.forEach(function (k) {
+	 this.values[k] = [];
+	 });*/
+	this.add = function (key, value) {
+		if (isType(key, "Array")) {
+			for (var i = 0; i &lt; key; i++) this.add(key[i], isType(value, "Array")? value[i]: value);
+		}
+		this.keys.add(key);
+		if (this.values[key] === undefined) this.values[key] = [];
+		this.values[key].push(value || null);
+	};
+	this.clear = function (key) {
+		key? this.values[key] = []: this.keys = new Set();
+	};
+	this.has = function (val) {
+		for (var k in this.keys) {
+			if (this.keys.hasOwnProperty(k) &amp;&amp; this.keys[k].has(val)) return true;
+		}
+		return false;
+	};
+	//noinspection JSUnusedGlobalSymbols
+	this.hasKey = function (key) {
+		return this.keys.contains(key);
+	};
+	this.size = function () {
+		var el = this.values;
+		return this.keys.value.map(function (k) {
+			return el[k].length;
+		});
+	};
+	this.elements = function (spaced) {
+		var el = this.values;
+		return this.keys.value.map(function (k) {
+			return spaced? el[k].toStr(true): el[k].toString();
+		}).toStr(true);
+	};
+	this.isEmpty = function () {
+		return this.keys.isEmpty(); //No need to check the values
+	};
+	this.get = function (key) {
+		return this.values[key];
+	};
+	this.remove = function (key, value) {
+		value? this.values[key] = this.values[key].remove(): this.keys.remove();
+	};
+	this.toString = function () {
+		return "Map(key/values=" + this.values.toArray().toStr(true) + ")";
+	};
+	this.forEach = function (act, valuesInstead) {
+		for (var i = 0; i &lt; this.keys.size(); i++) valuesInstead? act(this.values[this.keys.get(i)], i): act(this.keys.get(i), i);
+	};
+	//noinspection JSUnusedGlobalSymbols
+	this.merge = function (map) {
+		this.keys.add(map.keys.value, map.values);
+	};
+	this.set = function (key, value) {
+		this.keys.set(this.keys.indexOf(key), value);
+	};
+	this.replace = function (key, oldVal, newVal) {
+		if (this.values[key].has(oldVal)) this.values[key] = this.values[key].replace(oldVal, newVal);
+	};
+	this.replaceAll = function (oldVal, newVal) {
+		var self = this;
+		this.forEach(function (k) {
+			self.replace(k, oldVal, newVal);
+		});
+	};
+	return this;
+}
+
+/**
+ * @description DOM Analyser.
+ * @private
+ * @since 1.1
+ * @type {{nameOf, kidsOf, printOrder}}
+ */
+var DOMA = (function (){
+	function nameOfTag (tag) {
+        return tag.localName || tag.tagName.toLowerCase();
+	}
+	
+	function kidsOfTag (tag) {
+        return tag.children.toArray();
+    }
+
+    function printOrder (elm, t, s, d, sym) {
+        if (!t) t = "";
+        if (!s) s = "&amp;nbsp;&amp;nbsp;";
+        if (!d) d = 0;
+        if (!sym) sym = "|-";
+
+        for (var child in elm) {
+            if (elm.hasOwnProperty(child)) child.postOrder(t + s, s, d + 1, sym);
         }
-        this.keys.add(key);
-        if (this.values[key] === undefined) this.values[key] = [];
-        this.values[key].push(value || null);
-    };
-    this.clear = function (key) {
-        key? this.values[key] = []: this.keys = new Set();
-    };
-    this.has = function (val) {
-        for (var k in this.keys) {
-            if (this.keys.hasOwnProperty(k) &amp;&amp; this.keys[k].has(val)) return true;
+        println(t + sym + elm + s + " (depth=" + d + ")");
+	}
+
+	return {
+		nameOf: nameOfTag,
+		kidsOf: kidsOfTag,
+		printOrder: printOrder
+	};
+})();
+
+//noinspection JSUnusedGlobalSymbols
+/**
+ * @description DOM tree
+ * @returns {NTreeNode} Tree representing the DOM structure of the current web page
+ * @func
+ * @since 1.1
+ * @see module:DataStruct~DomStructure
+ * @TODO fix the repeated node issue (apparent in getOrder(), see()
+ */
+function DomTree () {
+	var current = document.children[0], stepIn = function (tag) {
+		if (debugging) Essence.say("Stepping in %c" + DOMA.nameOf(tag) + "%c", "info", "color: #00f", "color: #000");
+		return DOMA.kidsOf(tag).isEmpty()? new NTreeNode(DOMA.nameOf(tag)): new NTreeNode(DOMA.nameOf(tag), DOMA.kidsOf(tag).map(function (child) {
+			return DOMA.kidsOf(child).isEmpty()? new NTreeNode(DOMA.nameOf(child)): stepIn(child);
+		}));
+	};
+
+	return stepIn(current);
+}
+
+//noinspection JSUnusedGlobalSymbols
+/**
+ * @description DOM structure (represented as an object).
+ * @returns {{}} DOM object structure
+ * @func
+ * @since 1.1
+ * @see module:DataStruct~DomGraph
+ */
+function DomStructure () {
+	var dom = {}, current = document.children[0], stepIn = function (tag, parent) {
+		if (!parent) parent = {};
+		parent[DOMA.nameOf(tag)] = {};
+        DOMA.kidsOf(tag).map(function (child) {
+			parent[DOMA.nameOf(tag)][DOMA.nameOf(child)] = {};
+			if (!DOMA.kidsOf(child).isEmpty()) {
+                DOMA.kidsOf(child).map(function (subChild) {
+					//parent[nameOf(tag)][nameOf(child)][nameOf(subChild)] = {};
+					parent[DOMA.nameOf(tag)][DOMA.nameOf(child)] = stepIn(subChild, parent[DOMA.nameOf(tag)][DOMA.nameOf(child)]);
+				})
+			}
+		});
+		return parent;
+	};
+
+	return stepIn(current, dom);
+}
+
+
+/**
+ * @description Textual version of DomStructure.&lt;br />
+ * &lt;strong>Note:&lt;/strong> This isn't as reliably true as the DomGraph's textual representation.
+ * @returns {string} Textual representation of the DOM structure.
+ * @func
+ * @since 1.1
+ * @see module:DataStruct~DomGraph
+ */
+function DomList () {
+	var res = "", s = "  ", space = "", dom = {}, current = document.children[0], stepIn = function (tag, parent, spacing, depth) {
+        if (!parent) parent = {};
+        parent[DOMA.nameOf(tag)] = {};
+        res += spacing + "|-" + DOMA.nameOf(tag) + "   (d=" + depth + ")\n";
+        DOMA.kidsOf(tag).map(function (child) {
+            parent[DOMA.nameOf(tag)][DOMA.nameOf(child)] = {};
+            res += spacing + s.repeat(depth) + "|-" + DOMA.nameOf(child) + "   (d=" + (depth + 1) + ")\n";
+            if (!DOMA.kidsOf(child).isEmpty()) {
+                DOMA.kidsOf(child).map(function (subChild) {
+                    //parent[nameOf(tag)][nameOf(child)][nameOf(subChild)] = {};
+                    parent[DOMA.nameOf(tag)][DOMA.nameOf(child)] = stepIn(subChild, parent[DOMA.nameOf(tag)][DOMA.nameOf(child)], space + s + s, depth + 2);
+                    //res += spacing + s + s + ... + "\n";
+                })
+            }
+        });
+        return parent;
+	};
+	stepIn(current, dom, space, 0);
+	return res;
+}
+
+//noinspection JSUnusedGlobalSymbols
+/**
+ * @description Give a tree representation of an object.
+ * @param {Object} obj Object
+ * @param {string} [space="&amp;nbsp;&amp;nbsp;"] Space before the displayed branch
+ * @param {string} [symbol="|-"] Symbol to denote a branch
+ * @param {boolean} [forDOM=false] DOM representation.
+ * @returns {string} Tree
+ * @func
+ * @since 1.1
+ * @TODO Fix the child listing being on the first child-branch and leaving the rest empty
+ */
+function object2tree (obj, space, symbol, forDOM) {
+	if (!space) space = forDOM? "&amp;nbsp;&amp;nbsp;": "\t";
+	if (!symbol) symbol = "|-";
+
+	var treeOf = function (obj) {
+		return space + symbol + keyList(obj, true) + (forDOM? "&lt;br />": "\n");
+	};
+	var tree = treeOf(obj);
+	console.log("tree", tree);
+	for (var elm in obj) {
+		if (obj.hasOwnProperty(elm)) {
+			//console.log("tree from " + elm + "'s view: " + treeOf(obj[elm]));
+			tree += /*treeOf(obj[elm]); */object2tree(obj[elm], space + space, symbol, forDOM);
         }
-        return false;
-    };
-    this.hasKey = function (key) {
-        return this.keys.contains(key);
-    };
-    this.size = function () {
-        var el = this.values;
-        return this.keys.value.map(function (k) {
-            return el[k].length;
-        });
-    };
-    this.elements = function (spaced) {
-        var el = this.values;
-        return this.keys.value.map(function (k) {
-            return spaced? el[k].toStr(true): el[k].toString();
-        }).toStr(true);
-    };
-    this.isEmpty = function () {
-        return this.keys.isEmpty(); //No need to check the values
-    };
-    this.get = function (key) {
-        return this.values[key];
-    };
-    this.remove = function (key, value) {
-        value? this.values[key] = this.values[key].remove(value): this.keys.remove(key);
-    };
-    this.toString = function () {
-        return "Map(key/values=" + this.values.toArray().toStr(true) + ")";
-    };
-    this.forEach = function (act, valuesInstead) {
-        for (var i = 0; i &lt; this.keys.size(); i++) valuesInstead? act(this.values[this.keys.get(i)], i): act(this.keys.get(i), i);
-    };
-    this.merge = function (map) {
-        this.keys.add(map.keys.value, map.values);
-    };
-    this.set = function (key, value) {
-        this.keys.set(this.keys.indexOf(key), value);
-    };
-    this.replace = function (key, oldVal, newVal) {
-        if (this.values[key].has(oldVal)) this.values[key] = this.values[key].replace(oldVal, newVal);
-    };
-    this.replaceAll = function (oldVal, newVal) {
-        var self = this;
-        this.forEach(function (k) {
-            self.replace(k, oldVal, newVal);
-        });
-    };
-    return this;
+	}
+	return tree;
+}
+
+//noinspection JSUnusedGlobalSymbols
+/**
+ * @description Kruskal's algorithm, it selects a minimum length edge of all possible edges which connect two different disjoint MST components.
+ * @param {Node} tree Tree
+ * @since 1.1
+ * @func
+ */
+function Kruskal (tree) {
+
+}
+
+//noinspection JSUnusedGlobalSymbols
+/**
+ * @summary Dijkstra's algorithm.
+ * @description Algorithm that constructs a Shortest Path Tree starting from some source node.
+ * @param {Node} tree Tree
+ * @since 1.1
+ * @func
+ */
+function Dijkstra (tree) {
+
+}
+
+//noinspection JSUnusedGlobalSymbols
+/**
+ * @summary Prim's algorithm.
+ * @description Algorithm that constructs a minimum spanning tree for the graph.
+ * @param {Node} tree Tree
+ * @since 1.1
+ * @func
+ */
+function Prim (tree) {
+
 }</code></pre>
         </article>
     </section>
@@ -1990,13 +2819,13 @@ function Map (keys) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#DocTemplate">DocTemplate</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-DataStruct.html">DataStruct</a></li></ul><h3>Classes</h3><ul><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-Edge.html">Edge</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Sep 08 2016 11:58:04 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Dec 23 2016 20:23:08 GMT+0000 (GMT)
 </footer>
 
 <script> prettyPrint(); </script>
