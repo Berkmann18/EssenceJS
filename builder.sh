@@ -56,7 +56,7 @@ function build {
         if [ ${min} -eq 1 ]; then
             echo "Minimisation ..."
             rm modules/*.min.js
-            minify essence.js modules --no-comments & echo ".js scripts minimised"
+            minify essence.js --no-comments & minify modules --no-comments & echo ".js scripts minimised"
             minify essence.css --no-comments & echo "Minimisation done!"
         fi
         if [ ${doc} -eq 1 ]; then

@@ -6,22 +6,45 @@
     <meta name="author" content="Maximilian Berkmann" />
     <meta http-equiv="Cache-Control" content="no-cache" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type="text/css">
+        .num {
+            color: red;
+        }
+    </style>
     <script type="text/javascript" src="1.1/essence.js" async defer></script>
     <script type="text/javascript" async defer>
+        var tree, struct;
         function start () {
             Essence.init();
-            $e("body").after("<span id='log'>log here</span>", true);
-            $e("#log").write("<p><em>Essence.applyCSS</em>: " + time(Essence.applyCSS) + "ms</p>", true);
-            $e("#log").after("<p><em>Header change</em>: " + time(function () {
-                $e("header>h2").write($G.lorem.chunk(0, 4))
-            }) + "ms</p>", true);
-            $e("#log").after("<p><em>Footer change</em>: " + time(function () {
-                $e("footer").remove("me");
-                $e("footer").after(" " + Essence.author)
-            }) + "ms</p>", true);
-            $e("#log").after("<p><em>Log styling</em>: " + time(function () {
-                $e("#log").setStyles(["display", "inline-block", "text-align", "center", "border", "1px solid #000", "border-radius", "5px", "padding", "2px"]);
-            }) + "ms</p>", true);
+            var SbTime = 1 || asyncTime(init, "Sandbox"), completeness = false;
+            var mdlCompleteTime = asyncTime(function() {
+                setTimeout(function () {
+                    completeness = Essence.isComplete();
+                    $e("#mc").write(completeness);
+                }, 650);
+                setTimeout(function () {
+                    $e("#mct").write(mdlCompleteTime + "ms");
+                }, 700);
+            });
+
+            $e("body").after("<fieldset id='log'><legend><h3>Log</h3></legend></fieldset>", true);
+            $e("#log").after("<p><strong>Sandbox.js init</strong>: <span class='num'>" + SbTime + "ms</span></p>", true);
+            $e("#log").after("<p><strong>Loading (load&rarr;pageshow)</strong>: <span class='num'>" + $G.t + "</span></p>", true);
+            $e("#log").after("<p><strong>Essence.applyCSS</strong>: <span class='num'>" + time(Essence.applyCSS) + "ms</span></p>", true);
+            $e("#log").after("<p><strong>Header change</strong>: <span class='num'>" + time(function () {
+                $e("header>h2").write($G.lorem.chunk(0, 5))
+            }) + "ms</span></p>", true);
+            $e("#log").after("<p><strong>Footer change</strong>: <span class='num'>" + time(function () {
+                $e("footer").replace("me", Essence.author);
+            }) + "ms</span></p>", true);
+            $e("#log").after("<p><strong>Log styling</strong>: <span class='num'>" + time(function () {
+                $e("legend > h3").setCSS("text-align", "center");
+                $e("#log").setStyles(["display", "inline-block", "text-align", "center", "border", "1px solid #000", "border-radius", "5px", "padding", "9px"]);
+            }) + "ms</span></p>", true);
+            $e("#log").after("<p><strong>Module completeness (<span id='mc'>" + completeness + "</span>)</strong>: <span class='num' id='mct'>" + mdlCompleteTime + "ms</span></p>", true);
+            tree = DomTree();
+            struct = DomStructure();
+            //wait(zone);
         }
         function Init (stackLayer) {
             //Slower by ~100ms, changing the timeout to 0 would improve it a little but cause some ML errors to pop up more frequently
@@ -34,6 +57,25 @@
                 console.warn("EssenceJS is not currently available !");
                 Init(stackLayer? stackLayer + 1: 1);
             }
+        }
+
+        function zone () {
+            Essence.isComplete();
+            console.log(modules, Essence.loadedModules.map(function (m) {
+                return m.name;
+            }));
+            if (!Sandbox) {
+                init("Sandbox");
+                wait();
+            }
+
+            if (!BFS) {
+                run("Sandbox", "1.1");
+                wait();
+            }
+            debugger;
+            BFS(struct);
+            debugger;
         }
     </script>
 </head>

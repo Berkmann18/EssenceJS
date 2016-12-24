@@ -43,12 +43,7 @@
  */
 var DataStruct = new Module("DataStruct", "Data structures", ["DOM", "Maths", "Files"]);
 
-(function () {
-	//DataStruct.complete = true;
-})();
-
 /* eslint no-undef: 0 */
-
 /**
  * @description Linked list
  * @param {*} [pl=1] Payload
@@ -300,6 +295,7 @@ function Edge (start, end, len) {
  * @property {function(): string} TreeNode.printBFS Print in the BFS order
  * @property {function(): string} TreeNode.toString String representation
  * @property {function(boolean): Array} TreeNode.toArray Array representation
+ * @property {function(NumberLike): number} TreeNode.count Count the number of times there's a particular payload
  */
 function TreeNode (pl, l, r) { //Binary tree
 	this.left = l;
@@ -417,7 +413,7 @@ function TreeNode (pl, l, r) { //Binary tree
 		var d = 0, td = 0; //Depth, total depth
 		var stack = [];
 		stack.push(this);
-		while (stack != []) {
+		while (!stack.equals([])) {
 			d = 0;
 			var cur = stack.pop();
 			try {
@@ -435,12 +431,12 @@ function TreeNode (pl, l, r) { //Binary tree
 		var b = 0, tb = 0; //Breadth, total breadth
 		var queue = [];
 		queue.unshift(this); //Add as the end
-		while (queue != []) {
+		while (!queue.equals([])) {
 			b = 0;
 			var cur = queue.pop(); //Get the first element of the queue
 			try {
 				if (cur.payload === n) return [b, tb]
-			} catch(e) {
+			} catch (err) {
 				return [-1, tb]
 			}
 			if (cur.left) queue.unshift(cur.left);
@@ -480,17 +476,17 @@ function TreeNode (pl, l, r) { //Binary tree
 		if (!sym) sym = "->";
 		var queue = [], res = "";
 		queue.unshift(this); //Add as the end
-		while (queue!=[]) {
+		while (!queue.equals([])) {
 			var cur = queue.pop(); //Get the first element of the queue
 			res += cur + sym;
 			try {
 				if (cur.left) queue.unshift(cur.left);
 				if (cur.right) queue.unshift(cur.right);
-			} catch(e) {
-				Essence.say(e + " caused " + this + ".printBFS(" + sym + ") to go wrong", "err");
+			} catch (err) {
+				Essence.say(err + " caused " + this + ".printBFS(" + sym + ") to go wrong", "erro");
 			}
 		}
-		return sym
+		return res
 	};
 	this.toString = function () {
 		/* Essence.txt2print = "";
@@ -508,6 +504,10 @@ function TreeNode (pl, l, r) { //Binary tree
 		if (this.right) singly? arr.push(this.right.toArray().toString().split(",")): arr.push(this.right.toArray());
 		return singly? arr.toString().split(","): arr
 	};
+
+	this.count = function (n) {
+		return this.getInOrder().countWord(n, "->");
+    };
 
 	return this;
 }
@@ -549,6 +549,7 @@ NTreeNode.inheritsFrom(TreeNode);
  * @property {function(): Array} NTreeNode.toArray Array representation
  * @property {function(number): NTreeNode} NTreeNode.getChild Child getter
  * @property {function(string, boolean): ?string} NTreeNode.see See the tree for that particular node
+ * @property {function(*): number} NTreeNode.count Count the number of times there's a particular payload
  */
 function NTreeNode (pl, ch) {
 	this.payload = pl || 0;
@@ -647,13 +648,16 @@ function NTreeNode (pl, ch) {
 	};
 
 	this.find = function (n, method) {
-		return (method.normal() === "bfs")? this.bfs(n): this.dfs(n)
+		return (method &amp;&amp; method.toLowerCase() === "bfs")? this.bfs(n): this.dfs(n)
 	};
 	this.dfs = function (n, d, td) { //Depth First Search
 		if (!d) d = 0; //Depth
 		if (!td) td = 0; //Total depth
 		for (var c in this.child) {
-			if (this.child.hasOwnProperty(c)) c.dfs(n, d + 1, td++);
+			if (this.child.hasOwnProperty(c)) {
+                if (!isType(c, "NTreeNode")) throw new TypeError("The child '" + c + "' is not a NTreeNode");
+				c.dfs(n, d + 1, td++);
+            }
 		}
 		return [-1, td]
 	};
@@ -662,7 +666,7 @@ function NTreeNode (pl, ch) {
 		if (!tb) tb = 0; //Total breadth
 		var queue = [];
 		queue.unshift(this); //Add as the end
-		while (queue != []) {
+		while (!queue.equals([])) {
 			b = 0;
 			var cur = new NTreeNode(queue.pop()); //Get the first element of the queue
 			if (cur.payload === n) return [b, tb];
@@ -716,14 +720,11 @@ function NTreeNode (pl, ch) {
 		}
 	};
 	this.toString = function () {
-		/* Essence.txt2print = "";
-		 this.printInOrder();
-		 return "Tree(" + Essence.txt2print + ")" */
-		var str = "NTreeNode(payload=" + this.payload + ", child=";
+		var str = "NTreeNode(payload=" + this.payload + ", child=[";
 		for (var c in this.child) {
-			if (this.child.hasOwnProperty(c)) str += c.toString();
+			if (this.child.hasOwnProperty(c)) str += this.child[c].toString() + ", ";
 		}
-		return str.substring(0, str.length) + ")"
+		return (str.substring(0, str.length) + "])").replace(", ]", "]");
 	};
 	this.toArray = function (singly) {
 		var arr = [];
@@ -745,6 +746,10 @@ function NTreeNode (pl, ch) {
 		Buffer.clear();
 		return tree;
 	};
+
+    this.count = function (n) {
+        return this.getOrder().countWord(n, "->");
+    };
 
 	return this;
 }
@@ -2123,6 +2128,40 @@ function Map (keys) {
 	return this;
 }
 
+/**
+ * @description DOM Analyser.
+ * @private
+ * @since 1.1
+ * @type {{nameOf, kidsOf, printOrder}}
+ */
+var DOMA = (function (){
+	function nameOfTag (tag) {
+        return tag.localName || tag.tagName.toLowerCase();
+	}
+	
+	function kidsOfTag (tag) {
+        return tag.children.toArray();
+    }
+
+    function printOrder (elm, t, s, d, sym) {
+        if (!t) t = "";
+        if (!s) s = "&amp;nbsp;&amp;nbsp;";
+        if (!d) d = 0;
+        if (!sym) sym = "|-";
+
+        for (var child in elm) {
+            if (elm.hasOwnProperty(child)) child.postOrder(t + s, s, d + 1, sym);
+        }
+        println(t + sym + elm + s + " (depth=" + d + ")");
+	}
+
+	return {
+		nameOf: nameOfTag,
+		kidsOf: kidsOfTag,
+		printOrder: printOrder
+	};
+})();
+
 //noinspection JSUnusedGlobalSymbols
 /**
  * @description DOM tree
@@ -2130,15 +2169,13 @@ function Map (keys) {
  * @func
  * @since 1.1
  * @see module:DataStruct~DomStructure
+ * @TODO fix the repeated node issue (apparent in getOrder(), see()
  */
 function DomTree () {
-	var current = document.children[0], nameOf = function (tag) { //Return the tag's name
-		return tag.localName || tag.tagName.toLowerCase();
-	}, kidsOf = function (tag) {
-		return tag.children.toArray();
-	}, stepIn = function (tag) {
-		return kidsOf(tag).isEmpty()? new NTreeNode(nameOf(tag)): new NTreeNode(nameOf(tag), kidsOf(tag).map(function (child) {
-			return kidsOf(child).isEmpty()? new NTreeNode(nameOf(child)): stepIn(child);
+	var current = document.children[0], stepIn = function (tag) {
+		if (debugging) Essence.say("Stepping in %c" + DOMA.nameOf(tag) + "%c", "info", "color: #00f", "color: #000");
+		return DOMA.kidsOf(tag).isEmpty()? new NTreeNode(DOMA.nameOf(tag)): new NTreeNode(DOMA.nameOf(tag), DOMA.kidsOf(tag).map(function (child) {
+			return DOMA.kidsOf(child).isEmpty()? new NTreeNode(DOMA.nameOf(child)): stepIn(child);
 		}));
 	};
 
@@ -2154,19 +2191,15 @@ function DomTree () {
  * @see module:DataStruct~DomGraph
  */
 function DomStructure () {
-	var dom = {}, current = document.children[0], nameOf = function (tag) { //Return the tag's name
-		return tag.localName || tag.tagName.toLowerCase();
-	}, kidsOf = function (tag) {
-		return tag.children.toArray();
-	}, stepIn = function (tag, parent) {
+	var dom = {}, current = document.children[0], stepIn = function (tag, parent) {
 		if (!parent) parent = {};
-		parent[nameOf(tag)] = {};
-		kidsOf(tag).map(function (child) {
-			parent[nameOf(tag)][nameOf(child)] = {};
-			if (!kidsOf(child).isEmpty()) {
-				kidsOf(child).map(function (subChild) {
+		parent[DOMA.nameOf(tag)] = {};
+        DOMA.kidsOf(tag).map(function (child) {
+			parent[DOMA.nameOf(tag)][DOMA.nameOf(child)] = {};
+			if (!DOMA.kidsOf(child).isEmpty()) {
+                DOMA.kidsOf(child).map(function (subChild) {
 					//parent[nameOf(tag)][nameOf(child)][nameOf(subChild)] = {};
-					parent[nameOf(tag)][nameOf(child)] = stepIn(subChild, parent[nameOf(tag)][nameOf(child)]);
+					parent[DOMA.nameOf(tag)][DOMA.nameOf(child)] = stepIn(subChild, parent[DOMA.nameOf(tag)][DOMA.nameOf(child)]);
 				})
 			}
 		});
@@ -2174,6 +2207,37 @@ function DomStructure () {
 	};
 
 	return stepIn(current, dom);
+}
+
+
+/**
+ * @description Textual version of DomStructure.&lt;br />
+ * &lt;strong>Note:&lt;/strong> This isn't as reliably true as the DomGraph's textual representation.
+ * @returns {string} Textual representation of the DOM structure.
+ * @func
+ * @since 1.1
+ * @see module:DataStruct~DomGraph
+ */
+function DomList () {
+	var res = "", s = "  ", space = "", dom = {}, current = document.children[0], stepIn = function (tag, parent, spacing, depth) {
+        if (!parent) parent = {};
+        parent[DOMA.nameOf(tag)] = {};
+        res += spacing + "|-" + DOMA.nameOf(tag) + "   (d=" + depth + ")\n";
+        DOMA.kidsOf(tag).map(function (child) {
+            parent[DOMA.nameOf(tag)][DOMA.nameOf(child)] = {};
+            res += spacing + s.repeat(depth) + "|-" + DOMA.nameOf(child) + "   (d=" + (depth + 1) + ")\n";
+            if (!DOMA.kidsOf(child).isEmpty()) {
+                DOMA.kidsOf(child).map(function (subChild) {
+                    //parent[nameOf(tag)][nameOf(child)][nameOf(subChild)] = {};
+                    parent[DOMA.nameOf(tag)][DOMA.nameOf(child)] = stepIn(subChild, parent[DOMA.nameOf(tag)][DOMA.nameOf(child)], space + s + s, depth + 2);
+                    //res += spacing + s + s + ... + "\n";
+                })
+            }
+        });
+        return parent;
+	};
+	stepIn(current, dom, space, 0);
+	return res;
 }
 
 //noinspection JSUnusedGlobalSymbols
@@ -2186,16 +2250,22 @@ function DomStructure () {
  * @returns {string} Tree
  * @func
  * @since 1.1
+ * @TODO Fix the child listing being on the first child-branch and leaving the rest empty
  */
 function object2tree (obj, space, symbol, forDOM) {
 	if (!space) space = forDOM? "&amp;nbsp;&amp;nbsp;": "\t";
 	if (!symbol) symbol = "|-";
+
 	var treeOf = function (obj) {
 		return space + symbol + keyList(obj, true) + (forDOM? "&lt;br />": "\n");
 	};
 	var tree = treeOf(obj);
+	console.log("tree", tree);
 	for (var elm in obj) {
-		if (obj.hasOwnProperty(elm)) tree += /*treeOf(obj[elm]); */object2tree(obj[elm], space + space, symbol, forDOM);
+		if (obj.hasOwnProperty(elm)) {
+			//console.log("tree from " + elm + "'s view: " + treeOf(obj[elm]));
+			tree += /*treeOf(obj[elm]); */object2tree(obj[elm], space + space, symbol, forDOM);
+        }
 	}
 	return tree;
 }
@@ -2249,7 +2319,7 @@ function Prim (tree) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Dec 23 2016 02:39:59 GMT+0000 (GMT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Dec 23 2016 20:23:08 GMT+0000 (GMT)
 </footer>
 
 <script> prettyPrint(); </script>
