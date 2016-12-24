@@ -180,13 +180,13 @@ var Essence = {
 			this.txt2print = "";
 		}, preInit: function () {
 			//noinspection JSValidateTypes
-            $G.t1 = $G.t1.getSeconds() * 1000 + $G.t1.getMilliseconds();
+            $G.t1 = $G.t1.getTime();
 		}, init: function () {
 			//noinspection JSValidateTypes
             $G.t2 = new Date();
-			$G.t2 = $G.t2.getSeconds() * 1000 + $G.t2.getMilliseconds();
+			$G.t2 = $G.t2.getTime();
 			$G.t = ($G.t2 - $G.t1 > 1000)? ($G.t2 - $G.t1) / 1000 + "s": ($G.t2 - $G.t1) + "ms";
-			Essence.say("Page loaded in %c" + $G.t + "%c", "succ", "font-style: italic", "font-style: none");
+			if (debugging) Essence.say("Page loaded in %c" + $G.t + "%c", "succ", "font-style: italic", "font-style: none");
 		}, time: function(msg, style, style0) { //Like Essence.say(msg) but with the timestamp
 			console.log("[%c" + getTimestamp(true) + "%c] "+msg, "color: #00f;", "color: #000;", style || "", style0 || "")
 		}, sayClr: function (clrs) { //Display a RGB(A) coloured console log
@@ -3767,6 +3767,22 @@ String.prototype.portion = function (denominator, numerator) {
 };
 
 /**
+ * @description Counts how many times a word is present in the string.
+ * @param {String} word Word to be counted
+ * @param {String} [separation=" "] Separation character
+ * @this String
+ * @returns {number} Number of occurrences of the word in the string
+ * @since 1.0
+ * @method
+ * @inheritdoc
+ * @memberof String.prototype
+ * @external String
+ */
+String.prototype.countWord = function (word, separation) {
+	return this.split(separation || " ").count(word);
+};
+
+/**
  * @description Length of the number
  * @this Number
  * @returns {Nums} Length
@@ -4570,13 +4586,13 @@ function num2txt (num, base) {
 /**
  * @description Time how long an action took
  * @param {function(*)} act Action
- * @param {string} [pref="auto"] Preference (auto/none, ms/millisec, start/sec)
  * @param {*} [params] Parameters
+ * @param {string} [pref="auto"] Preference (auto/none, ms/millisec, start/sec)
  * @returns {string} Time
  * @since 1.0
  * @func
  */
-function timeUp (act, pref, params) {
+function timeUp (act, params, pref) {
 	var t1 = new Date();
 	t1 = (t1.getMinutes() * 60 + t1.getSeconds()) * 1000 + t1.getMilliseconds();
 	act(params);
@@ -4611,6 +4627,24 @@ function time (cb, params) {
  * @func
  */
 function wait (cb) {
-	if (!cb) cb = $f;
-	setTimeout(cb, 0);
+	setTimeout(cb || $f, 0);
+}
+
+/**
+ * @description Time how long an asynchronous callback took
+ * @param {Function} cb Callback
+ * @param {*} [params] Parameters
+ * @returns {number} Time
+ * @since 1.1
+ * @func
+ */
+function asyncTime (cb, params) {
+    var t1 = new Date().getTime(), done = "^no", maybe;
+    maybe = cb(params);
+    do {
+    	wait();
+    	done = maybe;
+    } while(maybe != undefined || done == "^no");
+    var t2 = new Date().getTime();
+    return t2 - t1;
 }

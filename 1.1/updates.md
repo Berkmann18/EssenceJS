@@ -1,38 +1,46 @@
 ## General
-+ 
+
 
 ## [essence](essence.js)
-+ \+ Object.inherits()
+\+ String.countWord(), asyncTime()
+
+^ Changed the parameter order in timeUp()
 
 ## [Ajax](modules/Ajax.js)
-+ \^ PUT(), DELETE()
+
 
 ## [DataStruct](modules/DataStruct.js)
-+ ^ Perm(), Comb()
-+ \+ PathNode.payload, Edge, PathNode.join()
+\+ (N)TreeNode.count(), DOMA, DomList()
+
+^ NTreeNode.find()
+
+^ Fixed the key-instead-of-value bug in NTreeNode.toString()
+
+^ Fixed a typo in TreeNode.printBFS()
+
+^ Placed common logic of DomTree(), DomStructure() into DOMA
 
 ## [DOM](modules/DOM.js)
-+ 
+\+ simplifiedCSSPath()
 
 ## [Files](modules/Files.js)
-+ 
+ 
 
 ## [Maths](modules/Maths.js)
-+ \+ timeDiff(), revPolishCalc()
+
 
 ## [Misc](modules/Misc.js)
-+ 
+ 
 
 ## [Security](modules/Security.js)
-+ 
+ 
 
 ## [UI](modules/UI.js)
-+ ^ rgb2hex(), hex2rgb()
-+ \+ rgb2hsl(), hsl2rgb(), rgb2hsv(), hsv2rgb()
+\+ clrToArr() (along with it's implementation in the appropriate places in UI.js), getLuminance()
+
+^ Optimised isDark()
 
 ## [Web](modules/Web.js)
-+ \+ rmCookie()
+
 
 ## [QTest](modules/QTest.js)
-+ ^ InvalidParamError()
-+ \+ InvalidExpressionError()
