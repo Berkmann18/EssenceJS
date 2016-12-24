@@ -230,7 +230,7 @@ function rmConsecDuplicates (arr) {
  * rmDuplicates([4, 10, 1, 9, 10, 10, 10, 3, 4, 2]); //[4, 10, 1, 9, 3, 2]
  */
 function rmDuplicates (arr) {
-	if (!arr.isIterable()) throw new TypeError("It'start not possible to remove duplicates of a non iterable object.");
+	if (!arr.isIterable()) throw new TypeError("It's not possible to remove duplicates of a non iterable object.");
 	var uniques = [];
 	for (var i = 0; i < arr.length; i++) {
 		if (!uniques.has(arr[i])) uniques.push(arr[i]);
@@ -1005,7 +1005,7 @@ function anim (msg, startTime, max, step, tuxStyle, stop) {
 	else return done();
 }
 
-//AI system that stores it'start rules in a database and update it after learning
+//AI system that stores it's rules in a database and update it after learning
 /**
  * @description Artificial Intelligence system.
  * @param {Array} [rules=[[0, "", null]]] Rules

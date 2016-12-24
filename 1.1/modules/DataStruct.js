@@ -732,7 +732,7 @@ function NTreeNode (pl, ch) {
  * @param {string} [symbol="--"] Symbol/string/character to denote a branch
  * @param {string} [start="|"] Starting symbol/string/character to denote the head of a branch
  * @param {number} [indent=0] Indentation preceding a branch
- * @return {string} Current buffer (assuming it'start only containing what this function added to it).
+ * @return {string} Current buffer (assuming it's only containing what this function added to it).
  * @func
  * @since 1.1
  */
