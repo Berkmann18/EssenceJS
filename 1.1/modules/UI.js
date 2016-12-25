@@ -1428,6 +1428,7 @@ function daynightMode (exch) { //Switch between enabled or not for Day/Night pag
 
 		for (var i = 0; i < tags.length; i++) {
 			//console.log("#%d tag: %s => %s", i, tags[i], tags[i].node);
+<<<<<<< HEAD
 <<<<<<< master
 <<<<<<< HEAD
 			if (darkTime) tags[i].invColour();
@@ -1436,6 +1437,10 @@ function daynightMode (exch) { //Switch between enabled or not for Day/Night pag
 			if (isNon(tags[i].css("backgroundColor"))) tags[i].setCSS("backgroundColor", "#FFF"); //fill it with a "default" colour to avoid using a blank value instead of an actual valid colour
 			console.log("backgroundColor of " + tags[i].selector + "=" + tags[i].css("backgroundColor"));
 >>>>>>> Conflict fixed
+=======
+			if (isNon(tags[i].css("backgroundColor"))) tags[i].setCSS("backgroundColor", "#FFF"); //fill it with a "default" colour to avoid using a blank value instead of an actual valid colour
+			console.log("backgroundColor of " + tags[i].selector + "=" + tags[i].css("backgroundColor"));
+>>>>>>> develop
 			if (darkTime && !isDark(tags[i].css("backgroundColor"))) tags[i].invColour();
 >>>>>>> develop
 		}
@@ -1660,13 +1665,22 @@ function clrToArr (clr) {
 
 /**
  * @description It will synchronize the in-JS CSS to the CSS of a page (since JS won't always know when an element follow CSS rules specified in a CSS snippet/code).
+<<<<<<< HEAD
 <<<<<<< master
 =======
+=======
+<<<<<<< HEAD
+>>>>>>> develop
 <<<<<<< HEAD
  * This may show rules that aren't in the styles tags.
 =======
 >>>>>>> develop
+<<<<<<< HEAD
 >>>>>>> Conflict fixed
+=======
+=======
+>>>>>>> develop
+>>>>>>> develop
  * @since 1.1
  * @func
  * @returns {undefined}
@@ -1675,10 +1689,14 @@ function syncCSS () {
 	var styleSheets = document.styleSheets.toArray();
 	for (var sheet in styleSheets) {
 		if (styleSheets.hasOwnProperty(sheet)) {
+<<<<<<< HEAD
 <<<<<<< master
             var rules = document.all? sheet.rules: sheet.cssRules;
             console.log("\tRules of %s:\n%s", sheet, rules);
 =======
+=======
+<<<<<<< HEAD
+>>>>>>> develop
 <<<<<<< HEAD
             var rules = (document.all? styleSheets[sheet].rules: styleSheets[sheet].cssRules).toArray();
             var currentRules = rules.map(function (rule) {
@@ -1693,7 +1711,14 @@ function syncCSS () {
             var rules = document.all? sheet.rules: sheet.cssRules;
             console.log("\tRules of %s:\n%s", sheet, rules);
 >>>>>>> develop
+<<<<<<< HEAD
 >>>>>>> Conflict fixed
+=======
+=======
+            var rules = document.all? sheet.rules: sheet.cssRules;
+            console.log("\tRules of %s:\n%s", sheet, rules);
+>>>>>>> develop
+>>>>>>> develop
 		}
 	}
 }
@@ -1701,8 +1726,12 @@ function syncCSS () {
 /**
  * @description Add a CSS rule to a particular place.<br />
  * Inspired by Diego Fl&ocute;rez's version of {@link https://davidwalsh.name/add-rules-stylesheets|David Walsh's addCSSRule}.
+<<<<<<< HEAD
 <<<<<<< master
 =======
+=======
+<<<<<<< HEAD
+>>>>>>> develop
 <<<<<<< HEAD
  * @param {String} selector Selector
  * @param {String} rules CSS rules
@@ -1716,7 +1745,12 @@ function addCSSRule (selector, rules, sheet, index) {
 	if (!sheet) sheet = document.styleSheets[0];
 	console.log("Adding %s {%s} to %s", selector, rules, sheet);
 =======
+<<<<<<< HEAD
 >>>>>>> Conflict fixed
+=======
+=======
+>>>>>>> develop
+>>>>>>> develop
  * @param {Stylesheet} [sheet=document.styleSheets[0]] Stylesheet
  * @param {String} selector Selector
  * @param {String} rules CSS rules
@@ -1725,10 +1759,17 @@ function addCSSRule (selector, rules, sheet, index) {
  */
 function addCSSRule (sheet, selector, rules, index) {
 	if (!sheet) sheet = document.styleSheets[0];
+<<<<<<< HEAD
 <<<<<<< master
 =======
 >>>>>>> develop
 >>>>>>> Conflict fixed
+=======
+<<<<<<< HEAD
+>>>>>>> develop
+=======
+>>>>>>> develop
+>>>>>>> develop
     //noinspection JSUnresolvedVariable
     var styleRules = document.all? sheet.rules: sheet.cssRules;
     if (!index) index = styleRules.length - 1;
@@ -1751,15 +1792,24 @@ function addCSSRule (sheet, selector, rules, index) {
  * @description Clear CSS rules from a stylesheet.<br />
  * Source: {@link https://davidwalsh.name/add-rules-stylesheets|Leonard's}
  * @param {Stylesheet} [sheet=document.styleSheets[0]] Stylesheet
+<<<<<<< HEAD
 <<<<<<< master
 =======
+=======
+<<<<<<< HEAD
+>>>>>>> develop
 <<<<<<< HEAD
  * @returns {undefined}
  * @since 1.1
  * @func
 =======
 >>>>>>> develop
+<<<<<<< HEAD
 >>>>>>> Conflict fixed
+=======
+=======
+>>>>>>> develop
+>>>>>>> develop
  */
 function clearCSSRules (sheet) {
 	if (!sheet) sheet = document.styleSheets[0];
@@ -1771,8 +1821,12 @@ function clearCSSRules (sheet) {
         else if ("removeRule" in sheet) sheet.removeRule(i);
         i--;
     }
+<<<<<<< HEAD
 <<<<<<< master
 =======
+=======
+<<<<<<< HEAD
+>>>>>>> develop
 <<<<<<< HEAD
 }
 
@@ -1819,5 +1873,10 @@ function getCSS (asArray) {
     return asArray? res: res.join("\n");
 =======
 >>>>>>> develop
+<<<<<<< HEAD
 >>>>>>> Conflict fixed
+=======
+=======
+>>>>>>> develop
+>>>>>>> develop
 }
