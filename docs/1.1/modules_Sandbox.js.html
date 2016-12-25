@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: SortedSet</title>
+    <title>JSDoc: Source: modules/Sandbox.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,312 +17,79 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: SortedSet</h1>
-
-    
-
-
-
-
-<section>
-
-<header>
-    
-        <h2>
-            <span class="ancestors"><a href="module-DataStruct.html">DataStruct</a>~</span>SortedSet</h2>
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-
-    
-
-    <h4 class="name" id="SortedSet"><span class="type-signature"></span>new SortedSet<span class="signature">(arr)</span><span class="type-signature"> &rarr; {SortedSet}</span></h4>
-
-    
-
-
-
-<div class="description">
-    Sorted mathematical set
-</div>
-
-
-
-
-
-
-
-    <h5>This:</h5>
-    <ul><li>SortedSet</li></ul>
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>arr</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Array</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    
-
-<table class="props">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>SortedSet.value</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;number></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Values</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>SortedSet.add</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Add an item to the set and sort it</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>SortedSet.toString</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">String representation</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-<dl class="details">
-
-    
-
-    
-    <dt class="tag-since">Since:</dt>
-    <dd class="tag-since"><ul class="dummy"><li>1.0</li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_DataStruct.js.html">modules/DataStruct.js</a>, <a href="modules_DataStruct.js.html#line896">line 896</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="module-DataStruct-Set.html">module:DataStruct~Set</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    Sorted set
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">SortedSet</span>
-
-
-    </dd>
-</dl>
+    <h1 class="page-title">Source: modules/Sandbox.js</h1>
 
     
 
 
 
     
-    </div>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @module Sandbox
+ * @description Sandbox module for testing/editing
+ * @version 1.0
+ * @since 1.1
+ * @license MIT
+ * @author maxie &lt;user@mail.com>
+ * @requires module:essence
+ * @requires DOM
+ * @requires UI
+ * @requires Misc
+ * @type {Module}
+ * @exports Sandbox
+ */
+var Sandbox = new Module("Sandbox", "Testing/editing module", ["DOM", "UI", "Misc"], 1, function () {
+    addCSSRule("body", "background-color: rgba(0, 255, 0, .5)");
+});
 
+function BFS (elm) {
     
+}
 
-    
+function bfsPrint (elm) {
 
-    
+}
 
-     
+function getRepeatedTags () {
+    return rmUniques(DomTree().getOrder().split("->"));
+}
 
-    
+function cleanInline () {
+    var tags = getRepeatedTags();
+    for (var i = 0; i &lt; tags.length; i++) {
+        $e("*" + tags[i]).moveCSS();
+    }
+}
 
-    
+function darkk () {
+    var h = new Date().getHours(), getTags = function () {
+        return rmDuplicates(DomTree().getOrder().split("->"));
+    };
+    var tags = getTags().map(function (name) {
+        return $e("*" + name);
+    }), darkTime = (h >= 20 || h &lt;= 3);
 
-    
+    Essence.say((darkTime ? "It's dark" : "It's light") + "!", "info");
+    syncCSS();
+    for (var i = 0; i &lt; tags.length; i++) {
+        //console.log("#%d tag: %s => %s", i, tags[i].selector, tags[i].node.toArray().map(x => x.tagName).toStr(true));
+        console.log("#%d tag: %s -> %s", i, tags[i].selector, tags[i].css("backgroundColor").toStr(true));
+        //console.log("isDark(tags[" + i + "].css('bgClr')=" + isDark(tags[i].css("backgroundColor")));
+    }
+}
 
-    
-
-    
-</article>
-
-</section>
+var ml;
+function mlTest () {
+    ml = moduleList(true);
+    console.log("ml=");
+    console.table(ml);
+    console.log("tableSorted: ");
+    console.table(TableSort(ml.get(1), 4, "des"));
+}</code></pre>
+        </article>
+    </section>
 
 
 

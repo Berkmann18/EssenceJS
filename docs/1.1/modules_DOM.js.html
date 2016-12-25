@@ -43,8 +43,8 @@
 var DOM = new Module("DOM", "DOM stuff", ["Misc", "Files"], 1, function () {
 	BrowserDetect.init();
 });
-/* eslint no-undef: 0 */
 
+/* eslint no-undef: 0 */
 /**
  * @description Print onto something
  * @param {*} text Data to be printed
@@ -109,12 +109,18 @@ function getMetaData () {
 
 /**
  * @description Disable right clicks
+ * @param {boolean} [restore=false] Restore the right click
  * @returns {undefined}
  * @since 1.0
  * @func
  */
-function noRightClick () {
-	document.oncontextmenu = new Function("return false")
+function noRightClick (restore) {
+	if (restore) {
+		document.oncontextmenu = $G.contextMenu;
+	} else {
+        $G.contextMenu = document.oncontextmenu;
+        document.oncontextmenu = new Function("return false")
+    }
 }
 
 /**
@@ -485,7 +491,7 @@ function rowTable (caption, headerRows, rows, id, split, style, cellIds) {
 		} else tab += "&lt;td id='" + id + (isNon(cellIds)? i: cellIds[i]) + "'>" + rows[i] + "&lt;/td>";
 		tab += "&lt;/tr>";
 	}
-	tab += "&lt;/table>&lt;style>#"+ id + " table{background: #000;}#"+ id + " table, #"+ id + " td, #"+ id + " th{border: 1px solid #000; color: #000; background: #fff;}#"+ id + " tr:nth-child(even) td, #"+ id + " tr:nth-child(even) th{background: #ddd;}#"+ id + " tr td:hover, #"+ id + " tr th:hover{background: #bbb;}&lt;/style>";
+	tab += "&lt;/table>&lt;style>#" + id + " table{background: #000;}#"+ id + " table, #"+ id + " td, #"+ id + " th{border: 1px solid #000; color: #000; background: #fff;}#"+ id + " tr:nth-child(even) td, #"+ id + " tr:nth-child(even) th{background: #ddd;}#"+ id + " tr td:hover, #"+ id + " tr th:hover{background: #bbb;}&lt;/style>";
 	return tab
 }
 
@@ -841,6 +847,7 @@ function tabs (n) {
  * @example
  * //We want to get the meta description and we know that there's an element such as $n("meta[name='description']") &amp;ne; null
  * var docDescription = $t("meta", "name='description'", "content");
+ * @global
  */
 function $t (tagName, knownAttrSelector, attr) {
 	var tag = $e(tagName + "[" + knownAttrSelector + "]").val(false, true), start;
@@ -985,7 +992,123 @@ var Buffer = {
 		this.log = "";
 		console.log("Buffer cleared");
 	}
-};</code></pre>
+};
+
+/**
+ * @description Dissect a selector and return if it matches some top-level CSS selections (or the matching bits).
+ * @param {String} selector Selector
+ * @param {boolean} [booleanOnly=false] Return the result as boolean (so test results)
+ * @returns {{list: boolean, tag: boolean, id: boolean, class: boolean, pseudoSelector: boolean, multiple: boolean, namespace: boolean}} Dissection
+ * @since 1.1
+ * @func
+ * @TODO make sure it gets the tags and spaces right
+ */
+function dissect (selector, booleanOnly) {
+	var hasPart = function (regexp) {
+		var matches = selector.match(new RegExp(regexp, "g"));
+		return matches === null? null: matches;
+	};
+
+	return booleanOnly? {
+		list: /\*\w+/g.test(selector),
+		tag: /^\w+[^#.|:](\s*?\w*[^#.|:]|$)/g.test(selector), //to improve
+		id: /#\w+/g.test(selector),
+		class: /\.\w+/g.test(selector),
+		pseudoSelector: /:\w+/g.test(selector),
+    	multiple: /\s+/g.test(selector),
+		namespace: /\w+\|\w+/g.test(selector)
+	}: {
+		list: hasPart(/\*\w+/),
+		tag: hasPart(/^\w+[^#.|:](\s*?\w*[^#.|:]|$)/), //to improve
+		id: hasPart(/#\w+/),
+		class: hasPart(/\.\w+/),
+		pseudoSelector: hasPart(/:\w+/),
+		multiple: hasPart(/\s+/),
+		namespace: hasPart(/\w+\|\w+/)
+	};
+}
+
+/**
+ * @description Try to gather an element &lt;em>$e(selector)&lt;/em> while placing it if it's not there yet to be used
+ * @param {String} selector Selector of the tested element
+ * @param {String} [container="body"] Container where the new element will be placed if it doesn't already exist
+ * @param {Code} [newHTMLValue] Value (HTML code) that the element will get if it's not already existent
+ * @returns {Element} Element
+ * @since 1.1
+ * @func
+ */
+function tryElement (selector, container, newHTMLValue) {
+	try {
+		$e(selector);
+	} catch (err) {
+		var dissection = dissect(selector);
+		var element = document.createElement(dissection.tag[0]);
+		element.id = dissection.id[0].remove("#");
+		element.className = dissection.class.join(" ").remove(".");
+		element.innerHTML = newHTMLValue || "";
+		$n(container || "body").appendChild(element);
+	}
+	return $e(selector);
+}
+
+/**
+ * @description Try to gather an element &lt;em>$n(selector)&lt;/em> while placing it if it's not there yet to be used
+ * @param {String} selector Selector of the tested element
+ * @param {String} [container="body"] Container where the new element will be placed if it doesn't already exist
+ * @param {{tagName: String, id: String, class: String, title: (undefined|String)}} attr Attributes of the newly created element (if not already present)
+ * @returns {HTMLElement} HTML element
+ * @since 1.1
+ * @func
+ */
+function tryNode (selector, container, attr) {
+	try {
+		$n(selector);
+	} catch (err) {
+		var node = document.createElement(attr.tagName);
+		if (attr.hasOwnProperty("id")) node.id = attr.id;
+		if (attr.hasOwnProperty("class")) node.className = attr.class;
+        if (attr.hasOwnProperty("title")) node.title = attr.title;
+        $n(container || "body").appendChild(node);
+	}
+	return $n(selector);
+}
+
+/**
+ * @description Get the CSS path of a node &lt;i>$n(...)&lt;/i>.&lt;br />
+ * Inspired by {@link https://stackoverflow.com/questions/4588119/get-elements-css-selector-when-it-doesnt-have-an-id|@Phrogz's answer on here}.
+ * @param {HTMLElement} node Node
+ * @returns {string} CSS Path
+ * @since 1.1
+ * @func
+ */
+function cssPath (node) {
+    var names = [];
+    while (node.parentNode) {
+        if (node.id) {
+            names.unshift("#" + node.id);
+            break;
+        } else {
+            if (node === node.ownerDocument.documentElement) names.unshift(node.tagName.toLowerCase());
+            else{
+                for (var c = 1, e = node; e.previousElementSibling; e = e.previousElementSibling, c++);
+                names.unshift(node.tagName.toLowerCase() + ":nth-child(" + c + ")");
+            }
+            node = node.parentNode;
+        }
+    }
+    return names.join(" > ");
+}
+
+/**
+ * @description Simplify a CSS Path (useful in conjuction with cssPath())
+ * @param {String} path CSS Path
+ * @returns {String} Simplified CSS Path
+ * @since 1.1
+ * @func
+ */
+function simplifyCSSPath (path) {
+	return path.replace(/(?:html > )*(head:nth-child\(1\)|body:nth-child\(2\)) > +/gmi, "");
+}</code></pre>
         </article>
     </section>
 
@@ -995,21 +1118,13 @@ var Buffer = {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="external-String.html">String</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-Edge.html">Edge</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidExpressionError.html">InvalidExpressionError</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#Buffer">Buffer</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#DocTemplate">DocTemplate</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Sandbox.html">Sandbox</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="external-String.html">String</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-Edge.html">Edge</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidExpressionError.html">InvalidExpressionError</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#$t">$t</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#Buffer">Buffer</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#DocTemplate">DocTemplate</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#perfMod">perfMod</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-<<<<<<< HEAD
-<<<<<<< HEAD
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Wed Nov 09 2016 17:54:07 GMT+0000 (GMT)
-=======
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Mon Dec 19 2016 01:21:28 GMT+0000 (GMT)
->>>>>>> e065322... Overall improvements
-=======
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Mon Dec 19 2016 01:21:28 GMT+0000 (GMT)
->>>>>>> develop
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sun Dec 25 2016 15:01:57 GMT+0000 (GMT)
 </footer>
 
 <script> prettyPrint(); </script>

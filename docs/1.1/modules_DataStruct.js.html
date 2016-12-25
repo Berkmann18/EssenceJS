@@ -38,17 +38,13 @@
  * @requires DOM
  * @requires Maths
  * @requires Files
+ * @requires Misc
  * @type {Module}
  * @exports DataStruct
  */
-var DataStruct = new Module("DataStruct", "Data structures", ["DOM", "Maths", "Files"]);
-
-(function () {
-	//DataStruct.complete = true;
-})();
+var DataStruct = new Module("DataStruct", "Data structures", ["DOM", "Maths", "Files", "Misc"]);
 
 /* eslint no-undef: 0 */
-
 /**
  * @description Linked list
  * @param {*} [pl=1] Payload
@@ -122,7 +118,7 @@ function Node (pl, nx, pv) {
 	};
 
 	this.printList = function () {
-		if (this.next === null) Essence.txt2print += "->" + this.v;
+		if (this.next === null) Essence.txt2print += "->" + this.payload;
 		else this.next.printList();
 		Essence.print("");
 	};
@@ -300,6 +296,7 @@ function Edge (start, end, len) {
  * @property {function(): string} TreeNode.printBFS Print in the BFS order
  * @property {function(): string} TreeNode.toString String representation
  * @property {function(boolean): Array} TreeNode.toArray Array representation
+ * @property {function(NumberLike): number} TreeNode.count Count the number of times there's a particular payload
  */
 function TreeNode (pl, l, r) { //Binary tree
 	this.left = l;
@@ -417,7 +414,7 @@ function TreeNode (pl, l, r) { //Binary tree
 		var d = 0, td = 0; //Depth, total depth
 		var stack = [];
 		stack.push(this);
-		while (stack != []) {
+		while (!stack.equals([])) {
 			d = 0;
 			var cur = stack.pop();
 			try {
@@ -435,12 +432,12 @@ function TreeNode (pl, l, r) { //Binary tree
 		var b = 0, tb = 0; //Breadth, total breadth
 		var queue = [];
 		queue.unshift(this); //Add as the end
-		while (queue != []) {
+		while (!queue.equals([])) {
 			b = 0;
 			var cur = queue.pop(); //Get the first element of the queue
 			try {
 				if (cur.payload === n) return [b, tb]
-			} catch(e) {
+			} catch (err) {
 				return [-1, tb]
 			}
 			if (cur.left) queue.unshift(cur.left);
@@ -480,17 +477,17 @@ function TreeNode (pl, l, r) { //Binary tree
 		if (!sym) sym = "->";
 		var queue = [], res = "";
 		queue.unshift(this); //Add as the end
-		while (queue!=[]) {
+		while (!queue.equals([])) {
 			var cur = queue.pop(); //Get the first element of the queue
 			res += cur + sym;
 			try {
 				if (cur.left) queue.unshift(cur.left);
 				if (cur.right) queue.unshift(cur.right);
-			} catch(e) {
-				Essence.say(e + " caused " + this + ".printBFS(" + sym + ") to go wrong", "err");
+			} catch (err) {
+				Essence.say(err + " caused " + this + ".printBFS(" + sym + ") to go wrong", "erro");
 			}
 		}
-		return sym
+		return res
 	};
 	this.toString = function () {
 		/* Essence.txt2print = "";
@@ -508,6 +505,10 @@ function TreeNode (pl, l, r) { //Binary tree
 		if (this.right) singly? arr.push(this.right.toArray().toString().split(",")): arr.push(this.right.toArray());
 		return singly? arr.toString().split(","): arr
 	};
+
+	this.count = function (n) {
+		return this.getInOrder().countWord(n, "->");
+    };
 
 	return this;
 }
@@ -549,6 +550,7 @@ NTreeNode.inheritsFrom(TreeNode);
  * @property {function(): Array} NTreeNode.toArray Array representation
  * @property {function(number): NTreeNode} NTreeNode.getChild Child getter
  * @property {function(string, boolean): ?string} NTreeNode.see See the tree for that particular node
+ * @property {function(*): number} NTreeNode.count Count the number of times there's a particular payload
  */
 function NTreeNode (pl, ch) {
 	this.payload = pl || 0;
@@ -647,13 +649,16 @@ function NTreeNode (pl, ch) {
 	};
 
 	this.find = function (n, method) {
-		return (method.normal() === "bfs")? this.bfs(n): this.dfs(n)
+		return (method &amp;&amp; method.toLowerCase() === "bfs")? this.bfs(n): this.dfs(n)
 	};
 	this.dfs = function (n, d, td) { //Depth First Search
 		if (!d) d = 0; //Depth
 		if (!td) td = 0; //Total depth
 		for (var c in this.child) {
-			if (this.child.hasOwnProperty(c)) c.dfs(n, d + 1, td++);
+			if (this.child.hasOwnProperty(c)) {
+                if (!isType(c, "NTreeNode")) throw new TypeError("The child '" + c + "' is not a NTreeNode");
+				c.dfs(n, d + 1, td++);
+            }
 		}
 		return [-1, td]
 	};
@@ -662,7 +667,7 @@ function NTreeNode (pl, ch) {
 		if (!tb) tb = 0; //Total breadth
 		var queue = [];
 		queue.unshift(this); //Add as the end
-		while (queue != []) {
+		while (!queue.equals([])) {
 			b = 0;
 			var cur = new NTreeNode(queue.pop()); //Get the first element of the queue
 			if (cur.payload === n) return [b, tb];
@@ -716,14 +721,11 @@ function NTreeNode (pl, ch) {
 		}
 	};
 	this.toString = function () {
-		/* Essence.txt2print = "";
-		 this.printInOrder();
-		 return "Tree(" + Essence.txt2print + ")" */
-		var str = "NTreeNode(payload=" + this.payload + ", child=";
+		var str = "NTreeNode(payload=" + this.payload + ", child=[";
 		for (var c in this.child) {
-			if (this.child.hasOwnProperty(c)) str += c.toString();
+			if (this.child.hasOwnProperty(c)) str += this.child[c].toString() + ", ";
 		}
-		return str.substring(0, str.length) + ")"
+		return (str.substring(0, str.length) + "])").replace(", ]", "]");
 	};
 	this.toArray = function (singly) {
 		var arr = [];
@@ -745,6 +747,10 @@ function NTreeNode (pl, ch) {
 		Buffer.clear();
 		return tree;
 	};
+
+    this.count = function (n) {
+        return this.getOrder().countWord(n, "->");
+    };
 
 	return this;
 }
@@ -1950,7 +1956,8 @@ function Comb (n, set) {
 	var res = new Array(n * factorial(set.length)), p = Perm(set.join("")), lIdx = set.lastIndex();
 	for (var i = 0; i &lt; set.length * 2; i += 2) {
 		if (i > lIdx + 1) break;
-		set.splice(i + 1, set.binaryIndexOf(set[i]), set[i].repeat(n));
+		//noinspection JSUnresolvedFunction
+        set.splice(i + 1, set.binaryIndexOf(set[i]), set[i].repeat(n));
 	}
 	p.append(complement(set, p));
 	console.log(res.length, p, "\nset=" + set);
@@ -2122,6 +2129,40 @@ function Map (keys) {
 	return this;
 }
 
+/**
+ * @description DOM Analyser.
+ * @private
+ * @since 1.1
+ * @type {{nameOf, kidsOf, printOrder}}
+ */
+var DOMA = (function (){
+	function nameOfTag (tag) {
+        return tag.localName || tag.tagName.toLowerCase();
+	}
+	
+	function kidsOfTag (tag) {
+        return tag.children.toArray();
+    }
+
+    function printOrder (elm, t, s, d, sym) {
+        if (!t) t = "";
+        if (!s) s = "&amp;nbsp;&amp;nbsp;";
+        if (!d) d = 0;
+        if (!sym) sym = "|-";
+
+        for (var child in elm) {
+            if (elm.hasOwnProperty(child)) child.postOrder(t + s, s, d + 1, sym);
+        }
+        println(t + sym + elm + s + " (depth=" + d + ")");
+	}
+
+	return {
+		nameOf: nameOfTag,
+		kidsOf: kidsOfTag,
+		printOrder: printOrder
+	};
+})();
+
 //noinspection JSUnusedGlobalSymbols
 /**
  * @description DOM tree
@@ -2129,15 +2170,13 @@ function Map (keys) {
  * @func
  * @since 1.1
  * @see module:DataStruct~DomStructure
+ * @TODO fix the repeated node issue (apparent in getOrder(), see()
  */
 function DomTree () {
-	var current = document.children[0], nameOf = function (tag) { //Return the tag's name
-		return tag.localName || tag.tagName.toLowerCase();
-	}, kidsOf = function (tag) {
-		return tag.children.toArray();
-	}, stepIn = function (tag) {
-		return kidsOf(tag).isEmpty()? new NTreeNode(nameOf(tag)): new NTreeNode(nameOf(tag), kidsOf(tag).map(function (child) {
-			return kidsOf(child).isEmpty()? new NTreeNode(nameOf(child)): stepIn(child);
+	var current = document.children[0], stepIn = function (tag) {
+		if (debugging) Essence.say("Stepping in %c" + DOMA.nameOf(tag) + "%c", "info", "color: #00f", "color: #000");
+		return DOMA.kidsOf(tag).isEmpty()? new NTreeNode(DOMA.nameOf(tag)): new NTreeNode(DOMA.nameOf(tag), DOMA.kidsOf(tag).map(function (child) {
+			return DOMA.kidsOf(child).isEmpty()? new NTreeNode(DOMA.nameOf(child)): stepIn(child);
 		}));
 	};
 
@@ -2153,19 +2192,15 @@ function DomTree () {
  * @see module:DataStruct~DomGraph
  */
 function DomStructure () {
-	var dom = {}, current = document.children[0], nameOf = function (tag) { //Return the tag's name
-		return tag.localName || tag.tagName.toLowerCase();
-	}, kidsOf = function (tag) {
-		return tag.children.toArray();
-	}, stepIn = function (tag, parent) {
+	var dom = {}, current = document.children[0], stepIn = function (tag, parent) {
 		if (!parent) parent = {};
-		parent[nameOf(tag)] = {};
-		kidsOf(tag).map(function (child) {
-			parent[nameOf(tag)][nameOf(child)] = {};
-			if (!kidsOf(child).isEmpty()) {
-				kidsOf(child).map(function (subChild) {
+		parent[DOMA.nameOf(tag)] = {};
+        DOMA.kidsOf(tag).map(function (child) {
+			parent[DOMA.nameOf(tag)][DOMA.nameOf(child)] = {};
+			if (!DOMA.kidsOf(child).isEmpty()) {
+                DOMA.kidsOf(child).map(function (subChild) {
 					//parent[nameOf(tag)][nameOf(child)][nameOf(subChild)] = {};
-					parent[nameOf(tag)][nameOf(child)] = stepIn(subChild, parent[nameOf(tag)][nameOf(child)]);
+					parent[DOMA.nameOf(tag)][DOMA.nameOf(child)] = stepIn(subChild, parent[DOMA.nameOf(tag)][DOMA.nameOf(child)]);
 				})
 			}
 		});
@@ -2173,6 +2208,37 @@ function DomStructure () {
 	};
 
 	return stepIn(current, dom);
+}
+
+
+/**
+ * @description Textual version of DomStructure.&lt;br />
+ * &lt;strong>Note:&lt;/strong> This isn't as reliably true as the DomGraph's textual representation.
+ * @returns {string} Textual representation of the DOM structure.
+ * @func
+ * @since 1.1
+ * @see module:DataStruct~DomGraph
+ */
+function DomList () {
+	var res = "", s = "  ", space = "", dom = {}, current = document.children[0], stepIn = function (tag, parent, spacing, depth) {
+        if (!parent) parent = {};
+        parent[DOMA.nameOf(tag)] = {};
+        res += spacing + "|-" + DOMA.nameOf(tag) + "   (d=" + depth + ")\n";
+        DOMA.kidsOf(tag).map(function (child) {
+            parent[DOMA.nameOf(tag)][DOMA.nameOf(child)] = {};
+            res += spacing + s.repeat(depth) + "|-" + DOMA.nameOf(child) + "   (d=" + (depth + 1) + ")\n";
+            if (!DOMA.kidsOf(child).isEmpty()) {
+                DOMA.kidsOf(child).map(function (subChild) {
+                    //parent[nameOf(tag)][nameOf(child)][nameOf(subChild)] = {};
+                    parent[DOMA.nameOf(tag)][DOMA.nameOf(child)] = stepIn(subChild, parent[DOMA.nameOf(tag)][DOMA.nameOf(child)], space + s + s, depth + 2);
+                    //res += spacing + s + s + ... + "\n";
+                })
+            }
+        });
+        return parent;
+	};
+	stepIn(current, dom, space, 0);
+	return res;
 }
 
 //noinspection JSUnusedGlobalSymbols
@@ -2185,16 +2251,22 @@ function DomStructure () {
  * @returns {string} Tree
  * @func
  * @since 1.1
+ * @TODO Fix the child listing being on the first child-branch and leaving the rest empty
  */
 function object2tree (obj, space, symbol, forDOM) {
 	if (!space) space = forDOM? "&amp;nbsp;&amp;nbsp;": "\t";
 	if (!symbol) symbol = "|-";
+
 	var treeOf = function (obj) {
 		return space + symbol + keyList(obj, true) + (forDOM? "&lt;br />": "\n");
 	};
 	var tree = treeOf(obj);
+	console.log("tree", tree);
 	for (var elm in obj) {
-		if (obj.hasOwnProperty(elm)) tree += /*treeOf(obj[elm]); */object2tree(obj[elm], space + space, symbol, forDOM);
+		if (obj.hasOwnProperty(elm)) {
+			//console.log("tree from " + elm + "'s view: " + treeOf(obj[elm]));
+			tree += /*treeOf(obj[elm]); */object2tree(obj[elm], space + space, symbol, forDOM);
+        }
 	}
 	return tree;
 }
@@ -2232,6 +2304,75 @@ function Dijkstra (tree) {
  */
 function Prim (tree) {
 
+}
+
+/**
+ * @description Sort a table/matrix following the column specified.&lt;br />
+ * It's a bit like SORT table BY col (ASC|DESC); in SQL
+ * @param {Array[][]} matrix Table/matrix to sort
+ * @param {number} [colIndex=0] Index of the column where the sorting is decided.
+ * @param {?(undefined|String|boolean)} [order] Sorting order
+ * @returns {Array[][]} Sorted table/matrix
+ * @since 1.1
+ * @func
+ * @throws {InvalidParamError} Wrong order
+ */
+function TableSort (matrix, colIndex, order) {
+	if (!colIndex) colIndex = 0;
+	var table = Copy(matrix), sort = function (arr, order, left, right) {
+        if (!left &amp;&amp; !right) {
+            left = 0;
+            right = arr.lastIndex();
+        }
+        if (!order) order = "asc";
+        var i;
+        if (arr.length > 1) {
+        	console.log("arr", arr[Math.floor((right + left) / 2)]);
+            var pivot = arr[Math.floor((right + left) / 2)][colIndex], j = right;
+            console.log("pivot=", pivot, "pivot pos:", Math.floor((right + left) / 2));
+            i = left;
+            if (!order || order.toLowerCase().get(0, 2) === "asc") {
+                while (i &lt;= j) {
+                    while(arr[i][colIndex] &lt; pivot) i++;
+                    while(arr[j][colIndex] > pivot) j--;
+                    if (i &lt;= j) {
+                        swap(arr, i, j);
+                        i++;
+                        j--;
+                    }
+                }
+			} else if (order.toLowerCase().get(0, 2) === "des") {
+                while (i >= j) {
+                    while(arr[i][colIndex] > pivot) i++;
+                    while(arr[j][colIndex] &lt; pivot) j--;
+                    if (i >= j) {
+                        swap(arr, i, j);
+                        i++;
+                        j--;
+                    }
+                }
+			} else throw new InvalidParamError("Order can either be false|undefined||\"asc\"|\"des\" to make it work");
+
+            if (left &lt; i - 1) sort(arr, left, i - 1, order);
+            if (i &lt; right) sort(arr, i, right, order);
+        }
+        return arr
+    };
+	return sort(table, order);
+}
+
+/**
+ * @description Sort a table in an ascending order following the column specified.&lt;br />
+ * It's a bit like SORT table BY col ASC; in SQL
+ * @param {Array[][]} table Table to sort
+ * @param {number} [colIndex=0] Index of the column where the sorting is decided.
+ * @param {?(undefined|String|boolean)} [order] Sorting order
+ * @returns {Array[][]} Sorted table
+ * @since 1.1
+ * @func
+ */
+function sortNamedTable (table, colIndex, order) {
+	return [table[0]].concat(TableSort(table.get(1), colIndex, order))
 }</code></pre>
         </article>
     </section>
@@ -2242,21 +2383,13 @@ function Prim (tree) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="external-String.html">String</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-Edge.html">Edge</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidExpressionError.html">InvalidExpressionError</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#Buffer">Buffer</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#DocTemplate">DocTemplate</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Sandbox.html">Sandbox</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="external-String.html">String</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-Edge.html">Edge</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidExpressionError.html">InvalidExpressionError</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#$t">$t</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#Buffer">Buffer</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#DocTemplate">DocTemplate</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#perfMod">perfMod</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-<<<<<<< HEAD
-<<<<<<< HEAD
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Wed Nov 09 2016 17:54:07 GMT+0000 (GMT)
-=======
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Mon Dec 19 2016 01:21:28 GMT+0000 (GMT)
->>>>>>> e065322... Overall improvements
-=======
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Mon Dec 19 2016 01:21:28 GMT+0000 (GMT)
->>>>>>> develop
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sun Dec 25 2016 15:01:57 GMT+0000 (GMT)
 </footer>
 
 <script> prettyPrint(); </script>

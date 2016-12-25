@@ -932,7 +932,7 @@ function Element (selector) {
 			/**
 			 * @todo find a way to convert camelCase to camel-case or simply modifying the property of the relevant CSSRule in document.styleSheets..
 			 */
-            console.log("CSS rule added: " + addCSSRule(/\*\S/.test(selector)? selector.get(1): selector, prop + ": " + val) + " by " + selector); //Avoid parsing *selectors into stylesheets
+            console.log("CSS rule added: " + addCSSRule(/\*\S/.test(selector)? selector.get(1): selector, camelCaseTo(prop, "hyphen") + ": " + val) + " by " + selector); //Avoid parsing *selectors into stylesheets
 		} else this.node.style[prop] = val;
 	};
 	
@@ -3983,14 +3983,7 @@ Function.prototype.inheritsFrom = function (parentClassOrObj) {
 		this.prototype.constructor = this;
 		this.prototype.parent = parentClassOrObj;
 	}
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 	//noinspection JSValidateTypes
->>>>>>> e065322... Overall improvements
-=======
-	//noinspection JSValidateTypes
->>>>>>> develop
 	return this
 };
 

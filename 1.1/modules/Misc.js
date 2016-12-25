@@ -1150,3 +1150,40 @@ var Calendar = {
 		this.element.write(text, true);
 	}
 };
+
+/**
+ * @description Convert a camelCased string into a hyphened/PascalCased/underscored/spaced one.
+ * @param {String} camelCase Camel cased text
+ * @param {String} writingStyle Writing style (hyphen, pascalcase, underscore, spaced)
+ * @returns {String} Styled string
+ * @since 1.1
+ * @func
+ */
+function camelCaseTo (camelCase, writingStyle) {
+	switch (writingStyle.toLowerCase()) {
+		case "hyphen":
+		case "-":
+			return camelCase.replace(/[A-Z]+/g, function (match) {
+				return "-" + match.toLowerCase();
+			});
+			break;
+		case "pascalcase":
+		case "pascal":
+            return camelCase.capitalize();
+            break;
+		case "underscore":
+		case "_":
+            return camelCase.replace(/[A-Z]+/g, function (match) {
+                return "_" + match.toLowerCase();
+            });
+            break;
+		case "english":
+		case "spaced":
+            return camelCase.replace(/[A-Z]+/g, function (match) {
+                return " " + match.toLowerCase();
+            }).trim();
+            break;
+		default:
+			return camelCase;
+	}
+}
