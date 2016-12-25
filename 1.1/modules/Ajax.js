@@ -7,10 +7,11 @@
  * @author Maximilian Berkmann <maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
  * @requires module:essence
+ * @requires Files
  * @type {Module}
  * @exports Ajax
  */
-var Ajax = new Module("Ajax", "AJAX stuff");
+var Ajax = new Module("Ajax", "AJAX stuff", ["Files"]);
 
 /**
  * @description XHR manipulation callback
@@ -112,7 +113,7 @@ function load (url, cb) {
  * @since 1.1
  * @returns {*} JSON data
  * @example
- * loadJSON("package"); //Loads the package.json file which content can be found in $G["json"] if not returned
+ * loadJSON("package"); //Loads the package.json file which content can be found in $G.json if not returned
  * //Equivalent of doing that
  * var package = {};
  * load("package.json", function (xhr) {
@@ -125,8 +126,8 @@ function loadJSON (file) {
 	xhr.open("GET", (file || "data") + ".json", true);
 	xhr.onreadystatechange = function () {
 		if (xhr.readyState === 4 && xhr.status === 200) (function () {
-			$G["json"] = JSON.parse(xhr.responseText);
-			return JSON.parse(xhr.responseText) || $G["json"];
+			$G.json = JSON.parse(xhr.responseText);
+			return JSON.parse(xhr.responseText) || $G.json;
 		})();
 	};
 	xhr.send(null);
@@ -134,7 +135,7 @@ function loadJSON (file) {
 	try {
 		return JSON.parse(xhr.response);
 	} catch (e) {
-		return $G["json"];
+		return $G.json;
 	}
 }
 

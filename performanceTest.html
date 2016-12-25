@@ -10,9 +10,13 @@
         .num {
             color: red;
         }
+        strong {
+            background-color: red;
+        }
     </style>
     <script type="text/javascript" src="1.1/essence.js" async defer></script>
     <script type="text/javascript" async defer>
+        console.profile("Local script Profile");
         var tree, struct;
         function start () {
             Essence.init();
@@ -77,6 +81,8 @@
             BFS(struct);
             debugger;
         }
+
+        console.profileEnd();
     </script>
 </head>
 <body onpageshow="start();" onload="Essence.preInit();">

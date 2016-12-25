@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!--suppress ALL -->
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -27,7 +26,8 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
+            <pre class="prettyprint source linenums"><code>//noinspection JSValidateJSDoc
+/**
  * @module Files
  * @description File management and control
  * @version 1.0
@@ -35,13 +35,13 @@
  * @license MIT
  * @author Maximilian Berkmann &lt;maxieberkmann@gmail.com>
  * @copyright Maximilian Berkmann 2016
- * @requires essence
+ * @requires mdodule:essence
  * @requires Ajax
  * @requires Misc
  * @type {Module}
  * @exports File
  */
-var Files = new Module("Files", "File management and control", ["Ajax", "Misc"]);
+var Files = new Module("Files", "File management and control", ["Ajax", "Misc", "DOM"]);
 
 /* eslint no-undef: 0 */
 /**
@@ -52,7 +52,7 @@ var Files = new Module("Files", "File management and control", ["Ajax", "Misc"])
  * @func
  */
 function stripPath (path) { //Keeps the file name even if it's not in the same directory as this library or the files using it
-    return path.split("/")[path.split("/").length - 1]
+	return path.split("/")[path.split("/").length - 1]
 }
 
 /**
@@ -63,7 +63,7 @@ function stripPath (path) { //Keeps the file name even if it's not in the same d
  * @func
  */
 function getFilename (withExt) {
-    return withExt? stripPath(location.pathname): stripPath(location.pathname).get(-stripPath(location.pathname).lastIndexOf(".") - 1);
+	return withExt? stripPath(location.pathname): stripPath(location.pathname).get(-stripPath(location.pathname).lastIndexOf(".") - 1);
 }
 
 /**
@@ -75,19 +75,19 @@ function getFilename (withExt) {
  * @func
  */
 function getCurrentPath (path, localPath) {
-    if (!localPath) localPath = "file:///";
-    var parts = path.split("/"), res, pParts = localPath.split("/"), i = 0, j = 0;
-    while(localPath.has(parts[i])) i++;
-    res = parts.get(i).join("/");
+	if (!localPath) localPath = "file:///";
+	var parts = path.split("/"), res, pParts = localPath.split("/"), i = 0, j = 0;
+	while(localPath.has(parts[i])) i++;
+	res = parts.get(i).join("/");
 
-    while (res.has(pParts[j])) {
-        console.log("Gone through " + pParts[j]);
-        j++;
-    }
-    if (j > 0) {
-        for(i = 0; i &lt; j; i++) res = "../" + res;
-    }
-    return res
+	while (res.has(pParts[j])) {
+		if (debugging) console.log("Gone through " + pParts[j]);
+		j++;
+	}
+	if (j > 0) {
+		for(i = 0; i &lt; j; i++) res = "../" + res;
+	}
+	return res
 }
 
 
@@ -99,9 +99,9 @@ function getCurrentPath (path, localPath) {
  * @since 1.1
  */
 function getExtPath (path) {
-    var cp = location.href;
-    var parentPath = cp.sameFirst(path);
-    return "../".repeat(getCurrentPath(cp, parentPath).count("/")) + getCurrentPath(path, parentPath);
+	var cp = location.href;
+	var parentPath = cp.sameFirst(path);
+	return "../".repeat(getCurrentPath(cp, parentPath).count("/")) + getCurrentPath(path, parentPath);
 }
 
 /**
@@ -112,9 +112,9 @@ function getExtPath (path) {
  * @func
  */
 function filenameList (list) {
-    var res = [];
-    for(var i = 0; i &lt; list.length; i++) res.push(stripPath(list[i]));
-    return res.remove("")
+	var res = [];
+	for(var i = 0; i &lt; list.length; i++) res.push(stripPath(list[i]));
+	return res.remove()
 }
 
 /**
@@ -125,8 +125,8 @@ function filenameList (list) {
  * @func
  */
 function getDirectoryPath (path) {
-    if (!path) path = location.href;
-    return path.get(0, path.indexOf(stripPath(path)) - 1)
+	if (!path) path = location.href;
+	return path.get(0, path.indexOf(stripPath(path)) - 1)
 }
 
 /**
@@ -140,19 +140,19 @@ function getDirectoryPath (path) {
  * @func
  */
 function AX (filename, text2write, close, remove) {
-    var fso = new ActiveXObject("Scripting.FileSystemObject");
-    //Bool: flat the file of the same name if it's already present
-    fso.CreateTextFile(filename,true);
-    //Opening type: 1-read only; 2-rewriting; 8-continue to write at the end, create (true) or not (false) the file if it doesn't exist
-    var otf = fso.OpenTextFile(filename, 1, true);
-    //WriteLn add a new line
-    //- the file has to be already opened in mode 2 or 8
-    otf.Write(text2write);
-    /* the file has to be opened in the read mod
-     - Read read to the specified number of characters. */
-    otf.ReadAll();
-    if (close &amp;&amp; confirm("Do you really want to close this file ?")) otf.Close();
-    if (remove &amp;&amp; confirm("Do you really want to delete this file ?")) fso.DeleteFile(filename)
+	var fso = new ActiveXObject("Scripting.FileSystemObject");
+	//Bool: flat the file of the same name if it's already present
+	fso.CreateTextFile(filename,true);
+	//Opening type: 1-read only; 2-rewriting; 8-continue to write at the end, create (true) or not (false) the file if it doesn't exist
+	var otf = fso.OpenTextFile(filename, 1, true);
+	//WriteLn add a new line
+	//- the file has to be already opened in mode 2 or 8
+	otf.Write(text2write);
+	/* the file has to be opened in the read mod
+	 - Read read to the specified number of characters. */
+	otf.ReadAll();
+	if (close &amp;&amp; confirm("Do you really want to close this file ?")) otf.Close();
+	if (remove &amp;&amp; confirm("Do you really want to delete this file ?")) fso.DeleteFile(filename)
 }
 
 /**
@@ -164,8 +164,8 @@ function AX (filename, text2write, close, remove) {
  * @func
  */
 function execFile (file, ext) {
-    var wshShell = new ActiveXObject("WScript.Shell");
-    wshShell.Run(file + "." + ext, 1, true)
+	var wshShell = new ActiveXObject("WScript.Shell");
+	wshShell.Run(file + "." + ext, 1, true)
 }
 
 /**
@@ -177,7 +177,7 @@ function execFile (file, ext) {
  * @func
  */
 function copyToClipboard (txt, type) { //Works only for IE
-    clipboardData.setData(type || "Text", txt)
+	clipboardData.setData(type || "Text", txt)
 }
 
 /**
@@ -190,21 +190,21 @@ function copyToClipboard (txt, type) { //Works only for IE
  * @func
  */
 function save (txt, name, type) { //Save into a file of the corresponding type
-    var txtfile = new Blob([txt], {type: "text/" + (type || "plain")});
+	var txtfile = new Blob([txt], {type: "text/" + (type || "plain")});
 
-    var dlLink = document.createElement("a");
-    dlLink.download = name;
-    dlLink.innerHTML = "Download File";
-    if (window.webkitURL != null) dlLink.href = window.webkitURL.createObjectURL(txtfile); //Chrome allows the link to be clicked without actually adding it to the DOM.
-    else { //Firefox requires the link to be added to the DOM before it can be clicked.
-        dlLink.href = window.URL.createObjectURL(txtfile);
-        dlLink.onclick = function (evt) {
-            document.body.removeChild(evt.target);
-        };
-        dlLink.style.display = "none";
-        document.body.appendChild(dlLink);
-    }
-    dlLink.click()
+	var dlLink = document.createElement("a");
+	dlLink.download = name;
+	dlLink.innerHTML = "Download File";
+	if (window.webkitURL != null) dlLink.href = window.webkitURL.createObjectURL(txtfile); //Chrome allows the link to be clicked without actually adding it to the DOM.
+	else { //Firefox requires the link to be added to the DOM before it can be clicked.
+		dlLink.href = window.URL.createObjectURL(txtfile);
+		dlLink.onclick = function (evt) {
+			document.body.removeChild(evt.target);
+		};
+		dlLink.style.display = "none";
+		document.body.appendChild(dlLink);
+	}
+	dlLink.click()
 }
 
 /**
@@ -217,17 +217,17 @@ function save (txt, name, type) { //Save into a file of the corresponding type
  * @deprecated
  */
 function getFileContent (fname) {
-    $G["fct"] = ""; //File content
-    var rawFile = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
-    rawFile.open("GET", fname, false);
-    rawFile.onreadystatechange = function () {
-        if (this.readyState === 4 &amp;&amp; this.status === 200) {
-            $G["fct"] = rawFile.responseText; //Because returning it won't allow the actual content to be returned
-            return rawFile.responseText
-        }
-    };
-    rawFile.send(null);
-    return $G["fct"];
+	$G["fct"] = ""; //File content
+	var rawFile = window.XMLHttpRequest? new XMLHttpRequest(): new ActiveXObject("Microsoft.XMLHTTP");
+	rawFile.open("GET", fname, false);
+	rawFile.onreadystatechange = function () {
+		if (this.readyState === 4 &amp;&amp; this.status === 200) {
+			$G["fct"] = rawFile.responseText; //Because returning it won't allow the actual content to be returned
+			return rawFile.responseText
+		}
+	};
+	rawFile.send(null);
+	return $G["fct"];
 }
 
 /**
@@ -240,20 +240,20 @@ function getFileContent (fname) {
  * @func
  */
 function getFC (fname, crossOrigin) {
-    if (!crossOrigin &amp;&amp; (fname.has("://") &amp;&amp; fname.split("//")[0] != location.protocol)) crossOrigin = true;
-    var res = "", xhr = crossOrigin? new CORS(fname, "GET", false, function (req) {
-        res = req.responseText;
-        return req.responseText;
-    }, function () {
-        return "Nothing";
-    }): new XHR(fname, "GET", false, function (req) {
-        res = req.responseText;
-        return req.responseText;
-    }, function () {
-        return "Nothing";
-    });
-    xhr.init();
-    return res;
+	if (!crossOrigin &amp;&amp; (fname.has("://") &amp;&amp; fname.split("//")[0] != location.protocol)) crossOrigin = true;
+	var res = "", xhr = crossOrigin? new CORS(fname, "GET", false, function (req) {
+		res = req.responseText;
+		return req.responseText;
+	}, function () {
+		return "Nothing";
+	}): new XHR(fname, "GET", false, function (req) {
+		res = req.responseText;
+		return req.responseText;
+	}, function () {
+		return "Nothing";
+	});
+	xhr.init();
+	return res;
 }
 
 /**
@@ -265,7 +265,7 @@ function getFC (fname, crossOrigin) {
  * @func
  */
 function evalFile (filename, crossOrigin) {
-    return (new Function("return " + getFC(filename, crossOrigin)))();
+	return (new Function("return " + getFC(filename, crossOrigin)))();
 }
 
 /**
@@ -277,14 +277,14 @@ function evalFile (filename, crossOrigin) {
  * @func
  */
 function getKeywords (text, noSymbols) {
-    var txt = (isType(text, "Array") ? text.join(" ") : text).replace(/(\.|!|\?|;|:|"|,|\t|\n|\f|\r|\v|\{|})+/gm, " ").split(" ").remove(""); //The \b would treat a-b as "a - b"
-    var kw = occurrenceSort(txt).filter(function (x) { //Filter out non-keywords words
-        return noSymbols? (["=", "+", "-", "*", "/", "\\", "%", "#", "'", "@", "^", "$", "£", "µ", "~", "&amp;", "[", "]", "(", ")", "|", "`"].has(x)? false: txt.count(x) > 3): txt.count(x) > 3;
-    });
+	var txt = (isType(text, "Array") ? text.join(" ") : text).replace(/(\.|!|\?|;|:|"|,|\t|\n|\f|\r|\v|\{|})+/gm, " ").split(" ").remove(); //The \b would treat a-b as "a - b"
+	var kw = occurrenceSort(txt).filter(function (x) { //Filter out non-keywords words
+		return noSymbols? (["=", "+", "-", "*", "/", "\\", "%", "#", "'", "@", "^", "$", "£", "µ", "~", "&amp;", "[", "]", "(", ")", "|", "`"].has(x)? false: txt.count(x) > 3): txt.count(x) > 3;
+	});
 
-    return kw.map(function (w) {
-        return w + ": " + txt.count(w) + " (" + markConv(txt.count(w), txt.length) + "%)";
-    });
+	return kw.map(function (w) {
+		return w + ": " + txt.count(w) + " (" + markConv(txt.count(w), txt.length) + "%)";
+	});
 }
 
 /**
@@ -306,54 +306,58 @@ function getKeywords (text, noSymbols) {
  * @property {function(): string} Spider.toString String representation
  */
 function Spider (filenames) {
-    this.dir = filenames || [];
-    this.keywords = [];
-    this.get = function (withSymbols, crossOrigin) { //Keywords infos
-        /*
-         Words: getKeywords(...).map(x => x.split(":")[0])
-         Occurrences: getKeywords(...).map(x => parseInt(x.split(" ")[1]))
-         Frequency: getKeywords(...).map(x => parseFloat(x.split(" ")[2].replace(/^\((\d|\d\.\d{1,})\%\)$/, "$1")))
-         */
-        for (var i = 0; i &lt; this.dir.length; i++) this.keywords[i] = getKeywords(getFC(this.dir[i], crossOrigin), !withSymbols);
-        return this.keywords;
-    };
-    this.getAll = function (withSymbols, crossOrigin) {
-        return this.get(withSymbols, crossOrigin).linearise();
-    };
+	this.dir = filenames || [];
+	this.keywords = [];
+	this.get = function (withSymbols, crossOrigin) { //Keywords infos
+		/*
+		 Words: getKeywords(...).map(x => x.split(":")[0])
+		 Occurrences: getKeywords(...).map(x => parseInt(x.split(" ")[1]))
+		 Frequency: getKeywords(...).map(x => parseFloat(x.split(" ")[2].replace(/^\((\d|\d\.\d{1,})\%\)$/, "$1")))
+		 */
+		for (var i = 0; i &lt; this.dir.length; i++) this.keywords[i] = getKeywords(getFC(this.dir[i], crossOrigin), !withSymbols);
+		return this.keywords;
+	};
+	this.getAll = function (withSymbols, crossOrigin) {
+		return this.get(withSymbols, crossOrigin).linearise();
+	};
+	//noinspection JSUnusedGlobalSymbols
     this.getWords = function (withSymbols, crossOrigin) { //Occurring words
-        return this.getAll(withSymbols, crossOrigin).map(function (x) {
-            return x.split(":")[0]
-        })
-    };
-    this.getOccurrences = function (withSymbols, crossOrigin) {
-        return this.getAll(withSymbols, crossOrigin).map(function (x) {
-            return parseInt(x.split(" ")[1])
-        })
-    };
-    this.getFreq = function (withSymbols, crossOrigin) { //Frequency
-        return this.getAll(withSymbols, crossOrigin).map(function (x) {
-            return parseFloat(x.split(" ")[2].replace(/^\((\d+|\d+\.\d+)%\)$/, "$1"));
-        })
-    };
+		return this.getAll(withSymbols, crossOrigin).map(function (x) {
+			return x.split(":")[0]
+		})
+	};
+	this.getOccurrences = function (withSymbols, crossOrigin) {
+		return this.getAll(withSymbols, crossOrigin).map(function (x) {
+			return parseInt(x.split(" ")[1])
+		})
+	};
+	this.getFreq = function (withSymbols, crossOrigin) { //Frequency
+		return this.getAll(withSymbols, crossOrigin).map(function (x) {
+			return parseFloat(x.split(" ")[2].replace(/^\((\d+|\d+\.\d+)%\)$/, "$1"));
+		})
+	};
 
+	//noinspection JSUnusedGlobalSymbols
     this.getCoverage = function (withSymbols, crossOrigin) {
-        return this.getFreq(withSymbols, crossOrigin).sum().toNDec(2);
-    };
+		return this.getFreq(withSymbols, crossOrigin).sum().toNDec(2);
+	};
+	//noinspection JSUnusedGlobalSymbols
     this.getGlobalKeywords = function (withSymbols, crossOrigin) {
-        var fullDir = this.dir.map(function (file) {
-            return getFC(file, crossOrigin);
-        }).toStr();
-        return getKeywords(fullDir, !withSymbols);
-    };
+		var fullDir = this.dir.map(function (file) {
+			return getFC(file, crossOrigin);
+		}).toStr();
+		return getKeywords(fullDir, !withSymbols);
+	};
 
-    this.toString = function () {
-        return "Spider(dir=" + this.dir + ", keywords= " + this.keywords.toStr(true) + ")";
-    };
-    return this;
+	this.toString = function () {
+		return "Spider(dir=" + this.dir + ", keywords= " + this.keywords.toStr(true) + ")";
+	};
+	return this;
 }
 
 //1. Get the file (if it exists) then get the content saved in an history accessible to the code.
 //2. When the the code changes/updates the content, it's saved in the file (which is created if it didn't exist)
+//noinspection JSUnusedGlobalSymbols
 /**
  * @description A mediator between data of the code and files to keep both interfaces up-to-date
  * @param {string} [filename="data.json"] Filename
@@ -362,46 +366,68 @@ function Spider (filenames) {
  * @todo Make sure that save() would save at the right place (since it would get it to be downloaded by the user)
  */
 function $Data (filename, data) {
-    this.name = filename || "data.json";
-    this.data = null || data;
-    var self = this;
-    this.req = new CORS(this.name, "GET", false, function (xhr) {
-       self.data = xhr.response;
-    }, function () {
-        Essence.say("The file %c" + self.name + "%c isn't available !", "warn", "text-decoration: italic;", "text-decoration: none;");
-    }, function () {
-        anim("Loading", 0, 5e3, 500, false, !isNon(self.req.data));
-    }, this.data);
-    this.req.init();
-    this.req.update();
-    this.history = new virtualHistory(this.data);
-    this.save = function () {
-        save(this.data, this.name, this.data.split(".").last());
-    };
-    this.undo = function () {
-        this.history.undo();
-        this.data = this.history.src;
-    };
-    this.redo = function () {
-        this.history.redo();
-        this.data = this.history.src;
-    };
-    this.update = function (newData) {
-        this.history.update(newData || this.data);
-        if (newData) this.data = newData;
-        this.save();
-    };
-    this.get = function () {
-        this.req.init();
-        this.req.update();
-        return this.data;
-    };
-    this.toString = function () {
-        return "$Data(name=" + this.name + ", data=" + this.data + ", history=" + this.history.getStates() + ", req=" + this.req + ")";
-    };
+	this.name = filename || "data.json";
+	this.data = null || data;
+	var self = this;
+	this.req = new CORS(this.name, "GET", false, function (xhr) {
+	   self.data = xhr.response;
+	}, function () {
+		Essence.say("The file %c" + self.name + "%c isn't available !", "warn", "text-decoration: italic;", "text-decoration: none;");
+	}, function () {
+		anim("Loading", 0, 5e3, 500, false, !isNon(self.req.data));
+	}, this.data);
+	this.req.init();
+	this.req.update();
+	this.history = new virtualHistory(this.data);
+	this.save = function () {
+		save(this.data, this.name, this.data.split(".").last());
+	};
+	this.undo = function () {
+		this.history.undo();
+		this.data = this.history.src;
+	};
+	this.redo = function () {
+		this.history.redo();
+		this.data = this.history.src;
+	};
+	this.update = function (newData) {
+		this.history.update(newData || this.data);
+		if (newData) this.data = newData;
+		this.save();
+	};
+	this.get = function () {
+		this.req.init();
+		this.req.update();
+		return this.data;
+	};
+	this.toString = function () {
+		return "$Data(name=" + this.name + ", data=" + this.data + ", history=" + this.history.getStates() + ", req=" + this.req + ")";
+	};
 
-    return this;
-}</code></pre>
+	return this;
+}
+
+/**
+ * @description Load a stylesheet in a deferred manner.&lt;br />
+ * Inspired by {@link https://developers.google.com/speed/docs/insights/OptimizeCSSDelivery|Google's CSS Optimized delivery}.
+ * @param {String} file Filename
+ * @returns {undefined}
+ * @since 1.1
+ * @func
+ */
+function loadDeferredStyle (file) {
+    var addStylesNode = tryNode("noscript#deferredStyles", "body");
+    var replacement = document.createElement("div");
+    replacement.innerHTML = addStylesNode.innerText;
+    document.body.appendChild(replacement);
+    addStylesNode.delete();
+    var raf = requestAnimationFrame || mozRequestAnimationFrame || webkitRequestAnimationFrame || msRequestAnimationFrame;
+    if (raf) raf(function () {
+    	wait(loadDeferredStyle);
+    });
+    else window.addEventListener("load", loadDeferredStyle);
+}
+</code></pre>
         </article>
     </section>
 
@@ -411,13 +437,13 @@ function $Data (filename, data) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#DocTemplate">DocTemplate</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Files.html">Files</a></li></ul><h3>Classes</h3><ul><li><a href="module-Files-Spider.html">Spider</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Sep 08 2016 11:58:04 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Dec 24 2016 13:36:25 GMT+0000 (GMT)
 </footer>
 
 <script> prettyPrint(); </script>

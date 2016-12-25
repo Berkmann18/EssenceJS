@@ -8,10 +8,11 @@
  * @copyright Maximilian Berkmann 2016
  * @requires module:essence
  * @requires Maths
+ * @requires QTest
  * @type {Module}
  * @exports UI
  */
-var UI = new Module("UI", "UI stuff", ["Maths", "DOM"]);
+var UI = new Module("UI", "UI stuff", ["Maths", "DOM", "QTest"]);
 
 /* eslint no-undef: 0 */
 /**
@@ -66,7 +67,7 @@ function toMaxSize () {
 		else if (frame.X) frame.resizeTo(frame.X, frame.Y);
 		else if (frame.x) frame.resizeTo(frame.x, frame.y);
 		else { //noinspection ExceptionCaughtLocallyJS
-			throw new Error("It'start not possible to maximise the size or you need to do more researches.");
+			throw new Error("It's not possible to maximise the size or you need to do more researches.");
 		}
 	} catch(e) {
 		Essence.say("An error occurred when trying to maximise the size Because of %c" + e, "err", "text-decoration: underline;");
@@ -448,7 +449,7 @@ function getColourType (clr) {
 }
 
 /**
- * @description Switch the colour of the <code>elmt</code>'start attribute (that can be the background/border/font colour of an HTML element and which is in hex form) to it'start red/green/blue/yellow/cyan/magenta/full negative version.
+ * @description Switch the colour of the <code>elmt</code>'s attribute (that can be the background/border/font colour of an HTML element and which is in hex form) to it's red/green/blue/yellow/cyan/magenta/full negative version.
  * @param {string} elmt Element to be used
  * @param {string} attr Attribute to be used
  * @param {string} [mod="x"] Mod
@@ -1428,12 +1429,22 @@ function daynightMode (exch) { //Switch between enabled or not for Day/Night pag
 		for (var i = 0; i < tags.length; i++) {
 			//console.log("#%d tag: %s => %s", i, tags[i], tags[i].node);
 <<<<<<< HEAD
+<<<<<<< master
+<<<<<<< HEAD
 			if (darkTime) tags[i].invColour();
 =======
+=======
+			if (isNon(tags[i].css("backgroundColor"))) tags[i].setCSS("backgroundColor", "#FFF"); //fill it with a "default" colour to avoid using a blank value instead of an actual valid colour
+			console.log("backgroundColor of " + tags[i].selector + "=" + tags[i].css("backgroundColor"));
+>>>>>>> Conflict fixed
+=======
+			if (isNon(tags[i].css("backgroundColor"))) tags[i].setCSS("backgroundColor", "#FFF"); //fill it with a "default" colour to avoid using a blank value instead of an actual valid colour
+			console.log("backgroundColor of " + tags[i].selector + "=" + tags[i].css("backgroundColor"));
+>>>>>>> develop
 			if (darkTime && !isDark(tags[i].css("backgroundColor"))) tags[i].invColour();
 >>>>>>> develop
 		}
-	} else Essence.say("You cannot use the day/night mod if it\'start disabled.", "warn")
+	} else Essence.say("You cannot use the day/night mod if it\'s disabled.", "warn")
 }
 
 /**
@@ -1600,7 +1611,7 @@ function htmlDate (id, minYear, maxYear) {
 function initCanvas (width, height) {
 	if (!width) width = 500;
 	if (!height) height = 500;
-	//There'start no <canvas id="essenceCanvas"></canvas> in the document
+	//There's no <canvas id="essenceCanvas"></canvas> in the document
 	if ($n("canvas#essenceCanvas", true) === null) print("<canvas id='essenceCanvas' width='" + width + "' height='" + height + "'>Canvas isn't supported by this browser</canvas>", true);
 	else {
 		$n("canvas#essenceCanvas").width = width;
@@ -1650,4 +1661,222 @@ function runCanvas (commands, dimension, stackLayer) {
  */
 function clrToArr (clr) {
 	return (getColourType(clr) === "hex")? clr.get(1).divide((clr.length - 1) / 3): clr.get(clr.indexOf("(") + 1, -1).split(", ");
+}
+
+/**
+ * @description It will synchronize the in-JS CSS to the CSS of a page (since JS won't always know when an element follow CSS rules specified in a CSS snippet/code).
+<<<<<<< HEAD
+<<<<<<< master
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> develop
+<<<<<<< HEAD
+ * This may show rules that aren't in the styles tags.
+=======
+>>>>>>> develop
+<<<<<<< HEAD
+>>>>>>> Conflict fixed
+=======
+=======
+>>>>>>> develop
+>>>>>>> develop
+ * @since 1.1
+ * @func
+ * @returns {undefined}
+ */
+function syncCSS () {
+	var styleSheets = document.styleSheets.toArray();
+	for (var sheet in styleSheets) {
+		if (styleSheets.hasOwnProperty(sheet)) {
+<<<<<<< HEAD
+<<<<<<< master
+            var rules = document.all? sheet.rules: sheet.cssRules;
+            console.log("\tRules of %s:\n%s", sheet, rules);
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> develop
+<<<<<<< HEAD
+            var rules = (document.all? styleSheets[sheet].rules: styleSheets[sheet].cssRules).toArray();
+            var currentRules = rules.map(function (rule) {
+            	if ($n(rule.selectorText, true)) $e(rule.selectorText === "*"? "html": rule.selectorText).setStyles(rule.style.cssText.split(";").map(function (rule) { //Transform the CSS rule string into an organised array
+                    return rule.split(":")
+                }).linearise());
+            	else if (debugging) console.log("No need to implement rule: " + rule.cssText);
+                return rule.selectorText + " {\n\t" + rule.style.cssText + "\n}";
+            });
+            console.info("Rules of %s:\n%s", styleSheets[sheet], currentRules.join("\n"));
+=======
+            var rules = document.all? sheet.rules: sheet.cssRules;
+            console.log("\tRules of %s:\n%s", sheet, rules);
+>>>>>>> develop
+<<<<<<< HEAD
+>>>>>>> Conflict fixed
+=======
+=======
+            var rules = document.all? sheet.rules: sheet.cssRules;
+            console.log("\tRules of %s:\n%s", sheet, rules);
+>>>>>>> develop
+>>>>>>> develop
+		}
+	}
+}
+
+/**
+ * @description Add a CSS rule to a particular place.<br />
+ * Inspired by Diego Fl&ocute;rez's version of {@link https://davidwalsh.name/add-rules-stylesheets|David Walsh's addCSSRule}.
+<<<<<<< HEAD
+<<<<<<< master
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> develop
+<<<<<<< HEAD
+ * @param {String} selector Selector
+ * @param {String} rules CSS rules
+ * @param {Stylesheet} [sheet=document.styleSheets[0]] Stylesheet
+ * @param {number} [index=-1] Insertion index
+ * @returns {String} Newly modified CSS rule
+ * @since 1.1
+ * @func
+ */
+function addCSSRule (selector, rules, sheet, index) {
+	if (!sheet) sheet = document.styleSheets[0];
+	console.log("Adding %s {%s} to %s", selector, rules, sheet);
+=======
+<<<<<<< HEAD
+>>>>>>> Conflict fixed
+=======
+=======
+>>>>>>> develop
+>>>>>>> develop
+ * @param {Stylesheet} [sheet=document.styleSheets[0]] Stylesheet
+ * @param {String} selector Selector
+ * @param {String} rules CSS rules
+ * @param {number} [index=-1] Insertion index
+ * @returns {String} Newly modified CSS rule
+ */
+function addCSSRule (sheet, selector, rules, index) {
+	if (!sheet) sheet = document.styleSheets[0];
+<<<<<<< HEAD
+<<<<<<< master
+=======
+>>>>>>> develop
+>>>>>>> Conflict fixed
+=======
+<<<<<<< HEAD
+>>>>>>> develop
+=======
+>>>>>>> develop
+>>>>>>> develop
+    //noinspection JSUnresolvedVariable
+    var styleRules = document.all? sheet.rules: sheet.cssRules;
+    if (!index) index = styleRules.length - 1;
+
+    for (var i = index; i > 0; i--) {
+        if (styleRules[i].selectorText === selector) { //Append the new rules to the current content of the styleRules[i]
+            rules = styleRules[i].style.cssText + rules;
+            sheet.deleteRule(i);
+            index = i;
+        }
+    }
+
+    if ("insertRule" in sheet) sheet.insertRule(selector + "{" + rules + "}", index);
+    else if ("addRule" in sheet) sheet.addRule(selector, rules, index);
+
+    return styleRules[index].cssText;
+}
+
+/**
+ * @description Clear CSS rules from a stylesheet.<br />
+ * Source: {@link https://davidwalsh.name/add-rules-stylesheets|Leonard's}
+ * @param {Stylesheet} [sheet=document.styleSheets[0]] Stylesheet
+<<<<<<< HEAD
+<<<<<<< master
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> develop
+<<<<<<< HEAD
+ * @returns {undefined}
+ * @since 1.1
+ * @func
+=======
+>>>>>>> develop
+<<<<<<< HEAD
+>>>>>>> Conflict fixed
+=======
+=======
+>>>>>>> develop
+>>>>>>> develop
+ */
+function clearCSSRules (sheet) {
+	if (!sheet) sheet = document.styleSheets[0];
+    var i = (document.all? sheet.rules: sheet.cssRules).length - 1;
+
+    // Remove all the rules from the end inwards.
+    while (i >= 0) {
+        if ("deleteRule" in sheet) sheet.deleteRule(i);
+        else if ("removeRule" in sheet) sheet.removeRule(i);
+        i--;
+    }
+<<<<<<< HEAD
+<<<<<<< master
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> develop
+<<<<<<< HEAD
+}
+
+/**
+ * @description Find all CSS rules in all stylesheets affecting a selector.
+ * @param {String} selector Selector
+ * @returns {String[]} CSS rules
+ * @since 1.1
+ * @func
+ */
+function findCSSRules (selector) {
+    var styleSheets = document.styleSheets.toArray();
+    for (var sheet in styleSheets) {
+        if (styleSheets.hasOwnProperty(sheet)) {
+            //noinspection JSUnresolvedVariable
+            var styleRules = document.all? styleSheets[sheet].rules: styleSheets[sheet].cssRules, res = [];
+
+            for (var i = 0; i < styleRules.length; i++) {
+            	console.log("seeing " + styleRules[i].selectorText + " in sheet " + sheet);
+                if (styleRules[i].selectorText === selector) res.push(styleRules[i].style.cssText);
+            }
+        }
+    }
+    return res;
+}
+
+/**
+ * @description Get the CSS rules of all stylesheets.
+ * @param {boolean} [asArray=false] Array representation
+ * @returns {Str} Dictionary of rules
+ * @since 1.1
+ * @func
+ */
+function getCSS (asArray) {
+    var styleSheets = document.styleSheets.toArray(), res = [];
+    for (var sheet in styleSheets) {
+        if (styleSheets.hasOwnProperty(sheet)) {
+            var rules = (document.all? styleSheets[sheet].rules: styleSheets[sheet].cssRules).toArray();
+            res.push(rules.map(function (rule) {
+                return rule.selectorText + " {\n\t" + rule.style.cssText + "\n}";
+            }).join("\n"));
+        }
+    }
+    return asArray? res: res.join("\n");
+=======
+>>>>>>> develop
+<<<<<<< HEAD
+>>>>>>> Conflict fixed
+=======
+=======
+>>>>>>> develop
+>>>>>>> develop
 }

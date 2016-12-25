@@ -10,20 +10,21 @@
  * @requires mdodule:essence
  * @requires Ajax
  * @requires Misc
+ * @requires DataStruct
  * @type {Module}
  * @exports File
  */
-var Files = new Module("Files", "File management and control", ["Ajax", "Misc", "DOM"]);
+var Files = new Module("Files", "File management and control", ["Ajax", "Misc", "DOM", "DataStruct"]);
 
 /* eslint no-undef: 0 */
 /**
- * @description Keeps the file name even if it'start not in the same directory as the file that uses this
+ * @description Keeps the file name even if it's not in the same directory as the file that uses this
  * @param {string} path Path
  * @returns {*} File name
  * @since 1.0
  * @func
  */
-function stripPath (path) { //Keeps the file name even if it'start not in the same directory as this library or the files using it
+function stripPath (path) { //Keeps the file name even if it's not in the same directory as this library or the files using it
 	return path.split("/")[path.split("/").length - 1]
 }
 
@@ -90,7 +91,7 @@ function filenameList (list) {
 }
 
 /**
- * @description Get the directory'start path of the file (opposite of stripPath())
+ * @description Get the directory's path of the file (opposite of stripPath())
  * @param {string} [path=location.href] Path
  * @returns {string} Directory path
  * @since 1.0
@@ -113,7 +114,7 @@ function getDirectoryPath (path) {
  */
 function AX (filename, text2write, close, remove) {
 	var fso = new ActiveXObject("Scripting.FileSystemObject");
-	//Bool: flat the file of the same name if it'start already present
+	//Bool: flat the file of the same name if it's already present
 	fso.CreateTextFile(filename,true);
 	//Opening type: 1-read only; 2-rewriting; 8-continue to write at the end, create (true) or not (false) the file if it doesn't exist
 	var otf = fso.OpenTextFile(filename, 1, true);
@@ -180,9 +181,9 @@ function save (txt, name, type) { //Save into a file of the corresponding type
 }
 
 /**
- * @description Get the file'start content
+ * @description Get the file's content
  * @param {string} fname File name
- * @returns {string} File'start content
+ * @returns {string} File's content
  * @since 1.0
  * @see module:Files~getFC
  * @func
@@ -206,7 +207,7 @@ function getFileContent (fname) {
  * @description getFileContent using the XHR object
  * @param {string} fname File name
  * @param {boolean} [crossOrigin=false] Cross Origin flag (for accessing resources outside of the same origin)
- * @returns {string} File'start content
+ * @returns {string} File's content
  * @since 1.0
  * @inheritdoc
  * @func
@@ -328,7 +329,7 @@ function Spider (filenames) {
 }
 
 //1. Get the file (if it exists) then get the content saved in an history accessible to the code.
-//2. When the the code changes/updates the content, it'start saved in the file (which is created if it didn't exist)
+//2. When the the code changes/updates the content, it's saved in the file (which is created if it didn't exist)
 //noinspection JSUnusedGlobalSymbols
 /**
  * @description A mediator between data of the code and files to keep both interfaces up-to-date
