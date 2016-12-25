@@ -1,27 +1,27 @@
 ## General
-
+<<<<<<< HEAD
+^ Updated the dependencies of each modules
 
 ## [essence](essence.js)
-\+ String.countWord(), asyncTime()
++ Moved the multi-node logic of Element.setCSS() to Element.setInlineCSS() and improved Element.setCSS()
+=======
+^ A couple corrections
 
-^ Changed the parameter order in timeUp()
+## [essence](essence.js)
+\+ String.countWord(), asyncTime(), perMode and profiling logs
+>>>>>>> develop
 
+^ Added the multi-node support to Element.attr() and Element.rmAttr()
+
+\+ Added Module.getUsage()
 ## [Ajax](modules/Ajax.js)
 
 
 ## [DataStruct](modules/DataStruct.js)
-\+ (N)TreeNode.count(), DOMA, DomList()
-
-^ NTreeNode.find()
-
-^ Fixed the key-instead-of-value bug in NTreeNode.toString()
-
-^ Fixed a typo in TreeNode.printBFS()
-
-^ Placed common logic of DomTree(), DomStructure() into DOMA
+\+ TableSort(), sortNamedSort()
 
 ## [DOM](modules/DOM.js)
-\+ simplifiedCSSPath()
+^ Added a restore option in noRightClick(), documented simplifyCSSPath()
 
 ## [Files](modules/Files.js)
  
@@ -30,17 +30,23 @@
 
 
 ## [Misc](modules/Misc.js)
- 
+ \+ rmUniques()
 
+^ moduleList()
 ## [Security](modules/Security.js)
  
 
 ## [UI](modules/UI.js)
-\+ clrToArr() (along with it's implementation in the appropriate places in UI.js), getLuminance()
+\+ clearCSSRules(), findCSSRules(), getCSS()
 
-^ Optimised isDark()
+\+ syncCSS(), addCSSRule(), clearCSSRule()
 
 ## [Web](modules/Web.js)
 
 
 ## [QTest](modules/QTest.js)
+\+ UnitTest.assert()
+
+^ UnitTest.basicTests(), UnitTest.test(), UnitTest.testFalse(), UnitTest.multiTest()
+
+^ renamed UnitTest.bad into UnitTest.fail

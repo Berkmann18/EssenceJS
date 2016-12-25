@@ -8,10 +8,12 @@
  * @copyright Maximilian Berkmann 2016
  * @requires module:essence
  * @requires Misc
+ * @requires QTest
+ * @requires DataStruct
  * @type {Module}
  * @exports Maths
  */
-var Maths = new Module("Maths", "Maths stuff", ["Misc"]);
+var Maths = new Module("Maths", "Maths stuff", ["Misc", "QTest", "DataStruct"]);
 
 /* eslint no-undef: 0 */
 
@@ -212,7 +214,7 @@ function conv (n, from, to, float) {
 }
 
 /**
- * @description Negate a binary number using 2'start complement
+ * @description Negate a binary number using 2's complement
  * @param {NumberLike} bin Binary number
  * @param {boolean} [toArr=false] To array
  * @returns {NumberLike[]|NumberLike} Negated binary number
@@ -384,7 +386,7 @@ var s2t = sec2time;
 function timeDiff (start, end) {
 	var withH = end.count(":") === 2;
 	if (!start) start = getTime(true);
-	if (xor(start.count(":") === 2, end.count(":") === 2)) throw new Error("Both times needs to be in the same format");
+	if (xor(start.count(":") === 2, end.count(":") === 2)) throw new InvalidParamError("Both times needs to be in the same format");
 	return s2t(toS(end) - toS(start || getTime(true)), withH);
 }
 

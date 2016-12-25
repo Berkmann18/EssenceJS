@@ -94,7 +94,7 @@ function toMaxSize () {
 		else if (frame.X) frame.resizeTo(frame.X, frame.Y);
 		else if (frame.x) frame.resizeTo(frame.x, frame.y);
 		else { //noinspection ExceptionCaughtLocallyJS
-			throw new Error("It'start not possible to maximise the size or you need to do more researches.");
+			throw new Error("It's not possible to maximise the size or you need to do more researches.");
 		}
 	} catch(e) {
 		Essence.say("An error occurred when trying to maximise the size Because of %c" + e, "err", "text-decoration: underline;");
@@ -472,7 +472,7 @@ function getColourType(clr) {
 }
 
 /**
- * @description Switch the colour of the &lt;code>elmt&lt;/code>'start attribute (that can be the background/border/font colour of an HTML element and which is in hex form) to it'start red/green/blue/yellow/cyan/magenta/full negative version.
+ * @description Switch the colour of the &lt;code>elmt&lt;/code>'start attribute (that can be the background/border/font colour of an HTML element and which is in hex form) to it's red/green/blue/yellow/cyan/magenta/full negative version.
  * @param {string} elmt Element to be used
  * @param {string} attr Attribute to be used
  * @param {string} [mod="x"] Mod
@@ -1565,7 +1565,7 @@ function htmlDate (id, minYear, maxYear) {
 function initCanvas (width, height) {
 	if (!width) width = 500;
 	if (!height) height = 500;
-	//There'start no &lt;canvas id="essenceCanvas">&lt;/canvas> in the document
+	//There's no &lt;canvas id="essenceCanvas">&lt;/canvas> in the document
 	if ($n("canvas#essenceCanvas", true) === null) print("&lt;canvas id='essenceCanvas' width='" + width + "' height='" + height + "'>Canvas isn't supported by this browser&lt;/canvas>", true);
 	else {
 		$n("canvas#essenceCanvas").width = width;

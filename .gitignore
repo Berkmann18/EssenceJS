@@ -1,5 +1,6 @@
+# Project
 Sandbox.*
-plain.html
+~*
 
 # Logs
 logs
@@ -38,7 +39,7 @@ jspm_packages
 
 # IDE
 .idea
-idea
+idea*
 .project
 .classpath
 .settings

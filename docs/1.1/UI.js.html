@@ -36,10 +36,11 @@
  * @copyright Maximilian Berkmann 2016
  * @requires module:essence
  * @requires Maths
+ * @requires QTest
  * @type {Module}
  * @exports UI
  */
-var UI = new Module("UI", "UI stuff", ["Maths", "DOM"]);
+var UI = new Module("UI", "UI stuff", ["Maths", "DOM", "QTest"]);
 
 /* eslint no-undef: 0 */
 /**
@@ -94,7 +95,7 @@ function toMaxSize () {
 		else if (frame.X) frame.resizeTo(frame.X, frame.Y);
 		else if (frame.x) frame.resizeTo(frame.x, frame.y);
 		else { //noinspection ExceptionCaughtLocallyJS
-			throw new Error("It'start not possible to maximise the size or you need to do more researches.");
+			throw new Error("It's not possible to maximise the size or you need to do more researches.");
 		}
 	} catch(e) {
 		Essence.say("An error occurred when trying to maximise the size Because of %c" + e, "err", "text-decoration: underline;");
@@ -472,7 +473,7 @@ function getColourType (clr) {
 }
 
 /**
- * @description Switch the colour of the &lt;code>elmt&lt;/code>'start attribute (that can be the background/border/font colour of an HTML element and which is in hex form) to it'start red/green/blue/yellow/cyan/magenta/full negative version.
+ * @description Switch the colour of the &lt;code>elmt&lt;/code>'s attribute (that can be the background/border/font colour of an HTML element and which is in hex form) to it's red/green/blue/yellow/cyan/magenta/full negative version.
  * @param {string} elmt Element to be used
  * @param {string} attr Attribute to be used
  * @param {string} [mod="x"] Mod
@@ -1443,9 +1444,11 @@ function daynightMode (exch) { //Switch between enabled or not for Day/Night pag
 
 		for (var i = 0; i &lt; tags.length; i++) {
 			//console.log("#%d tag: %s => %s", i, tags[i], tags[i].node);
+			if (isNon(tags[i].css("backgroundColor"))) tags[i].setCSS("backgroundColor", "#FFF"); //fill it with a "default" colour to avoid using a blank value instead of an actual valid colour
+			console.log("backgroundColor of " + tags[i].selector + "=" + tags[i].css("backgroundColor"));
 			if (darkTime &amp;&amp; !isDark(tags[i].css("backgroundColor"))) tags[i].invColour();
 		}
-	} else Essence.say("You cannot use the day/night mod if it\'start disabled.", "warn")
+	} else Essence.say("You cannot use the day/night mod if it\'s disabled.", "warn")
 }
 
 /**
@@ -1612,7 +1615,7 @@ function htmlDate (id, minYear, maxYear) {
 function initCanvas (width, height) {
 	if (!width) width = 500;
 	if (!height) height = 500;
-	//There'start no &lt;canvas id="essenceCanvas">&lt;/canvas> in the document
+	//There's no &lt;canvas id="essenceCanvas">&lt;/canvas> in the document
 	if ($n("canvas#essenceCanvas", true) === null) print("&lt;canvas id='essenceCanvas' width='" + width + "' height='" + height + "'>Canvas isn't supported by this browser&lt;/canvas>", true);
 	else {
 		$n("canvas#essenceCanvas").width = width;
@@ -1662,6 +1665,150 @@ function runCanvas (commands, dimension, stackLayer) {
  */
 function clrToArr (clr) {
 	return (getColourType(clr) === "hex")? clr.get(1).divide((clr.length - 1) / 3): clr.get(clr.indexOf("(") + 1, -1).split(", ");
+}
+
+/**
+ * @description It will synchronize the in-JS CSS to the CSS of a page (since JS won't always know when an element follow CSS rules specified in a CSS snippet/code).
+<<<<<<< HEAD
+ * This may show rules that aren't in the styles tags.
+=======
+>>>>>>> develop
+ * @since 1.1
+ * @func
+ * @returns {undefined}
+ */
+function syncCSS () {
+	var styleSheets = document.styleSheets.toArray();
+	for (var sheet in styleSheets) {
+		if (styleSheets.hasOwnProperty(sheet)) {
+<<<<<<< HEAD
+            var rules = (document.all? styleSheets[sheet].rules: styleSheets[sheet].cssRules).toArray();
+            var currentRules = rules.map(function (rule) {
+            	if ($n(rule.selectorText, true)) $e(rule.selectorText === "*"? "html": rule.selectorText).setStyles(rule.style.cssText.split(";").map(function (rule) { //Transform the CSS rule string into an organised array
+                    return rule.split(":")
+                }).linearise());
+            	else if (debugging) console.log("No need to implement rule: " + rule.cssText);
+                return rule.selectorText + " {\n\t" + rule.style.cssText + "\n}";
+            });
+            console.info("Rules of %s:\n%s", styleSheets[sheet], currentRules.join("\n"));
+=======
+            var rules = document.all? sheet.rules: sheet.cssRules;
+            console.log("\tRules of %s:\n%s", sheet, rules);
+>>>>>>> develop
+		}
+	}
+}
+
+/**
+ * @description Add a CSS rule to a particular place.&lt;br />
+ * Inspired by Diego Fl&amp;ocute;rez's version of {@link https://davidwalsh.name/add-rules-stylesheets|David Walsh's addCSSRule}.
+<<<<<<< HEAD
+ * @param {String} selector Selector
+ * @param {String} rules CSS rules
+ * @param {Stylesheet} [sheet=document.styleSheets[0]] Stylesheet
+ * @param {number} [index=-1] Insertion index
+ * @returns {String} Newly modified CSS rule
+ * @since 1.1
+ * @func
+ */
+function addCSSRule (selector, rules, sheet, index) {
+	if (!sheet) sheet = document.styleSheets[0];
+	console.log("Adding %s {%s} to %s", selector, rules, sheet);
+=======
+ * @param {Stylesheet} [sheet=document.styleSheets[0]] Stylesheet
+ * @param {String} selector Selector
+ * @param {String} rules CSS rules
+ * @param {number} [index=-1] Insertion index
+ * @returns {String} Newly modified CSS rule
+ */
+function addCSSRule (sheet, selector, rules, index) {
+	if (!sheet) sheet = document.styleSheets[0];
+>>>>>>> develop
+    //noinspection JSUnresolvedVariable
+    var styleRules = document.all? sheet.rules: sheet.cssRules;
+    if (!index) index = styleRules.length - 1;
+
+    for (var i = index; i > 0; i--) {
+        if (styleRules[i].selectorText === selector) { //Append the new rules to the current content of the styleRules[i]
+            rules = styleRules[i].style.cssText + rules;
+            sheet.deleteRule(i);
+            index = i;
+        }
+    }
+
+    if ("insertRule" in sheet) sheet.insertRule(selector + "{" + rules + "}", index);
+    else if ("addRule" in sheet) sheet.addRule(selector, rules, index);
+
+    return styleRules[index].cssText;
+}
+
+/**
+ * @description Clear CSS rules from a stylesheet.&lt;br />
+ * Source: {@link https://davidwalsh.name/add-rules-stylesheets|Leonard's}
+ * @param {Stylesheet} [sheet=document.styleSheets[0]] Stylesheet
+<<<<<<< HEAD
+ * @returns {undefined}
+ * @since 1.1
+ * @func
+=======
+>>>>>>> develop
+ */
+function clearCSSRules (sheet) {
+	if (!sheet) sheet = document.styleSheets[0];
+    var i = (document.all? sheet.rules: sheet.cssRules).length - 1;
+
+    // Remove all the rules from the end inwards.
+    while (i >= 0) {
+        if ("deleteRule" in sheet) sheet.deleteRule(i);
+        else if ("removeRule" in sheet) sheet.removeRule(i);
+        i--;
+    }
+<<<<<<< HEAD
+}
+
+/**
+ * @description Find all CSS rules in all stylesheets affecting a selector.
+ * @param {String} selector Selector
+ * @returns {String[]} CSS rules
+ * @since 1.1
+ * @func
+ */
+function findCSSRules (selector) {
+    var styleSheets = document.styleSheets.toArray();
+    for (var sheet in styleSheets) {
+        if (styleSheets.hasOwnProperty(sheet)) {
+            //noinspection JSUnresolvedVariable
+            var styleRules = document.all? styleSheets[sheet].rules: styleSheets[sheet].cssRules, res = [];
+
+            for (var i = 0; i &lt; styleRules.length; i++) {
+            	console.log("seeing " + styleRules[i].selectorText + " in sheet " + sheet);
+                if (styleRules[i].selectorText === selector) res.push(styleRules[i].style.cssText);
+            }
+        }
+    }
+    return res;
+}
+
+/**
+ * @description Get the CSS rules of all stylesheets.
+ * @param {boolean} [asArray=false] Array representation
+ * @returns {Str} Dictionary of rules
+ * @since 1.1
+ * @func
+ */
+function getCSS (asArray) {
+    var styleSheets = document.styleSheets.toArray(), res = [];
+    for (var sheet in styleSheets) {
+        if (styleSheets.hasOwnProperty(sheet)) {
+            var rules = (document.all? styleSheets[sheet].rules: styleSheets[sheet].cssRules).toArray();
+            res.push(rules.map(function (rule) {
+                return rule.selectorText + " {\n\t" + rule.style.cssText + "\n}";
+            }).join("\n"));
+        }
+    }
+    return asArray? res: res.join("\n");
+=======
+>>>>>>> develop
 }</code></pre>
         </article>
     </section>
@@ -1678,7 +1825,11 @@ function clrToArr (clr) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Dec 23 2016 21:41:07 GMT+0000 (GMT)
+<<<<<<< HEAD
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sun Dec 25 2016 02:44:41 GMT+0000 (GMT)
+=======
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Dec 24 2016 14:14:28 GMT+0000 (GMT)
+>>>>>>> develop
 </footer>
 
 <script> prettyPrint(); </script>

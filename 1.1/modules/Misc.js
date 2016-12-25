@@ -8,10 +8,12 @@
  * @copyright Maximilian Berkmann 2016
  * @requires module:essence
  * @requires Files
+ * @requires DataStruct
+ * @requires Ajax
  * @type {Module}
  * @exports Misc
  */
-var Misc = new Module("Misc", "Miscellaneous", ["Files", "DataStruct"]);
+var Misc = new Module("Misc", "Miscellaneous", ["Files", "DataStruct", "Ajax"]);
 
 /* eslint no-undef: 0 */
 /**
@@ -170,7 +172,7 @@ function Item (name, cat, price, amr, nb) { //An item like the ones that can be 
 		for (var p in this) {
 			if (this.hasOwnProperty(p) && p != "toString" && !isType(p, "Function")) str += p + "=" + this[p] + ", ";
 		}
-		return str.substring(0, str.length-2)
+		return str.substring(0, str.length - 2)
 	};
 	return this
 }
@@ -230,12 +232,32 @@ function rmConsecDuplicates (arr) {
  * rmDuplicates([4, 10, 1, 9, 10, 10, 10, 3, 4, 2]); //[4, 10, 1, 9, 3, 2]
  */
 function rmDuplicates (arr) {
-	if (!arr.isIterable()) throw new TypeError("It'start not possible to remove duplicates of a non iterable object.");
+	if (!arr.isIterable()) throw new TypeError("It's not possible to remove duplicates of a non iterable object.");
 	var uniques = [];
 	for (var i = 0; i < arr.length; i++) {
 		if (!uniques.has(arr[i])) uniques.push(arr[i]);
 	}
 	return isType(arr, "Array")? uniques: uniques.join("");
+}
+
+/**
+ * @description Remove the Unique values of an array (keep the ones that are initially duplicated).
+ * @param {Array|string} arr Array
+ * @returns {Array|string} Filtered array
+ * @see module:Misc~rmDuplicates
+ * @since 1.1
+ * @func
+ * @throws {TypeError} arr isn't iterable
+ * @example
+ * rmUniques("hello world !"); //"lo "
+ * rmUniques([4, 10, 1, 9, 10, 10, 10, 3, 4, 2]); //[10, 4]
+ */
+function rmUniques (arr) {
+	if (!arr.isIterable()) throw new TypeError("It's not possible to remove uniques of a non iterable object.");
+	var duplicates = rmDuplicates(arr.filter(function (item) {
+        return arr.count(item) > 1;
+    }));
+	return isType(arr, "Array")? duplicates: duplicates.join("");
 }
 
 /**
@@ -870,17 +892,27 @@ function arrayLiteral (arr, cjt) {
 /**
  * @description Module list
  * @param {boolean} [extended=false] Extension table flag
+ * @param {boolean} [less=false] Less details (not for use)
  * @return {Array[]} Module list
  * @func
  * @since 1.1
  */
-function moduleList (extended) {
-	var table = [["Name", "Version", "Description", "Dependencies"]];
-	if (extended) table[0].push("Weight");
+function moduleList (extended, less) {
+	var moduleTable = [["Name", "Version", "Description", "Dependencies", "Weight"]];
+	if (less) moduleTable[0].pop();
+	if (extended) moduleTable[0].push("Used by");
+	//noinspection JSValidateTypes
+    //if (!eval(Essence.isComplete())) void(true); //Update in case the coder/user injected a module and do it ONCE
 	Essence.loadedModules.map(function (m) {
-		extended? table.push([m.name, m.version, m.description, m.dependency.toStr(true), m.getWeight()]): table.push([m.name, m.version, m.description, m.dependency.toStr(true)]);
+		/*
+		!extended & !less <=> normal + weight
+	    !extended & less <=> normal
+	    extended->less <=> normal + weight + usage
+		*/
+		if (extended) moduleTable.push([m.name, m.version, m.description, m.dependency.toStr(true), m.getWeight(), m.getUsage()]);
+		else less? moduleTable.push([m.name, m.version, m.description, m.dependency.toStr(true)]): moduleTable.push([m.name, m.version, m.description, m.dependency.toStr(true), m.getWeight()])
 	});
-	return table;
+	return moduleTable;
 }
 
 /**
@@ -1005,7 +1037,7 @@ function anim (msg, startTime, max, step, tuxStyle, stop) {
 	else return done();
 }
 
-//AI system that stores it'start rules in a database and update it after learning
+//AI system that stores it's rules in a database and update it after learning
 /**
  * @description Artificial Intelligence system.
  * @param {Array} [rules=[[0, "", null]]] Rules

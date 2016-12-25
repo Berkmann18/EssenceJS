@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectTasksOptions">
     <TaskOptions isEnabled="true">
-      <option name="arguments" value="$FileName$ -o $FileNameWithoutExtension$.min.js --no-comment" />
+      <option name="arguments" value="$FileName$ -o $FileNameWithoutExtension$.min.js --no-comments" />
       <option name="checkSyntaxErrors" value="true" />
-      <option name="description" value="Compress .js files" />
+      <option name="description" />
       <option name="exitCodeBehavior" value="ERROR" />
       <option name="fileExtension" value="js" />
       <option name="immediateSync" value="true" />
@@ -21,9 +21,9 @@
       <envs />
     </TaskOptions>
     <TaskOptions isEnabled="true">
-      <option name="arguments" value="$FileName$ -o $FileNameWithoutExtension$.min.css" />
+      <option name="arguments" value="$FileName$ -o $FileNameWithoutExtension$.min.css --no-comments" />
       <option name="checkSyntaxErrors" value="true" />
-      <option name="description" value="Compress .css files" />
+      <option name="description" />
       <option name="exitCodeBehavior" value="ERROR" />
       <option name="fileExtension" value="css" />
       <option name="immediateSync" value="true" />
