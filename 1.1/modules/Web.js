@@ -9,10 +9,11 @@
  * @requires module:essence
  * @requires DataStruct
  * @requires Misc
+ * @requires Ajax
  * @type {Module}
  * @exports Web
  */
-var Web = new Module("Web", "Web stuff", ["DataStruct", "Misc"], 1, function () {
+var Web = new Module("Web", "Web stuff", ["DataStruct", "Misc", "Ajax"], 1, function () {
 	//if (!isValid($G["IP"], "ip")) getIP();
 	//if (!isValid($G["IP"], "ip")) getPrivateIP();
 });

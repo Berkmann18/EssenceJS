@@ -10,10 +10,11 @@
  * @requires module:essence
  * @requires Maths
  * @requires DOM
+ * @requires Files
  * @type {Module}
  * @exports File
  */
-var QTest = new Module("QTest", "QA and tests", ["Maths", "DOM"]);
+var QTest = new Module("QTest", "QA and tests", ["Maths", "DOM", "Files"]);
 
 /* eslint no-undef: 0 */
 

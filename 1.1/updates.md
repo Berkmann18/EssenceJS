@@ -1,5 +1,6 @@
 ## General
 <<<<<<< master
+<<<<<<< master
 <<<<<<< HEAD
 ^ Documentation
 
@@ -29,13 +30,28 @@
 
 ## [essence](essence.js)
 \+ String.countWord(), asyncTime(), perMode and profiling logs
+=======
+<<<<<<< HEAD
+^ Updated the dependencies of each modules
 
-^ Changed the parameter order in timeUp()
+## [essence](essence.js)
++ Moved the multi-node logic of Element.setCSS() to Element.setInlineCSS() and improved Element.setCSS()
+=======
+^ A couple corrections
 
+## [essence](essence.js)
+\+ String.countWord(), asyncTime(), perMode and profiling logs
+>>>>>>> develop
+>>>>>>> Conflict fixed
+
+^ Added the multi-node support to Element.attr() and Element.rmAttr()
+
+\+ Added Module.getUsage()
 ## [Ajax](modules/Ajax.js)
 
 
 ## [DataStruct](modules/DataStruct.js)
+<<<<<<< master
 \+ (N)TreeNode.count(), DOMA, DomList()
 
 ^ NTreeNode.find()
@@ -46,9 +62,12 @@
 
 ^ Placed common logic of DomTree(), DomStructure() into DOMA
 >>>>>>> develop
+=======
+\+ TableSort(), sortNamedSort()
+>>>>>>> Conflict fixed
 
 ## [DOM](modules/DOM.js)
-\+ simplifiedCSSPath()
+^ Added a restore option in noRightClick(), documented simplifyCSSPath()
 
 ## [Files](modules/Files.js)
  
@@ -61,12 +80,14 @@
 >>>>>>> develop
 
 ## [Misc](modules/Misc.js)
- 
+ \+ rmUniques()
 
+^ moduleList()
 ## [Security](modules/Security.js)
  
 
 ## [UI](modules/UI.js)
+<<<<<<< master
 <<<<<<< HEAD
 \+ getColourType() which supports: hex, rgb(a), hsl(a), hsv(a) and hsb(a);
 
@@ -79,8 +100,11 @@
 ^ Fixed a typo in InvalidExpressionError
 =======
 \+ clrToArr() (along with it's implementation in the appropriate places in UI.js), getLuminance()
+=======
+\+ clearCSSRules(), findCSSRules(), getCSS()
+>>>>>>> Conflict fixed
 
-^ Optimised isDark()
+\+ syncCSS(), addCSSRule(), clearCSSRule()
 
 \+ syncCSS(), addCSSRule(), clearCSSRule()
 
@@ -89,11 +113,18 @@
 
 ## [QTest](modules/QTest.js)
 <<<<<<< master
+<<<<<<< master
 >>>>>>> develop
 =======
+=======
+>>>>>>> Conflict fixed
 \+ UnitTest.assert()
 
 ^ UnitTest.basicTests(), UnitTest.test(), UnitTest.testFalse(), UnitTest.multiTest()
 
+<<<<<<< master
 ^ renamed UnitTest.bad into UnitTest.fail
 >>>>>>> Updated
+=======
+^ renamed UnitTest.bad into UnitTest.fail
+>>>>>>> Conflict fixed

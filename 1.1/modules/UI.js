@@ -8,10 +8,11 @@
  * @copyright Maximilian Berkmann 2016
  * @requires module:essence
  * @requires Maths
+ * @requires QTest
  * @type {Module}
  * @exports UI
  */
-var UI = new Module("UI", "UI stuff", ["Maths", "DOM"]);
+var UI = new Module("UI", "UI stuff", ["Maths", "DOM", "QTest"]);
 
 /* eslint no-undef: 0 */
 /**
@@ -1427,9 +1428,14 @@ function daynightMode (exch) { //Switch between enabled or not for Day/Night pag
 
 		for (var i = 0; i < tags.length; i++) {
 			//console.log("#%d tag: %s => %s", i, tags[i], tags[i].node);
+<<<<<<< master
 <<<<<<< HEAD
 			if (darkTime) tags[i].invColour();
 =======
+=======
+			if (isNon(tags[i].css("backgroundColor"))) tags[i].setCSS("backgroundColor", "#FFF"); //fill it with a "default" colour to avoid using a blank value instead of an actual valid colour
+			console.log("backgroundColor of " + tags[i].selector + "=" + tags[i].css("backgroundColor"));
+>>>>>>> Conflict fixed
 			if (darkTime && !isDark(tags[i].css("backgroundColor"))) tags[i].invColour();
 >>>>>>> develop
 		}
@@ -1654,6 +1660,13 @@ function clrToArr (clr) {
 
 /**
  * @description It will synchronize the in-JS CSS to the CSS of a page (since JS won't always know when an element follow CSS rules specified in a CSS snippet/code).
+<<<<<<< master
+=======
+<<<<<<< HEAD
+ * This may show rules that aren't in the styles tags.
+=======
+>>>>>>> develop
+>>>>>>> Conflict fixed
  * @since 1.1
  * @func
  * @returns {undefined}
@@ -1662,8 +1675,25 @@ function syncCSS () {
 	var styleSheets = document.styleSheets.toArray();
 	for (var sheet in styleSheets) {
 		if (styleSheets.hasOwnProperty(sheet)) {
+<<<<<<< master
             var rules = document.all? sheet.rules: sheet.cssRules;
             console.log("\tRules of %s:\n%s", sheet, rules);
+=======
+<<<<<<< HEAD
+            var rules = (document.all? styleSheets[sheet].rules: styleSheets[sheet].cssRules).toArray();
+            var currentRules = rules.map(function (rule) {
+            	if ($n(rule.selectorText, true)) $e(rule.selectorText === "*"? "html": rule.selectorText).setStyles(rule.style.cssText.split(";").map(function (rule) { //Transform the CSS rule string into an organised array
+                    return rule.split(":")
+                }).linearise());
+            	else if (debugging) console.log("No need to implement rule: " + rule.cssText);
+                return rule.selectorText + " {\n\t" + rule.style.cssText + "\n}";
+            });
+            console.info("Rules of %s:\n%s", styleSheets[sheet], currentRules.join("\n"));
+=======
+            var rules = document.all? sheet.rules: sheet.cssRules;
+            console.log("\tRules of %s:\n%s", sheet, rules);
+>>>>>>> develop
+>>>>>>> Conflict fixed
 		}
 	}
 }
@@ -1671,6 +1701,22 @@ function syncCSS () {
 /**
  * @description Add a CSS rule to a particular place.<br />
  * Inspired by Diego Fl&ocute;rez's version of {@link https://davidwalsh.name/add-rules-stylesheets|David Walsh's addCSSRule}.
+<<<<<<< master
+=======
+<<<<<<< HEAD
+ * @param {String} selector Selector
+ * @param {String} rules CSS rules
+ * @param {Stylesheet} [sheet=document.styleSheets[0]] Stylesheet
+ * @param {number} [index=-1] Insertion index
+ * @returns {String} Newly modified CSS rule
+ * @since 1.1
+ * @func
+ */
+function addCSSRule (selector, rules, sheet, index) {
+	if (!sheet) sheet = document.styleSheets[0];
+	console.log("Adding %s {%s} to %s", selector, rules, sheet);
+=======
+>>>>>>> Conflict fixed
  * @param {Stylesheet} [sheet=document.styleSheets[0]] Stylesheet
  * @param {String} selector Selector
  * @param {String} rules CSS rules
@@ -1679,6 +1725,10 @@ function syncCSS () {
  */
 function addCSSRule (sheet, selector, rules, index) {
 	if (!sheet) sheet = document.styleSheets[0];
+<<<<<<< master
+=======
+>>>>>>> develop
+>>>>>>> Conflict fixed
     //noinspection JSUnresolvedVariable
     var styleRules = document.all? sheet.rules: sheet.cssRules;
     if (!index) index = styleRules.length - 1;
@@ -1701,6 +1751,15 @@ function addCSSRule (sheet, selector, rules, index) {
  * @description Clear CSS rules from a stylesheet.<br />
  * Source: {@link https://davidwalsh.name/add-rules-stylesheets|Leonard's}
  * @param {Stylesheet} [sheet=document.styleSheets[0]] Stylesheet
+<<<<<<< master
+=======
+<<<<<<< HEAD
+ * @returns {undefined}
+ * @since 1.1
+ * @func
+=======
+>>>>>>> develop
+>>>>>>> Conflict fixed
  */
 function clearCSSRules (sheet) {
 	if (!sheet) sheet = document.styleSheets[0];
@@ -1712,4 +1771,53 @@ function clearCSSRules (sheet) {
         else if ("removeRule" in sheet) sheet.removeRule(i);
         i--;
     }
+<<<<<<< master
+=======
+<<<<<<< HEAD
+}
+
+/**
+ * @description Find all CSS rules in all stylesheets affecting a selector.
+ * @param {String} selector Selector
+ * @returns {String[]} CSS rules
+ * @since 1.1
+ * @func
+ */
+function findCSSRules (selector) {
+    var styleSheets = document.styleSheets.toArray();
+    for (var sheet in styleSheets) {
+        if (styleSheets.hasOwnProperty(sheet)) {
+            //noinspection JSUnresolvedVariable
+            var styleRules = document.all? styleSheets[sheet].rules: styleSheets[sheet].cssRules, res = [];
+
+            for (var i = 0; i < styleRules.length; i++) {
+            	console.log("seeing " + styleRules[i].selectorText + " in sheet " + sheet);
+                if (styleRules[i].selectorText === selector) res.push(styleRules[i].style.cssText);
+            }
+        }
+    }
+    return res;
+}
+
+/**
+ * @description Get the CSS rules of all stylesheets.
+ * @param {boolean} [asArray=false] Array representation
+ * @returns {Str} Dictionary of rules
+ * @since 1.1
+ * @func
+ */
+function getCSS (asArray) {
+    var styleSheets = document.styleSheets.toArray(), res = [];
+    for (var sheet in styleSheets) {
+        if (styleSheets.hasOwnProperty(sheet)) {
+            var rules = (document.all? styleSheets[sheet].rules: styleSheets[sheet].cssRules).toArray();
+            res.push(rules.map(function (rule) {
+                return rule.selectorText + " {\n\t" + rule.style.cssText + "\n}";
+            }).join("\n"));
+        }
+    }
+    return asArray? res: res.join("\n");
+=======
+>>>>>>> develop
+>>>>>>> Conflict fixed
 }

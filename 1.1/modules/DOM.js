@@ -81,12 +81,18 @@ function getMetaData () {
 
 /**
  * @description Disable right clicks
+ * @param {boolean} [restore=false] Restore the right click
  * @returns {undefined}
  * @since 1.0
  * @func
  */
-function noRightClick () {
-	document.oncontextmenu = new Function("return false")
+function noRightClick (restore) {
+	if (restore) {
+		document.oncontextmenu = $G.contextMenu;
+	} else {
+        $G.contextMenu = document.oncontextmenu;
+        document.oncontextmenu = new Function("return false")
+    }
 }
 
 /**
@@ -457,7 +463,7 @@ function rowTable (caption, headerRows, rows, id, split, style, cellIds) {
 		} else tab += "<td id='" + id + (isNon(cellIds)? i: cellIds[i]) + "'>" + rows[i] + "</td>";
 		tab += "</tr>";
 	}
-	tab += "</table><style>#"+ id + " table{background: #000;}#"+ id + " table, #"+ id + " td, #"+ id + " th{border: 1px solid #000; color: #000; background: #fff;}#"+ id + " tr:nth-child(even) td, #"+ id + " tr:nth-child(even) th{background: #ddd;}#"+ id + " tr td:hover, #"+ id + " tr th:hover{background: #bbb;}</style>";
+	tab += "</table><style>#" + id + " table{background: #000;}#"+ id + " table, #"+ id + " td, #"+ id + " th{border: 1px solid #000; color: #000; background: #fff;}#"+ id + " tr:nth-child(even) td, #"+ id + " tr:nth-child(even) th{background: #ddd;}#"+ id + " tr td:hover, #"+ id + " tr th:hover{background: #bbb;}</style>";
 	return tab
 }
 
@@ -811,6 +817,13 @@ function tabs (n) {
  * @since 1.1
  * @func
  * @example
+<<<<<<< master
+=======
+<<<<<<< HEAD
+ * @global
+=======
+>>>>>>> develop
+>>>>>>> Conflict fixed
  * //We want to get the meta description and we know that there's an element such as $n("meta[name='description']") &ne; null
  * var docDescription = $t("meta", "name='description'", "content");
  */
@@ -1064,6 +1077,13 @@ function cssPath (node) {
     return names.join(" > ");
 }
 
+/**
+ * @description Simplify a CSS Path (useful in conjuction with cssPath())
+ * @param {String} path CSS Path
+ * @returns {String} Simplified CSS Path
+ * @since 1.1
+ * @func
+ */
 function simplifyCSSPath (path) {
 	return path.replace(/(?:html > )*(head:nth-child\(1\)|body:nth-child\(2\)) > +/gmi, "");
 }

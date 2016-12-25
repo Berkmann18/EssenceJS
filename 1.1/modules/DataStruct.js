@@ -10,10 +10,11 @@
  * @requires DOM
  * @requires Maths
  * @requires Files
+ * @requires Misc
  * @type {Module}
  * @exports DataStruct
  */
-var DataStruct = new Module("DataStruct", "Data structures", ["DOM", "Maths", "Files"]);
+var DataStruct = new Module("DataStruct", "Data structures", ["DOM", "Maths", "Files", "Misc"]);
 
 /* eslint no-undef: 0 */
 /**
@@ -2275,4 +2276,73 @@ function Dijkstra (tree) {
  */
 function Prim (tree) {
 
+}
+
+/**
+ * @description Sort a table/matrix following the column specified.<br />
+ * It's a bit like SORT table BY col (ASC|DESC); in SQL
+ * @param {Array[][]} matrix Table/matrix to sort
+ * @param {number} [colIndex=0] Index of the column where the sorting is decided.
+ * @param {?(undefined|String|boolean)} [order] Sorting order
+ * @returns {Array[][]} Sorted table/matrix
+ * @since 1.1
+ * @func
+ * @throws {InvalidParamError} Wrong order
+ */
+function TableSort (matrix, colIndex, order) {
+	if (!colIndex) colIndex = 0;
+	var table = Copy(matrix), sort = function (arr, order, left, right) {
+        if (!left && !right) {
+            left = 0;
+            right = arr.lastIndex();
+        }
+        if (!order) order = "asc";
+        var i;
+        if (arr.length > 1) {
+        	console.log("arr", arr[Math.floor((right + left) / 2)]);
+            var pivot = arr[Math.floor((right + left) / 2)][colIndex], j = right;
+            console.log("pivot=", pivot, "pivot pos:", Math.floor((right + left) / 2));
+            i = left;
+            if (!order || order.toLowerCase().get(0, 2) === "asc") {
+                while (i <= j) {
+                    while(arr[i][colIndex] < pivot) i++;
+                    while(arr[j][colIndex] > pivot) j--;
+                    if (i <= j) {
+                        swap(arr, i, j);
+                        i++;
+                        j--;
+                    }
+                }
+			} else if (order.toLowerCase().get(0, 2) === "des") {
+                while (i >= j) {
+                    while(arr[i][colIndex] > pivot) i++;
+                    while(arr[j][colIndex] < pivot) j--;
+                    if (i >= j) {
+                        swap(arr, i, j);
+                        i++;
+                        j--;
+                    }
+                }
+			} else throw new InvalidParamError("Order can either be false|undefined||\"asc\"|\"des\" to make it work");
+
+            if (left < i - 1) sort(arr, left, i - 1, order);
+            if (i < right) sort(arr, i, right, order);
+        }
+        return arr
+    };
+	return sort(table, order);
+}
+
+/**
+ * @description Sort a table in an ascending order following the column specified.<br />
+ * It's a bit like SORT table BY col ASC; in SQL
+ * @param {Array[][]} table Table to sort
+ * @param {number} [colIndex=0] Index of the column where the sorting is decided.
+ * @param {?(undefined|String|boolean)} [order] Sorting order
+ * @returns {Array[][]} Sorted table
+ * @since 1.1
+ * @func
+ */
+function sortNamedTable (table, colIndex, order) {
+	return [table[0]].concat(TableSort(table.get(1), colIndex, order))
 }

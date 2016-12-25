@@ -10,10 +10,11 @@
  * @requires mdodule:essence
  * @requires Ajax
  * @requires Misc
+ * @requires DataStruct
  * @type {Module}
  * @exports File
  */
-var Files = new Module("Files", "File management and control", ["Ajax", "Misc", "DOM"]);
+var Files = new Module("Files", "File management and control", ["Ajax", "Misc", "DOM", "DataStruct"]);
 
 /* eslint no-undef: 0 */
 /**

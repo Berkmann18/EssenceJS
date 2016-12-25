@@ -223,7 +223,11 @@ var Essence = {
 			this.isComplete();
 			this.loadedModules.map(function (m) {
 				m.update();
-			})
+			});
+		},
+		listModules: function () {
+			var list = moduleList(true);
+			var weights = list.line(4).get(1);
 		}
 	},
 	/**
@@ -286,6 +290,7 @@ var Essence = {
  * @property {function(): string} Module.toString String representation
  * @property {function(): number} Module.getWeight Weight of the module on EssenceJS's module ecosystem
  * @property {Function} Module.update Update the module
+ * @property {function(): String} Module.getUsage List of modules dependent on this one
  * @since 1.1
  */
 function Module (name, desc, dpc, ver, rn, pathVer) {
@@ -314,7 +319,7 @@ function Module (name, desc, dpc, ver, rn, pathVer) {
 	};
 
 	this.getWeight = function () {
-		var dpcs = moduleList().line(3).get(1), weight = 0, names = moduleList().line().get(1); //List of dependencies of all loaded modules
+		var dpcs = moduleList(false, true).line(3).get(1), weight = 0, names = moduleList(false, true).line().get(1); //List of dependencies of all loaded modules
 		for (var i = 0; i < dpcs.length; i++) {
 			if (dpcs[i].has(this.name) && names[i] != this.name && dpcs[i].count(this.name) < 2) weight++;
 			else if (names[i] === this.name && dpcs[i].has(this.name)) weight--; //Penalty
@@ -336,6 +341,15 @@ function Module (name, desc, dpc, ver, rn, pathVer) {
 		Essence.say(this.name.capitalize() + "(.min).js has been updated", "succ");
         if (perfMod) console.timeStamp("Updated module:" + this.name);
 	};
+	
+	this.getUsage = function () {
+        var dpcs = moduleList(false, true).line(3).get(1), usage = "", names = moduleList(false, true).line().get(1); //List of dependencies of all loaded modules
+        for (var i = 0; i < dpcs.length; i++) {
+            if (dpcs[i].has(this.name) && names[i] != this.name && dpcs[i].count(this.name) < 2) usage += names[i] + ", ";
+        }
+        return usage.get(-2);
+    };
+
 	return this;
 }
 
@@ -780,6 +794,7 @@ function $n (selector, silence) { //To get directly the node without having to u
  * @property {function(*, boolean, boolean)} Element.after Write something to the node after its value
  * @property {function(string, ?string)} Element.remove Remove a character/string from the node's value and optionally insert jointers
  * @property {function(string, string)} Element.setCSS Set a CSS rule or change a CSS property
+ * @property {function(string, string)} Element.setInlineCSS Set a CSS rule or change a CSS property inline to a righty of elements
  * @property {function(string[])} Element.setStyles Set multiple CSS rules
  * @property {function(string): NumberLike} Element.css Get the value of a CSS property
  * @property {function(string): boolean} Element.hasClass Check if the node is affiliated to a class
@@ -806,6 +821,8 @@ function $n (selector, silence) { //To get directly the node without having to u
  * @property {function(string, Array)} Element.multiElm Execute a method on all elements of a $e("*...") element
  * @property {function()} Element.delete Self-destruction of the element by self-removal of the DOM
  * @property {function(String, String, boolean, boolean)} Element.replace Replace a string in the element's value by a new one
+ * @todo All the CSS implementations on $e("*..") must always be wrote in a CSS place and not inline (like now)
+ * @property {function()} Element.moveCSS Move the inline-CSS into the current stylesheet
  */
 function Element (selector) {
 	if (/^([#.*_-`~&]\W*|\S|undefined|null|)$/.test(selector)) throw new InvalidParamError("Element cannot accept the selector '" + selector + "' as its invalid."); //Reject invalid selectors
@@ -911,10 +928,18 @@ function Element (selector) {
 
 	this.setCSS = function (prop, val) { //Change the css property
 		if (isType(this.node, "NodeList")) {
-			for (var i = 0; i < this.node.length; i++) this.node[i].style[prop] = isType(val, "Array")? val[i]: val;
+			//for (var i = 0; i < this.node.length; i++) this.node[i].style[prop] = isType(val, "Array")? val[i]: val;
+			/**
+			 * @todo find a way to convert camelCase to camel-case or simply modifying the property of the relevant CSSRule in document.styleSheets..
+			 */
+            console.log("CSS rule added: " + addCSSRule(/\*\S/.test(selector)? selector.get(1): selector, prop + ": " + val) + " by " + selector); //Avoid parsing *selectors into stylesheets
 		} else this.node.style[prop] = val;
 	};
-
+	
+	this.setInlineCSS = function (prop, vals) {
+        for (var i = 0; i < this.node.length; i++) this.node[i].style[prop] = isType(vals, "Array")? vals[i]: vals;
+	};
+	
 	this.setStyles = function (sAndV) { //Style and vals: [style0, val0, style1, val1, ...]
 		for(var i = 0; i < sAndV.length - 1; i += 2) this.setCSS(sAndV[i], sAndV[i + 1]);
 	};
@@ -1071,12 +1096,20 @@ function Element (selector) {
 	//Maybe do something with $n(...).scrollIntoView()
 
 	this.attr = function (name, nval) {
-		return isNon(nval)? this.node.getAttribute(name): this.node.setAttribute(name, nval);
+		if (isType(this.node, "NodeList")) {
+			var res = [];
+            for (var i = 0; i < this.node.length; i++) res += isNon(nval)? this.node[i].getAttribute(name): this.node[i].setAttribute(name, nval);
+			return res;
+		}
+		else return isNon(nval)? this.node.getAttribute(name): this.node.setAttribute(name, nval);
 	};
 
 	//noinspection JSUnusedGlobalSymbols
 	this.rmAttr = function (name) {
-		this.node.removeAttribute(name);
+        if (isType(this.node, "NodeList")) {
+            var res = [];
+            for (var i = 0; i < this.node.length; i++) this.node[i].removeAttribute(name);
+		} else this.node.removeAttribute(name);
 	};
 
 	this.invColour = function () {
@@ -1116,11 +1149,17 @@ function Element (selector) {
 	};
 
 	this.delete = function () {
-		this.write("", false, true); //or this.node.parentElement.removeChild(this.node);
+		this.write("", false, true); //Or this.node.parentElement.removeChild(this.node);
 	};
 
 	this.replace = function (oldVal, newVal, parseToHTML, incTags) {
 		this.write(this.val(parseToHTML, incTags).replace(oldVal, newVal), parseToHTML, incTags);
+	};
+
+	this.moveCSS = function () {
+		console.log("moving %s's rules to style", selector);
+		addCSSRule(selector, this.attr("style"));
+		this.rmAttr("style");
 	};
 
 	return this
