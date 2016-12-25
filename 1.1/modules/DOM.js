@@ -818,7 +818,10 @@ function tabs (n) {
  * @func
  * @example
 <<<<<<< HEAD
+<<<<<<< HEAD
  * @global
+=======
+>>>>>>> develop
 =======
 >>>>>>> develop
  * //We want to get the meta description and we know that there's an element such as $n("meta[name='description']") &ne; null

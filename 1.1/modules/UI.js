@@ -1642,7 +1642,10 @@ function clrToArr (clr) {
 /**
  * @description It will synchronize the in-JS CSS to the CSS of a page (since JS won't always know when an element follow CSS rules specified in a CSS snippet/code).
 <<<<<<< HEAD
+<<<<<<< HEAD
  * This may show rules that aren't in the styles tags.
+=======
+>>>>>>> develop
 =======
 >>>>>>> develop
  * @since 1.1
@@ -1653,6 +1656,7 @@ function syncCSS () {
 	var styleSheets = document.styleSheets.toArray();
 	for (var sheet in styleSheets) {
 		if (styleSheets.hasOwnProperty(sheet)) {
+<<<<<<< HEAD
 <<<<<<< HEAD
             var rules = (document.all? styleSheets[sheet].rules: styleSheets[sheet].cssRules).toArray();
             var currentRules = rules.map(function (rule) {
@@ -1667,6 +1671,10 @@ function syncCSS () {
             var rules = document.all? sheet.rules: sheet.cssRules;
             console.log("\tRules of %s:\n%s", sheet, rules);
 >>>>>>> develop
+=======
+            var rules = document.all? sheet.rules: sheet.cssRules;
+            console.log("\tRules of %s:\n%s", sheet, rules);
+>>>>>>> develop
 		}
 	}
 }
@@ -1674,6 +1682,7 @@ function syncCSS () {
 /**
  * @description Add a CSS rule to a particular place.<br />
  * Inspired by Diego Fl&ocute;rez's version of {@link https://davidwalsh.name/add-rules-stylesheets|David Walsh's addCSSRule}.
+<<<<<<< HEAD
 <<<<<<< HEAD
  * @param {String} selector Selector
  * @param {String} rules CSS rules
@@ -1687,6 +1696,8 @@ function addCSSRule (selector, rules, sheet, index) {
 	if (!sheet) sheet = document.styleSheets[0];
 	console.log("Adding %s {%s} to %s", selector, rules, sheet);
 =======
+=======
+>>>>>>> develop
  * @param {Stylesheet} [sheet=document.styleSheets[0]] Stylesheet
  * @param {String} selector Selector
  * @param {String} rules CSS rules
@@ -1695,6 +1706,9 @@ function addCSSRule (selector, rules, sheet, index) {
  */
 function addCSSRule (sheet, selector, rules, index) {
 	if (!sheet) sheet = document.styleSheets[0];
+<<<<<<< HEAD
+>>>>>>> develop
+=======
 >>>>>>> develop
     //noinspection JSUnresolvedVariable
     var styleRules = document.all? sheet.rules: sheet.cssRules;
@@ -1719,9 +1733,12 @@ function addCSSRule (sheet, selector, rules, index) {
  * Source: {@link https://davidwalsh.name/add-rules-stylesheets|Leonard's}
  * @param {Stylesheet} [sheet=document.styleSheets[0]] Stylesheet
 <<<<<<< HEAD
+<<<<<<< HEAD
  * @returns {undefined}
  * @since 1.1
  * @func
+=======
+>>>>>>> develop
 =======
 >>>>>>> develop
  */
@@ -1735,6 +1752,7 @@ function clearCSSRules (sheet) {
         else if ("removeRule" in sheet) sheet.removeRule(i);
         i--;
     }
+<<<<<<< HEAD
 <<<<<<< HEAD
 }
 
@@ -1779,6 +1797,8 @@ function getCSS (asArray) {
         }
     }
     return asArray? res: res.join("\n");
+=======
+>>>>>>> develop
 =======
 >>>>>>> develop
 }

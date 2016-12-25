@@ -1,14 +1,20 @@
 ## General
 <<<<<<< HEAD
+<<<<<<< HEAD
 ^ Updated the dependencies of each modules
 
 ## [essence](essence.js)
 + Moved the multi-node logic of Element.setCSS() to Element.setInlineCSS() and improved Element.setCSS()
 =======
+=======
+>>>>>>> develop
 ^ A couple corrections
 
 ## [essence](essence.js)
 \+ String.countWord(), asyncTime(), perMode and profiling logs
+<<<<<<< HEAD
+>>>>>>> develop
+=======
 >>>>>>> develop
 
 ^ Added the multi-node support to Element.attr() and Element.rmAttr()
@@ -38,6 +44,8 @@
 
 ## [UI](modules/UI.js)
 \+ clearCSSRules(), findCSSRules(), getCSS()
+
+\+ syncCSS(), addCSSRule(), clearCSSRule()
 
 \+ syncCSS(), addCSSRule(), clearCSSRule()
 
