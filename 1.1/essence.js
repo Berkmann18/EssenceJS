@@ -16,7 +16,7 @@
  * @typedef {(Array|Object|string)} Iterable
  * @typedef {(Array|Object)} Dict
  * @typedef {(XML|string)} Code
- * @typedef {(Node|TreeNode|NTreeNode|PathNode)} Node
+ * @typedef {(Node|TreeNode|NTreeNode|Vertex)} Node
  * @requires modules/Files
  * @requires modules/DOM
  * @requires modules/UI
@@ -927,13 +927,8 @@ function Element (selector) {
 	};
 
 	this.setCSS = function (prop, val) { //Change the css property
-		if (isType(this.node, "NodeList")) {
-			//for (var i = 0; i < this.node.length; i++) this.node[i].style[prop] = isType(val, "Array")? val[i]: val;
-			/**
-			 * @todo find a way to convert camelCase to camel-case or simply modifying the property of the relevant CSSRule in document.styleSheets..
-			 */
-            console.log("CSS rule added: " + addCSSRule(/\*\S/.test(selector)? selector.get(1): selector, camelCaseTo(prop, "hyphen") + ": " + val) + " by " + selector); //Avoid parsing *selectors into stylesheets
-		} else this.node.style[prop] = val;
+		if (isType(this.node, "NodeList")) addCSSRule(/\*\S/.test(selector)? selector.get(1): selector, camelCaseTo(prop, "hyphen") + ": " + val)
+		else this.node.style[prop] = val;
 	};
 	
 	this.setInlineCSS = function (prop, vals) {

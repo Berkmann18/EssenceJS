@@ -4,9 +4,8 @@
 | 1 | L | Improve getResources() | to do | [DOM] |
 | 2 | L | Improve Console() | to do | [Web] |
 | 3 | M | Comparing DB and server's event handlers/listeners and use the best for the rest | to do |  |
-| 4 | M | Test daynightMode() (using Dom*() | in progress | [UI] |
+| 4 | M | Finish daynightMode() (using Dom*() | stuck | [UI] |
 | 5 | M | Add a complete thing for DocTemplate (to avoid having to add manually of the things) | to do | [DOM] |
-| 6 | H | Speed up the framework | waiting for pre-1.2 release |  |
 | 7 | H | Rewrite README.md | to do | [README](README.md) |
 | 8 | L | Test DES() | to do | [Security] |
 | 9 | L | Add an URL (or any good) pipeline to BuddyGit to send updates to the github website for each releases | to do |  |
@@ -43,7 +42,6 @@
 | 41 | M | FA | read about it and continue | [Misc]~FA |
 | 42 | M | exp2dict | to continue | [Misc]~exp2dict |
 | 43 | H | Alg formula to truth table | to continue | [Maths]~truthTable, [Maths]~getDNF, [Maths]~getCNF |
-| 44 | M | PUT and DELETE | to do | [Ajax]~PUT, [Ajax]~DELETE |
 | 45 | M | Kruskal, Dijkstra and Prim algs | to do | [DataStruct] |
 | 46 | H | Calendar | to improve | [Misc] |
 | 47 | H | Array.getOccurrences() | to fix | [essence]~Array.getOccurrences |
@@ -54,7 +52,7 @@
 | 52 | H | A+reconPath | to fix (in progress) | [DataStruct]~A |
 | 53 | H | Something like Java's System.in that allows the code to grab the user's input without having to use JS prompt, contentEditable or HTML's input/textarea fields | to fix | [Misc]~Sys, [essence]~Essence.ask |
 | 54 | H | Getting $Data.save() to save at the desired place and making sure the rest works | to fix | [Files]~$Data |
-| 55 | H | Array.(min/max)(Avg/Mean)() | to fix | [essence]~Array |
+| 55 | H | Array.(min/max)(Avg/Mean)() | to rectify | [essence]~Array |
 | 56 | H | Moving onto 1.2 using ES6+Node.js(+ExpressJS) | to do | |
 | 57 | L | Add an element creator (a bit like in React) such that: createElement("tagname", {attr: val, ..., onEvt: handler, ...}, "Value") will create an object (Component) which will be transformed into this <tagname attr="val" onEvt="handler(this)">Value</tagname> after being rendered by a renderer | to add | [Dom]~createComponent (React.createElement), [UI]~renderComponent |
 

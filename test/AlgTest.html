@@ -11,11 +11,11 @@
     <script type="text/javascript" src="../1.1/essence.js"></script>
     <script type="text/javascript" defer>
         var nodeSet = [];
-        function Init(stackLayer) {
+        function Init (stackLayer) {
             if (typeof Essence !== "undefined") {
-                nodeSet = [new PathNode(0, 0, [10, 10]), new PathNode(1, 0, [200, 100]), new PathNode(2, 0, [100, 150]), new PathNode(1, 0, [100, 300]), new PathNode(3, 0, [200, 240]), new PathNode(2, 0, [220, 290])];
+                nodeSet = [new Vertex(0, 0, [10, 10]), new Vertex(1, 0, [200, 100]), new Vertex(2, 0, [100, 150]), new Vertex(1, 0, [100, 300]), new Vertex(3, 0, [200, 240]), new Vertex(2, 0, [220, 290])];
                 for (var i = 1; i < nodeSet.length; i++) nodeSet[i].parent = nodeSet[i - 1];
-                console.log(drawPathNode(nodeSet));
+                console.log(drawVertex(nodeSet));
                 console.log(A(nodeSet[0], nodeSet.last(), nodeSet));
             } else if (stackLayer > 3) {
                 console.log("Wow, hold on ! %d stack layers down !!", stackLayer);
@@ -25,7 +25,7 @@
             }
         }
 
-        function drawPathNode (nodes) { //draw the path node on the screen
+        function drawVertex (nodes) { //draw the path node on the screen
             initCanvas(1e3, 1e3);
             var nodeObj = nodes.map(function (node) {
                 return new Circ(node.pos[0], node.pos[1], 5);

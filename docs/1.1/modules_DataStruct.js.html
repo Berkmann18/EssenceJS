@@ -177,24 +177,24 @@ function Node (pl, nx, pv) {
  * @param {number[]} [pos=[0, 0]] 2D position of the node
  * @param {Edge[]} [edges=[]] List of edges connected to the path node
  * @param {*} [payload=""] Payload
- * @returns {PathNode} Path node
- * @this PathNode
+ * @returns {Vertex} Path node
+ * @this Vertex
  * @constructor
  * @since 1.0
- * @property {number} PathNode.g Cost of the path to that node
- * @property {number} PathNode.h Heuristic to get to that node
- * @property {number} PathNode.f Cost of the path (g) + heuristic estimate
- * @property {Edge[]} PathNode.edges List of edges connected to the path node
- * @property {*} PathNode.payload Payload (content/data) of the node
- * @property {number[]} PathNode.pos Position of the node
- * @property {?PathNode} PathNode.parent Parent of the path-node
- * @property {function(number): PathNode} PathNode.back Go n path-nodes back
- * @property {function(PathNode): boolean} PathNode.isCloser Check if the current path-node is closer than the other one
- * @property {function(): string} PathNode.toString String representation
- * @property {Function} PathNode.join Join PathNodes with edges
+ * @property {number} Vertex.g Cost of the path to that node
+ * @property {number} Vertex.h Heuristic to get to that node
+ * @property {number} Vertex.f Cost of the path (g) + heuristic estimate
+ * @property {Edge[]} Vertex.edges List of edges connected to the path node
+ * @property {*} Vertex.payload Payload (content/data) of the node
+ * @property {number[]} Vertex.pos Position of the node
+ * @property {?Vertex} Vertex.parent Parent of the vertex
+ * @property {function(number): Vertex} Vertex.back Go n vertexs back
+ * @property {function(Vertex): boolean} Vertex.isCloser Check if the current vertex is closer than the other one
+ * @property {function(): string} Vertex.toString String representation
+ * @property {Function} Vertex.join Join Vertexs with edges
  *
  */
-function PathNode (g, h, pos, payload, edges) {
+function Vertex (g, h, pos, payload, edges) {
 	this.g = g || 0;
 	this.h = h || 0;
 	this.f = this.g + this.h || 1;
@@ -212,16 +212,16 @@ function PathNode (g, h, pos, payload, edges) {
 	};
 
 	this.toString = function () {
-		return "PathNode(g=" + this.g + "h=" + this.h + "f=" + this.f + ", pos=[" + this.pos.toStr(true) + "], parent=" + (this.parent === null? null: this.parent.toString()) + ")";
+		return "Vertex(g=" + this.g + "h=" + this.h + "f=" + this.f + ", pos=[" + this.pos.toStr(true) + "], parent=" + (this.parent === null? null: this.parent.toString()) + ")";
 	};
 
-	this.join = function (PathNodes) {
-		for (var i = 0; i &lt; PathNodes.length; i++) {
+	this.join = function (Vertexs) {
+		for (var i = 0; i &lt; Vertexs.length; i++) {
 			this.edges[i].startNode = this;
-			this.edges[i].endNode = PathNodes[i];
-			PathNodes[i].edges.push(this.edges[i]);
-			PathNodes[i].edges.last().startNode = this;
-			PathNodes[i].edges.last().endNode = PathNodes[i];
+			this.edges[i].endNode = Vertexs[i];
+			Vertexs[i].edges.push(this.edges[i]);
+			Vertexs[i].edges.last().startNode = this;
+			Vertexs[i].edges.last().endNode = Vertexs[i];
 		}
     };
 
@@ -229,15 +229,15 @@ function PathNode (g, h, pos, payload, edges) {
 }
 
 /**
- * @description Edge that connects two PathNodes
- * @param {?PathNode} start Starting node
- * @param {?PathNode} end Ending node
+ * @description Edge that connects two Vertexs
+ * @param {?Vertex} start Starting node
+ * @param {?Vertex} end Ending node
  * @param {number} [len=0] Length of the edge.
  * @this Edge
  * @since 1.1
  * @constructor
- * @property {?PathNode} Edge.startNode Starting node of the edge
- * @property {?PathNode} Edge.endNode Ending node of the edge
+ * @property {?Vertex} Edge.startNode Starting node of the edge
+ * @property {?Vertex} Edge.endNode Ending node of the edge
  * @property {number} Edge.length Length of the edge
  * @property {function(): string} Edge.toString String representation of the edge
  * @property {Function} Edge.draw Draw the edge
@@ -1409,15 +1409,15 @@ function QueueList () {
 /**
  * @description A* path finding algorithm inspired from {@link http://Heyes-jones.com/pseudocode.php|this pseudo-code}
  * @todo Make sure it works properly
- * @param {PathNode} start Starting node
- * @param {PathNode} goal Ending node
+ * @param {Vertex} start Starting node
+ * @param {Vertex} goal Ending node
  * @returns {undefined}
  * @since 1.0
  * @func
  * @deprecated
  */
 function Astar (start, goal) {
-	//PathNode.f (score) = g (sum of all cost to get at this point) + h (heuristic: estimate of what it will take to get the goal)
+	//Vertex.f (score) = g (sum of all cost to get at this point) + h (heuristic: estimate of what it will take to get the goal)
 	var nodeGoal = goal, nodeCurrent, _h;
 	var openList = [start], closedList = [];
 	while (openList.length > 0) {
@@ -1463,16 +1463,16 @@ function Astar (start, goal) {
 /**
  * @description A* algorithm v2.&lt;br />
  * JS version of: {@link https://en.wikipedia.org/wiki/A*_search_algorithm}
- * @param {PathNode} start Starting node
- * @param {PathNode} goal Ending node
- * @param {PathNode[]} grid Grid
+ * @param {Vertex} start Starting node
+ * @param {Vertex} goal Ending node
+ * @param {Vertex[]} grid Grid
  * @returns {?Array} Optimal Path
  * @since 1.0
  * @func
- * @throws {InvalidParamError} Not a PathNode object
+ * @throws {InvalidParamError} Not a Vertex object
  */
 function A (start, goal, grid) {
-	if (!isCustomType(start, "PathNode") || !isCustomType(goal, "PathNode")) throw new InvalidParamError("The boundary nodes needs to be PathNode objects !");
+	if (!isCustomType(start, "Vertex") || !isCustomType(goal, "Vertex")) throw new InvalidParamError("The boundary nodes needs to be Vertex objects !");
 	/*
 	closedSet: The set of nodes already evaluated
 	openSet: The set of currently discovered nodes still to be evaluated (where only the start node is known)
@@ -2383,7 +2383,7 @@ function sortNamedTable (table, colIndex, order) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Sandbox.html">Sandbox</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="external-String.html">String</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-Edge.html">Edge</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidExpressionError.html">InvalidExpressionError</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#$t">$t</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#Buffer">Buffer</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#DocTemplate">DocTemplate</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#perfMod">perfMod</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Sandbox.html">Sandbox</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="external-String.html">String</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-Edge.html">Edge</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-Vertex.html">Vertex</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidExpressionError.html">InvalidExpressionError</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#$t">$t</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#Buffer">Buffer</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#DocTemplate">DocTemplate</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#perfMod">perfMod</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
 </nav>
 
 <br class="clear">

@@ -1,4 +1,7 @@
 ## General
+^ Clean-up
+
+\+ Ignored list.md from the VCS scope and added a structure folder with all the functions/objects of each modules ([see here](../structure/1.1)).
 
 ## [essence](essence.js)
 
@@ -28,7 +31,9 @@
 
 
 ## [DataStruct](modules/DataStruct.js)
+^ Renamed PathNode to Vertex
 
+\+ Vertex.getVerticesInEdge(), Vertex.getConnectedVertices(), Vertex.find(), Vertex.getNetwork(), Vertex.size()
 
 ## [DOM](modules/DOM.js)
 

@@ -19,6 +19,7 @@
         console.profile("Local script Profile");
         var tree, struct;
         function start () {
+            perfMod = true;
             Essence.init();
             var SbTime = 1 || asyncTime(init, "Sandbox"), completeness = false;
             var mdlCompleteTime = asyncTime(function() {

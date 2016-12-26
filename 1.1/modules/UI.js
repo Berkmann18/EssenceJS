@@ -1415,10 +1415,9 @@ function daynightMode (exch) { //Switch between enabled or not for Day/Night pag
 		Essence.say((darkTime ? "It's dark" : "It's light") + "!", "info");
 
 		for (var i = 0; i < tags.length; i++) {
-			//console.log("#%d tag: %s => %s", i, tags[i], tags[i].node);
 			if (isNon(tags[i].css("backgroundColor"))) tags[i].setCSS("backgroundColor", "#FFF"); //fill it with a "default" colour to avoid using a blank value instead of an actual valid colour
 			console.log("backgroundColor of " + tags[i].selector + "=" + tags[i].css("backgroundColor"));
-			if (darkTime && !isDark(tags[i].css("backgroundColor"))) tags[i].invColour();
+			//if (darkTime && !isDark(tags[i].css("backgroundColor"))) tags[i].invColour();
 		}
 	} else Essence.say("You cannot use the day/night mod if it\'s disabled.", "warn")
 }
@@ -1674,12 +1673,14 @@ function syncCSS () {
  * @since 1.1
  * @func
  */
-function addCSSRule (sheet, selector, rules, index) {
+function addCSSRule (selector, rules, sheet, index) {
 	if (!sheet) sheet = document.styleSheets[0];
     //noinspection JSUnresolvedVariable
     var styleRules = document.all? sheet.rules: sheet.cssRules;
+    //console.log("sheet", sheet);
+    //console.log("styleRules", styleRules, "IE?", !isNon(document.all));
     if (!index) index = styleRules.length - 1;
-
+	if (debugging) console.info("Adding %s {%s} into %s", selector, rules, sheet);
     for (var i = index; i > 0; i--) {
         if (styleRules[i].selectorText === selector) { //Append the new rules to the current content of the styleRules[i]
             rules = styleRules[i].style.cssText + rules;

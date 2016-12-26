@@ -105,7 +105,7 @@
 
 # DataStruct
 - LinkedList
-- TreeNode, Node, PathNode, NTreeNode
+- TreeNode, Node, Vertex, NTreeNode
 - Set, SortedSet, Stack, StackArray, StackList, Queue, QueueArray, QueueList
 - Astar, IDAstar, A, reconPath
 - alphabetSort, occurrenceSort
@@ -267,7 +267,7 @@
 
 # DataStruct
 - LinkedList
-- TreeNode, Node, PathNode, NTreeNode
+- TreeNode, Node, Vertex, NTreeNode
 - Set, SortedSet, Stack, StackArray, StackList, Queue, QueueArray, QueueList
 - Astar, IDAstar, A, reconPath
 - alphabetSort, occurrenceSort
