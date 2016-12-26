@@ -36,10 +36,12 @@
  * @copyright Maximilian Berkmann 2016
  * @requires module:essence
  * @requires Files
+ * @requires DataStruct
+ * @requires Ajax
  * @type {Module}
  * @exports Misc
  */
-var Misc = new Module("Misc", "Miscellaneous", ["Files", "DataStruct"]);
+var Misc = new Module("Misc", "Miscellaneous", ["Files", "DataStruct", "Ajax"]);
 
 /* eslint no-undef: 0 */
 /**
@@ -198,7 +200,7 @@ function Item (name, cat, price, amr, nb) { //An item like the ones that can be 
 		for (var p in this) {
 			if (this.hasOwnProperty(p) &amp;&amp; p != "toString" &amp;&amp; !isType(p, "Function")) str += p + "=" + this[p] + ", ";
 		}
-		return str.substring(0, str.length-2)
+		return str.substring(0, str.length - 2)
 	};
 	return this
 }
@@ -267,6 +269,26 @@ function rmDuplicates (arr) {
 }
 
 /**
+ * @description Remove the Unique values of an array (keep the ones that are initially duplicated).
+ * @param {Array|string} arr Array
+ * @returns {Array|string} Filtered array
+ * @see module:Misc~rmDuplicates
+ * @since 1.1
+ * @func
+ * @throws {TypeError} arr isn't iterable
+ * @example
+ * rmUniques("hello world !"); //"lo "
+ * rmUniques([4, 10, 1, 9, 10, 10, 10, 3, 4, 2]); //[10, 4]
+ */
+function rmUniques (arr) {
+	if (!arr.isIterable()) throw new TypeError("It's not possible to remove uniques of a non iterable object.");
+	var duplicates = rmDuplicates(arr.filter(function (item) {
+        return arr.count(item) > 1;
+    }));
+	return isType(arr, "Array")? duplicates: duplicates.join("");
+}
+
+/**
  * @description Base64.&lt;br />
  * Source: somewhere
  * @type {{PADCHAR: string, ALPHA: string, getbyte64: base64.getbyte64, decode: base64.decode, getbyte: base64.getbyte, encode: base64.encode}}
@@ -295,7 +317,8 @@ var base64 = {
 	 * @throws Invalid character error: DOM Exception 5
 	 * @param {String} s String to use
 	 * @param {number} [i=0] Index
-	 * @returns {undefined}
+	 * @returns {number}
+	 * @throws String State
 	 */
 	getbyte64: function (s, i) {
 		/* "This is oddly fast, except on Chrome/V8.
@@ -309,6 +332,7 @@ var base64 = {
 	 * @throws Cannot decode base64
 	 * @param {String} s String to decode
 	 * @returns {String} Decoded base64 code
+     * @throws String State
 	 */
 	decode: function (s) {
 		s += "";
@@ -347,7 +371,8 @@ var base64 = {
 	 * @throws Invalid character error: DOM Exception 5
 	 * @param {String} s String to use
 	 * @param {number} [i=0] Index
-	 * @returns {undefined}
+	 * @returns {Number}
+     * @throws String State
 	 */
 	getbyte: function (s, i) {
 		var x = s.charCodeAt(i || 0);
@@ -357,7 +382,7 @@ var base64 = {
 	/**
 	 * @throws {SyntaxError} Only one argument needed
 	 * @param {string} s String to encode
-	 * @returns {undefined}
+	 * @returns {String} Encoded result
 	 */
 	encode: function (s) {
 		if (arguments.length != 1) throw new SyntaxError("Only one argument please !");
@@ -679,7 +704,8 @@ var Sys = { //System
  * @listens window.onkeypress
  */
 window.onkeypress = function (keyStroke) {
-	Sys.in.record(keyStroke);
+	//noinspection JSValidateTypes
+    Sys.in.record(keyStroke);
 	$G["lastKeyPair"] = getKey(keyStroke);
 };
 
@@ -795,7 +821,7 @@ function name2type (name, param) {
 		case "LinkedList": return LinkedList(param, arguments.toArray().get(2));
 		case "TreeNode": return TreeNode(param, arguments.toArray().get(2));
 		case "Node": return Node(param, arguments.toArray().get(2));
-		case "PathNode": return PathNode(param, arguments.toArray().get(2));
+		case "Vertex": return Vertex(param, arguments.toArray().get(2));
 		case "NTreeNode": return NTreeNode(param, arguments.toArray().get(2));
 		case "Set": return Set(param, arguments.toArray().get(2));
 		case "SortedSet": return SortedSet(param, arguments.toArray().get(2));
@@ -894,17 +920,27 @@ function arrayLiteral (arr, cjt) {
 /**
  * @description Module list
  * @param {boolean} [extended=false] Extension table flag
+ * @param {boolean} [less=false] Less details (not for use)
  * @return {Array[]} Module list
  * @func
  * @since 1.1
  */
-function moduleList (extended) {
-	var table = [["Name", "Version", "Description", "Dependencies"]];
-	if (extended) table[0].push("Weight");
+function moduleList (extended, less) {
+	var moduleTable = [["Name", "Version", "Description", "Dependencies", "Weight"]];
+	if (less) moduleTable[0].pop();
+	if (extended) moduleTable[0].push("Used by");
+	//noinspection JSValidateTypes
+    //if (!eval(Essence.isComplete())) void(true); //Update in case the coder/user injected a module and do it ONCE
 	Essence.loadedModules.map(function (m) {
-		extended? table.push([m.name, m.version, m.description, m.dependency.toStr(true), m.getWeight()]): table.push([m.name, m.version, m.description, m.dependency.toStr(true)]);
+		/*
+		!extended &amp; !less &lt;=> normal + weight
+	    !extended &amp; less &lt;=> normal
+	    extended->less &lt;=> normal + weight + usage
+		*/
+		if (extended) moduleTable.push([m.name, m.version, m.description, m.dependency.toStr(true), m.getWeight(), m.getUsage()]);
+		else less? moduleTable.push([m.name, m.version, m.description, m.dependency.toStr(true)]): moduleTable.push([m.name, m.version, m.description, m.dependency.toStr(true), m.getWeight()])
 	});
-	return table;
+	return moduleTable;
 }
 
 /**
@@ -1141,7 +1177,44 @@ var Calendar = {
 		text += "&lt;/table>";
 		this.element.write(text, true);
 	}
-};</code></pre>
+};
+
+/**
+ * @description Convert a camelCased string into a hyphened/PascalCased/underscored/spaced one.
+ * @param {String} camelCase Camel cased text
+ * @param {String} writingStyle Writing style (hyphen, pascalcase, underscore, spaced)
+ * @returns {String} Styled string
+ * @since 1.1
+ * @func
+ */
+function camelCaseTo (camelCase, writingStyle) {
+	switch (writingStyle.toLowerCase()) {
+		case "hyphen":
+		case "-":
+			return camelCase.replace(/[A-Z]+/g, function (match) {
+				return "-" + match.toLowerCase();
+			});
+			break;
+		case "pascalcase":
+		case "pascal":
+            return camelCase.capitalize();
+            break;
+		case "underscore":
+		case "_":
+            return camelCase.replace(/[A-Z]+/g, function (match) {
+                return "_" + match.toLowerCase();
+            });
+            break;
+		case "english":
+		case "spaced":
+            return camelCase.replace(/[A-Z]+/g, function (match) {
+                return " " + match.toLowerCase();
+            }).trim();
+            break;
+		default:
+			return camelCase;
+	}
+}</code></pre>
         </article>
     </section>
 
@@ -1151,21 +1224,13 @@ var Calendar = {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="external-String.html">String</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-Edge.html">Edge</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidExpressionError.html">InvalidExpressionError</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#Buffer">Buffer</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#DocTemplate">DocTemplate</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a></li><li><a href="module-DataStruct.html">DataStruct</a></li><li><a href="module-DOM.html">DOM</a></li><li><a href="module-essence.html">essence</a></li><li><a href="module-Files.html">Files</a></li><li><a href="module-Maths.html">Maths</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-QTest.html">QTest</a></li><li><a href="module-Sandbox.html">Sandbox</a></li><li><a href="module-Security.html">Security</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Web.html">Web</a></li></ul><h3>Externals</h3><ul><li><a href="Array_external_Array.html">Array</a></li><li><a href="external-essence-$G.module_essence-external_$G.html">$G</a></li><li><a href="external-String.html">String</a></li><li><a href="Function_external_Function.html">Function</a></li><li><a href="Number_external_Number.html">Number</a></li><li><a href="Object_external_Object.html">Object</a></li><li><a href="String_external_String.html">String</a></li></ul><h3>Classes</h3><ul><li><a href="module-Ajax-CORS.html">CORS</a></li><li><a href="module-Ajax-XHR.html">XHR</a></li><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-Edge.html">Edge</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-Vertex.html">Vertex</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li><li><a href="module-DOM-checkBrowser.html">checkBrowser</a></li><li><a href="module-essence-Element.html">Element</a></li><li><a href="module-essence-Module.html">Module</a></li><li><a href="module-Files-Spider.html">Spider</a></li><li><a href="module-Maths-Equation.html">Equation</a></li><li><a href="module-Maths-InvNorm.html">InvNorm</a></li><li><a href="module-Misc-AI.html">AI</a></li><li><a href="module-Misc-Machine.html">Machine</a></li><li><a href="module-Misc-Memory.html">Memory</a></li><li><a href="module-Misc-Scoreboard.html">Scoreboard</a></li><li><a href="module-QTest-InvalidExpressionError.html">InvalidExpressionError</a></li><li><a href="module-QTest-InvalidParamError.html">InvalidParamError</a></li><li><a href="module-UI-AABB.html">AABB</a></li><li><a href="module-UI-Box.html">Box</a></li><li><a href="module-UI-Circ.html">Circ</a></li><li><a href="module-UI-Line.html">Line</a></li><li><a href="module-UI-Polygon.html">Polygon</a></li><li><a href="module-UI-Pt.html">Pt</a></li><li><a href="module-UI-Vector.html">Vector</a></li><li><a href="module-Web-Console.html">Console</a></li><li><a href="module-Web-DB.html">DB</a></li><li><a href="module-Web-Debugger.html">Debugger</a></li><li><a href="module-Web-Editor.html">Editor</a></li><li><a href="module-Web-IDE.html">IDE</a></li><li><a href="module-Web-Parser.html">Parser</a></li><li><a href="module-Web-Preview.html">Preview</a></li><li><a href="module-Web-Toolbar.html">Toolbar</a></li><li><a href="module-Web-WebApp.html">WebApp</a></li><li><a href="module-Web-WebPage.html">WebPage</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-UI-Shape.html">Shape</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$f">$f</a></li><li><a href="global.html#$G">$G</a></li><li><a href="global.html#$t">$t</a></li><li><a href="global.html#base64">base64</a></li><li><a href="global.html#BrowserDetect">BrowserDetect</a></li><li><a href="global.html#Buffer">Buffer</a></li><li><a href="global.html#debugging">debugging</a></li><li><a href="global.html#DocTemplate">DocTemplate</a></li><li><a href="global.html#modules">modules</a></li><li><a href="global.html#perfMod">perfMod</a></li><li><a href="global.html#sec2time">sec2time</a></li><li><a href="global.html#Sys">Sys</a></li><li><a href="global.html#testMode">testMode</a></li><li><a href="global.html#UnitTest">UnitTest</a></li><li><a href="global.html#WifiTest">WifiTest</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-<<<<<<< HEAD
-<<<<<<< HEAD
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Wed Nov 09 2016 17:54:07 GMT+0000 (GMT)
-=======
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Mon Dec 19 2016 01:21:28 GMT+0000 (GMT)
->>>>>>> e065322... Overall improvements
-=======
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Mon Dec 19 2016 01:21:28 GMT+0000 (GMT)
->>>>>>> develop
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sun Dec 25 2016 15:01:57 GMT+0000 (GMT)
 </footer>
 
 <script> prettyPrint(); </script>

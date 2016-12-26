@@ -38,10 +38,11 @@
  * @requires DOM
  * @requires Maths
  * @requires Files
+ * @requires Misc
  * @type {Module}
  * @exports DataStruct
  */
-var DataStruct = new Module("DataStruct", "Data structures", ["DOM", "Maths", "Files"]);
+var DataStruct = new Module("DataStruct", "Data structures", ["DOM", "Maths", "Files", "Misc"]);
 
 /* eslint no-undef: 0 */
 /**
@@ -176,24 +177,27 @@ function Node (pl, nx, pv) {
  * @param {number[]} [pos=[0, 0]] 2D position of the node
  * @param {Edge[]} [edges=[]] List of edges connected to the path node
  * @param {*} [payload=""] Payload
- * @returns {PathNode} Path node
- * @this PathNode
+ * @returns {Vertex} Vertex
+ * @this Vertex
  * @constructor
  * @since 1.0
- * @property {number} PathNode.g Cost of the path to that node
- * @property {number} PathNode.h Heuristic to get to that node
- * @property {number} PathNode.f Cost of the path (g) + heuristic estimate
- * @property {Edge[]} PathNode.edges List of edges connected to the path node
- * @property {*} PathNode.payload Payload (content/data) of the node
- * @property {number[]} PathNode.pos Position of the node
- * @property {?PathNode} PathNode.parent Parent of the path-node
- * @property {function(number): PathNode} PathNode.back Go n path-nodes back
- * @property {function(PathNode): boolean} PathNode.isCloser Check if the current path-node is closer than the other one
- * @property {function(): string} PathNode.toString String representation
- * @property {Function} PathNode.join Join PathNodes with edges
- *
+ * @property {number} Vertex.g Cost of the path to that node
+ * @property {number} Vertex.h Heuristic to get to that node
+ * @property {number} Vertex.f Cost of the path (g) + heuristic estimate
+ * @property {Edge[]} Vertex.edges List of edges connected to the path node
+ * @property {*} Vertex.payload Payload (content/data) of the node
+ * @property {number[]} Vertex.pos Position of the node
+ * @property {?Vertex} Vertex.parent Parent of the vertex
+ * @property {function(number): Vertex} Vertex.back Go n vertexes back
+ * @property {function(Vertex): boolean} Vertex.isCloser Check if the current vertex is closer than the other one
+ * @property {function(Vertex[]): string} Vertex.toString String representation
+ * @property {Function} Vertex.join Join Vertexes with edges
+ * @property {function(): Vertex} Vertex.getVertexInEdge Get the vertex connected to a particular edge
+ * @property {function(): Vertex[]} Vertex.getConnectedVertices Get the vertexes connected to this one
+ * @property {function(): (Vertex[]|Vertex[][])} Vertex.getNetwork Get the network/tree/graph/map of vertices connected to this one
+ * @property {function(): number} Vertex.size Size of the vertex's network
  */
-function PathNode (g, h, pos, payload, edges) {
+function Vertex (g, h, pos, payload, edges) {
 	this.g = g || 0;
 	this.h = h || 0;
 	this.f = this.g + this.h || 1;
@@ -206,37 +210,78 @@ function PathNode (g, h, pos, payload, edges) {
 		return (isNon(n) || n &lt;= 1)? this.parent: this.parent.back(n - 1);
 	};
 
-	this.isCloser = function (pn) {
-		return this.f &lt;= pn.f;
+	this.isCloser = function (pathNode) {
+		return this.f &lt;= pathNode.f;
 	};
 
 	this.toString = function () {
-		return "PathNode(g=" + this.g + "h=" + this.h + "f=" + this.f + ", pos=[" + this.pos.toStr(true) + "], parent=" + (this.parent === null? null: this.parent.toString()) + ")";
+		return "Vertex(g=" + this.g + "h=" + this.h + "f=" + this.f + ", pos=[" + this.pos.toStr(true) + "], parent=" + (this.parent === null? null: this.parent.toString()) + ")";
 	};
 
-	this.join = function (PathNodes) {
-		for (var i = 0; i &lt; PathNodes.length; i++) {
+	this.join = function (pathNodes) {
+		for (var i = 0; i &lt; pathNodes.length; i++) {
 			this.edges[i].startNode = this;
-			this.edges[i].endNode = PathNodes[i];
-			PathNodes[i].edges.push(this.edges[i]);
-			PathNodes[i].edges.last().startNode = this;
-			PathNodes[i].edges.last().endNode = PathNodes[i];
+			this.edges[i].endNode = pathNodes[i];
+			pathNodes[i].edges.push(this.edges[i]);
+			pathNodes[i].edges.last().startNode = this;
+			pathNodes[i].edges.last().endNode = pathNodes[i];
 		}
     };
+	
+	this.getVertexInEdge = function (index) {
+		var edge = this.edges[index || 0];
+		return edge.startNode.equals(this)? edge.endNode: edge.startNode;
+    };
+
+	this.getConnectedVertices = function () {
+		var list = [];
+		for (var i = 0; i &lt; this.edges.length; i++) list.push(this.getVertexInEdge(i));
+		return list;
+	};
+
+    this.find = function (n, depth) {
+        if (!depth) depth = 0;
+        if (this.payload === n) return depth;
+        var search = this.getConnectedVertices().map(function (node) {
+        	try {
+                return node.find(n, depth + 1);
+			} catch (err) {
+	    		return [-1, depth];
+			}
+		});
+		var res = search.filter(function (item) { //Filters out the items = [-1, depth]
+			return !isType(item, "Array");
+        });
+
+        return res.length > 0? res: [-1, depth]
+    };
+
+    this.getNetwork = function () {
+        var self = this;
+        var listVertices = function (vertex) {
+            var list = vertex.getConnectedVertices().remove([self, null], true);
+            return list.length > 0? list.map(listVertices): list;
+        };
+        return this.getConnectedVertices().map(listVertices);
+    };
+
+    this.size = function () {
+    	return this.getNetwork().linearise().length;
+	};
 
 	return this;
 }
 
 /**
- * @description Edge that connects two PathNodes
- * @param {?PathNode} start Starting node
- * @param {?PathNode} end Ending node
+ * @description Edge that connects two Vertexs
+ * @param {?Vertex} start Starting node
+ * @param {?Vertex} end Ending node
  * @param {number} [len=0] Length of the edge.
  * @this Edge
  * @since 1.1
  * @constructor
- * @property {?PathNode} Edge.startNode Starting node of the edge
- * @property {?PathNode} Edge.endNode Ending node of the edge
+ * @property {?Vertex} Edge.startNode Starting node of the edge
+ * @property {?Vertex} Edge.endNode Ending node of the edge
  * @property {number} Edge.length Length of the edge
  * @property {function(): string} Edge.toString String representation of the edge
  * @property {Function} Edge.draw Draw the edge
@@ -806,106 +851,6 @@ function traverseTree (node, symbol, start, indent) {
  * @property {function(function(*))} Set.forEach Act on each items of the set
  */
 function Set (arr) {
-<<<<<<< HEAD
-    this.value = (isType(arr, "Array")? rmDuplicates(arr): [arr]) || [];
-    this.size = function () {
-        return this.value.length
-    };
-
-    this.add = function (item) {
-        if (isType(item, "Array")) {
-            for (var i = 0; i &lt; item.length; i++) this.add(item[i]);
-        }
-        if (this.value.indexOf(item) === -1) this.value.push(item)
-    };
-
-    this.remove = function (item) {
-        if (this.value.has(item)) {
-            if (isType(item, "Array")) {
-                for(var i = 0; i &lt; item.length; i++) this.remove(item[i]);
-            } else this.value = this.value.remove(item)
-        }
-    };
-
-    this.clear = function (index) {
-        index? this.value = this.value.remove(this.value[index]): this.value = []
-    };
-
-    this.isEmpty = function () {
-        return this.value.length === 0
-    };
-
-    this.contains = function (item) {
-        if (isType(item, "Array")) {
-            var c = true;
-            for (var i = 0; i &lt; item.length; i++) {
-                if (!c) return false; //Reduce the cost of the operation by not doing any unnecessary work
-                c = c &amp;&amp; this.contains(item[i]);
-            }
-            return c
-        } else return this.value.has(item)
-    };
-
-    this.equals = function (s) {
-        return this.value.toString() === s.value.toString()
-    };
-
-    this.isSame = function (s) { //Check if both sets have the same elements but not necessarily in the same order
-        if (this.equals(s)) return true;
-        var same = true;
-        for (var i = 0; i &lt; s.size(); i++) {
-            if (!same) return false;
-            same = same &amp;&amp; this.contains(s.value[i]);
-        }
-        return same
-    };
-
-    this.toString = function () {
-        return "Set(" + this.value.toString() + ")"
-    };
-
-    this.subset = function (s, e) {
-        return this.value.slice(s, e + 1)
-    };
-
-    this.get = function (i) {
-        return this.value[i]
-    };
-
-    this.indexOf = function (val) {
-        return this.value.indexOf(val);
-    };
-
-    this.set = function (i, val) {
-        this.value[i] = val;
-    };
-
-    this.first = function () {
-        return this.value[0]
-    };
-
-    this.last = function () {
-        return this.value.last()
-    };
-
-    this.min = function (s, e) {
-        return this.value.min(s, e)
-    };
-
-    this.max = function (s, e) {
-        return this.value.max(s, e)
-    };
-
-    this.median = function () {
-        return this.value.median()
-    };
-
-    this.forEach = function (act) {
-        for (var i = 0; i &lt; this.size(); i++) act(this.get(i));
-    };
-
-    return this;
-=======
 	this.value = (isType(arr, "Array")? rmDuplicates(arr): [arr]) || [];
 	this.size = function () {
 		return this.value.length
@@ -1004,7 +949,6 @@ function Set (arr) {
 	};
 
 	return this;
->>>>>>> develop
 }
 
 SortedSet.inheritsFrom(Set);
@@ -1022,19 +966,11 @@ SortedSet.inheritsFrom(Set);
  * @property {function(): string} SortedSet.toString String representation
  */
 function SortedSet (arr) {
-<<<<<<< HEAD
-    this.value = Copy(arr).quickSort() || [];
-    this.add = function (item) {
-        isType(item, "Array")? this.value.multiPlace(item): this.value.place(item);
-        this.value = rmDuplicates(this.value);
-    };
-=======
 	this.value = Copy(arr).quickSort() || [];
 	this.add = function (item) {
 		isType(item, "Array")? this.value.multiPlace(item): this.value.place(item);
 		this.value = rmDuplicates(this.value);
 	};
->>>>>>> develop
 
 	this.toString = function () {
 		return "SortedSet(" + this.value.toString() + ")"
@@ -1063,55 +999,6 @@ function SortedSet (arr) {
  * @property {function(): string} Stack.toString String representation
  */
 function Stack (arr, lim) {
-<<<<<<< HEAD
-    this.value = isType(lim, "Number")? new Array(lim): [];
-    this.limit = lim || null;
-    if (arr) this.value.push(arr);
-
-    this.peek = function () {
-        return this.value.last()
-    };
-
-    this.ground = function () {
-        return this.value[0]
-    };
-
-    /**
-     * @throws {Error} Stack overflow
-     * @param {*} item Item
-     */
-    this.push = function (item) {
-        if (this.isFull()) throw new Error("Stack overflow !");
-        isType(item, "Array")? this.value.append(item): this.value.push(item);
-    };
-
-    /**
-     * @throws {Error} Stack underflow
-     * @return {*} Item
-     */
-    this.pop = function () {
-        if (this.isEmpty()) throw new Error("Stack underflow !");
-        return this.value.pop();
-    };
-
-    this.isEmpty = function () {
-        return this.value.length === 0
-    };
-
-    this.isFull = function () {
-        return this.limit != null? this.value.length >= this.limit: false
-    };
-
-    this.size = function () {
-        return this.value.length
-    };
-
-    this.toString = function () {
-        return "Stack(" + this.value.toString() + ")"
-    };
-
-    return this;
-=======
 	this.value = isType(lim, "Number")? new Array(lim): [];
 	this.limit = lim || null;
 	if (arr) this.value.push(arr);
@@ -1160,7 +1047,6 @@ function Stack (arr, lim) {
 	};
 
 	return this;
->>>>>>> develop
 }
 
 /**
@@ -1183,67 +1069,6 @@ function Stack (arr, lim) {
  * @see module:DataStruct~Stack
  */
 function StackArray (sz) {
-<<<<<<< HEAD
-    this.value = new Array(sz);
-    /** @default */
-    this.top = -1;
-
-    this.peek = function () {
-        return this.value[this.top]
-    };
-
-    this.ground = function () {
-        return this.value[0];
-    };
-
-    /**
-     * @throws {Error} Stack overflow
-     * @param {*} item Item
-     */
-    this.push = function (item) {
-        if (this.isFull()) throw new Error("Stack overflow !");
-        if (isType(item, "Array")) {
-            for(var i = 0; i &lt; item.length; i++) this.push(item[i]);
-        } else {
-            this.top++;
-            this.value[this.top] = item;
-        }
-    };
-
-    /**
-     * @throws {Error} Stack underflow
-     * @param {*} item Item
-     * @returns {*} Item
-     */
-    this.pop = function (item) {
-        if (this.isEmpty()) throw new Error("Stack underflow !");
-        if (isType(item, "Array")) {
-            for(var i = 0; i &lt; item.length; i++) this.pop(item[i]);
-        } else {
-            var el = this.peek();
-            this.top--;
-            return el
-        }
-    };
-
-    this.isEmpty = function () {
-        return this.top &lt;= -1
-    };
-
-    this.isFull = function () {
-        return this.top >= this.value.length
-    };
-
-    this.size = function () {
-        return this.top + 1
-    };
-
-    this.toString = function () {
-        return "Stack(" + this.value.toString() + ")"
-    };
-
-    return this;
-=======
 	this.value = new Array(sz);
 	/** @default */
 	this.top = -1;
@@ -1304,7 +1129,6 @@ function StackArray (sz) {
 	};
 
 	return this;
->>>>>>> develop
 }
 
 /**
@@ -1326,54 +1150,6 @@ function StackArray (sz) {
  * @see module:DataStruct~Stack
  */
 function StackList (arr) {
-<<<<<<< HEAD
-    this.top = new Node();
-
-    this.peek = function () {
-        return (this.isEmpty() || this.top === null)? null: this.top.next.payload
-    };
-
-    this.ground = function () {
-        return this.top.payload;
-    };
-
-    this.push = function (item) {
-        if (isType(item, "Array")) {
-            for(var i = 0; i &lt; item.length; i++) this.push(item[i]);
-        } else {
-            var n = new Node(item, this.top);
-            this.top = n;
-        }
-        return this
-    };
-    if (arr) this.push(arr);
-
-    /**
-     * @throws {Error} Stack underflow
-     * @param {number} [n] Number of pops to do
-     * @returns {Node} Item
-     */
-    this.pop = function (n) {
-        if (!this.isEmpty()) throw new Error("I can't pop from an empty stack list");
-        if (n) {
-            for(var i = 0; i &lt; n; i++) this.pop();
-        } else {
-            var el = this.top.payload;
-            this.top = this.top.next;
-            return el
-        }
-    };
-
-    this.isEmpty = function () {
-        return this.top == null
-    };
-
-    this.size = function (n) {
-        return this.top != null? this.size(n + 1): n
-    };
-
-    return this;
-=======
 	this.top = null;
 
 	this.ground = function () {
@@ -1431,7 +1207,6 @@ function StackList (arr) {
 	};
 
 	return this;
->>>>>>> develop
 }
 
 /**
@@ -1454,57 +1229,6 @@ function StackList (arr) {
  * @property {function(): string} Queue.toString String representation
  */
 function Queue (arr, lim) {
-<<<<<<< HEAD
-    this.value = isType(lim, "Number")? new Array(lim): [];
-    this.limit = lim || null;
-    if (arr) this.value.push(arr);
-
-    /**
-     * @throws {Error} Queue overflow
-     * @param {*} item Item
-     */
-    this.enqueue = function (item) {
-        if (this.isFull()) throw new Error("Queue overflow !");
-        isType(item, "Array")? this.value.prepend(item): this.value.unshift(item);
-    };
-
-    /**
-     * @throws {Error} Queue undeflow
-     * @returns {*} Item
-     */
-    this.dequeue = function () {
-        if (this.isEmpty()) throw new Error("Queue underflow !");
-        var it = this.head();
-        this.value.pop();
-        return it
-    };
-
-    this.head = function () {
-        return this.value.last()
-    };
-
-    this.tail = function () {
-        return this.value[0]
-    };
-
-    this.isEmpty = function () {
-        return this.value.length === 0
-    };
-
-    this.isFull = function () {
-        return this.limit != null? this.value.length >= this.limit: false
-    };
-
-    this.size = function () {
-        return this.value.length
-    };
-
-    this.toString = function () {
-        return "Queue(head=" + this.head() + ", tail=" + this.tail() + ", value=" + this.value.toString() + ")"
-    };
-
-    return this;
-=======
 	this.value = isType(lim, "Number")? new Array(lim): [];
 	this.limit = lim || null;
 	if (arr) this.value.push(arr);
@@ -1555,7 +1279,6 @@ function Queue (arr, lim) {
 	};
 
 	return this;
->>>>>>> develop
 }
 
 /**
@@ -1579,69 +1302,6 @@ function Queue (arr, lim) {
  * @property {function(): string} QueueArray.toString String representation
  */
 function QueueArray (arr) {
-<<<<<<< HEAD
-    /** @default */
-    this.value = arr || [];
-    /** @default */
-    this.front = -1;
-    /** @default */
-    this.back = -1;
-
-    /**
-     * @throws {Error} Queue full
-     * @param {*} item Item
-     */
-    this.enqueue = function (item) {
-        if (isType(item, "Array")) {
-            for(var i = 0; i &lt; item.length; i++) this.enqueue(item[i]);
-        } else {
-            if (this.isFull()) throw new Error("The queue is full");
-            if (this.isEmpty()) {
-                this.front++;
-                this.back++;
-                this.value[this.back] = item;
-            } else {
-                this.back = (this.back + 1) % this.value.length;
-                this.value[this.back] = item;
-            }
-        }
-    };
-
-    /**
-     * @throws {Error} Queue empty
-     * @returns {*}
-     */
-    this.dequeue = function () {
-        var val;
-        if (this.isEmpty()) throw new Error("I can't dequeue from an empty queue");
-        if (this.front === this.back) {
-            val = this.value[this.front];
-            this.front = this.back = -1;
-        }else {
-            val = this.value[this.front];
-            this.front = (this.front + 1) % this.value.length;
-        }
-        return val
-    };
-
-    this.isEmpty = function () {
-        return this.front === -1 &amp;&amp; this.back === -1
-    };
-
-    this.isFull = function () {
-        return this.back>(this.front + 1) % this.value.length
-    };
-
-    this.size = function () {
-        return this.value.length
-    };
-
-    this.toString = function () {
-        return "Queue(front=" + this.front + ", back=" + this.back + ", value=" + this.value.toString() + ")"
-    };
-
-    return this;
-=======
 	/** @default */
 	this.value = arr || [];
 	/** @default */
@@ -1704,7 +1364,6 @@ function QueueArray (arr) {
 	};
 
 	return this;
->>>>>>> develop
 }
 
 /**
@@ -1729,68 +1388,6 @@ function QueueArray (arr) {
  * @property {function(number, *)} QueueList.insertAt Positional node insertion
  */
 function QueueList () {
-<<<<<<< HEAD
-    this.front = null;
-    this.back = null;
-    this.len = 0;
-
-    this.enqueue = function (item) {
-        if (isType(item, "Array")) {
-            for(var i = 0; i &lt; item.length; i++) this.enqueue(item[i]);
-        } else {
-            var n = this.back != null? new Node(item, this.back, null): new Node(item);
-            if (this.back.prev != null) this.back.prev = n;
-            this.back = n;
-            this.len++;
-        }
-        return this
-    };
-
-    /**
-     * @throws {Error} Queue underflow
-     * @returns {?Node}
-     */
-    this.dequeue = function () {
-        if (this.isEmpty()) throw new Error("I can't dequeue an empty queue list");
-        this.front = this.front.prev;
-        this.len--;
-        return this.front
-    };
-
-    this.isEmpty = function () {
-        return this.len === 0 || this.back === null
-    };
-
-    this.size = function () {
-        return this.len
-    };
-
-    this.toString = function () {
-        var str = "", crt = this.front;
-        while (crt != null) {
-            str += "&lt;-"+ crt.payload;
-            crt = crt.prev;
-        }
-        return str
-    };
-
-    this.remove = function (pl) {
-        var crt = this.front;
-        while (crt != null) {
-            if (crt.payload != null &amp;&amp; (crt.payload == pl || crt.payload.equals(pl))) crt = null;
-            crt = crt.next;
-        }
-    };
-
-    this.insertAt = function (i, pl) {
-        this.back.next = new Node(pl);
-        if (i === 0) this.front = new Node(pl);
-        else if (i === this.len) this.back = new Node(pl);
-        else if (i > this.len) this.enqueue(pl);
-    };
-
-    return this;
-=======
 	this.front = new Node(null);
 	this.back = new Node(null);
 	this.len = 0;
@@ -1851,21 +1448,20 @@ function QueueList () {
 	};
 
 	return this;
->>>>>>> develop
 }
 
 /**
  * @description A* path finding algorithm inspired from {@link http://Heyes-jones.com/pseudocode.php|this pseudo-code}
  * @todo Make sure it works properly
- * @param {PathNode} start Starting node
- * @param {PathNode} goal Ending node
+ * @param {Vertex} start Starting node
+ * @param {Vertex} goal Ending node
  * @returns {undefined}
  * @since 1.0
  * @func
  * @deprecated
  */
 function Astar (start, goal) {
-	//PathNode.f (score) = g (sum of all cost to get at this point) + h (heuristic: estimate of what it will take to get the goal)
+	//Vertex.f (score) = g (sum of all cost to get at this point) + h (heuristic: estimate of what it will take to get the goal)
 	var nodeGoal = goal, nodeCurrent, _h;
 	var openList = [start], closedList = [];
 	while (openList.length > 0) {
@@ -1910,17 +1506,17 @@ function Astar (start, goal) {
 
 /**
  * @description A* algorithm v2.&lt;br />
- * JS version of: {@link https://en.wikipedia.org/wiki/A*_search_algorithm}
- * @param {PathNode} start Starting node
- * @param {PathNode} goal Ending node
- * @param {PathNode[]} grid Grid
+ * JS version of: {@link https://en.wikipedia.org/wiki/A*_search_algorithm|wiki's pseudo alg}
+ * @param {Vertex} start Starting node
+ * @param {Vertex} goal Ending node
+ * @param {Vertex[]} grid Grid
  * @returns {?Array} Optimal Path
  * @since 1.0
  * @func
- * @throws {InvalidParamError} Not a PathNode object
+ * @throws {InvalidParamError} Not a Vertex object
  */
 function A (start, goal, grid) {
-	if (!isCustomType(start, "PathNode") || !isCustomType(goal, "PathNode")) throw new InvalidParamError("The boundary nodes needs to be PathNode objects !");
+	if (!isCustomType(start, "Vertex") || !isCustomType(goal, "Vertex")) throw new InvalidParamError("The boundary nodes needs to be Vertex objects !");
 	/*
 	closedSet: The set of nodes already evaluated
 	openSet: The set of currently discovered nodes still to be evaluated (where only the start node is known)
@@ -1938,7 +1534,7 @@ function A (start, goal, grid) {
 				}).min();
 		});
 
-		if (current.equals(goal)) return reconPath(cameFrom, current, grid);
+		if (current.equals(goal)) return reconPath(cameFrom, current);
 		openSet.remove(current);
 		closedSet.push(current);
 
@@ -1961,12 +1557,11 @@ function A (start, goal, grid) {
  * @description Path reconstructor
  * @param {Array} cameFrom List of visited nodes
  * @param {Array} current Current node
- * param {Array} grid Grid
  * @returns {Array} Reconstructed path
  * @since 1.0
  * @func
  */
-function reconPath(cameFrom, current/*, grid*/) {
+function reconPath(cameFrom, current) {
 	var totalPath = [current];
 	while (current in keyList(cameFrom)) {
 		current = cameFrom[current];
@@ -2154,62 +1749,6 @@ function Archive (name, data) {
  * @property {*} virtualHistory.isStateDefault Check if the current state is the default one
  */
 function virtualHistory (elm) {
-<<<<<<< HEAD
-    this.src = elm;
-    this.DEFAULT_STATE = elm;
-    this.states = new Set(this.src);
-    this.state = 0;
-
-    this.reset = function () {
-        this.src = this.DEFAULT_STATE;
-    };
-
-    this.update = function (elm) {
-        if (this.src != elm) this.add(elm);
-    };
-
-    this.add = function (val) { //Add a state
-        if (isType(val, "Array")) {
-            for (var i = 0; i &lt; val.length; i++) this.add(val[i]);
-        } else {
-            this.src = val;
-            this.states.add(this.src);
-            this.state++;
-        }
-    };
-
-    this.get = function (i) {
-        return this.states.get(i)
-    };
-
-    /**
-     * @throws {Error} Set underflow
-     */
-    this.undo = function () {
-        if (this.state === 0) throw new Error("Set underflow, it's not possible to undo to a non-existent state.");
-        this.state--;
-        this.src = this.get(this.state);
-    };
-
-    /**
-     * @throws {Error} Set overflow
-     */
-    this.redo = function () {
-        if (this.state === (this.states.size() - 1)) throw new Error("Set overflow, it's not possible to redo to a non-existent state.");
-        this.state++;
-        this.src = this.get(this.state);
-    };
-
-    this.getStates = function () {
-        return this.states.toString()
-    };
-
-    this.isStateDefault = function () { //Check if the current state is the default
-        return this.src === this.DEFAULT_STATE
-    };
-
-    return this;
-=======
 	this.src = elm;
 	this.DEFAULT_STATE = elm;
 	this.states = new Set(this.src);
@@ -2266,7 +1805,6 @@ function virtualHistory (elm) {
 	};
 
 	return this;
->>>>>>> develop
 }
 
 /**
@@ -2779,11 +2317,13 @@ function object2tree (obj, space, symbol, forDOM) {
 //noinspection JSUnusedGlobalSymbols
 /**
  * @description Kruskal's algorithm, it selects a minimum length edge of all possible edges which connect two different disjoint MST components.
- * @param {Node} tree Tree
+ * @param {Node} root Root vertex of the tree
  * @since 1.1
  * @func
  */
-function Kruskal (tree) {
+function Kruskal (root) {
+	var verticesNb = root.size(), edges;
+	var visited = new Array(verticesNb), spanningTree = mkArray(verticesNb + 1, 2);
 
 }
 
@@ -2791,11 +2331,11 @@ function Kruskal (tree) {
 /**
  * @summary Dijkstra's algorithm.
  * @description Algorithm that constructs a Shortest Path Tree starting from some source node.
- * @param {Node} tree Tree
+ * @param {Node} root Root vertex of the tree
  * @since 1.1
  * @func
  */
-function Dijkstra (tree) {
+function Dijkstra (root) {
 
 }
 
@@ -2803,12 +2343,81 @@ function Dijkstra (tree) {
 /**
  * @summary Prim's algorithm.
  * @description Algorithm that constructs a minimum spanning tree for the graph.
- * @param {Node} tree Tree
+ * @param {Node} root Root vertex of the tree
  * @since 1.1
  * @func
  */
-function Prim (tree) {
+function Prim (root) {
 
+}
+
+/**
+ * @description Sort a table/matrix following the column specified.&lt;br />
+ * It's a bit like SORT table BY col (ASC|DESC); in SQL
+ * @param {Array[][]} matrix Table/matrix to sort
+ * @param {number} [colIndex=0] Index of the column where the sorting is decided.
+ * @param {?(undefined|String|boolean)} [order] Sorting order
+ * @returns {Array[][]} Sorted table/matrix
+ * @since 1.1
+ * @func
+ * @throws {InvalidParamError} Wrong order
+ */
+function TableSort (matrix, colIndex, order) {
+	if (!colIndex) colIndex = 0;
+	var table = Copy(matrix), sort = function (arr, order, left, right) {
+        if (!left &amp;&amp; !right) {
+            left = 0;
+            right = arr.lastIndex();
+        }
+        if (!order) order = "asc";
+        var i;
+        if (arr.length > 1) {
+        	console.log("arr", arr[Math.floor((right + left) / 2)]);
+            var pivot = arr[Math.floor((right + left) / 2)][colIndex], j = right;
+            console.log("pivot=", pivot, "pivot pos:", Math.floor((right + left) / 2));
+            i = left;
+            if (!order || order.toLowerCase().get(0, 2) === "asc") {
+                while (i &lt;= j) {
+                    while(arr[i][colIndex] &lt; pivot) i++;
+                    while(arr[j][colIndex] > pivot) j--;
+                    if (i &lt;= j) {
+                        swap(arr, i, j);
+                        i++;
+                        j--;
+                    }
+                }
+			} else if (order.toLowerCase().get(0, 2) === "des") {
+                while (i >= j) {
+                    while(arr[i][colIndex] > pivot) i++;
+                    while(arr[j][colIndex] &lt; pivot) j--;
+                    if (i >= j) {
+                        swap(arr, i, j);
+                        i++;
+                        j--;
+                    }
+                }
+			} else throw new InvalidParamError("Order can either be false|undefined||\"asc\"|\"des\" to make it work");
+
+            if (left &lt; i - 1) sort(arr, left, i - 1, order);
+            if (i &lt; right) sort(arr, i, right, order);
+        }
+        return arr
+    };
+	return sort(table, order);
+}
+
+/**
+ * @description Sort a table in an ascending order following the column specified.&lt;br />
+ * It's a bit like SORT table BY col ASC; in SQL
+ * @param {Array[][]} table Table to sort
+ * @param {number} [colIndex=0] Index of the column where the sorting is decided.
+ * @param {?(undefined|String|boolean)} [order] Sorting order
+ * @returns {Array[][]} Sorted table
+ * @since 1.1
+ * @func
+ */
+function sortNamedTable (table, colIndex, order) {
+	return [table[0]].concat(TableSort(table.get(1), colIndex, order))
 }</code></pre>
         </article>
     </section>
@@ -2819,13 +2428,13 @@ function Prim (tree) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-DataStruct.html">DataStruct</a></li></ul><h3>Classes</h3><ul><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-Edge.html">Edge</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-DataStruct.html">DataStruct</a></li></ul><h3>Classes</h3><ul><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-Edge.html">Edge</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-Vertex.html">Vertex</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Dec 24 2016 13:36:26 GMT+0000 (GMT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Mon Dec 26 2016 02:13:52 GMT+0000 (GMT)
 </footer>
 
 <script> prettyPrint(); </script>

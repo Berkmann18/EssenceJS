@@ -1,6 +1,7 @@
 # Project
 Sandbox.*
 ~*
+list.md
 
 # Logs
 logs
@@ -49,3 +50,4 @@ idea*
 # Win
 Thumbs.db
 desktop.ini
+/.idea/watcherTasks.xml

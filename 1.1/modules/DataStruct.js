@@ -149,24 +149,27 @@ function Node (pl, nx, pv) {
  * @param {number[]} [pos=[0, 0]] 2D position of the node
  * @param {Edge[]} [edges=[]] List of edges connected to the path node
  * @param {*} [payload=""] Payload
- * @returns {PathNode} Path node
- * @this PathNode
+ * @returns {Vertex} Vertex
+ * @this Vertex
  * @constructor
  * @since 1.0
- * @property {number} PathNode.g Cost of the path to that node
- * @property {number} PathNode.h Heuristic to get to that node
- * @property {number} PathNode.f Cost of the path (g) + heuristic estimate
- * @property {Edge[]} PathNode.edges List of edges connected to the path node
- * @property {*} PathNode.payload Payload (content/data) of the node
- * @property {number[]} PathNode.pos Position of the node
- * @property {?PathNode} PathNode.parent Parent of the path-node
- * @property {function(number): PathNode} PathNode.back Go n path-nodes back
- * @property {function(PathNode): boolean} PathNode.isCloser Check if the current path-node is closer than the other one
- * @property {function(): string} PathNode.toString String representation
- * @property {Function} PathNode.join Join PathNodes with edges
- *
+ * @property {number} Vertex.g Cost of the path to that node
+ * @property {number} Vertex.h Heuristic to get to that node
+ * @property {number} Vertex.f Cost of the path (g) + heuristic estimate
+ * @property {Edge[]} Vertex.edges List of edges connected to the path node
+ * @property {*} Vertex.payload Payload (content/data) of the node
+ * @property {number[]} Vertex.pos Position of the node
+ * @property {?Vertex} Vertex.parent Parent of the vertex
+ * @property {function(number): Vertex} Vertex.back Go n vertexes back
+ * @property {function(Vertex): boolean} Vertex.isCloser Check if the current vertex is closer than the other one
+ * @property {function(Vertex[]): string} Vertex.toString String representation
+ * @property {Function} Vertex.join Join Vertexes with edges
+ * @property {function(): Vertex} Vertex.getVertexInEdge Get the vertex connected to a particular edge
+ * @property {function(): Vertex[]} Vertex.getConnectedVertices Get the vertexes connected to this one
+ * @property {function(): (Vertex[]|Vertex[][])} Vertex.getNetwork Get the network/tree/graph/map of vertices connected to this one
+ * @property {function(): number} Vertex.size Size of the vertex's network
  */
-function PathNode (g, h, pos, payload, edges) {
+function Vertex (g, h, pos, payload, edges) {
 	this.g = g || 0;
 	this.h = h || 0;
 	this.f = this.g + this.h || 1;
@@ -179,37 +182,78 @@ function PathNode (g, h, pos, payload, edges) {
 		return (isNon(n) || n <= 1)? this.parent: this.parent.back(n - 1);
 	};
 
-	this.isCloser = function (pn) {
-		return this.f <= pn.f;
+	this.isCloser = function (pathNode) {
+		return this.f <= pathNode.f;
 	};
 
 	this.toString = function () {
-		return "PathNode(g=" + this.g + "h=" + this.h + "f=" + this.f + ", pos=[" + this.pos.toStr(true) + "], parent=" + (this.parent === null? null: this.parent.toString()) + ")";
+		return "Vertex(g=" + this.g + "h=" + this.h + "f=" + this.f + ", pos=[" + this.pos.toStr(true) + "], parent=" + (this.parent === null? null: this.parent.toString()) + ")";
 	};
 
-	this.join = function (PathNodes) {
-		for (var i = 0; i < PathNodes.length; i++) {
+	this.join = function (pathNodes) {
+		for (var i = 0; i < pathNodes.length; i++) {
 			this.edges[i].startNode = this;
-			this.edges[i].endNode = PathNodes[i];
-			PathNodes[i].edges.push(this.edges[i]);
-			PathNodes[i].edges.last().startNode = this;
-			PathNodes[i].edges.last().endNode = PathNodes[i];
+			this.edges[i].endNode = pathNodes[i];
+			pathNodes[i].edges.push(this.edges[i]);
+			pathNodes[i].edges.last().startNode = this;
+			pathNodes[i].edges.last().endNode = pathNodes[i];
 		}
     };
+	
+	this.getVertexInEdge = function (index) {
+		var edge = this.edges[index || 0];
+		return edge.startNode.equals(this)? edge.endNode: edge.startNode;
+    };
+
+	this.getConnectedVertices = function () {
+		var list = [];
+		for (var i = 0; i < this.edges.length; i++) list.push(this.getVertexInEdge(i));
+		return list;
+	};
+
+    this.find = function (n, depth) {
+        if (!depth) depth = 0;
+        if (this.payload === n) return depth;
+        var search = this.getConnectedVertices().map(function (node) {
+        	try {
+                return node.find(n, depth + 1);
+			} catch (err) {
+	    		return [-1, depth];
+			}
+		});
+		var res = search.filter(function (item) { //Filters out the items = [-1, depth]
+			return !isType(item, "Array");
+        });
+
+        return res.length > 0? res: [-1, depth]
+    };
+
+    this.getNetwork = function () {
+        var self = this;
+        var listVertices = function (vertex) {
+            var list = vertex.getConnectedVertices().remove([self, null], true);
+            return list.length > 0? list.map(listVertices): list;
+        };
+        return this.getConnectedVertices().map(listVertices);
+    };
+
+    this.size = function () {
+    	return this.getNetwork().linearise().length;
+	};
 
 	return this;
 }
 
 /**
- * @description Edge that connects two PathNodes
- * @param {?PathNode} start Starting node
- * @param {?PathNode} end Ending node
+ * @description Edge that connects two Vertexs
+ * @param {?Vertex} start Starting node
+ * @param {?Vertex} end Ending node
  * @param {number} [len=0] Length of the edge.
  * @this Edge
  * @since 1.1
  * @constructor
- * @property {?PathNode} Edge.startNode Starting node of the edge
- * @property {?PathNode} Edge.endNode Ending node of the edge
+ * @property {?Vertex} Edge.startNode Starting node of the edge
+ * @property {?Vertex} Edge.endNode Ending node of the edge
  * @property {number} Edge.length Length of the edge
  * @property {function(): string} Edge.toString String representation of the edge
  * @property {Function} Edge.draw Draw the edge
@@ -1381,15 +1425,15 @@ function QueueList () {
 /**
  * @description A* path finding algorithm inspired from {@link http://Heyes-jones.com/pseudocode.php|this pseudo-code}
  * @todo Make sure it works properly
- * @param {PathNode} start Starting node
- * @param {PathNode} goal Ending node
+ * @param {Vertex} start Starting node
+ * @param {Vertex} goal Ending node
  * @returns {undefined}
  * @since 1.0
  * @func
  * @deprecated
  */
 function Astar (start, goal) {
-	//PathNode.f (score) = g (sum of all cost to get at this point) + h (heuristic: estimate of what it will take to get the goal)
+	//Vertex.f (score) = g (sum of all cost to get at this point) + h (heuristic: estimate of what it will take to get the goal)
 	var nodeGoal = goal, nodeCurrent, _h;
 	var openList = [start], closedList = [];
 	while (openList.length > 0) {
@@ -1434,17 +1478,17 @@ function Astar (start, goal) {
 
 /**
  * @description A* algorithm v2.<br />
- * JS version of: {@link https://en.wikipedia.org/wiki/A*_search_algorithm}
- * @param {PathNode} start Starting node
- * @param {PathNode} goal Ending node
- * @param {PathNode[]} grid Grid
+ * JS version of: {@link https://en.wikipedia.org/wiki/A*_search_algorithm|wiki's pseudo alg}
+ * @param {Vertex} start Starting node
+ * @param {Vertex} goal Ending node
+ * @param {Vertex[]} grid Grid
  * @returns {?Array} Optimal Path
  * @since 1.0
  * @func
- * @throws {InvalidParamError} Not a PathNode object
+ * @throws {InvalidParamError} Not a Vertex object
  */
 function A (start, goal, grid) {
-	if (!isCustomType(start, "PathNode") || !isCustomType(goal, "PathNode")) throw new InvalidParamError("The boundary nodes needs to be PathNode objects !");
+	if (!isCustomType(start, "Vertex") || !isCustomType(goal, "Vertex")) throw new InvalidParamError("The boundary nodes needs to be Vertex objects !");
 	/*
 	closedSet: The set of nodes already evaluated
 	openSet: The set of currently discovered nodes still to be evaluated (where only the start node is known)
@@ -1462,7 +1506,7 @@ function A (start, goal, grid) {
 				}).min();
 		});
 
-		if (current.equals(goal)) return reconPath(cameFrom, current, grid);
+		if (current.equals(goal)) return reconPath(cameFrom, current);
 		openSet.remove(current);
 		closedSet.push(current);
 
@@ -1485,12 +1529,11 @@ function A (start, goal, grid) {
  * @description Path reconstructor
  * @param {Array} cameFrom List of visited nodes
  * @param {Array} current Current node
- * param {Array} grid Grid
  * @returns {Array} Reconstructed path
  * @since 1.0
  * @func
  */
-function reconPath(cameFrom, current/*, grid*/) {
+function reconPath(cameFrom, current) {
 	var totalPath = [current];
 	while (current in keyList(cameFrom)) {
 		current = cameFrom[current];
@@ -2246,11 +2289,13 @@ function object2tree (obj, space, symbol, forDOM) {
 //noinspection JSUnusedGlobalSymbols
 /**
  * @description Kruskal's algorithm, it selects a minimum length edge of all possible edges which connect two different disjoint MST components.
- * @param {Node} tree Tree
+ * @param {Node} root Root vertex of the tree
  * @since 1.1
  * @func
  */
-function Kruskal (tree) {
+function Kruskal (root) {
+	var verticesNb = root.size(), edges;
+	var visited = new Array(verticesNb), spanningTree = mkArray(verticesNb + 1, 2);
 
 }
 
@@ -2258,11 +2303,11 @@ function Kruskal (tree) {
 /**
  * @summary Dijkstra's algorithm.
  * @description Algorithm that constructs a Shortest Path Tree starting from some source node.
- * @param {Node} tree Tree
+ * @param {Node} root Root vertex of the tree
  * @since 1.1
  * @func
  */
-function Dijkstra (tree) {
+function Dijkstra (root) {
 
 }
 
@@ -2270,11 +2315,11 @@ function Dijkstra (tree) {
 /**
  * @summary Prim's algorithm.
  * @description Algorithm that constructs a minimum spanning tree for the graph.
- * @param {Node} tree Tree
+ * @param {Node} root Root vertex of the tree
  * @since 1.1
  * @func
  */
-function Prim (tree) {
+function Prim (root) {
 
 }
 

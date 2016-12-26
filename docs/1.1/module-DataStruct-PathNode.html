@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: PathNode</title>
+    <title>JSDoc: Class: Vertex</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: PathNode</h1>
+    <h1 class="page-title">Class: Vertex</h1>
 
     
 
@@ -29,7 +29,7 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="module-DataStruct.html">DataStruct</a>~</span>PathNode</h2>
+            <span class="ancestors"><a href="module-DataStruct.html">DataStruct</a>~</span>Vertex</h2>
         
     
 </header>
@@ -41,7 +41,7 @@
 
     
 
-    <h4 class="name" id="PathNode"><span class="type-signature"></span>new PathNode<span class="signature">(g<span class="signature-attributes">opt</span>, h<span class="signature-attributes">opt</span>, pos<span class="signature-attributes">opt</span>, edges<span class="signature-attributes">opt</span>, payload<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {PathNode}</span></h4>
+    <h4 class="name" id="Vertex"><span class="type-signature"></span>new Vertex<span class="signature">(g<span class="signature-attributes">opt</span>, h<span class="signature-attributes">opt</span>, pos<span class="signature-attributes">opt</span>, edges<span class="signature-attributes">opt</span>, payload<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Vertex}</span></h4>
 
     
 
@@ -58,7 +58,7 @@
 
 
     <h5>This:</h5>
-    <ul><li>PathNode</li></ul>
+    <ul><li>Vertex</li></ul>
 
 
 
@@ -319,7 +319,7 @@
 
         <tr>
             
-                <td class="name"><code>PathNode.g</code></td>
+                <td class="name"><code>Vertex.g</code></td>
             
 
             <td class="type">
@@ -348,7 +348,7 @@
 
         <tr>
             
-                <td class="name"><code>PathNode.h</code></td>
+                <td class="name"><code>Vertex.h</code></td>
             
 
             <td class="type">
@@ -377,7 +377,7 @@
 
         <tr>
             
-                <td class="name"><code>PathNode.f</code></td>
+                <td class="name"><code>Vertex.f</code></td>
             
 
             <td class="type">
@@ -406,7 +406,7 @@
 
         <tr>
             
-                <td class="name"><code>PathNode.edges</code></td>
+                <td class="name"><code>Vertex.edges</code></td>
             
 
             <td class="type">
@@ -435,7 +435,7 @@
 
         <tr>
             
-                <td class="name"><code>PathNode.payload</code></td>
+                <td class="name"><code>Vertex.payload</code></td>
             
 
             <td class="type">
@@ -464,7 +464,7 @@
 
         <tr>
             
-                <td class="name"><code>PathNode.pos</code></td>
+                <td class="name"><code>Vertex.pos</code></td>
             
 
             <td class="type">
@@ -493,13 +493,13 @@
 
         <tr>
             
-                <td class="name"><code>PathNode.parent</code></td>
+                <td class="name"><code>Vertex.parent</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">PathNode</span>
+<span class="param-type">Vertex</span>
 
 
             
@@ -517,14 +517,14 @@
 
             
 
-            <td class="description last">Parent of the path-node</td>
+            <td class="description last">Parent of the vertex</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>PathNode.back</code></td>
+                <td class="name"><code>Vertex.back</code></td>
             
 
             <td class="type">
@@ -546,14 +546,14 @@
 
             
 
-            <td class="description last">Go n path-nodes back</td>
+            <td class="description last">Go n vertexs back</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>PathNode.isCloser</code></td>
+                <td class="name"><code>Vertex.isCloser</code></td>
             
 
             <td class="type">
@@ -575,14 +575,14 @@
 
             
 
-            <td class="description last">Check if the current path-node is closer than the other one</td>
+            <td class="description last">Check if the current vertex is closer than the other one</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>PathNode.toString</code></td>
+                <td class="name"><code>Vertex.toString</code></td>
             
 
             <td class="type">
@@ -611,7 +611,7 @@
 
         <tr>
             
-                <td class="name"><code>PathNode.join</code></td>
+                <td class="name"><code>Vertex.join</code></td>
             
 
             <td class="type">
@@ -633,7 +633,65 @@
 
             
 
-            <td class="description last">Join PathNodes with edges</td>
+            <td class="description last">Join Vertexs with edges</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Vertex.getNodeInEdge</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Get the vertex connected to a particular edge</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Vertex.getConnectedNodes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Get the vertexs connected to this one</td>
         </tr>
 
     
@@ -675,7 +733,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="DataStruct.js.html">DataStruct.js</a>, <a href="DataStruct.js.html#line168">line 168</a>
+        <a href="DataStruct.js.html">DataStruct.js</a>, <a href="DataStruct.js.html#line170">line 170</a>
     </li></ul></dd>
     
 
@@ -713,7 +771,7 @@
     </dt>
     <dd>
         
-<span class="param-type">PathNode</span>
+<span class="param-type">Vertex</span>
 
 
     </dd>
@@ -753,33 +811,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-DataStruct.html">DataStruct</a></li></ul><h3>Classes</h3><ul><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-Edge.html">Edge</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-PathNode.html">PathNode</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-DataStruct.html">DataStruct</a></li></ul><h3>Classes</h3><ul><li><a href="module-DataStruct-Archive.html">Archive</a></li><li><a href="module-DataStruct-Edge.html">Edge</a></li><li><a href="module-DataStruct-EventTable.html">EventTable</a></li><li><a href="module-DataStruct-Graph.html">Graph</a></li><li><a href="module-DataStruct-LinkedList.html">LinkedList</a></li><li><a href="module-DataStruct-Map.html">Map</a></li><li><a href="module-DataStruct-MultiStream.html">MultiStream</a></li><li><a href="module-DataStruct-Node.html">Node</a></li><li><a href="module-DataStruct-NTreeNode.html">NTreeNode</a></li><li><a href="module-DataStruct-Vertex.html">Vertex</a></li><li><a href="module-DataStruct-Queue.html">Queue</a></li><li><a href="module-DataStruct-QueueArray.html">QueueArray</a></li><li><a href="module-DataStruct-QueueList.html">QueueList</a></li><li><a href="module-DataStruct-Set.html">Set</a></li><li><a href="module-DataStruct-SortedSet.html">SortedSet</a></li><li><a href="module-DataStruct-Stack.html">Stack</a></li><li><a href="module-DataStruct-StackArray.html">StackArray</a></li><li><a href="module-DataStruct-StackList.html">StackList</a></li><li><a href="module-DataStruct-Stream.html">Stream</a></li><li><a href="module-DataStruct-TreeNode.html">TreeNode</a></li><li><a href="module-DataStruct-virtualHistory.html">virtualHistory</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-<<<<<<< HEAD
-<<<<<<< master
-<<<<<<< master
-<<<<<<< HEAD
-<<<<<<< HEAD
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Wed Nov 09 2016 17:54:07 GMT+0000 (GMT)
-=======
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Mon Dec 19 2016 01:21:30 GMT+0000 (GMT)
->>>>>>> e065322... Overall improvements
-=======
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Dec 23 2016 20:23:08 GMT+0000 (GMT)
->>>>>>> develop
-=======
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Dec 24 2016 13:36:26 GMT+0000 (GMT)
->>>>>>> Updated
-=======
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Dec 24 2016 13:36:26 GMT+0000 (GMT)
->>>>>>> Conflict fixed
-=======
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Dec 24 2016 13:36:26 GMT+0000 (GMT)
->>>>>>> develop
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Mon Dec 26 2016 00:20:53 GMT+0000 (GMT)
 </footer>
 
 <script> prettyPrint(); </script>

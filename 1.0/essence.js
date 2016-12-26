@@ -5194,11 +5194,11 @@ function Node (pl, nx, pv) {
  * @description Path node
  * @param {number} g Total current cost
  * @param {number} h Total current heuristic
- * @returns {PathNode} Path node
- * @this PathNode
+ * @returns {Vertex} Path node
+ * @this Vertex
  * @constructor
  */
-function PathNode (g, h) { //Nodes for path finding algs
+function Vertex (g, h) { //Nodes for path finding algs
 	this.f = g + h || 1;
 	this.parent = null;
 	return this;
@@ -5869,14 +5869,14 @@ function QueueList () {
 /**
  * @description A* path finding algorithm
  * @todo Make sure it works properly
- * @param {PathNode} start Starting node
- * @param {PathNode} goal Ending node
+ * @param {Vertex} start Starting node
+ * @param {Vertex} goal Ending node
  * @returns {undefined}
- * @see PathNode
+ * @see Vertex
  */
 function Astar (start, goal) {
 	//Inspired from http://Heyes-jones.com/pseudocode.php
-	//PathNode.f (score) = g (sum of all cost to get at this point) + h (heuristic: estimate of what it will take to get the goal)
+	//Vertex.f (score) = g (sum of all cost to get at this point) + h (heuristic: estimate of what it will take to get the goal)
 	var nodeGoal = goal, nodeCurrent, nodeSucessor, _h;
 	var openList = [start], closedList = [];
 	while (openList.length > 0) {
@@ -9524,7 +9524,7 @@ function name2type(name, param) {
 		case "LinkedList": return LinkedList(param);
 		case "TreeNode": return TreeNode(param);
 		case "Node": return Node(param);
-		case "PathNode": return PathNode(param);
+		case "Vertex": return Vertex(param);
 		case "NTreeNode": return NTreeNode(param);
 		case "Set": return Set(param);
 		case "SortedSet": return SortedSet(param);

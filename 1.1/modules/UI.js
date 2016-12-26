@@ -437,11 +437,7 @@ function hsv2rgb (hsv, toArray) {
  * @since 1.1
  * @func
  */
-<<<<<<< HEAD
 function getColourType(clr) {
-=======
-function getColourType (clr) {
->>>>>>> develop
 	if (!isValid(clr, "colour")) throw new InvalidExpressionError(clr + " isn't a colour!");
 	if (/^#?([a-f\d]{1,2})([a-f\d]{1,2})([a-f\d]{1,2})$/i.test(clr)) return "hex";
 	var colourNames = [clr.replace(/^(rgb|hsl|hsv|hsb)\(([0-9]+,\s){2}([0-9]+)\)$/, "$1"), clr.replace(/^(rgb|hsl|hsv|hsb)a\(([0-9]+,\s){3}((0|1|)\.[0-9]*)\)$/, "$1")];
@@ -1363,8 +1359,6 @@ function radialGradient (clrI, clrF, n) {
 /* eslint no-unused-vars: 2 */
 
 /**
-<<<<<<< HEAD
-=======
  * @description Luminance of an RGB colour.
  * @param {number} [r=0] Red shade
  * @param {number} [g=0] Green shade
@@ -1376,7 +1370,6 @@ function getLuminance (r, g, b) {
 }
 
 /**
->>>>>>> develop
  * @description Check if a colour is dark<i>-ish</i>.
  * @param {string} clr Colour
  * @return {boolean} Darkness
@@ -1384,14 +1377,9 @@ function getLuminance (r, g, b) {
  * @func
  */
 function isDark (clr) {
-<<<<<<< HEAD
-
-	return true;
-=======
 	var shades = clrToArr(clr);
 	if (getColourType(clr) != "rgb") shades = window[getColourType(clr) + "2rgb"](shades, true);
     return getLuminance(shades[0], shades[1], shades[2]) < 128;
->>>>>>> develop
 }
 
 /**
@@ -1427,22 +1415,9 @@ function daynightMode (exch) { //Switch between enabled or not for Day/Night pag
 		Essence.say((darkTime ? "It's dark" : "It's light") + "!", "info");
 
 		for (var i = 0; i < tags.length; i++) {
-			//console.log("#%d tag: %s => %s", i, tags[i], tags[i].node);
-<<<<<<< HEAD
-<<<<<<< master
-<<<<<<< HEAD
-			if (darkTime) tags[i].invColour();
-=======
-=======
 			if (isNon(tags[i].css("backgroundColor"))) tags[i].setCSS("backgroundColor", "#FFF"); //fill it with a "default" colour to avoid using a blank value instead of an actual valid colour
 			console.log("backgroundColor of " + tags[i].selector + "=" + tags[i].css("backgroundColor"));
->>>>>>> Conflict fixed
-=======
-			if (isNon(tags[i].css("backgroundColor"))) tags[i].setCSS("backgroundColor", "#FFF"); //fill it with a "default" colour to avoid using a blank value instead of an actual valid colour
-			console.log("backgroundColor of " + tags[i].selector + "=" + tags[i].css("backgroundColor"));
->>>>>>> develop
-			if (darkTime && !isDark(tags[i].css("backgroundColor"))) tags[i].invColour();
->>>>>>> develop
+			//if (darkTime && !isDark(tags[i].css("backgroundColor"))) tags[i].invColour();
 		}
 	} else Essence.say("You cannot use the day/night mod if it\'s disabled.", "warn")
 }
@@ -1665,22 +1640,7 @@ function clrToArr (clr) {
 
 /**
  * @description It will synchronize the in-JS CSS to the CSS of a page (since JS won't always know when an element follow CSS rules specified in a CSS snippet/code).
-<<<<<<< HEAD
-<<<<<<< master
-=======
-=======
-<<<<<<< HEAD
->>>>>>> develop
-<<<<<<< HEAD
  * This may show rules that aren't in the styles tags.
-=======
->>>>>>> develop
-<<<<<<< HEAD
->>>>>>> Conflict fixed
-=======
-=======
->>>>>>> develop
->>>>>>> develop
  * @since 1.1
  * @func
  * @returns {undefined}
@@ -1689,16 +1649,7 @@ function syncCSS () {
 	var styleSheets = document.styleSheets.toArray();
 	for (var sheet in styleSheets) {
 		if (styleSheets.hasOwnProperty(sheet)) {
-<<<<<<< HEAD
-<<<<<<< master
-            var rules = document.all? sheet.rules: sheet.cssRules;
-            console.log("\tRules of %s:\n%s", sheet, rules);
-=======
-=======
-<<<<<<< HEAD
->>>>>>> develop
-<<<<<<< HEAD
-            var rules = (document.all? styleSheets[sheet].rules: styleSheets[sheet].cssRules).toArray();
+			var rules = (document.all? styleSheets[sheet].rules: styleSheets[sheet].cssRules).toArray();
             var currentRules = rules.map(function (rule) {
             	if ($n(rule.selectorText, true)) $e(rule.selectorText === "*"? "html": rule.selectorText).setStyles(rule.style.cssText.split(";").map(function (rule) { //Transform the CSS rule string into an organised array
                     return rule.split(":")
@@ -1707,18 +1658,6 @@ function syncCSS () {
                 return rule.selectorText + " {\n\t" + rule.style.cssText + "\n}";
             });
             console.info("Rules of %s:\n%s", styleSheets[sheet], currentRules.join("\n"));
-=======
-            var rules = document.all? sheet.rules: sheet.cssRules;
-            console.log("\tRules of %s:\n%s", sheet, rules);
->>>>>>> develop
-<<<<<<< HEAD
->>>>>>> Conflict fixed
-=======
-=======
-            var rules = document.all? sheet.rules: sheet.cssRules;
-            console.log("\tRules of %s:\n%s", sheet, rules);
->>>>>>> develop
->>>>>>> develop
 		}
 	}
 }
@@ -1726,13 +1665,6 @@ function syncCSS () {
 /**
  * @description Add a CSS rule to a particular place.<br />
  * Inspired by Diego Fl&ocute;rez's version of {@link https://davidwalsh.name/add-rules-stylesheets|David Walsh's addCSSRule}.
-<<<<<<< HEAD
-<<<<<<< master
-=======
-=======
-<<<<<<< HEAD
->>>>>>> develop
-<<<<<<< HEAD
  * @param {String} selector Selector
  * @param {String} rules CSS rules
  * @param {Stylesheet} [sheet=document.styleSheets[0]] Stylesheet
@@ -1743,37 +1675,12 @@ function syncCSS () {
  */
 function addCSSRule (selector, rules, sheet, index) {
 	if (!sheet) sheet = document.styleSheets[0];
-	console.log("Adding %s {%s} to %s", selector, rules, sheet);
-=======
-<<<<<<< HEAD
->>>>>>> Conflict fixed
-=======
-=======
->>>>>>> develop
->>>>>>> develop
- * @param {Stylesheet} [sheet=document.styleSheets[0]] Stylesheet
- * @param {String} selector Selector
- * @param {String} rules CSS rules
- * @param {number} [index=-1] Insertion index
- * @returns {String} Newly modified CSS rule
- */
-function addCSSRule (sheet, selector, rules, index) {
-	if (!sheet) sheet = document.styleSheets[0];
-<<<<<<< HEAD
-<<<<<<< master
-=======
->>>>>>> develop
->>>>>>> Conflict fixed
-=======
-<<<<<<< HEAD
->>>>>>> develop
-=======
->>>>>>> develop
->>>>>>> develop
     //noinspection JSUnresolvedVariable
     var styleRules = document.all? sheet.rules: sheet.cssRules;
+    //console.log("sheet", sheet);
+    //console.log("styleRules", styleRules, "IE?", !isNon(document.all));
     if (!index) index = styleRules.length - 1;
-
+	if (debugging) console.info("Adding %s {%s} into %s", selector, rules, sheet);
     for (var i = index; i > 0; i--) {
         if (styleRules[i].selectorText === selector) { //Append the new rules to the current content of the styleRules[i]
             rules = styleRules[i].style.cssText + rules;
@@ -1792,24 +1699,9 @@ function addCSSRule (sheet, selector, rules, index) {
  * @description Clear CSS rules from a stylesheet.<br />
  * Source: {@link https://davidwalsh.name/add-rules-stylesheets|Leonard's}
  * @param {Stylesheet} [sheet=document.styleSheets[0]] Stylesheet
-<<<<<<< HEAD
-<<<<<<< master
-=======
-=======
-<<<<<<< HEAD
->>>>>>> develop
-<<<<<<< HEAD
  * @returns {undefined}
  * @since 1.1
  * @func
-=======
->>>>>>> develop
-<<<<<<< HEAD
->>>>>>> Conflict fixed
-=======
-=======
->>>>>>> develop
->>>>>>> develop
  */
 function clearCSSRules (sheet) {
 	if (!sheet) sheet = document.styleSheets[0];
@@ -1821,13 +1713,6 @@ function clearCSSRules (sheet) {
         else if ("removeRule" in sheet) sheet.removeRule(i);
         i--;
     }
-<<<<<<< HEAD
-<<<<<<< master
-=======
-=======
-<<<<<<< HEAD
->>>>>>> develop
-<<<<<<< HEAD
 }
 
 /**
@@ -1871,12 +1756,4 @@ function getCSS (asArray) {
         }
     }
     return asArray? res: res.join("\n");
-=======
->>>>>>> develop
-<<<<<<< HEAD
->>>>>>> Conflict fixed
-=======
-=======
->>>>>>> develop
->>>>>>> develop
 }

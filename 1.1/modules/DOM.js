@@ -817,24 +817,9 @@ function tabs (n) {
  * @since 1.1
  * @func
  * @example
-<<<<<<< HEAD
-<<<<<<< master
-=======
-=======
-<<<<<<< HEAD
->>>>>>> develop
-<<<<<<< HEAD
- * @global
-=======
->>>>>>> develop
-<<<<<<< HEAD
->>>>>>> Conflict fixed
-=======
-=======
->>>>>>> develop
->>>>>>> develop
  * //We want to get the meta description and we know that there's an element such as $n("meta[name='description']") &ne; null
  * var docDescription = $t("meta", "name='description'", "content");
+ * @global
  */
 function $t (tagName, knownAttrSelector, attr) {
 	var tag = $e(tagName + "[" + knownAttrSelector + "]").val(false, true), start;
