@@ -210,11 +210,11 @@ function rmConsecDuplicates (arr) {
 	var out = [];
 	var j = 0;
 	for (var i = 0; i < arr.length; i++) {
-		if (i === 0 || arr[i] != arr[i - 1]) out[j++] = arr[i];
+		if (i === 0 || !arr[i].equals(arr[i - 1])) out[j++] = arr[i];
 	}
 	j = 0;
 	for (i = 0; i < arr.length - 1; i++) { //Double enforced check
-		if (arr[i] != arr[i + 1]) out[j++] = arr[i];
+		if (!arr[i].equals(arr[i + 1])) out[j++] = arr[i];
 	}
 	return out
 }

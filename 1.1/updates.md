@@ -1,7 +1,5 @@
 ## General
-^ Clean-up
 
-\+ Ignored list.md from the VCS scope and added a structure folder with all the functions/objects of each modules ([see here](../structure/1.1)).
 
 ## [essence](essence.js)
 
@@ -10,30 +8,9 @@
  
 
 ## [DataStruct](modules/DataStruct.js)
+\+ Edge.getSurroundingEdges(), Kruskal(), Edge.getNeighbours(), Vertex.distanceFrom(), Dijkstra(), Vertex.getNearestVertex(), Prim()
 
-
-## [essence](essence.js)
-
-
-## [essence](essence.js)
-
-
-## [essence](essence.js)
-
-
-## [essence](essence.js)
-
-
-## [essence](essence.js)
-
-
-## [Ajax](modules/Ajax.js)
-
-
-## [DataStruct](modules/DataStruct.js)
-^ Renamed PathNode to Vertex
-
-\+ Vertex.getVerticesInEdge(), Vertex.getConnectedVertices(), Vertex.find(), Vertex.getNetwork(), Vertex.size()
+^ Edge.join(), Edge.toString()
 
 ## [DOM](modules/DOM.js)
 
@@ -45,7 +22,7 @@
 
 
 ## [Misc](modules/Misc.js)
-
+^ Universalised rmDuplicates (to work on arrays/sets/lists that aren't using native or comparison-simple objects)
 
 ## [Security](modules/Security.js)
  
@@ -54,12 +31,7 @@
 
 
 ## [Web](modules/Web.js)
-+
-
-## [QTest](modules/QTest.js)
-
-
-## [Web](modules/Web.js)
 
 
 ## [QTest](modules/QTest.js)
+

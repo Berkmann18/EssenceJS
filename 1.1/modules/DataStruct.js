@@ -163,11 +163,13 @@ function Node (pl, nx, pv) {
  * @property {function(number): Vertex} Vertex.back Go n vertexes back
  * @property {function(Vertex): boolean} Vertex.isCloser Check if the current vertex is closer than the other one
  * @property {function(Vertex[]): string} Vertex.toString String representation
- * @property {Function} Vertex.join Join Vertexes with edges
+ * @property {function(Vertex[])} Vertex.join Join Vertexes with edges
  * @property {function(): Vertex} Vertex.getVertexInEdge Get the vertex connected to a particular edge
  * @property {function(): Vertex[]} Vertex.getConnectedVertices Get the vertexes connected to this one
  * @property {function(): (Vertex[]|Vertex[][])} Vertex.getNetwork Get the network/tree/graph/map of vertices connected to this one
  * @property {function(): number} Vertex.size Size of the vertex's network
+ * @property {function(Vertex): number} Vertex.distanceFrom Distance from this vertex to another
+ * @property {function(): Vertex} Vertex.getNearestVertex Get the nearest connected vertex
  */
 function Vertex (g, h, pos, payload, edges) {
 	this.g = g || 0;
@@ -182,21 +184,31 @@ function Vertex (g, h, pos, payload, edges) {
 		return (isNon(n) || n <= 1)? this.parent: this.parent.back(n - 1);
 	};
 
-	this.isCloser = function (pathNode) {
-		return this.f <= pathNode.f;
+	this.isCloser = function (vertex) {
+		return this.f <= vertex.f;
 	};
 
 	this.toString = function () {
-		return "Vertex(g=" + this.g + "h=" + this.h + "f=" + this.f + ", pos=[" + this.pos.toStr(true) + "], parent=" + (this.parent === null? null: this.parent.toString()) + ")";
+		var edges = this.edges.length > 0? this.edges.map(function (edge) {
+			try {
+                return edge.toString()
+			} catch (err) {
+				return null;
+			}
+		}): "";
+		return "Vertex(g=" + this.g + ", h=" + this.h + ", f=" + this.f + ", pos=[" + this.pos.toStr(true) + "], payload=" + this.payload + ", edges=[" + edges + "], parent=" + (this.parent === null? null: this.parent.toString()) + ")";
 	};
 
-	this.join = function (pathNodes) {
-		for (var i = 0; i < pathNodes.length; i++) {
-			this.edges[i].startNode = this;
-			this.edges[i].endNode = pathNodes[i];
-			pathNodes[i].edges.push(this.edges[i]);
-			pathNodes[i].edges.last().startNode = this;
-			pathNodes[i].edges.last().endNode = pathNodes[i];
+	this.join = function (vertices) {
+		for (var i = 0; i < vertices.length; i++) {
+			if (!isType(this.edges[i], "Edge")) this.edges[i] = new Edge(this, vertices[i]);
+			else {
+				this.edges[i].startNode = this;
+                this.edges[i].endNode = vertices[i];
+            }
+			vertices[i].edges.push(this.edges[i]);
+			vertices[i].edges.last().startNode = this;
+			vertices[i].edges.last().endNode = vertices[i];
 		}
     };
 	
@@ -241,22 +253,38 @@ function Vertex (g, h, pos, payload, edges) {
     	return this.getNetwork().linearise().length;
 	};
 
+    this.distanceFrom = function (vertex) {
+		return euclidianDist(this.pos, vertex.pos);
+    };
+
+    this.getNearestVertex = function () {
+    	var self = this;
+    	var smallestEdge = this.edges.filter(function (edge) {
+            return edge.length === self.edges.map(function (edge) {
+				return edge.length;
+			}).min();
+        });
+		return smallestEdge.startNode.equals(this)? smallestEdge.endNode: smallestEdge.startNode;
+    };
+
 	return this;
 }
 
 /**
- * @description Edge that connects two Vertexs
- * @param {?Vertex} start Starting node
- * @param {?Vertex} end Ending node
+ * @description Edge that connects two Vertices
+ * @param {?Vertex} start Starting vertex/node
+ * @param {?Vertex} end Ending vertex/node
  * @param {number} [len=0] Length of the edge.
  * @this Edge
  * @since 1.1
  * @constructor
- * @property {?Vertex} Edge.startNode Starting node of the edge
- * @property {?Vertex} Edge.endNode Ending node of the edge
+ * @property {?Vertex} Edge.startNode Starting node/vertex of the edge
+ * @property {?Vertex} Edge.endNode Ending node/vertex of the edge
  * @property {number} Edge.length Length of the edge
  * @property {function(): string} Edge.toString String representation of the edge
  * @property {Function} Edge.draw Draw the edge
+ * @property {function(): Edge[]} Edge.getSurroundingEdges Get all the surrounding edges
+ * @property {function(): Edge[]} Edge.getNeighbours Get the neighbour edges
  */
 function Edge (start, end, len) {
 	this.startNode = start || null;
@@ -270,7 +298,23 @@ function Edge (start, end, len) {
 
 	this.draw = function () {
 		this.line.draw();
-    }
+    };
+
+    this.getSurroundingEdges = function () {
+        var self = this, vertexNetwork = this.startNode? this.startNode.getNetwork(): [];
+        vertexNetwork.append(this.endNode? this.endNode.getNetwork(): []);
+        return vertexNetwork.map(function (vertex) {
+			return vertex.edges;
+        }).linearise().remove(this, true); //Get a 1d array of edges which are different than this one
+	};
+
+    this.getNeighbours = function () {
+        var self = this, neighbours = this.startNode? this.startNode.getConnectedVertices(): [];
+        neighbours.append(this.endNode? this.endNode.getConnectedVertices(): []);
+        return neighbours.map(function (vertex) {
+            return vertex.edges;
+        }).linearise().remove(this, true);
+	}
 }
 
 /**
@@ -2288,39 +2332,106 @@ function object2tree (obj, space, symbol, forDOM) {
 
 //noinspection JSUnusedGlobalSymbols
 /**
- * @description Kruskal's algorithm, it selects a minimum length edge of all possible edges which connect two different disjoint MST components.
+ * @description Kruskal's algorithm, it selects a minimum length edge of all possible edges which connect two different disjoint <strong>M</strong>inimum <strong>S</strong>panning <strong>T</strong>ree components.
  * @param {Node} root Root vertex of the tree
+ * @returns {Edge[]} MST
  * @since 1.1
  * @func
+ * @todo Revisit it
  */
 function Kruskal (root) {
-	var verticesNb = root.size(), edges;
-	var visited = new Array(verticesNb), spanningTree = mkArray(verticesNb + 1, 2);
+	// Wiki adaption
+	var forest = [], edges = root.edges[0].getSurroundingEdges();
 
+	while (edges.length > 0 /*& forest.notYetSpanning()*/) {
+		var edge = edges.filter(function (edge) { //Get the smallest edge
+            return edge.length === edges.map(function (edge) {
+                    return edge.length;
+                }).min()
+        }).map(function (edge) {
+            return edge.length
+        })[0];
+        var otherEdgesStart = edge.startNode.edges.remove(this, true), otherEdgesEnd = edge.endNode.edges.remove(this, true);
+        var otherVerticesStart = otherEdgesStart.map(function (edge) {
+			return [edge.startNode, edge.endNode]
+        }).linearise(), otherVerticesEnd = otherEdgesEnd.map(function (edge) {
+            return [edge.startNode, edge.endNode]
+        }).linearise();
+        var otherVertices = rmDuplicates(otherEdgesStart.concat(otherVerticesEnd)).filter(function (vertex) {
+			return !vertex.startNode.equals(vertex.endNode) && (!vertex.startNode.equals(edge.startNode) || !vertex.endNode.equals(edge.startNode) || vertex.startNode.equals(edge.endNode) || !vertex.endNode.equals(edge.endNode));
+        });
+        if (edge.startNode != edge.endNode && otherVertices.length > 0) forest.push(edge);
+	}
+
+	return forest;
 }
 
 //noinspection JSUnusedGlobalSymbols
 /**
  * @summary Dijkstra's algorithm.
- * @description Algorithm that constructs a Shortest Path Tree starting from some source node.
- * @param {Node} root Root vertex of the tree
+ * @description Algorithm that constructs a <strong>S</strong>hortest <strong>P</strong>ath <strong>T</strong>ree starting from some source node.
+ * @param {Vertex} root Root vertex of the tree
+ * @param {Vertex[]} [graph=root.getNetwork()] Graph
+ * @returns {{number[], Vertex[]}} SPT
  * @since 1.1
  * @func
  */
-function Dijkstra (root) {
+function Dijkstra (root, graph) {
+	if (!graph) graph = root.getNetwork();
+	var unvisitedVertices = [], dist = {}, prev = {};
 
+	for (var i = 0; i < graph.length; i++) {
+		var vertex = graph[i];
+		dist[vertex] = Infinity;
+		prev[vertex] = undefined;
+		unvisitedVertices.push(vertex);
+	}
+	dist[root] = 0; //Root/root distance
+
+	while (unvisitedVertices.length > 0) {
+		var current = unvisitedVertices.filter(function (vertex) {
+			return unvisitedVertices.filter(function (vertex) {
+				return dist[vertex] === unvisitedVertices.map(function (vertex) {
+					return dist[vertex]
+				}).min();
+			}).has(vertex);
+        })[0];
+		unvisitedVertices.remove(current);
+		var neighbours = current.getConnectedVertices();
+		for (i = 0; i < neighbours.length; i++) {
+			if (unvisitedVertices.has(neighbours[i])) {
+				var altPath = dist[current] + current.distanceFrom(neighbours[i]);
+				if (altPath < dist[neighbours[i]]) { //Shorter path to neighbours[i] found
+                    dist[neighbours[i]] = altPath;
+                    prev[neighbours[i]] = current;
+				}
+			}
+		}
+	}
+
+	return {"dist": dist, "prev": prev};
 }
 
 //noinspection JSUnusedGlobalSymbols
 /**
  * @summary Prim's algorithm.
- * @description Algorithm that constructs a minimum spanning tree for the graph.
+ * @description Algorithm that constructs a <strong>M</strong>inimum <strong>S</strong>panning <strong>T</strong>ree for the graph.
  * @param {Node} root Root vertex of the tree
+ * @returns {Vertex[]} MST
  * @since 1.1
  * @func
  */
 function Prim (root) {
+	var tree = [root], current = root;
+	debugger;
+    while (!tree.has(current.getNearestVertex())) {
+        debugger;
+		current = current.getNearestVertex();
+		tree.push(current);
+        debugger;
+	}
 
+	return tree
 }
 
 /**
