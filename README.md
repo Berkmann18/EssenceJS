@@ -19,4 +19,5 @@ The main features are the following:
 ###Note:
 -	EssenceJS 1.0 will be the ES4-5 All-In-One version
 -	EssenceJS 1.1 will be the ES5 framework (ES4-like module based)
--	EssenceJS 1.2 will be the ES5-6 framework
+-	EssenceJS 1.2 will be the ES5-6 framework (skipped in favour of the next one)
+-   EssenceJS 2 is will be the ES6 framework
