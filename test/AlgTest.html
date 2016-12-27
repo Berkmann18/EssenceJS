@@ -10,22 +10,29 @@
     <meta name="keywords" content="Algorithm, test, EssenceJS, alg, A*"/>
     <script type="text/javascript" src="../1.1/essence.js"></script>
     <script type="text/javascript" defer>
-        var nodeSet = [];
+        var nodeSet = [], vertices, algs = [];
         function Init (stackLayer) {
             if (typeof Essence !== "undefined") {
                 nodeSet = [new Vertex(0, 0, [10, 10]), new Vertex(1, 0, [200, 100]), new Vertex(2, 0, [100, 150]), new Vertex(1, 0, [100, 300]), new Vertex(3, 0, [200, 240]), new Vertex(2, 0, [220, 290])];
-                for (var i = 1; i < nodeSet.length; i++) nodeSet[i].parent = nodeSet[i - 1];
-                console.log(drawVertex(nodeSet));
-                console.log(A(nodeSet[0], nodeSet.last(), nodeSet));
-            } else if (stackLayer > 3) {
-                console.log("Wow, hold on ! %d stack layers down !!", stackLayer);
-            } else {
+                for (var i = 1; i < nodeSet.length; i++) {
+                    nodeSet[i].parent = nodeSet[i - 1];
+                    nodeSet[i - 1].join([nodeSet[i]]);
+                }
+                vertices = drawVertex(nodeSet);
+                console.log(vertices);
+                //console.log("A*", A(nodeSet[0], nodeSet.last(), nodeSet));
+                //algs[0] = Dijkstra(nodeSet[0], nodeSet);
+                //console.log("Dijkstra: ", algs[0]);
+                algs[1] = Prim(nodeSet[0]);
+                console.log("Prim: ", algs[1]);
+            } else if (stackLayer > 3) console.log("Wow, hold on ! %d stack layers down !!", stackLayer);
+            else {
                 console.warn("EssenceJS is not currently available !");
                 Init(stackLayer ? stackLayer + 1 : 1);
             }
         }
 
-        function drawVertex (nodes) { //draw the path node on the screen
+        function drawVertex (nodes) { //draw the vertices on the screen
             initCanvas(1e3, 1e3);
             var nodeObj = nodes.map(function (node) {
                 return new Circ(node.pos[0], node.pos[1], 5);
